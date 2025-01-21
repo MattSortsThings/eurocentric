@@ -1,7 +1,14 @@
 ### Admin API V1.0 placeholder
 
-GET http://localhost:5214/admin/api/v1.0/placeholder
+POST http://localhost:5214/admin/api/v1.0/contests
 Accept: application/json
+Content-Type: application/json
+
+{
+  "contestYear": 2025,
+  "hostCityName": "Basel",
+  "votingRules": "Liverpool"
+}
 
 ### Public API V1.0 placeholder
 

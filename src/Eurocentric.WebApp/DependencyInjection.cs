@@ -2,6 +2,7 @@ using System.Reflection;
 using Eurocentric.AdminApi;
 using Eurocentric.PublicApi;
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Mapping;
 
 namespace Eurocentric.WebApp;
@@ -25,7 +26,8 @@ public static class DependencyInjection
         ];
 
         builder.Services.AddAppPipeline(apiAssemblies)
-            .AddMapping(apiAssemblies);
+            .AddMapping(apiAssemblies)
+            .AddHttpJsonConfiguration();
 
         return builder;
     }
