@@ -1,4 +1,4 @@
-namespace Eurocentric.AdminApi.V1.Contests.Common;
+namespace Eurocentric.AdminApi.V1.Contests.Models;
 
 public enum VotingRules
 {

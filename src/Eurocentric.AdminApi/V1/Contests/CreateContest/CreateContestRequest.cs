@@ -1,4 +1,4 @@
-using Eurocentric.AdminApi.V1.Contests.Common;
+using Eurocentric.AdminApi.V1.Contests.Models;
 
 namespace Eurocentric.AdminApi.V1.Contests.CreateContest;
 

@@ -1,5 +1,4 @@
 using ErrorOr;
-using Eurocentric.Domain.Entities.Contests;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Contest = Eurocentric.Domain.Entities.Contests.Contest;
 
 namespace Eurocentric.AdminApi.V1.Contests.CreateContest;
 
