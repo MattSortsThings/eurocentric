@@ -12,5 +12,5 @@ Content-Type: application/json
 
 ### Public API V1.0 placeholder
 
-GET http://localhost:5214/public/api/v1.0/placeholder
+GET http://localhost:5214/public/api/v1.0/voting-country-rankings/points-share?targetCountryCode=GB&votingMethod=Jury
 Accept: application/json
