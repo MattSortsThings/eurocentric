@@ -38,6 +38,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Domain.Tests.Un
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Shared.Tests.Unit", "tests\unit\Eurocentric.Shared.Tests.Unit\Eurocentric.Shared.Tests.Unit.csproj", "{842F61F1-1C52-41AF-926C-D1D4C54BDD31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Tests.Utils.Fixtures", "tests\utils\Eurocentric.Tests.Utils.Fixtures\Eurocentric.Tests.Utils.Fixtures.csproj", "{6D3DDE98-75FE-45E4-884D-6D082C5B9FAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "acceptance", "acceptance", "{1030E06B-9CA7-46C8-8F07-786532624FCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.AdminApi.Tests.Acceptance", "tests\acceptance\Eurocentric.AdminApi.Tests.Acceptance\Eurocentric.AdminApi.Tests.Acceptance.csproj", "{658A10C5-A087-410F-99C2-4D79781FA086}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.PublicApi.Tests.Acceptance", "tests\acceptance\Eurocentric.PublicApi.Tests.Acceptance\Eurocentric.PublicApi.Tests.Acceptance.csproj", "{7C9FFFD7-7E6A-462F-A3D9-C88196D6ABC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Shared.Tests.Acceptance", "tests\acceptance\Eurocentric.Shared.Tests.Acceptance\Eurocentric.Shared.Tests.Acceptance.csproj", "{271634C3-C173-45AE-BC3C-340378A10D2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +93,22 @@ Global
 		{842F61F1-1C52-41AF-926C-D1D4C54BDD31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{842F61F1-1C52-41AF-926C-D1D4C54BDD31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{842F61F1-1C52-41AF-926C-D1D4C54BDD31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D3DDE98-75FE-45E4-884D-6D082C5B9FAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D3DDE98-75FE-45E4-884D-6D082C5B9FAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D3DDE98-75FE-45E4-884D-6D082C5B9FAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D3DDE98-75FE-45E4-884D-6D082C5B9FAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{658A10C5-A087-410F-99C2-4D79781FA086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{658A10C5-A087-410F-99C2-4D79781FA086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{658A10C5-A087-410F-99C2-4D79781FA086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{658A10C5-A087-410F-99C2-4D79781FA086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C9FFFD7-7E6A-462F-A3D9-C88196D6ABC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C9FFFD7-7E6A-462F-A3D9-C88196D6ABC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C9FFFD7-7E6A-462F-A3D9-C88196D6ABC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C9FFFD7-7E6A-462F-A3D9-C88196D6ABC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{271634C3-C173-45AE-BC3C-340378A10D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{271634C3-C173-45AE-BC3C-340378A10D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{271634C3-C173-45AE-BC3C-340378A10D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{271634C3-C173-45AE-BC3C-340378A10D2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{00CD8591-F60D-4005-8407-DB0A14DCC812} = {CBD06BDF-20C9-4F50-A6F4-E3F39C6E8166}
@@ -96,5 +122,10 @@ Global
 		{F3C06F0C-56FF-4D33-8868-F1ED500C0FA6} = {4D829B98-B1D6-4FC7-A7B1-3880AD91FAEA}
 		{73D73C0D-319A-4CAD-B4B1-29134EB03D6E} = {F3C06F0C-56FF-4D33-8868-F1ED500C0FA6}
 		{842F61F1-1C52-41AF-926C-D1D4C54BDD31} = {F3C06F0C-56FF-4D33-8868-F1ED500C0FA6}
+		{6D3DDE98-75FE-45E4-884D-6D082C5B9FAA} = {320AD2B4-0C59-445C-AACE-D3A746D757CD}
+		{1030E06B-9CA7-46C8-8F07-786532624FCB} = {4D829B98-B1D6-4FC7-A7B1-3880AD91FAEA}
+		{658A10C5-A087-410F-99C2-4D79781FA086} = {1030E06B-9CA7-46C8-8F07-786532624FCB}
+		{7C9FFFD7-7E6A-462F-A3D9-C88196D6ABC9} = {1030E06B-9CA7-46C8-8F07-786532624FCB}
+		{271634C3-C173-45AE-BC3C-340378A10D2E} = {1030E06B-9CA7-46C8-8F07-786532624FCB}
 	EndGlobalSection
 EndGlobal
