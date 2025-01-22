@@ -18,4 +18,4 @@ so that
 
 ## Dev note reference
 
-![TITLE](URL)
+[TITLE](URL)
