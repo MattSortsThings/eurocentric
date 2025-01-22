@@ -1,8 +1,8 @@
 ---
-name: Shared feature
-about: New feature with "shared" scope.
-title: 'S1a: Title'
-labels: feat, shared
+name: Public API feature
+about: New feature with "public-api" scope.
+title: 'P1a: Title'
+labels: feat, public-api
 assignees: MattSortsThings
 ---
 
