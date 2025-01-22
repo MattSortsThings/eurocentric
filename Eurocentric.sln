@@ -48,6 +48,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.PublicApi.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Shared.Tests.Acceptance", "tests\acceptance\Eurocentric.Shared.Tests.Acceptance\Eurocentric.Shared.Tests.Acceptance.csproj", "{271634C3-C173-45AE-BC3C-340378A10D2E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "subcutaneous", "subcutaneous", "{690EAE85-24DE-44E6-B149-53CBA0B4247A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.AdminApi.Tests.Subcutaneous", "tests\subcutaneous\Eurocentric.AdminApi.Tests.Subcutaneous\Eurocentric.AdminApi.Tests.Subcutaneous.csproj", "{E9FB221B-C154-40FD-BDBE-6046B1C31CEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.PublicApi.Tests.Subcutaneous", "tests\subcutaneous\Eurocentric.PublicApi.Tests.Subcutaneous\Eurocentric.PublicApi.Tests.Subcutaneous.csproj", "{6B64FA94-645A-4165-9D19-FF82790F3E6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +115,14 @@ Global
 		{271634C3-C173-45AE-BC3C-340378A10D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{271634C3-C173-45AE-BC3C-340378A10D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{271634C3-C173-45AE-BC3C-340378A10D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9FB221B-C154-40FD-BDBE-6046B1C31CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9FB221B-C154-40FD-BDBE-6046B1C31CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9FB221B-C154-40FD-BDBE-6046B1C31CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9FB221B-C154-40FD-BDBE-6046B1C31CEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B64FA94-645A-4165-9D19-FF82790F3E6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B64FA94-645A-4165-9D19-FF82790F3E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B64FA94-645A-4165-9D19-FF82790F3E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B64FA94-645A-4165-9D19-FF82790F3E6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{00CD8591-F60D-4005-8407-DB0A14DCC812} = {CBD06BDF-20C9-4F50-A6F4-E3F39C6E8166}
@@ -127,5 +141,8 @@ Global
 		{658A10C5-A087-410F-99C2-4D79781FA086} = {1030E06B-9CA7-46C8-8F07-786532624FCB}
 		{7C9FFFD7-7E6A-462F-A3D9-C88196D6ABC9} = {1030E06B-9CA7-46C8-8F07-786532624FCB}
 		{271634C3-C173-45AE-BC3C-340378A10D2E} = {1030E06B-9CA7-46C8-8F07-786532624FCB}
+		{690EAE85-24DE-44E6-B149-53CBA0B4247A} = {4D829B98-B1D6-4FC7-A7B1-3880AD91FAEA}
+		{E9FB221B-C154-40FD-BDBE-6046B1C31CEE} = {690EAE85-24DE-44E6-B149-53CBA0B4247A}
+		{6B64FA94-645A-4165-9D19-FF82790F3E6A} = {690EAE85-24DE-44E6-B149-53CBA0B4247A}
 	EndGlobalSection
 EndGlobal
