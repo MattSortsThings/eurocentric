@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Eurocentric.Shared.Tests.Unit</RootNamespace>
+    <TargetFramework>net9.0</TargetFramework>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
+    <PackageReference Include="xunit.v3" Version="1.0.1"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Eurocentric.Shared\Eurocentric.Shared.csproj"/>
+    <ProjectReference Include="..\..\utils\Eurocentric.Tests.Utils.Attributes\Eurocentric.Tests.Utils.Attributes.csproj"/>
+  </ItemGroup>
+
+</Project>

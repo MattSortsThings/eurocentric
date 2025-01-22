@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Eurocentric.Tests.Utils.Attributes</RootNamespace>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.analyzers" Version="1.19.0"/>
+    <PackageReference Include="xunit.v3.extensibility.core" Version="1.0.1"/>
+  </ItemGroup>
+
+</Project>
