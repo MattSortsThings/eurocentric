@@ -18,7 +18,7 @@ public abstract class CleanWebAppTests : IDisposable
 
     public void Dispose()
     {
-        _fixture.Dispose();
+        _fixture.Reset();
         GC.SuppressFinalize(this);
     }
 }

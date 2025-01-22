@@ -8,8 +8,8 @@ namespace Eurocentric.AdminApi.Tests.Subcutaneous.Utils;
 [Collection(nameof(CleanWebAppTestCollection))]
 public abstract class CleanWebAppTests : IDisposable
 {
+    private readonly CleanWebAppFixture _fixture;
     private readonly IServiceScope _scope;
-    private CleanWebAppFixture? _fixture;
 
     protected CleanWebAppTests(CleanWebAppFixture fixture)
     {
@@ -22,9 +22,8 @@ public abstract class CleanWebAppTests : IDisposable
 
     public void Dispose()
     {
-        _scope?.Dispose();
-        _fixture?.Reset();
-        _fixture = null;
+        _scope.Dispose();
+        _fixture.Reset();
         GC.SuppressFinalize(this);
     }
 }

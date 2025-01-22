@@ -7,8 +7,8 @@ namespace Eurocentric.PublicApi.Tests.Subcutaneous.Utils;
 [DatabaseTest]
 public abstract class SeededWebAppTests : IDisposable
 {
+    private readonly SeededWebAppFixture _fixture;
     private readonly IServiceScope _scope;
-    private SeededWebAppFixture? _fixture;
 
     protected SeededWebAppTests(SeededWebAppFixture fixture)
     {
@@ -21,8 +21,7 @@ public abstract class SeededWebAppTests : IDisposable
 
     public void Dispose()
     {
-        _scope?.Dispose();
-        _fixture = null;
+        _scope.Dispose();
         GC.SuppressFinalize(this);
     }
 }
