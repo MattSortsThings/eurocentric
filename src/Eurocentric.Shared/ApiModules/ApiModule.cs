@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Shared.ApiModules;
 
@@ -30,9 +31,20 @@ public abstract class ApiModule : IApiModule
         }
     }
 
+    public void AddOpenApiDocuments(IServiceCollection services)
+    {
+        foreach (string name in GetOpenApiDocumentNames())
+        {
+            services.AddOpenApi(name);
+        }
+    }
+
     private IApiEndpoint[] GetAllEndpointsInAssembly() =>
         GetType().Assembly.GetTypes()
             .Where(type => typeof(IApiEndpoint).IsAssignableFrom(type) && type is { IsAbstract: false, IsInterface: false })
             .Select(type => (IApiEndpoint)Activator.CreateInstance(type)!)
             .ToArray();
+
+    private IEnumerable<string> GetOpenApiDocumentNames() =>
+        GetAllEndpointsInAssembly().GetDistinctApiVersions().Select(version => version.MapToApiReleaseGroupName(ApiName));
 }

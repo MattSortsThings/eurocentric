@@ -5,6 +5,7 @@ using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Mapping;
+using Eurocentric.Shared.OpenApi;
 using Eurocentric.Shared.Security;
 using Eurocentric.Shared.Versioning;
 
@@ -28,13 +29,15 @@ public static class DependencyInjection
             typeof(PublicApiModule).Assembly
         ];
 
-        builder.Services.AddAppPipeline(apiAssemblies)
+        builder.Services
+            .AddTransient<IApiModule, AdminApiModule>()
+            .AddTransient<IApiModule, PublicApiModule>()
+            .AddAppPipeline(apiAssemblies)
             .AddMapping(apiAssemblies)
             .AddHttpJsonConfiguration()
+            .AddOpenApiDocuments()
             .AddSecurity()
-            .AddVersioning()
-            .AddTransient<IApiModule, AdminApiModule>()
-            .AddTransient<IApiModule, PublicApiModule>();
+            .AddVersioning();
 
         return builder;
     }

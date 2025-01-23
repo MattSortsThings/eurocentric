@@ -18,7 +18,7 @@ public static class GetVotingCountryPointsShareRankingsTests
         public async Task Should_return_200_with_fixed_data_given_valid_request()
         {
             // Arrange
-            RestRequest restRequest = Requests.Get.To(UriSegments.PublicApi.V0Latest + "voting-country-rankings/points-share")
+            RestRequest restRequest = Requests.Get.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
                 .AddQueryParameter("targetCountryCode", "GB")
                 .UsePublicApiKey();
 

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -19,9 +20,19 @@ internal sealed class ApiKeyAuthenticator(
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        Request.Headers.TryGetValue(ApiKeyRequestHeaderName, out StringValues extractedApiKey);
+        AuthenticateResult result;
 
-        return Task.FromResult(Authenticate(extractedApiKey));
+        if (AllowsAnonymousRequests(Request.Path))
+        {
+            result = AuthenticateResult.Success(CreateAnonymousAuthenticationTicket());
+        }
+        else
+        {
+            Request.Headers.TryGetValue(ApiKeyRequestHeaderName, out StringValues extractedApiKey);
+            result = Authenticate(extractedApiKey);
+        }
+
+        return Task.FromResult(result);
     }
 
     private AuthenticateResult Authenticate(StringValues extractedApiKey) =>
@@ -51,9 +62,22 @@ internal sealed class ApiKeyAuthenticator(
         return new AuthenticationTicket(principal, Scheme.Name);
     }
 
+    private AuthenticationTicket CreateAnonymousAuthenticationTicket()
+    {
+        ClaimsIdentity identity = new(
+            [new Claim("ClientID", ClientIds.Anonymous)],
+            Scheme.Name);
+        GenericPrincipal principal = new(identity, null);
+
+        return new AuthenticationTicket(principal, Scheme.Name);
+    }
+
     private bool IsAdminApiKey(StringValues apiKey) =>
         string.Equals(apiKey, apiKeysOptions.CurrentValue.AdminApiKey, StringComparison.Ordinal);
 
     private bool IsPublicApiKey(StringValues apiKey) =>
         string.Equals(apiKey, apiKeysOptions.CurrentValue.PublicApiKey, StringComparison.Ordinal);
+
+    private static bool AllowsAnonymousRequests(PathString requestPath) =>
+        requestPath.StartsWithSegments("/favicon.ico") || requestPath.StartsWithSegments("/openapi");
 }
