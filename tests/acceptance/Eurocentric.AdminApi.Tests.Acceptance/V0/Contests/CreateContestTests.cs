@@ -31,9 +31,13 @@ public static class CreateContestTests
                 ContestYear = 2025, HostCityName = "Basel", VotingRules = VotingRules.Liverpool
             };
 
-            RestRequest restRequest = Requests.Post.To(Apis.Admin.V0.Latest.Uri + "contests")
-                .AddJsonBody(request)
-                .UseAdminApiKey();
+            const string route = Apis.Admin.V0.Latest.Uri + "contests";
+
+            RestRequest restRequest = PostRequest.To(route)
+                .AddHeader("Accept", "application/json")
+                .AddHeader("Content-Type", "application/json")
+                .AddHeader("X-Api-Key", TestApiKeys.Admin)
+                .AddJsonBody(request);
 
             // Act
             RestResponse<CreateContestResponse> result =

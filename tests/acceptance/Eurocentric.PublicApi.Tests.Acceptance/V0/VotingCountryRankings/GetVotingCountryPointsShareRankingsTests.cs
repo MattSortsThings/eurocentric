@@ -18,9 +18,12 @@ public static class GetVotingCountryPointsShareRankingsTests
         public async Task Should_return_200_with_fixed_data_given_valid_request()
         {
             // Arrange
-            RestRequest restRequest = Requests.Get.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+            const string route = Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share";
+
+            RestRequest restRequest = GetRequest.To(route)
+                .AddHeader("Accept", "application/json")
                 .AddQueryParameter("targetCountryCode", "GB")
-                .UsePublicApiKey();
+                .AddHeader("X-Api-Key", TestApiKeys.Public);
 
             // Act
             RestResponse<GetVotingCountryPointsShareRankingsResponse> result =

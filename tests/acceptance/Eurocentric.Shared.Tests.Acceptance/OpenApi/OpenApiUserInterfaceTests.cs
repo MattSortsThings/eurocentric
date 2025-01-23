@@ -5,22 +5,22 @@ using RestSharp;
 
 namespace Eurocentric.Shared.Tests.Acceptance.OpenApi;
 
-public static class OpenApiDocumentPerApiReleaseTests
+public static class OpenApiUserInterfaceTests
 {
-    public sealed class OpenApi : SeededWebAppTests
+    public sealed class Docs : SeededWebAppTests
     {
-        public OpenApi(SeededWebAppFixture fixture) : base(fixture)
+        public Docs(SeededWebAppFixture fixture) : base(fixture)
         {
         }
 
         [Theory]
         [InlineData(Apis.Admin.V0.Latest.OpenApiDocName)]
         [InlineData(Apis.Public.V0.Latest.OpenApiDocName)]
-        public async Task Should_serve_open_api_document_per_api_release_with_no_authentication(string docName)
+        public async Task Should_serve_documentation_page_per_api_release_with_no_authentication(string docName)
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To("openapi/" + docName + ".json")
-                .AddHeader("Accept", "application/json");
+            RestRequest restRequest = GetRequest.To("docs/" + docName)
+                .AddHeader("Accept", "text/html");
 
             // Act
             RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);

@@ -1,3 +1,4 @@
+using Eurocentric.Shared.OpenApi.Transformers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +36,10 @@ public abstract class ApiModule : IApiModule
     {
         foreach (string name in GetOpenApiDocumentNames())
         {
-            services.AddOpenApi(name);
+            services.AddOpenApi(name, options =>
+            {
+                options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>();
+            });
         }
     }
 

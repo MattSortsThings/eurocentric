@@ -16,7 +16,7 @@ internal sealed class ApiKeyAuthenticator(
     UrlEncoder urlEncoder) : AuthenticationHandler<AuthenticationSchemeOptions>(authenticationSchemeOptions, logger, urlEncoder)
 {
     internal const string SchemeName = "ApiKey";
-    private const string ApiKeyRequestHeaderName = "X-Api-Key";
+    internal const string ApiKeyRequestHeaderName = "X-Api-Key";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
@@ -79,5 +79,7 @@ internal sealed class ApiKeyAuthenticator(
         string.Equals(apiKey, apiKeysOptions.CurrentValue.PublicApiKey, StringComparison.Ordinal);
 
     private static bool AllowsAnonymousRequests(PathString requestPath) =>
-        requestPath.StartsWithSegments("/favicon.ico") || requestPath.StartsWithSegments("/openapi");
+        requestPath.StartsWithSegments("/favicon.ico")
+        || requestPath.StartsWithSegments("/docs")
+        || requestPath.StartsWithSegments("/openapi");
 }

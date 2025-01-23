@@ -1,4 +1,5 @@
 using Eurocentric.Shared.ApiModules;
+using Eurocentric.Shared.OpenApi;
 
 namespace Eurocentric.WebApp;
 
@@ -15,6 +16,8 @@ public static class Configuration
     public static WebApplication ConfigureRequestPipeline(this WebApplication app)
     {
         app.MapOpenApi();
+
+        app.UseDocumentationPages();
 
         app.UseHttpsRedirection();
 
