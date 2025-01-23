@@ -21,10 +21,10 @@ public static class DependencyInjection
             .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticator>(ApiKeyAuthenticator.SchemeName, null);
 
         services.AddAuthorizationBuilder()
-            .AddPolicy(nameof(Policies.AuthenticatedAdminOnly),
-                Policies.AuthenticatedAdminOnly.ConfigurePolicy)
-            .AddPolicy(nameof(Policies.AuthenticatedAdminOrUserOnly),
-                Policies.AuthenticatedAdminOrUserOnly.ConfigurePolicy);
+            .AddPolicy(nameof(AuthorizationPolicies.AuthenticatedAdminOnly),
+                AuthorizationPolicies.AuthenticatedAdminOnly.ConfigurePolicy)
+            .AddPolicy(nameof(AuthorizationPolicies.AuthenticatedAdminOrUserOnly),
+                AuthorizationPolicies.AuthenticatedAdminOrUserOnly.ConfigurePolicy);
 
         return services;
     }

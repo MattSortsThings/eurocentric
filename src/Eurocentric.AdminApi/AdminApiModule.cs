@@ -9,5 +9,5 @@ public sealed class AdminApiModule : ApiModule
 
     public override string Prefix => "admin/api";
 
-    protected override string? AuthorizationPolicyName => nameof(Policies.AuthenticatedAdminOnly);
+    protected override string? AuthorizationPolicyName => nameof(AuthorizationPolicies.AuthenticatedAdminOnly);
 }

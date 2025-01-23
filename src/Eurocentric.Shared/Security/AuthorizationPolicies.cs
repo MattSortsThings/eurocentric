@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Eurocentric.Shared.Security;
 
-public static class Policies
+public static class AuthorizationPolicies
 {
     public static class AuthenticatedAdminOnly
     {
