@@ -1,4 +1,4 @@
-using Eurocentric.PublicApi.V1.VotingCountryRankings.GetVotingCountryPointsShareRankings;
+using Eurocentric.PublicApi.V0.VotingCountryRankings.GetVotingCountryPointsShareRankings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -8,7 +8,7 @@ public static class PublicApiPlaceholder
 {
     public static IEndpointRouteBuilder MapPublicApiPlaceholderEndpoint(this IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder api = app.MapGroup("public/api/v1.0")
+        RouteGroupBuilder api = app.MapGroup("public/api/v0.1")
             .AllowAnonymous();
 
         api.MapGetVotingCountryPointsShare();

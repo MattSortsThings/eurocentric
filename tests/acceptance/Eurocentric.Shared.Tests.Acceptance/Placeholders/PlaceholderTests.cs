@@ -19,7 +19,7 @@ public static class PlaceholderTests
         public async Task Should_return_404_given_request_to_non_existent_route()
         {
             // Arrange
-            RestRequest restRequest = Requests.Get.To("public/api/v1.0/non-existent");
+            RestRequest restRequest = Requests.Get.To("public/api/v0.1/non-existent");
 
             // Act
             RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
