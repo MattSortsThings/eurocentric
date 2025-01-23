@@ -5,6 +5,7 @@ using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Mapping;
+using Eurocentric.Shared.Security;
 using Eurocentric.Shared.Versioning;
 
 namespace Eurocentric.WebApp;
@@ -30,6 +31,7 @@ public static class DependencyInjection
         builder.Services.AddAppPipeline(apiAssemblies)
             .AddMapping(apiAssemblies)
             .AddHttpJsonConfiguration()
+            .AddSecurity()
             .AddVersioning()
             .AddTransient<IApiModule, AdminApiModule>()
             .AddTransient<IApiModule, PublicApiModule>();

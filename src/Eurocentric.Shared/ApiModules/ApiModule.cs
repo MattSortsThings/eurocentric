@@ -5,6 +5,8 @@ namespace Eurocentric.Shared.ApiModules;
 
 public abstract class ApiModule : IApiModule
 {
+    protected virtual string? AuthorizationPolicyName => null;
+
     public abstract string ApiName { get; }
 
     public abstract string Prefix { get; }
@@ -12,6 +14,15 @@ public abstract class ApiModule : IApiModule
     public void MapVersionedApiEndpoints(IEndpointRouteBuilder app)
     {
         RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiName).MapGroup(Prefix);
+
+        if (AuthorizationPolicyName != null)
+        {
+            apiGroup.RequireAuthorization(AuthorizationPolicyName);
+        }
+        else
+        {
+            apiGroup.AllowAnonymous();
+        }
 
         foreach (ApiRelease apiRelease in GetAllEndpointsInAssembly().MapToApiReleases(ApiName))
         {

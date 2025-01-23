@@ -16,6 +16,10 @@ public static class Configuration
     {
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
+
+        app.UseAuthorization();
+
         app.UseVersionedApiEndpoints();
 
         return app;

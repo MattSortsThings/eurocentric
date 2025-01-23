@@ -31,7 +31,9 @@ public static class CreateContestTests
                 ContestYear = 2025, HostCityName = "Basel", VotingRules = VotingRules.Liverpool
             };
 
-            RestRequest restRequest = Requests.Post.To("admin/api/v0.1/contests").AddJsonBody(request);
+            RestRequest restRequest = Requests.Post.To("admin/api/v0.1/contests")
+                .AddJsonBody(request)
+                .UseAdminApiKey();
 
             // Act
             RestResponse<CreateContestResponse> result =
