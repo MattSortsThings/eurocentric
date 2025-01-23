@@ -1,5 +1,4 @@
-using Eurocentric.AdminApi;
-using Eurocentric.PublicApi;
+using Eurocentric.Shared.ApiModules;
 
 namespace Eurocentric.WebApp;
 
@@ -17,7 +16,7 @@ public static class Configuration
     {
         app.UseHttpsRedirection();
 
-        app.MapAdminApiPlaceholderEndpoint().MapPublicApiPlaceholderEndpoint();
+        app.UseVersionedApiEndpoints();
 
         return app;
     }

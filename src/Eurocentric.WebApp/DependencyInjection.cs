@@ -1,9 +1,11 @@
 using System.Reflection;
 using Eurocentric.AdminApi;
 using Eurocentric.PublicApi;
+using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Mapping;
+using Eurocentric.Shared.Versioning;
 
 namespace Eurocentric.WebApp;
 
@@ -21,13 +23,16 @@ public static class DependencyInjection
     {
         Assembly[] apiAssemblies =
         [
-            typeof(AdminApiPlaceholder).Assembly,
-            typeof(PublicApiPlaceholder).Assembly
+            typeof(AdminApiModule).Assembly,
+            typeof(PublicApiModule).Assembly
         ];
 
         builder.Services.AddAppPipeline(apiAssemblies)
             .AddMapping(apiAssemblies)
-            .AddHttpJsonConfiguration();
+            .AddHttpJsonConfiguration()
+            .AddVersioning()
+            .AddTransient<IApiModule, AdminApiModule>()
+            .AddTransient<IApiModule, PublicApiModule>();
 
         return builder;
     }

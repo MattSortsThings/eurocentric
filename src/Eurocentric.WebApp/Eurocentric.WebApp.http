@@ -1,4 +1,4 @@
-### Admin API V1.0 placeholder
+### Admin API V0.1 placeholder
 
 POST http://localhost:5214/admin/api/v0.1/contests
 Accept: application/json
@@ -10,7 +10,7 @@ Content-Type: application/json
   "votingRules": "Liverpool"
 }
 
-### Public API V1.0 placeholder
+### Public API V0.1 placeholder
 
 GET http://localhost:5214/public/api/v0.1/voting-country-rankings/points-share?targetCountryCode=GB&votingMethod=Jury
 Accept: application/json
