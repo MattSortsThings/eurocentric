@@ -15,6 +15,8 @@ public static class Configuration
     /// <returns>The same <see cref="WebApplication" /> instance, so that method invocations can be chained.</returns>
     public static WebApplication ConfigureRequestPipeline(this WebApplication app)
     {
+        app.UseExceptionHandler();
+
         app.MapOpenApi();
 
         app.UseDocumentationPages();

@@ -24,6 +24,14 @@ internal static class ProblemDetailsExtensions
                                                            && pair.Value is not null
                                                            && pair.Value.ToString() == value.ToString());
 
+    internal static void ShouldHaveExtensionsEntry(this ProblemDetails problemDetails, string key, string value) =>
+        Assert.Contains(problemDetails.Extensions, pair => pair.Key == key
+                                                           && pair.Value is not null
+                                                           && pair.Value.ToString() == value);
+
     internal static void ShouldHaveEmptyExtensions(this ProblemDetails problemDetails) =>
         Assert.Empty(problemDetails.Extensions);
+
+    internal static void ShouldHaveSingleExtension(this ProblemDetails problemDetails, string key) =>
+        Assert.True(problemDetails.Extensions.Count == 1 && problemDetails.Extensions.ContainsKey(key));
 }

@@ -15,6 +15,11 @@ public sealed class GetVotingCountryPointsShareRankingsHandler :
 
         var (target, method, pageIndex, pageSize) = query;
 
+        if (string.IsNullOrWhiteSpace(target))
+        {
+            throw new ArgumentException("Target country code cannot be null or empty or whitespace.");
+        }
+
         VotingCountryPointsShareMetadata metadata = new()
         {
             TargetCountryCode = target,

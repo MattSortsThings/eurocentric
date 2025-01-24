@@ -15,13 +15,14 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddErrorHandling(this IServiceCollection services)
     {
-        services.AddProblemDetails(options =>
-        {
-            options.CustomizeProblemDetails = ctx =>
+        services.AddExceptionHandler<ExceptionToProblemDetailsHandler>()
+            .AddProblemDetails(options =>
             {
-                ctx.ProblemDetails.Instance = ctx.HttpContext.Request.GetInstance();
-            };
-        });
+                options.CustomizeProblemDetails = ctx =>
+                {
+                    ctx.ProblemDetails.Instance = ctx.HttpContext.Request.GetInstance();
+                };
+            });
 
         return services;
     }

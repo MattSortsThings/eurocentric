@@ -1,0 +1,181 @@
+using System.Net;
+using Eurocentric.Shared.Tests.Acceptance.Utils;
+using Eurocentric.Tests.Utils.Fixtures;
+using Microsoft.AspNetCore.Mvc;
+using RestSharp;
+
+namespace Eurocentric.Shared.Tests.Acceptance.ErrorHandling;
+
+public static class GlobalExceptionHandlingTests
+{
+    public sealed class AdminApi : SeededWebAppTests
+    {
+        public AdminApi(SeededWebAppFixture fixture) : base(fixture)
+        {
+        }
+
+        [Fact]
+        public async Task Should_return_400_with_problem_details_given_POST_request_with_missing_required_body_property()
+        {
+            // Arrange
+            const string noContestYearJson = """
+                                             {
+                                                "hostCityName": "Basel",
+                                                "votingRules": "Stockholm"
+                                             }
+                                             """;
+
+            RestRequest request = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
+                .AddHeader("X-Api-Key", TestApiKeys.Admin)
+                .AddHeader("Accept", "application/json")
+                .AddHeader("Content-Type", "application/json")
+                .AddJsonBody(noContestYearJson);
+
+            // Act
+            RestResponse<ProblemDetails> result =
+                await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
+
+            // Assert
+            ProblemDetails problemDetails = result.Data!;
+
+            Assert.Multiple(
+                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
+                () => problemDetails.ShouldHaveTitle("BadHttpRequest"),
+                () => problemDetails.ShouldHaveInstance("POST /admin/api/v0.1/contests"),
+                () => problemDetails.ShouldHaveDetail("BadHttpRequestException was thrown while handling the request."),
+                () => problemDetails.ShouldHaveExtensionsEntry("error",
+                    "Failed to read parameter 'CreateContestRequest request' from the request body as JSON."),
+                () => problemDetails.ShouldHaveExtensionsEntry("jsonError",
+                    "JSON deserialization for type 'Eurocentric.AdminApi.V0.Contests.CreateContest.CreateContestRequest' " +
+                    "was missing required properties including: 'contestYear'."),
+                () => problemDetails.ShouldHaveExtensionsEntry("jsonPath", "$")
+            );
+        }
+
+        [Fact]
+        public async Task Should_return_400_with_problem_details_given_POST_request_with_unparseable_required_body_property()
+        {
+            // Arrange
+            const string invalidVotingRulesJson = """
+                                                  {
+                                                    "contestYear": 2025,
+                                                    "hostCityName": "Basel",
+                                                    "votingRules": "NOT_VOTING_RULES"
+                                                  }
+                                                  """;
+
+            RestRequest request = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
+                .AddHeader("X-Api-Key", TestApiKeys.Admin)
+                .AddHeader("Accept", "application/json")
+                .AddHeader("Content-Type", "application/json")
+                .AddJsonBody(invalidVotingRulesJson);
+
+            // Act
+            RestResponse<ProblemDetails> result =
+                await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
+
+            // Assert
+            ProblemDetails problemDetails = result.Data!;
+
+            Assert.Multiple(
+                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
+                () => problemDetails.ShouldHaveTitle("BadHttpRequest"),
+                () => problemDetails.ShouldHaveInstance("POST /admin/api/v0.1/contests"),
+                () => problemDetails.ShouldHaveDetail("BadHttpRequestException was thrown while handling the request."),
+                () => problemDetails.ShouldHaveExtensionsEntry("error",
+                    "Failed to read parameter 'CreateContestRequest request' from the request body as JSON."),
+                () => problemDetails.ShouldHaveExtensionsEntry("jsonError",
+                    "The JSON value could not be converted to Eurocentric.AdminApi.V0.Contests.Models.VotingRules. " +
+                    "Path: $.votingRules | LineNumber: 3 | BytePositionInLine: 35."),
+                () => problemDetails.ShouldHaveExtensionsEntry("jsonPath", "$.votingRules")
+            );
+        }
+    }
+
+    public sealed class PublicApi : SeededWebAppTests
+    {
+        public PublicApi(SeededWebAppFixture fixture) : base(fixture)
+        {
+        }
+
+        [Fact]
+        public async Task Should_return_400_with_problem_details_given_GET_request_with_missing_required_query_param()
+        {
+            // Arrange
+            RestRequest restRequest = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+                .AddHeader("X-Api-Key", TestApiKeys.Public)
+                .AddHeader("Accept", "application/json");
+
+            // Act
+            RestResponse<ProblemDetails> result =
+                await Sut.ExecuteAsync<ProblemDetails>(restRequest, TestContext.Current.CancellationToken);
+
+            // Assert
+            ProblemDetails problemDetails = result.Data!;
+
+            Assert.Multiple(
+                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
+                () => problemDetails.ShouldHaveTitle("BadHttpRequest"),
+                () => problemDetails.ShouldHaveInstance("GET /public/api/v0.1/voting-country-rankings/points-share"),
+                () => problemDetails.ShouldHaveDetail("BadHttpRequestException was thrown while handling the request."),
+                () => problemDetails.ShouldHaveExtensionsEntry("error",
+                    "Required parameter 'string TargetCountryCode' was not provided from query string.")
+            );
+        }
+
+        [Fact]
+        public async Task Should_return_400_with_problem_details_given_GET_request_with_unparseable_enum_query_param()
+        {
+            // Arrange
+            RestRequest restRequest = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+                .AddHeader("X-Api-Key", TestApiKeys.Public)
+                .AddHeader("Accept", "application/json")
+                .AddQueryParameter("targetCountryCode", "GB")
+                .AddQueryParameter("votingMethod", "NOT_A_VOTING_METHOD");
+
+            // Act
+            RestResponse<ProblemDetails> result =
+                await Sut.ExecuteAsync<ProblemDetails>(restRequest, TestContext.Current.CancellationToken);
+
+            // Assert
+            ProblemDetails problemDetails = result.Data!;
+
+            Assert.Multiple(
+                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
+                () => problemDetails.ShouldHaveTitle("BadHttpRequest"),
+                () => problemDetails.ShouldHaveInstance("GET /public/api/v0.1/voting-country-rankings/points-share" +
+                                                        "?targetCountryCode=GB&votingMethod=NOT_A_VOTING_METHOD"),
+                () => problemDetails.ShouldHaveDetail("BadHttpRequestException was thrown while handling the request."),
+                () => problemDetails.ShouldHaveExtensionsEntry("error",
+                    "Failed to bind parameter 'Nullable<VotingMethod> VotingMethod' from 'NOT_A_VOTING_METHOD'.")
+            );
+        }
+
+        [Fact]
+        public async Task Should_return_500_with_problem_details_given_GET_request_that_causes_uncaught_exception()
+        {
+            // Arrange
+            RestRequest restRequest = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+                .AddHeader("X-Api-Key", TestApiKeys.Public)
+                .AddHeader("Accept", "application/json")
+                .AddQueryParameter("targetCountryCode", "  ")
+                .AddQueryParameter("votingMethod", "Any");
+
+            // Act
+            RestResponse<ProblemDetails> result =
+                await Sut.ExecuteAsync<ProblemDetails>(restRequest, TestContext.Current.CancellationToken);
+
+            // Assert
+            ProblemDetails problemDetails = result.Data!;
+
+            Assert.Multiple(
+                () => result.ShouldHaveStatusCode(HttpStatusCode.InternalServerError),
+                () => problemDetails.ShouldHaveTitle("InternalServerError"),
+                () => problemDetails.ShouldHaveInstance("GET /public/api/v0.1/voting-country-rankings/points-share" +
+                                                        "?targetCountryCode=%20%20&votingMethod=Any"),
+                () => problemDetails.ShouldHaveDetail("ArgumentException was thrown while handling the request."),
+                () => problemDetails.ShouldHaveSingleExtension("traceId")
+            );
+        }
+    }
+}
