@@ -13,7 +13,7 @@ internal sealed class CreateContestHandler : IRequestHandler<CreateContestComman
         var (year, city, rules) = command;
 
         return rules == VotingRules.Undefined
-            ? Error.Failure("Contests.IllegalVotingRules", "Cannot create a contest with Undefined voting rules.")
+            ? Error.Failure("IllegalVotingRules", "Cannot create a contest with Undefined voting rules.")
             : new Contest(Guid.CreateVersion7(), year, city, rules);
     }
 }

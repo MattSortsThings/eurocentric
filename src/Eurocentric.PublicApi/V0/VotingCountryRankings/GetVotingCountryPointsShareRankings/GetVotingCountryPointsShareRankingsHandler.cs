@@ -72,6 +72,10 @@ public sealed class GetVotingCountryPointsShareRankingsHandler :
             }
         ];
 
-        return new VotingCountryPointsSharePage(items, metadata);
+        return metadata.PageSize < 1
+            ? Error.Validation("InvalidPageSize",
+                "Page size value cannot be less than 1.",
+                new Dictionary<string, object> { { "pageSize", metadata.PageSize } })
+            : new VotingCountryPointsSharePage(items, metadata);
     }
 }

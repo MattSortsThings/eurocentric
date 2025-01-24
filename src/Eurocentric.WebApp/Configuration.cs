@@ -27,6 +27,8 @@ public static class Configuration
 
         app.UseVersionedApiEndpoints();
 
+        app.UseStatusCodePages();
+
         return app;
     }
 }

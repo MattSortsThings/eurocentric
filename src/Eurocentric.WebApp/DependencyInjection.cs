@@ -3,6 +3,7 @@ using Eurocentric.AdminApi;
 using Eurocentric.PublicApi;
 using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.ErrorHandling;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Mapping;
 using Eurocentric.Shared.OpenApi;
@@ -34,6 +35,7 @@ public static class DependencyInjection
             .AddTransient<IApiModule, PublicApiModule>()
             .AddAppPipeline(apiAssemblies)
             .AddMapping(apiAssemblies)
+            .AddErrorHandling()
             .AddHttpJsonConfiguration()
             .AddOpenApiDocuments()
             .AddSecurity()
