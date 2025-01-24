@@ -1,10 +1,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Eurocentric.DataAccess;
+using Eurocentric.DataAccess.Contexts;
 using Eurocentric.Shared.Security;
 using Eurocentric.WebApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RestSharp;
 using RestSharp.Serializers.Json;
@@ -57,14 +60,25 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
     /// <returns>A completed task.</returns>
     protected virtual Task SeedDatabaseAsync() => Task.CompletedTask;
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
-    {
-        services.Configure<ApiKeysOptions>(options =>
+    protected override void ConfigureWebHost(IWebHostBuilder builder) =>
+        builder.ConfigureTestServices(services =>
         {
-            options.AdminApiKey = TestApiKeys.Admin;
-            options.PublicApiKey = TestApiKeys.Public;
+            SubstituteAppDbContextUsingDbContainer(services);
+            SubstituteTestApiKeys(services);
         });
-    });
+
+    private void SubstituteAppDbContextUsingDbContainer(IServiceCollection services)
+    {
+        ServiceDescriptor? serviceDescriptor = services.SingleOrDefault(descriptor =>
+            descriptor.ServiceType == typeof(DbContextOptions<AppDbContext>));
+
+        if (serviceDescriptor is not null)
+        {
+            services.Remove(serviceDescriptor);
+        }
+
+        services.AddAppDbContext(_dbContainer.GetConnectionString());
+    }
 
     private RestClient CreateRestClient()
     {
@@ -79,4 +93,11 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase, Converters = { new JsonStringEnumConverter() }
             }));
     }
+
+    private static void SubstituteTestApiKeys(IServiceCollection services) =>
+        services.Configure<ApiKeysOptions>(options =>
+        {
+            options.AdminApiKey = TestApiKeys.Admin;
+            options.PublicApiKey = TestApiKeys.Public;
+        });
 }

@@ -1,5 +1,6 @@
 using System.Reflection;
 using Eurocentric.AdminApi;
+using Eurocentric.DataAccess;
 using Eurocentric.PublicApi;
 using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
@@ -39,7 +40,8 @@ public static class DependencyInjection
             .AddHttpJsonConfiguration()
             .AddOpenApiDocuments()
             .AddSecurity()
-            .AddVersioning();
+            .AddVersioning()
+            .AddDataAccess(builder.Configuration);
 
         return builder;
     }
