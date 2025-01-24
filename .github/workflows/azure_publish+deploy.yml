@@ -29,5 +29,11 @@ jobs:
         run: dotnet build ./src/Eurocentric.WebApp/Eurocentric.WebApp.csproj --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish ./src/Eurocentric.WebApp/Eurocentric.WebApp.csproj --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
-        
+        run: dotnet publish ./src/Eurocentric.WebApp/Eurocentric.WebApp.csproj --configuration Release --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
+
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.API_PUBLISH_SECRET }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
