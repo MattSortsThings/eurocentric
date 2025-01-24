@@ -32,14 +32,12 @@ public static class GlobalExceptionHandlingTests
                 .AddJsonBody(noContestYearJson);
 
             // Act
-            RestResponse<ProblemDetails> result =
+            (HttpStatusCode statusCode, ProblemDetails problemDetails) =
                 await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
 
             // Assert
-            ProblemDetails problemDetails = result.Data!;
-
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
+                () => statusCode.ShouldBe(HttpStatusCode.BadRequest),
                 () => problemDetails.ShouldHaveTitle("BadHttpRequest"),
                 () => problemDetails.ShouldHaveInstance("POST /admin/api/v0.1/contests"),
                 () => problemDetails.ShouldHaveDetail("BadHttpRequestException was thrown while handling the request."),
@@ -71,14 +69,12 @@ public static class GlobalExceptionHandlingTests
                 .AddJsonBody(invalidVotingRulesJson);
 
             // Act
-            RestResponse<ProblemDetails> result =
+            (HttpStatusCode statusCode, ProblemDetails problemDetails) =
                 await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
 
             // Assert
-            ProblemDetails problemDetails = result.Data!;
-
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
+                () => statusCode.ShouldBe(HttpStatusCode.BadRequest),
                 () => problemDetails.ShouldHaveTitle("BadHttpRequest"),
                 () => problemDetails.ShouldHaveInstance("POST /admin/api/v0.1/contests"),
                 () => problemDetails.ShouldHaveDetail("BadHttpRequestException was thrown while handling the request."),
@@ -102,19 +98,17 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_400_with_problem_details_given_GET_request_with_missing_required_query_param()
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+            RestRequest request = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
                 .AddHeader("X-Api-Key", TestApiKeys.Public)
                 .AddHeader("Accept", "application/json");
 
             // Act
-            RestResponse<ProblemDetails> result =
-                await Sut.ExecuteAsync<ProblemDetails>(restRequest, TestContext.Current.CancellationToken);
+            (HttpStatusCode statusCode, ProblemDetails problemDetails) =
+                await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
 
             // Assert
-            ProblemDetails problemDetails = result.Data!;
-
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
+                () => statusCode.ShouldBe(HttpStatusCode.BadRequest),
                 () => problemDetails.ShouldHaveTitle("BadHttpRequest"),
                 () => problemDetails.ShouldHaveInstance("GET /public/api/v0.1/voting-country-rankings/points-share"),
                 () => problemDetails.ShouldHaveDetail("BadHttpRequestException was thrown while handling the request."),
@@ -127,21 +121,19 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_400_with_problem_details_given_GET_request_with_unparseable_enum_query_param()
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+            RestRequest request = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
                 .AddHeader("X-Api-Key", TestApiKeys.Public)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("targetCountryCode", "GB")
                 .AddQueryParameter("votingMethod", "NOT_A_VOTING_METHOD");
 
             // Act
-            RestResponse<ProblemDetails> result =
-                await Sut.ExecuteAsync<ProblemDetails>(restRequest, TestContext.Current.CancellationToken);
+            (HttpStatusCode statusCode, ProblemDetails problemDetails) =
+                await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
 
             // Assert
-            ProblemDetails problemDetails = result.Data!;
-
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
+                () => statusCode.ShouldBe(HttpStatusCode.BadRequest),
                 () => problemDetails.ShouldHaveTitle("BadHttpRequest"),
                 () => problemDetails.ShouldHaveInstance("GET /public/api/v0.1/voting-country-rankings/points-share" +
                                                         "?targetCountryCode=GB&votingMethod=NOT_A_VOTING_METHOD"),
@@ -155,21 +147,19 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_500_with_problem_details_given_GET_request_that_causes_uncaught_exception()
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+            RestRequest request = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
                 .AddHeader("X-Api-Key", TestApiKeys.Public)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("targetCountryCode", "  ")
                 .AddQueryParameter("votingMethod", "Any");
 
             // Act
-            RestResponse<ProblemDetails> result =
-                await Sut.ExecuteAsync<ProblemDetails>(restRequest, TestContext.Current.CancellationToken);
+            (HttpStatusCode statusCode, ProblemDetails problemDetails) =
+                await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
 
             // Assert
-            ProblemDetails problemDetails = result.Data!;
-
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.InternalServerError),
+                () => statusCode.ShouldBe(HttpStatusCode.InternalServerError),
                 () => problemDetails.ShouldHaveTitle("InternalServerError"),
                 () => problemDetails.ShouldHaveInstance("GET /public/api/v0.1/voting-country-rankings/points-share" +
                                                         "?targetCountryCode=%20%20&votingMethod=Any"),

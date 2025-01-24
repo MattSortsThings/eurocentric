@@ -20,20 +20,20 @@ public static class GetVotingCountryPointsShareRankingsTests
             // Arrange
             const string route = Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share";
 
-            RestRequest restRequest = GetRequest.To(route)
+            RestRequest request = GetRequest.To(route)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("targetCountryCode", "GB")
                 .AddHeader("X-Api-Key", TestApiKeys.Public);
 
             // Act
-            RestResponse<GetVotingCountryPointsShareRankingsResponse> result =
-                await Sut.ExecuteAsync<GetVotingCountryPointsShareRankingsResponse>(restRequest,
+            (HttpStatusCode statusCode, GetVotingCountryPointsShareRankingsResponse response) =
+                await Sut.ExecuteAsync<GetVotingCountryPointsShareRankingsResponse>(request,
                     TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.OK),
-                () => Assert.NotEmpty(result.Data!.Items)
+                () => statusCode.ShouldBe(HttpStatusCode.OK),
+                () => Assert.NotEmpty(response.Items)
             );
         }
     }

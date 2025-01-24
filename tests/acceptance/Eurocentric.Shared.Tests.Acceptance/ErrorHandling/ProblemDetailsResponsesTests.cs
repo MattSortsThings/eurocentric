@@ -3,6 +3,7 @@ using Eurocentric.AdminApi.V0.Contests.CreateContest;
 using Eurocentric.AdminApi.V0.Contests.Models;
 using Eurocentric.Shared.Tests.Acceptance.Utils;
 using Eurocentric.Tests.Utils.Fixtures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
@@ -16,29 +17,29 @@ public static class ProblemDetailsResponsesTests
         {
         }
 
-        private static CreateContestRequest CreateContestRequestWithVotingRules(VotingRules votingRules) =>
-            new() { ContestYear = 2025, HostCityName = "HostCityName", VotingRules = votingRules };
+        private static CreateContestRequest CreateContestRequestWithVotingRules(VotingRules votingRules) => new()
+        {
+            ContestYear = 2025, HostCityName = "HostCityName", VotingRules = votingRules
+        };
 
         [Fact]
         public async Task Should_return_422_with_problem_details_given_valid_but_unprocessable_request()
         {
             // Arrange
-            RestRequest restRequest = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
+            RestRequest request = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
                 .AddHeader("X-Api-Key", TestApiKeys.Admin)
                 .AddHeader("Accept", "application/json")
                 .AddHeader("Content-Type", "application/json")
                 .AddJsonBody(CreateContestRequestWithVotingRules(VotingRules.Undefined));
 
             // Act
-            RestResponse<ProblemDetails> result =
-                await Sut.ExecuteAsync<ProblemDetails>(restRequest, TestContext.Current.CancellationToken);
+            (HttpStatusCode statusCode, ProblemDetails problemDetails) =
+                await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
 
             // Assert
-            ProblemDetails problemDetails = result.Data!;
-
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity),
-                () => problemDetails.ShouldHaveStatus(422),
+                () => statusCode.ShouldBe(HttpStatusCode.UnprocessableEntity),
+                () => problemDetails.ShouldHaveStatus(StatusCodes.Status422UnprocessableEntity),
                 () => problemDetails.ShouldHaveTitle("IllegalVotingRules"),
                 () => problemDetails.ShouldHaveDetail("Cannot create a contest with Undefined voting rules."),
                 () => problemDetails.ShouldHaveInstance("POST /admin/api/v0.1/contests")
@@ -58,22 +59,20 @@ public static class ProblemDetailsResponsesTests
             // Arrange
             const int invalidPageSize = 0;
 
-            RestRequest restRequest = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+            RestRequest request = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
                 .AddHeader("X-Api-Key", TestApiKeys.Public)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("pageSize", invalidPageSize)
                 .AddQueryParameter("targetCountryCode", "GB");
 
             // Act
-            RestResponse<ProblemDetails> result =
-                await Sut.ExecuteAsync<ProblemDetails>(restRequest, TestContext.Current.CancellationToken);
+            (HttpStatusCode statusCode, ProblemDetails problemDetails) =
+                await Sut.ExecuteAsync<ProblemDetails>(request, TestContext.Current.CancellationToken);
 
             // Assert
-            ProblemDetails problemDetails = result.Data!;
-
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.BadRequest),
-                () => problemDetails.ShouldHaveStatus(400),
+                () => statusCode.ShouldBe(HttpStatusCode.BadRequest),
+                () => problemDetails.ShouldHaveStatus(StatusCodes.Status400BadRequest),
                 () => problemDetails.ShouldHaveTitle("InvalidPageSize"),
                 () => problemDetails.ShouldHaveDetail("Page size value cannot be less than 1."),
                 () => problemDetails.ShouldHaveInstance("GET /public/api/v0.1/voting-country-rankings/points-share" +

@@ -22,70 +22,70 @@ public static class ApiKeySecurityTests
         }
 
         [Fact]
-        public async Task Should_authenticate_and_authorize_request_with_admin_api_key_as_request_header()
+        public async Task Should_authenticate_and_authorize_request_with_Admin_API_key_as_request_header()
         {
             // Arrange
-            RestRequest restRequest = PostRequest.To(Route)
+            RestRequest request = PostRequest.To(Route)
                 .AddHeader("Accept", "application/json")
                 .AddHeader("Content-Type", "application/json")
                 .AddHeader("X-Api-Key", TestApiKeys.Admin)
                 .AddJsonBody(DummyRequest);
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task Should_authenticate_but_not_authorize_request_with_public_api_key_as_request_header()
+        public async Task Should_authenticate_but_not_authorize_request_with_Public_API_key_as_request_header()
         {
             // Arrange
-            RestRequest restRequest = PostRequest.To(Route)
+            RestRequest request = PostRequest.To(Route)
                 .AddHeader("Accept", "application/json")
                 .AddHeader("Content-Type", "application/json")
                 .AddHeader("X-Api-Key", TestApiKeys.Public)
                 .AddJsonBody(DummyRequest);
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+            result.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
         }
 
         [Fact]
-        public async Task Should_not_authenticate_request_with_unrecognized_api_key_as_request_header()
+        public async Task Should_not_authenticate_request_with_unrecognized_API_key_as_request_header()
         {
             // Arrange
-            RestRequest restRequest = PostRequest.To(Route)
+            RestRequest request = PostRequest.To(Route)
                 .AddHeader("Accept", "application/json")
                 .AddHeader("Content-Type", "application/json")
                 .AddHeader("X-Api-Key", TestApiKeys.Unrecognized)
                 .AddJsonBody(DummyRequest);
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+            result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
-        public async Task Should_not_authenticate_request_without_api_key_as_request_header()
+        public async Task Should_not_authenticate_request_without_API_key_as_request_header()
         {
             // Arrange
-            RestRequest restRequest = PostRequest.To(Route)
+            RestRequest request = PostRequest.To(Route)
                 .AddHeader("Accept", "application/json")
                 .AddHeader("Content-Type", "application/json")
                 .AddJsonBody(DummyRequest);
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+            result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
     }
 
@@ -98,66 +98,66 @@ public static class ApiKeySecurityTests
         }
 
         [Fact]
-        public async Task Should_authenticate_and_authorize_request_with_admin_api_key_as_request_header()
+        public async Task Should_authenticate_and_authorize_request_with_Admin_API_key_as_request_header()
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To(Route)
+            RestRequest request = GetRequest.To(Route)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("targetCountryCode", "GB")
                 .AddHeader("X-Api-Key", TestApiKeys.Admin);
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task Should_authenticate_and_authorize_request_with_public_api_key_as_request_header()
+        public async Task Should_authenticate_and_authorize_request_with_Public_API_key_as_request_header()
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To(Route)
+            RestRequest request = GetRequest.To(Route)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("targetCountryCode", "GB")
                 .AddHeader("X-Api-Key", TestApiKeys.Public);
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task Should_not_authenticate_request_with_unrecognized_api_key_as_request_header()
+        public async Task Should_not_authenticate_request_with_unrecognized_API_key_as_request_header()
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To(Route)
+            RestRequest request = GetRequest.To(Route)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("targetCountryCode", "GB")
                 .AddHeader("X-Api-Key", TestApiKeys.Unrecognized);
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+            result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
-        public async Task Should_not_authenticate_request_without_api_key_as_request_header()
+        public async Task Should_not_authenticate_request_without_API_key_as_request_header()
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To(Route)
+            RestRequest request = GetRequest.To(Route)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("targetCountryCode", "GB");
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+            result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
     }
 }

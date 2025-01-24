@@ -16,17 +16,17 @@ public static class OpenApiDocumentPerApiReleaseTests
         [Theory]
         [InlineData(Apis.Admin.V0.Latest.OpenApiDocName)]
         [InlineData(Apis.Public.V0.Latest.OpenApiDocName)]
-        public async Task Should_serve_open_api_document_per_api_release_with_no_authentication(string docName)
+        public async Task Should_serve_OpenAPI_document_per_API_release_with_no_authentication(string docName)
         {
             // Arrange
-            RestRequest restRequest = GetRequest.To("openapi/" + docName + ".json")
+            RestRequest request = GetRequest.To("openapi/" + docName + ".json")
                 .AddHeader("Accept", "application/json");
 
             // Act
-            RestResponse result = await Sut.ExecuteAsync(restRequest, TestContext.Current.CancellationToken);
+            RestResponse result = await Sut.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
             // Assert
-            result.ShouldHaveStatusCode(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Net;
 using Eurocentric.AdminApi.Tests.Acceptance.Utils;
 using Eurocentric.AdminApi.V0.Contests.CreateContest;
 using Eurocentric.AdminApi.V0.Contests.Models;
+using Eurocentric.PublicApi.Tests.Acceptance.Utils;
 using Eurocentric.Tests.Utils.Fixtures;
 using RestSharp;
 
@@ -26,27 +27,25 @@ public static class CreateContestTests
         public async Task Should_create_contest_and_return_200_given_valid_request()
         {
             // Arrange
-            CreateContestRequest request = new()
+            CreateContestRequest requestBody = new()
             {
                 ContestYear = 2025, HostCityName = "Basel", VotingRules = VotingRules.Liverpool
             };
 
-            const string route = Apis.Admin.V0.Latest.Uri + "contests";
-
-            RestRequest restRequest = PostRequest.To(route)
+            RestRequest request = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
                 .AddHeader("Accept", "application/json")
                 .AddHeader("Content-Type", "application/json")
                 .AddHeader("X-Api-Key", TestApiKeys.Admin)
-                .AddJsonBody(request);
+                .AddJsonBody(requestBody);
 
             // Act
-            RestResponse<CreateContestResponse> result =
-                await Sut.ExecuteAsync<CreateContestResponse>(restRequest, TestContext.Current.CancellationToken);
+            (HttpStatusCode statusCode, CreateContestResponse response) =
+                await Sut.ExecuteAsync<CreateContestResponse>(request, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Multiple(
-                () => result.ShouldHaveStatusCode(HttpStatusCode.OK),
-                () => result.Data!.Contest.ShouldMatch(request)
+                () => statusCode.ShouldBe(HttpStatusCode.OK),
+                () => response.Contest.ShouldMatch(requestBody)
             );
         }
     }
