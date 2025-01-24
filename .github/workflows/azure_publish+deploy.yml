@@ -7,8 +7,12 @@ on:
     branches:
     - main
 
+env:
+  AZURE_WEBAPP_NAME: eurocentric
+  AZURE_WEBAPP_PACKAGE_PATH: './publish'
+
 jobs:
-  publish:
+  publish_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +27,7 @@ jobs:
 
       - name: Build
         run: dotnet build ./src/Eurocentric.WebApp/Eurocentric.WebApp.csproj --configuration Release --no-restore
-          
-    
-    
+
+      - name: Publish
+        run: dotnet publish ./src/Eurocentric.WebApp/Eurocentric.WebApp.csproj --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
+        
