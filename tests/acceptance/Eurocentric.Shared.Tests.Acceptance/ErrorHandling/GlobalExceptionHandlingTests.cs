@@ -18,18 +18,15 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_400_with_problem_details_given_POST_request_with_missing_required_body_property()
         {
             // Arrange
-            const string noContestYearJson = """
-                                             {
-                                                "hostCityName": "Basel",
-                                                "votingRules": "Stockholm"
-                                             }
-                                             """;
+            const string resourceUri = Apis.Admin.V0.Latest.Uri + "contests";
 
-            RestRequest request = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
-                .AddHeader("X-Api-Key", TestApiKeys.Admin)
-                .AddHeader("Accept", "application/json")
-                .AddHeader("Content-Type", "application/json")
-                .AddJsonBody(noContestYearJson);
+            const string unparseableJson = """
+                                           {"hostCityName": "Basel", "votingRules": "Stockholm"}
+                                           """;
+
+            RestRequest request = RestRequestFactory.Post(resourceUri)
+                .UseAdminApiKey()
+                .AddJsonBody(unparseableJson);
 
             // Act
             (HttpStatusCode statusCode, ProblemDetails problemDetails) =
@@ -54,19 +51,19 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_400_with_problem_details_given_POST_request_with_unparseable_required_body_property()
         {
             // Arrange
-            const string invalidVotingRulesJson = """
-                                                  {
-                                                    "contestYear": 2025,
-                                                    "hostCityName": "Basel",
-                                                    "votingRules": "NOT_VOTING_RULES"
-                                                  }
-                                                  """;
+            const string resourceUri = Apis.Admin.V0.Latest.Uri + "contests";
 
-            RestRequest request = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
-                .AddHeader("X-Api-Key", TestApiKeys.Admin)
-                .AddHeader("Accept", "application/json")
-                .AddHeader("Content-Type", "application/json")
-                .AddJsonBody(invalidVotingRulesJson);
+            const string unparseableJson = """
+                                           {
+                                            "contestYear": 2025,
+                                            "hostCityName": "Basel",
+                                            "votingRules": "NOT_VALID_VOTING_RULES"
+                                           }
+                                           """;
+
+            RestRequest request = RestRequestFactory.Post(resourceUri)
+                .UseAdminApiKey()
+                .AddJsonBody(unparseableJson);
 
             // Act
             (HttpStatusCode statusCode, ProblemDetails problemDetails) =
@@ -82,7 +79,7 @@ public static class GlobalExceptionHandlingTests
                     "Failed to read parameter 'CreateContestRequest request' from the request body as JSON."),
                 () => problemDetails.ShouldHaveExtensionsEntry("jsonError",
                     "The JSON value could not be converted to Eurocentric.AdminApi.V0.Contests.Models.VotingRules. " +
-                    "Path: $.votingRules | LineNumber: 3 | BytePositionInLine: 35."),
+                    "Path: $.votingRules | LineNumber: 3 | BytePositionInLine: 40."),
                 () => problemDetails.ShouldHaveExtensionsEntry("jsonPath", "$.votingRules")
             );
         }
@@ -98,9 +95,10 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_400_with_problem_details_given_GET_request_with_missing_required_query_param()
         {
             // Arrange
-            RestRequest request = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
-                .AddHeader("X-Api-Key", TestApiKeys.Public)
-                .AddHeader("Accept", "application/json");
+            const string resourceUri = Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share";
+
+            RestRequest request = RestRequestFactory.Get(resourceUri)
+                .UsePublicApiKey();
 
             // Act
             (HttpStatusCode statusCode, ProblemDetails problemDetails) =
@@ -121,9 +119,10 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_400_with_problem_details_given_GET_request_with_unparseable_enum_query_param()
         {
             // Arrange
-            RestRequest request = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
-                .AddHeader("X-Api-Key", TestApiKeys.Public)
-                .AddHeader("Accept", "application/json")
+            const string resourceUri = Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share";
+
+            RestRequest request = RestRequestFactory.Get(resourceUri)
+                .UsePublicApiKey()
                 .AddQueryParameter("targetCountryCode", "GB")
                 .AddQueryParameter("votingMethod", "NOT_A_VOTING_METHOD");
 
@@ -144,12 +143,13 @@ public static class GlobalExceptionHandlingTests
         }
 
         [Fact]
-        public async Task Should_return_500_with_problem_details_given_GET_request_that_causes_uncaught_exception()
+        public async Task Should_return_500_with_problem_details_given_valid_request_that_causes_exception()
         {
             // Arrange
-            RestRequest request = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
-                .AddHeader("X-Api-Key", TestApiKeys.Public)
-                .AddHeader("Accept", "application/json")
+            const string resourceUri = Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share";
+
+            RestRequest request = RestRequestFactory.Get(resourceUri)
+                .UsePublicApiKey()
                 .AddQueryParameter("targetCountryCode", "  ")
                 .AddQueryParameter("votingMethod", "Any");
 

@@ -26,7 +26,9 @@ public static class ProblemDetailsResponsesTests
         public async Task Should_return_422_with_problem_details_given_valid_but_unprocessable_request()
         {
             // Arrange
-            RestRequest request = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
+            const string resourceUri = Apis.Admin.V0.Latest.Uri + "contests";
+
+            RestRequest request = new RestRequest(resourceUri, Method.Post)
                 .AddHeader("X-Api-Key", TestApiKeys.Admin)
                 .AddHeader("Accept", "application/json")
                 .AddHeader("Content-Type", "application/json")
@@ -59,7 +61,9 @@ public static class ProblemDetailsResponsesTests
             // Arrange
             const int invalidPageSize = 0;
 
-            RestRequest request = GetRequest.To(Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share")
+            const string resourceUri = Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share";
+
+            RestRequest request = new RestRequest(resourceUri)
                 .AddHeader("X-Api-Key", TestApiKeys.Public)
                 .AddHeader("Accept", "application/json")
                 .AddQueryParameter("pageSize", invalidPageSize)

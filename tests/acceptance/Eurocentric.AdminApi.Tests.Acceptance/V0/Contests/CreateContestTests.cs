@@ -19,6 +19,8 @@ public static class CreateContestTests
 
     public sealed class AdminApi : CleanWebAppTests
     {
+        private const string ResourceUri = Apis.Admin.V0.Latest.Uri + "contests";
+
         public AdminApi(CleanWebAppFixture fixture) : base(fixture)
         {
         }
@@ -32,10 +34,8 @@ public static class CreateContestTests
                 ContestYear = 2025, HostCityName = "Basel", VotingRules = VotingRules.Liverpool
             };
 
-            RestRequest request = PostRequest.To(Apis.Admin.V0.Latest.Uri + "contests")
-                .AddHeader("Accept", "application/json")
-                .AddHeader("Content-Type", "application/json")
-                .AddHeader("X-Api-Key", TestApiKeys.Admin)
+            RestRequest request = RestRequestFactory.Post(ResourceUri)
+                .UseAdminApiKey()
                 .AddJsonBody(requestBody);
 
             // Act

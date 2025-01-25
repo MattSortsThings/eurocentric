@@ -10,6 +10,8 @@ public static class GetVotingCountryPointsShareRankingsTests
 {
     public sealed class PublicApi : SeededWebAppTest
     {
+        private const string ResourceUri = Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share";
+
         public PublicApi(SeededWebAppFixture fixture) : base(fixture)
         {
         }
@@ -20,10 +22,9 @@ public static class GetVotingCountryPointsShareRankingsTests
             // Arrange
             const string route = Apis.Public.V0.Latest.Uri + "voting-country-rankings/points-share";
 
-            RestRequest request = GetRequest.To(route)
-                .AddHeader("Accept", "application/json")
+            RestRequest request = RestRequestFactory.Get(ResourceUri)
                 .AddQueryParameter("targetCountryCode", "GB")
-                .AddHeader("X-Api-Key", TestApiKeys.Public);
+                .UsePublicApiKey();
 
             // Act
             (HttpStatusCode statusCode, GetVotingCountryPointsShareRankingsResponse response) =

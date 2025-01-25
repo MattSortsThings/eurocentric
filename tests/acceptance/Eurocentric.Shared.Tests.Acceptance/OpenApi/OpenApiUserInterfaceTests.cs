@@ -19,7 +19,9 @@ public static class OpenApiUserInterfaceTests
         public async Task Should_serve_documentation_page_per_API_release_with_no_authentication(string docName)
         {
             // Arrange
-            RestRequest request = GetRequest.To("docs/" + docName)
+            string resourceUri = "docs/" + docName;
+
+            RestRequest request = new RestRequest(resourceUri)
                 .AddHeader("Accept", "text/html");
 
             // Act

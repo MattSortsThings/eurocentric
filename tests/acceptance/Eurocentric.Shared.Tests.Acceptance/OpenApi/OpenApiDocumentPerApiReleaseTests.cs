@@ -19,7 +19,9 @@ public static class OpenApiDocumentPerApiReleaseTests
         public async Task Should_serve_OpenAPI_document_per_API_release_with_no_authentication(string docName)
         {
             // Arrange
-            RestRequest request = GetRequest.To("openapi/" + docName + ".json")
+            string resourceUri = "openApi/" + docName + ".json";
+
+            RestRequest request = new RestRequest(resourceUri)
                 .AddHeader("Accept", "application/json");
 
             // Act
