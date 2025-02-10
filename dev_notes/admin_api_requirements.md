@@ -23,7 +23,7 @@ Refer to the [project summary](project_summary.md) dev note for an overview of t
   - [A3: Countries](#a3-countries)
     - [A301: Create Country](#a301-create-country)
     - [A302: Delete Country](#a302-delete-country)
-    - [A303: GetCountries](#a303-getcountries)
+    - [A303: Get Countries](#a303-get-countries)
     - [A304: Get Country](#a304-get-country)
     - [A305: Handle Contest Created](#a305-handle-contest-created)
     - [A306: Handle Contest Deleted](#a306-handle-contest-deleted)
@@ -221,7 +221,7 @@ I want to delete a country from the system,
 so that I can re-create it with amended details.
 ```
 
-### A303: GetCountries
+### A303: Get Countries
 
 ```
 As the Admin,
