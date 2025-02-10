@@ -4,3 +4,4 @@ This directory contains notes written during development of the *Eurocentric* pr
 
 1. [Project summary](project_summary.md)
 2. [Eurovision context](eurovision_context.md)
+3. [Domain model](domain_model.md)
