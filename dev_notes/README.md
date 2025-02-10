@@ -8,3 +8,4 @@ This directory contains notes written during initial development of the *Eurocen
 4. [Admin API requirements](admin_api_requirements.md)
 5. [Public API requirements](public_api_requirements.md)
 6. [Shared requirements](shared_requirements.md)
+7. [System design](system_design.md)

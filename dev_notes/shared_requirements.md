@@ -1,6 +1,6 @@
 # Shared requirements
 
-This document outlines the shared (non-functional) requirements for version 1.0 of *Eurocentric*.
+This document outlines the *Shared* (non-functional) requirements for version 1.0 of *Eurocentric*.
 
 Refer to the [project summary](project_summary.md) dev note for an overview of the APIs and the Dev user role.
 
