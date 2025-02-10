@@ -25,7 +25,8 @@ Refer to the [project summary](project_summary.md) dev note for an overview of t
     - [A302: Delete Country](#a302-delete-country)
     - [A303: Get All Countries](#a303-get-all-countries)
     - [A304: Get Country](#a304-get-country)
-    - [A305: Handle Contest Deleted](#a305-handle-contest-deleted)
+    - [A305: Handle Contest Created](#a305-handle-contest-created)
+    - [A306: Handle Contest Deleted](#a306-handle-contest-deleted)
 
 ## A1: Broadcasts
 
@@ -242,7 +243,19 @@ I want to retrieve a country from the system,
 so that I can review its details.
 ```
 
-### A305: Handle Contest Deleted
+### A305: Handle Contest Created
+
+```
+As the Admin,
+
+I want all the countries involved in a newly created contest
+  to update themselves,
+  removing adding the contest year,
+
+so that it is no longer possible to delete any of the affected countries.
+```
+
+### A306: Handle Contest Deleted
 
 ```
 As the Admin,
