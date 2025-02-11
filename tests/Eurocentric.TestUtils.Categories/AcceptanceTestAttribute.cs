@@ -3,7 +3,7 @@ using Xunit.v3;
 namespace Eurocentric.TestUtils.Categories;
 
 /// <summary>
-///     Applies the "Acceptance Test" category.
+///     Applies the "AcceptanceTest" category.
 /// </summary>
 [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
 public sealed class AcceptanceTestAttribute : Attribute, ITraitAttribute

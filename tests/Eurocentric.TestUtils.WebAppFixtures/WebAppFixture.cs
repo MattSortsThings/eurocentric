@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Eurocentric.TestUtils.WebAppFixtures;
 
-public class WebAppFixture : WebApplicationFactory<IWebAppMarker>, IAsyncLifetime
+public abstract class WebAppFixture : WebApplicationFactory<IWebAppMarker>, IAsyncLifetime
 {
     private static readonly Uri BaseUri = new("http://localhost:5131");
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
@@ -20,7 +20,7 @@ public class WebAppFixture : WebApplicationFactory<IWebAppMarker>, IAsyncLifetim
 
     public async ValueTask InitializeAsync() => await _dbContainer.StartAsync();
 
-    public void Reset()
+    protected void ResetDatabase()
     {
         // Reset database here
     }

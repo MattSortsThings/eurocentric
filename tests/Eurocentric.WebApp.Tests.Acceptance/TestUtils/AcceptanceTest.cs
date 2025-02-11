@@ -1,16 +1,15 @@
 using Eurocentric.TestUtils.Categories;
-using Eurocentric.TestUtils.WebAppFixtures;
 using RestSharp;
 
-namespace Eurocentric.WebApp.Tests.Acceptance.Utils;
+namespace Eurocentric.WebApp.Tests.Acceptance.TestUtils;
 
 [AcceptanceTest]
-[Collection(nameof(AcceptanceTestCollection))]
+[Collection(nameof(CleanWebAppTestCollection))]
 public abstract class AcceptanceTest : IDisposable
 {
-    private readonly WebAppFixture _webAppFixture;
+    private readonly CleanWebAppFixture _webAppFixture;
 
-    protected AcceptanceTest(WebAppFixture webAppFixture)
+    protected AcceptanceTest(CleanWebAppFixture webAppFixture)
     {
         _webAppFixture = webAppFixture;
     }

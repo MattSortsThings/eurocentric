@@ -1,8 +1,7 @@
 using System.Net;
 using Eurocentric.AdminApi.V0.Calculations.Common;
 using Eurocentric.AdminApi.V0.CreateCalculation;
-using Eurocentric.TestUtils.WebAppFixtures;
-using Eurocentric.WebApp.Tests.Acceptance.Utils;
+using Eurocentric.WebApp.Tests.Acceptance.TestUtils;
 using RestSharp;
 
 namespace Eurocentric.WebApp.Tests.Acceptance.AdminApi.V0.Calculations;
@@ -13,7 +12,8 @@ public static class CreateCalculationTests
     {
         private const string Resource = "admin/api/v0.1/calculations";
 
-        public Endpoint(WebAppFixture webAppFixture) : base(webAppFixture)
+
+        public Endpoint(CleanWebAppFixture webAppFixture) : base(webAppFixture)
         {
         }
 

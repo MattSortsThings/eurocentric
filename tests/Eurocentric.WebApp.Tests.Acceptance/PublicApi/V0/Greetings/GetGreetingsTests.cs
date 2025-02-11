@@ -1,7 +1,6 @@
 using System.Net;
 using Eurocentric.PublicApi.V0.Greetings.GetGreetings;
-using Eurocentric.TestUtils.WebAppFixtures;
-using Eurocentric.WebApp.Tests.Acceptance.Utils;
+using Eurocentric.WebApp.Tests.Acceptance.TestUtils;
 using RestSharp;
 
 namespace Eurocentric.WebApp.Tests.Acceptance.PublicApi.V0.Greetings;
@@ -12,7 +11,8 @@ public static class GetGreetingsTests
     {
         private const string Resource = "public/api/v0.1/greetings";
 
-        public Endpoint(WebAppFixture webAppFixture) : base(webAppFixture)
+
+        public Endpoint(CleanWebAppFixture webAppFixture) : base(webAppFixture)
         {
         }
 
