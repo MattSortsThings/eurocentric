@@ -21,8 +21,8 @@ public static class CreateCalculationEndpoint
         return TypedResults.Ok(result);
     }
 
-    public static void MapAdminApiPlaceholderEndpoint(this IEndpointRouteBuilder app) => app
-        .MapPost("admin/api/v0.1/calculations", ExecuteAsync)
+    public static void MapCreateCalculationEndpoint(this IEndpointRouteBuilder app) => app
+        .MapPost("calculations", ExecuteAsync)
         .WithSummary("Create calculation")
         .WithTags("Calculations");
 }

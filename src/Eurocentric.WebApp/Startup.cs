@@ -1,10 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Eurocentric.AdminApi;
-using Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 using Eurocentric.DataAccess;
 using Eurocentric.PublicApi;
-using Eurocentric.PublicApi.V0.Greetings.GetGreetings;
+using Eurocentric.Shared.Versioning;
 
 namespace Eurocentric.WebApp;
 
@@ -22,7 +21,8 @@ internal static class Startup
     {
         builder.Services.AddAppPipeline()
             .AddDataAccess()
-            .ConfigureHttpJsonOptions();
+            .ConfigureHttpJsonOptions()
+            .AddVersioning();
 
         return builder;
     }
@@ -36,8 +36,7 @@ internal static class Startup
     {
         app.UseHttpsRedirection();
 
-        app.MapAdminApiPlaceholderEndpoint();
-        app.MapPublicApiPlaceholderEndpoint();
+        app.MapAdminApiEndpoints().MapPublicApiEndpoints();
 
         return app;
     }
