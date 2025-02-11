@@ -1,0 +1,38 @@
+POST http://localhost:5131/admin/api/v0.1/calculations
+Accept: application/json
+Content-Type: application/json
+
+{
+  "x": 10,
+  "y": 2,
+  "operation": "Product"
+}
+
+###
+
+POST http://localhost:5131/admin/api/v0.1/calculations
+Accept: application/json
+Content-Type: application/json
+
+{
+  "x": 10,
+  "y": 3,
+  "operation": "Modulus"
+}
+
+###
+
+GET http://localhost:5131/public/api/v0.1/greetings?quantity=5&language=English
+Accept: application/json
+
+###
+
+GET http://localhost:5131/public/api/v0.1/greetings?quantity=3&language=French
+Accept: application/json
+
+###
+
+GET http://localhost:5131/public/api/v0.1/greetings?quantity=10&language=Dutch
+Accept: application/json
+
+###

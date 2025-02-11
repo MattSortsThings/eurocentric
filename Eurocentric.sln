@@ -12,6 +12,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution_items", "_solutio
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C4D61E6B-2106-4C91-8476-4613B5B60CE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.WebApp", "src\Eurocentric.WebApp\Eurocentric.WebApp.csproj", "{52E46247-4E60-4E03-AFC2-8E4179C0BC8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.AdminApi", "src\Eurocentric.AdminApi\Eurocentric.AdminApi.csproj", "{71A0F432-2615-40C4-9F13-977AC48E5E68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.DataAccess", "src\Eurocentric.DataAccess\Eurocentric.DataAccess.csproj", "{6B629A3B-CDC5-496D-A9DC-BC3A849B0705}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Domain", "src\Eurocentric.Domain\Eurocentric.Domain.csproj", "{57A1F769-F867-475D-9273-3819207930F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.PublicApi", "src\Eurocentric.PublicApi\Eurocentric.PublicApi.csproj", "{BA2F7CC0-556A-47F6-943D-B3B377268C6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Shared", "src\Eurocentric.Shared\Eurocentric.Shared.csproj", "{836902D6-A3B4-4CB0-9E04-33B4778906D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,5 +33,39 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52E46247-4E60-4E03-AFC2-8E4179C0BC8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E46247-4E60-4E03-AFC2-8E4179C0BC8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E46247-4E60-4E03-AFC2-8E4179C0BC8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E46247-4E60-4E03-AFC2-8E4179C0BC8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71A0F432-2615-40C4-9F13-977AC48E5E68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71A0F432-2615-40C4-9F13-977AC48E5E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71A0F432-2615-40C4-9F13-977AC48E5E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71A0F432-2615-40C4-9F13-977AC48E5E68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B629A3B-CDC5-496D-A9DC-BC3A849B0705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B629A3B-CDC5-496D-A9DC-BC3A849B0705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B629A3B-CDC5-496D-A9DC-BC3A849B0705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B629A3B-CDC5-496D-A9DC-BC3A849B0705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57A1F769-F867-475D-9273-3819207930F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57A1F769-F867-475D-9273-3819207930F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57A1F769-F867-475D-9273-3819207930F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57A1F769-F867-475D-9273-3819207930F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA2F7CC0-556A-47F6-943D-B3B377268C6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA2F7CC0-556A-47F6-943D-B3B377268C6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA2F7CC0-556A-47F6-943D-B3B377268C6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA2F7CC0-556A-47F6-943D-B3B377268C6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{836902D6-A3B4-4CB0-9E04-33B4778906D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{836902D6-A3B4-4CB0-9E04-33B4778906D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{836902D6-A3B4-4CB0-9E04-33B4778906D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{836902D6-A3B4-4CB0-9E04-33B4778906D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{52E46247-4E60-4E03-AFC2-8E4179C0BC8D} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
+		{71A0F432-2615-40C4-9F13-977AC48E5E68} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
+		{6B629A3B-CDC5-496D-A9DC-BC3A849B0705} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
+		{57A1F769-F867-475D-9273-3819207930F2} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
+		{BA2F7CC0-556A-47F6-943D-B3B377268C6F} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
+		{836902D6-A3B4-4CB0-9E04-33B4778906D4} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
 	EndGlobalSection
 EndGlobal
