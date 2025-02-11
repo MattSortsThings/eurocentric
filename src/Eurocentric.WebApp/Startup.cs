@@ -4,6 +4,7 @@ using Eurocentric.AdminApi;
 using Eurocentric.DataAccess;
 using Eurocentric.PublicApi;
 using Eurocentric.Shared.Versioning;
+using Scalar.AspNetCore;
 
 namespace Eurocentric.WebApp;
 
@@ -22,7 +23,9 @@ internal static class Startup
         builder.Services.AddAppPipeline()
             .AddDataAccess()
             .ConfigureHttpJsonOptions()
-            .AddVersioning();
+            .AddVersioning()
+            .AddAdminApiOpenApiDocuments()
+            .AddPublicApiOpenApiDocuments();
 
         return builder;
     }
@@ -35,6 +38,10 @@ internal static class Startup
     internal static WebApplication ConfigureRequestPipeline(this WebApplication app)
     {
         app.UseHttpsRedirection();
+
+        app.MapOpenApi();
+
+        app.MapDocumentationPages();
 
         app.MapAdminApiEndpoints().MapPublicApiEndpoints();
 
@@ -59,4 +66,11 @@ internal static class Startup
 
         return services;
     }
+
+    private static void MapDocumentationPages(this WebApplication app) =>
+        app.MapScalarApiReference("docs", options =>
+        {
+            options.Theme = ScalarTheme.Kepler;
+            options.Title = "Documentation";
+        });
 }

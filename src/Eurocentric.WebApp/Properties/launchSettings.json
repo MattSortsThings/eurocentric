@@ -5,7 +5,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "public/api/v0.1/greetings?quantity=3&language=French",
+      "launchUrl": "docs/public-api-v0.1",
       "applicationUrl": "http://localhost:5131",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -15,7 +15,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "public/api/v0.1/greetings?quantity=3&language=French",
+      "launchUrl": "docs/public-api-v0.1",
       "applicationUrl": "https://localhost:7019;http://localhost:5131",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
