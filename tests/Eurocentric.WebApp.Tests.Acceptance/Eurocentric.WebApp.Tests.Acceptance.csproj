@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Eurocentric.Domain.Tests.Unit</RootNamespace>
+    <RootNamespace>Eurocentric.WebApp.Tests.Acceptance</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Eurocentric.Domain\Eurocentric.Domain.csproj"/>
     <ProjectReference Include="..\Eurocentric.TestUtils.Categories\Eurocentric.TestUtils.Categories.csproj"/>
+    <ProjectReference Include="..\Eurocentric.TestUtils.WebAppFixtures\Eurocentric.TestUtils.WebAppFixtures.csproj"/>
   </ItemGroup>
 
 </Project>

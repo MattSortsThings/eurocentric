@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution_items", "_solutio
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
 		exclusion.dic = exclusion.dic
 		README.md = README.md
 	EndProjectSection
@@ -32,13 +33,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Domain.Tests.Un
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.TestUtils.Categories", "tests\Eurocentric.TestUtils.Categories\Eurocentric.TestUtils.Categories.csproj", "{BCE5AD71-4B02-42B7-A097-C7996162D385}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.TestUtils.WebAppFixtures", "tests\Eurocentric.TestUtils.WebAppFixtures\Eurocentric.TestUtils.WebAppFixtures.csproj", "{381ECD75-B309-405B-ADC8-022A917BC013}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.WebApp.Tests.Acceptance", "tests\Eurocentric.WebApp.Tests.Acceptance\Eurocentric.WebApp.Tests.Acceptance.csproj", "{8D778455-2651-4286-99A8-2DAEC08CECC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{38C579D6-12B6-4B28-BF3A-4CAD26F24761}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "acceptance", "acceptance", "{237FF4B8-E069-47EE-8D0C-1FD5C6477324}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{49A7B71A-0218-477F-A695-93445EC46B79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{52E46247-4E60-4E03-AFC2-8E4179C0BC8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -73,6 +81,17 @@ Global
 		{BCE5AD71-4B02-42B7-A097-C7996162D385}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCE5AD71-4B02-42B7-A097-C7996162D385}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCE5AD71-4B02-42B7-A097-C7996162D385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381ECD75-B309-405B-ADC8-022A917BC013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381ECD75-B309-405B-ADC8-022A917BC013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381ECD75-B309-405B-ADC8-022A917BC013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381ECD75-B309-405B-ADC8-022A917BC013}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D778455-2651-4286-99A8-2DAEC08CECC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D778455-2651-4286-99A8-2DAEC08CECC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D778455-2651-4286-99A8-2DAEC08CECC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D778455-2651-4286-99A8-2DAEC08CECC1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{52E46247-4E60-4E03-AFC2-8E4179C0BC8D} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
@@ -81,7 +100,12 @@ Global
 		{57A1F769-F867-475D-9273-3819207930F2} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
 		{BA2F7CC0-556A-47F6-943D-B3B377268C6F} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
 		{836902D6-A3B4-4CB0-9E04-33B4778906D4} = {C4D61E6B-2106-4C91-8476-4613B5B60CE0}
-		{62B99DB7-ED9F-4EAE-AF7D-81D47967214D} = {24DCCAE4-0D76-4833-A56B-B4A8659859C8}
-		{BCE5AD71-4B02-42B7-A097-C7996162D385} = {24DCCAE4-0D76-4833-A56B-B4A8659859C8}
+		{62B99DB7-ED9F-4EAE-AF7D-81D47967214D} = {38C579D6-12B6-4B28-BF3A-4CAD26F24761}
+		{BCE5AD71-4B02-42B7-A097-C7996162D385} = {49A7B71A-0218-477F-A695-93445EC46B79}
+		{381ECD75-B309-405B-ADC8-022A917BC013} = {49A7B71A-0218-477F-A695-93445EC46B79}
+		{8D778455-2651-4286-99A8-2DAEC08CECC1} = {237FF4B8-E069-47EE-8D0C-1FD5C6477324}
+		{38C579D6-12B6-4B28-BF3A-4CAD26F24761} = {24DCCAE4-0D76-4833-A56B-B4A8659859C8}
+		{237FF4B8-E069-47EE-8D0C-1FD5C6477324} = {24DCCAE4-0D76-4833-A56B-B4A8659859C8}
+		{49A7B71A-0218-477F-A695-93445EC46B79} = {24DCCAE4-0D76-4833-A56B-B4A8659859C8}
 	EndGlobalSection
 EndGlobal

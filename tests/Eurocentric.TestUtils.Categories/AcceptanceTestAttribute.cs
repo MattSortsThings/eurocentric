@@ -3,14 +3,14 @@ using Xunit.v3;
 namespace Eurocentric.TestUtils.Categories;
 
 /// <summary>
-///     Applies the "Unit Test" category.
+///     Applies the "Acceptance Test" category.
 /// </summary>
 [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-public sealed class UnitTestAttribute : Attribute, ITraitAttribute
+public sealed class AcceptanceTestAttribute : Attribute, ITraitAttribute
 {
     public IReadOnlyCollection<KeyValuePair<string, string>> GetTraits() =>
     [
-        new("Category", "UnitTest"),
+        new("Category", "AcceptanceTest"),
         new("Categorized", "true")
     ];
 }
