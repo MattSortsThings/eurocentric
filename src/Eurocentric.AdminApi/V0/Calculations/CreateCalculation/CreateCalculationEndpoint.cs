@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace Eurocentric.AdminApi.V0.CreateCalculation;
+namespace Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 
 public static class CreateCalculationEndpoint
 {

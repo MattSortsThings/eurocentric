@@ -1,4 +1,4 @@
-namespace Eurocentric.AdminApi.V0.CreateCalculation;
+namespace Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 
 internal static class Extensions
 {

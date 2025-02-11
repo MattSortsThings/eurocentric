@@ -1,6 +1,6 @@
 using Eurocentric.AdminApi.Tests.Integration.TestUtils;
 using Eurocentric.AdminApi.V0.Calculations.Common;
-using Eurocentric.AdminApi.V0.CreateCalculation;
+using Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Xunit.Sdk;

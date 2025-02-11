@@ -1,7 +1,7 @@
 using Eurocentric.AdminApi.V0.Calculations.Common;
 using MediatR;
 
-namespace Eurocentric.AdminApi.V0.CreateCalculation;
+namespace Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 
 internal sealed class CreateCalculationHandler : IRequestHandler<CreateCalculationCommand, CreateCalculationResponse>
 {

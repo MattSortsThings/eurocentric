@@ -1,6 +1,6 @@
 using System.Net;
 using Eurocentric.AdminApi.V0.Calculations.Common;
-using Eurocentric.AdminApi.V0.CreateCalculation;
+using Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 using Eurocentric.WebApp.Tests.Acceptance.TestUtils;
 using RestSharp;
 

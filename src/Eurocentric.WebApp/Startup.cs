@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Eurocentric.AdminApi;
-using Eurocentric.AdminApi.V0.CreateCalculation;
+using Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 using Eurocentric.DataAccess;
 using Eurocentric.PublicApi;
 using Eurocentric.PublicApi.V0.Greetings.GetGreetings;
