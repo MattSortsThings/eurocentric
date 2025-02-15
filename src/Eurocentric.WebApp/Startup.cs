@@ -1,3 +1,8 @@
+using Eurocentric.AdminApi;
+using Eurocentric.DataAccess;
+using Eurocentric.PublicApi;
+using Eurocentric.Shared;
+
 namespace Eurocentric.WebApp;
 
 /// <summary>
@@ -10,7 +15,15 @@ internal static class Startup
     /// </summary>
     /// <param name="builder">The web application builder to be configured.</param>
     /// <returns>The same <see cref="WebApplicationBuilder" /> instance, so that method invocations can be chained.</returns>
-    internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder) => builder;
+    internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAdminApiServices()
+            .AddPublicApiServices()
+            .AddDataAccessServices()
+            .AddSharedServices();
+
+        return builder;
+    }
 
     /// <summary>
     ///     Configures the request pipeline middleware for the web application.
@@ -19,9 +32,15 @@ internal static class Startup
     /// <returns>The same <see cref="WebApplication" /> instance, so that method invocations can be chained.</returns>
     internal static WebApplication ConfigureMiddleware(this WebApplication app)
     {
+        using IServiceScope scope = app.Services.CreateScope();
+
         app.UseHttpsRedirection();
 
-        app.MapGet("message", () => TypedResults.Ok("You don't have to tell me twice! But during the Stone Age..."));
+        foreach (Action<IEndpointRouteBuilder> action in scope.ServiceProvider
+                     .GetRequiredService<IEnumerable<Action<IEndpointRouteBuilder>>>())
+        {
+            action.Invoke(app);
+        }
 
         return app;
     }
