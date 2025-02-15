@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using Eurocentric.PublicApi.V0.Greetings.GetGreetings;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,8 +19,7 @@ public static class Startup
         services.AddTransient<Action<MediatRServiceConfiguration>>(_ => configuration =>
             configuration.RegisterServicesFromAssemblyContaining(typeof(Startup)));
 
-        services.AddTransient<Action<IEndpointRouteBuilder>>(_ => builder => builder.MapGet("public/api/v0.1/message",
-            () => TypedResults.Ok($"Public API zapped to the extreme at {DateTime.Now}!")));
+        services.AddTransient<Action<IEndpointRouteBuilder>>(_ => builder => builder.MapGetGreetings());
 
         return services;
     }

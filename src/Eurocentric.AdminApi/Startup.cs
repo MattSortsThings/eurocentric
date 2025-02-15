@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,8 +19,7 @@ public static class Startup
         services.AddTransient<Action<MediatRServiceConfiguration>>(_ => configuration =>
             configuration.RegisterServicesFromAssemblyContaining(typeof(Startup)));
 
-        services.AddTransient<Action<IEndpointRouteBuilder>>(_ => builder => builder.MapGet("admin/api/v0.1/message",
-            () => TypedResults.Ok($"Admin API zapped to the extreme at {DateTime.Now}!")));
+        services.AddTransient<Action<IEndpointRouteBuilder>>(_ => builder => builder.MapCreateCalculation());
 
         return services;
     }

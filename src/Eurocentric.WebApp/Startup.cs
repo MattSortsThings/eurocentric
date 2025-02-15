@@ -32,15 +32,9 @@ internal static class Startup
     /// <returns>The same <see cref="WebApplication" /> instance, so that method invocations can be chained.</returns>
     internal static WebApplication ConfigureMiddleware(this WebApplication app)
     {
-        using IServiceScope scope = app.Services.CreateScope();
-
         app.UseHttpsRedirection();
 
-        foreach (Action<IEndpointRouteBuilder> action in scope.ServiceProvider
-                     .GetRequiredService<IEnumerable<Action<IEndpointRouteBuilder>>>())
-        {
-            action.Invoke(app);
-        }
+        app.UseApiEndpoints();
 
         return app;
     }

@@ -1,0 +1,16 @@
+### Admin API placeholder endpoint
+
+POST http://localhost:5056/admin/api/v0.1/calculations
+Accept: application/json
+Content-Type: application/json
+
+{
+  "x": 10,
+  "y": 5,
+  "operation": "Product"
+}
+
+### Public API placeholder endpoint
+
+GET http://localhost:5056/public/api/v0.1/greetings?quantity=4&language=English&client_name=Matt
+Accept: application/json

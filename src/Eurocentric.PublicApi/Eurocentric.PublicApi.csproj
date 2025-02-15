@@ -9,4 +9,7 @@
     <ProjectReference Include="..\Eurocentric.DataAccess\Eurocentric.DataAccess.csproj"/>
     <ProjectReference Include="..\Eurocentric.Shared\Eurocentric.Shared.csproj"/>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="V0\"/>
+  </ItemGroup>
 </Project>

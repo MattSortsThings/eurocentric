@@ -1,3 +1,6 @@
+using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Json;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Shared;
@@ -14,24 +17,23 @@ public static class Startup
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddSharedServices(this IServiceCollection services)
     {
-        services.AddMediatR(BuildConfiguration(services));
+        services.AddAppPipeline()
+            .AddJsonConfiguration();
 
         return services;
     }
 
-    private static MediatRServiceConfiguration BuildConfiguration(IServiceCollection services)
+    public static IEndpointRouteBuilder UseApiEndpoints(this IEndpointRouteBuilder app)
     {
-        MediatRServiceConfiguration config = new();
+        using IServiceScope scope = app.ServiceProvider.CreateScope();
 
-        using ServiceProvider serviceProvider = services.BuildServiceProvider();
-        using IServiceScope scope = serviceProvider.CreateScope();
+        Action<IEndpointRouteBuilder> mappingAction =
+            scope.ServiceProvider.GetRequiredService<IEnumerable<Action<IEndpointRouteBuilder>>>()
+                .Aggregate((IEndpointRouteBuilder _) => { },
+                    (currentAction, action) => currentAction + action);
 
-        foreach (Action<MediatRServiceConfiguration> action in scope.ServiceProvider
-                     .GetRequiredService<IEnumerable<Action<MediatRServiceConfiguration>>>())
-        {
-            action.Invoke(config);
-        }
+        mappingAction.Invoke(app);
 
-        return config;
+        return app;
     }
 }
