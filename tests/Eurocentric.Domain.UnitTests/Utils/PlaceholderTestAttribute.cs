@@ -1,6 +1,6 @@
 using Xunit.v3;
 
-namespace Eurocentric.TestUtils.Attributes;
+namespace Eurocentric.Domain.UnitTests.Utils;
 
 /// <summary>
 ///     Applies the "PlaceholderTest" category trait and the "true" categorized trait to annotated tests.

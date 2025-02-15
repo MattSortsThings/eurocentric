@@ -1,4 +1,4 @@
-using Eurocentric.TestUtils.Attributes;
+using Eurocentric.Domain.UnitTests.Utils;
 
 namespace Eurocentric.Domain.UnitTests;
 
