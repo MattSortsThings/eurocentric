@@ -23,10 +23,9 @@ public abstract class AcceptanceTest : IDisposable
 
     private protected static RestRequest Get(string resource) =>
         new RestRequest(resource)
-            .AddHeader("Accept", "application/json");
+            .AddHeader("Accept", "application/json, application/problem+json");
 
     private protected static RestRequest Post(string resource) =>
         new RestRequest(resource, Method.Post)
-            .AddHeader("Accept", "application/json")
-            .AddHeader("Content-Type", "application/json");
+            .AddHeader("Accept", "application/json, application/problem+json");
 }

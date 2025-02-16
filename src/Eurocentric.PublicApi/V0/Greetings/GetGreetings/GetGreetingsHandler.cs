@@ -24,6 +24,8 @@ internal sealed class GetGreetingsHandler : QueryHandler<GetGreetingsQuery, GetG
 
         string greeting = clientName is null ? $"{salutation}!" : $"{salutation} {clientName}!";
 
-        return new GetGreetingsResult(Enumerable.Repeat(greeting, quantity).ToArray());
+        return quantity > 0
+            ? new GetGreetingsResult(Enumerable.Repeat(greeting, quantity).ToArray())
+            : Error.Failure("Invalid greetings quantity", "Greetings quantity cannot be 0.");
     }
 }

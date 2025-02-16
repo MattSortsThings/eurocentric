@@ -12,5 +12,5 @@ Content-Type: application/json
 
 ### Public API placeholder endpoint
 
-GET http://localhost:5056/public/api/v0.1/greetings?quantity=4&language=English&client_name=Matt
+GET http://localhost:5056/public/api/v0.1/greetings?quantity=4&language=English&clientName=Matt
 Accept: application/json

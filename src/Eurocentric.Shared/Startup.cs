@@ -1,4 +1,5 @@
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.ErrorHandling;
 using Eurocentric.Shared.Json;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,8 @@ public static class Startup
     public static IServiceCollection AddSharedServices(this IServiceCollection services)
     {
         services.AddAppPipeline()
-            .AddJsonConfiguration();
+            .AddJsonConfiguration()
+            .AddErrorHandling();
 
         return services;
     }

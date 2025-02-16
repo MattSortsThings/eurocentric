@@ -15,7 +15,7 @@ public sealed record GetGreetingsQuery : Query<GetGreetingsResult>
     [FromQuery(Name = "language")]
     public required Language Language { get; init; }
 
-    [FromQuery(Name = "client_name")]
+    [FromQuery(Name = "clientName")]
     public string? ClientName { get; init; }
 
     internal void Deconstruct(out int quantity, out Language language, out string? clientName)

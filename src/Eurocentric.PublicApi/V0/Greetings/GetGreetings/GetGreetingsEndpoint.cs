@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Shared.ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,9 +13,12 @@ internal static class GetGreetingsEndpoint
         api.MapGet("public/api/v0.1/greetings",
                 async ([AsParameters] GetGreetingsQuery query,
                     ISender sender,
-                    CancellationToken cancellationToken = default) => await query.ToErrorOr()
-                    .ThenAsync(get => sender.Send(get, cancellationToken))
-                    .MatchFirst<GetGreetingsResult, IResult>(TypedResults.Ok, _ => TypedResults.BadRequest()))
+                    CancellationToken cancellationToken = default) =>
+                {
+                    ErrorOr<GetGreetingsResult> result = await sender.Send(query, cancellationToken);
+
+                    return result.ToHttpResult(TypedResults.Ok);
+                })
             .WithSummary("Get greetings")
             .WithTags("Greetings")
             .Produces<GetGreetingsResult>();

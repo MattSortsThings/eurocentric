@@ -7,9 +7,9 @@ namespace Eurocentric.WebApp.Tests.Acceptance.PublicApi.V0.Greetings;
 
 public static class GetGreetingsTests
 {
-    public sealed class Feature : AcceptanceTest
+    public sealed class PublicApiV0 : AcceptanceTest
     {
-        public Feature(CleanWebAppFixture fixture) : base(fixture)
+        public PublicApiV0(CleanWebAppFixture fixture) : base(fixture)
         {
         }
 
@@ -18,16 +18,16 @@ public static class GetGreetingsTests
         {
             // Arrange
             RestRequest request = Get("public/api/v0.1/greetings")
-                .AddQueryParameter("quantity", "2")
+                .AddQueryParameter("quantity", 2)
                 .AddQueryParameter("language", "Dutch")
-                .AddQueryParameter("client_name", "Conchita");
+                .AddQueryParameter("clientName", "Conchita");
+
+            GetGreetingsResult expected = new(["Hoi Conchita!", "Hoi Conchita!"]);
 
             // Act
             (HttpStatusCode statusCode, GetGreetingsResult result) = await SendAsync<GetGreetingsResult>(request);
 
             // Assert
-            GetGreetingsResult expected = new(["Hoi Conchita!", "Hoi Conchita!"]);
-
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, statusCode),
                 () => Assert.Equivalent(expected, result)
