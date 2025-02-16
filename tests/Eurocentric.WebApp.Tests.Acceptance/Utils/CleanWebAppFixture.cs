@@ -37,4 +37,12 @@ public sealed class CleanWebAppFixture : WebAppFixture
 
             return restClient.ExecuteAsync<T>(request, cancellationToken);
         });
+
+    internal async Task<RestResponse> SendAsync(RestRequest request, CancellationToken cancellationToken = default) =>
+        await ExecuteScopedAsync(serviceProvider =>
+        {
+            IRestClient restClient = serviceProvider.GetRequiredService<IRestClient>();
+
+            return restClient.ExecuteAsync(request, cancellationToken);
+        });
 }

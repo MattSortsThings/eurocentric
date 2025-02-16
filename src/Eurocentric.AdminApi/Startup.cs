@@ -21,6 +21,11 @@ public static class Startup
 
         services.AddTransient<Action<IEndpointRouteBuilder>>(_ => builder => builder.MapCreateCalculation());
 
+        services.AddOpenApi("admin-api-v0.1", options =>
+        {
+            options.ShouldInclude = description => description.GroupName == "admin-api-v0.1";
+        });
+
         return services;
     }
 }

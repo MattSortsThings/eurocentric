@@ -18,5 +18,6 @@ internal static class CreateCalculationEndpoint
             })
         .WithSummary("Create calculation")
         .WithTags("Calculations")
+        .WithGroupName("admin-api-v0.1")
         .Produces<CreateCalculationResult>();
 }

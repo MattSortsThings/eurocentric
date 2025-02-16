@@ -21,6 +21,8 @@ public abstract class AcceptanceTest : IDisposable
 
     private protected async Task<RestResponse<T>> SendAsync<T>(RestRequest request) => await _fixture.SendAsync<T>(request);
 
+    private protected async Task<RestResponse> SendAsync(RestRequest request) => await _fixture.SendAsync(request);
+
     private protected static RestRequest Get(string resource) =>
         new RestRequest(resource)
             .AddHeader("Accept", "application/json, application/problem+json");

@@ -21,5 +21,6 @@ internal static class GetGreetingsEndpoint
                 })
             .WithSummary("Get greetings")
             .WithTags("Greetings")
-            .Produces<GetGreetingsResult>();
+            .Produces<GetGreetingsResult>()
+            .WithGroupName("public-api-v0.1");
 }

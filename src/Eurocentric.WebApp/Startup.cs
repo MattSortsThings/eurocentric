@@ -2,6 +2,7 @@ using Eurocentric.AdminApi;
 using Eurocentric.DataAccess;
 using Eurocentric.PublicApi;
 using Eurocentric.Shared;
+using Scalar.AspNetCore;
 
 namespace Eurocentric.WebApp;
 
@@ -37,6 +38,10 @@ internal static class Startup
         app.UseStatusCodePages();
 
         app.UseExceptionHandler();
+
+        app.MapOpenApi();
+
+        app.MapScalarApiReference("docs", options => options.Theme = ScalarTheme.Kepler);
 
         app.UseApiEndpoints();
 
