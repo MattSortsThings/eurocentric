@@ -22,12 +22,7 @@ internal sealed class CreateCalculationHandler : CommandHandler<CreateCalculatio
 
         return new CreateCalculationResult(new Calculation
         {
-            Id = Guid.CreateVersion7(),
-            DateRequested = DateOnly.FromDateTime(DateTime.UtcNow),
-            X = x,
-            Y = y,
-            Operation = operation,
-            Result = result
+            DateRequested = DateOnly.FromDateTime(DateTime.UtcNow), X = x, Y = y, Operation = operation, Result = result
         });
     }
 }

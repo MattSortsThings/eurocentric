@@ -20,6 +20,7 @@ internal static class GetGreetingsEndpoint
                     return result.ToHttpResult(TypedResults.Ok);
                 })
             .WithSummary("Get greetings")
+            .WithName("GetGreetings")
             .WithTags("Greetings")
             .Produces<GetGreetingsResult>()
             .WithGroupName("public-api-v0.1");
