@@ -18,6 +18,7 @@ internal sealed class GetGreetingsHandler : QueryHandler<GetGreetingsQuery, GetG
             Language.English => "Hi",
             Language.French => "Bonjour",
             Language.Dutch => "Hoi",
+            Language.Swedish => "Hej",
             _ => throw new InvalidOperationException("Invalid enum value")
         };
 

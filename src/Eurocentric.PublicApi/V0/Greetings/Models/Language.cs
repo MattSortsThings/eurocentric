@@ -4,5 +4,6 @@ public enum Language
 {
     English,
     French,
-    Dutch
+    Dutch,
+    Swedish
 }
