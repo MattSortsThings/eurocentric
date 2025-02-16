@@ -1,6 +1,6 @@
 using Xunit.v3;
 
-namespace Eurocentric.Domain.UnitTests.Utils;
+namespace Eurocentric.Domain.Tests.Unit.Utils;
 
 /// <summary>
 ///     Applies the "UnitTest" category trait and the "true" categorized trait to annotated tests.

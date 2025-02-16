@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
 using Xunit;
 
-namespace Eurocentric.WebApp.Fixtures;
+namespace Eurocentric.WebApp.Tests.Fixtures;
 
 public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyMarker>, IAsyncLifetime
 {

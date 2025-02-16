@@ -1,7 +1,7 @@
 using System.Net;
 using RestSharp;
 
-namespace Eurocentric.WebApp.AcceptanceTests.Utils;
+namespace Eurocentric.WebApp.Tests.Acceptance.Utils;
 
 internal static class RestResponseExtensions
 {

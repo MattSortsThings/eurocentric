@@ -1,4 +1,4 @@
-using Eurocentric.WebApp.Fixtures;
+using Eurocentric.WebApp.Tests.Fixtures;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using RestSharp;
 using RestSharp.Serializers.Json;
 
-namespace Eurocentric.WebApp.AcceptanceTests.Utils;
+namespace Eurocentric.WebApp.Tests.Acceptance.Utils;
 
 public sealed class CleanWebAppFixture : WebAppFixture
 {

@@ -30,11 +30,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.PublicApi", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7525DEBB-7D9D-44CE-9888-EC96D92A02AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Domain.UnitTests", "tests\Eurocentric.Domain.UnitTests\Eurocentric.Domain.UnitTests.csproj", "{AF689E7A-C55F-4163-9CEF-61D89C133830}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Domain.Tests.Unit", "tests\Eurocentric.Domain.Tests.Unit\Eurocentric.Domain.Tests.Unit.csproj", "{AF689E7A-C55F-4163-9CEF-61D89C133830}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.WebApp.Fixtures", "tests\Eurocentric.WebApp.Fixtures\Eurocentric.WebApp.Fixtures.csproj", "{0BE0EE35-3FF3-4745-8ED9-04BBF8153F24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.WebApp.Tests.Fixtures", "tests\Eurocentric.WebApp.Tests.Fixtures\Eurocentric.WebApp.Tests.Fixtures.csproj", "{0BE0EE35-3FF3-4745-8ED9-04BBF8153F24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.WebApp.AcceptanceTests", "tests\Eurocentric.WebApp.AcceptanceTests\Eurocentric.WebApp.AcceptanceTests.csproj", "{329D63C8-C6BB-4CB4-88ED-A7CACE4691A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.WebApp.Tests.Acceptance", "tests\Eurocentric.WebApp.Tests.Acceptance\Eurocentric.WebApp.Tests.Acceptance.csproj", "{329D63C8-C6BB-4CB4-88ED-A7CACE4691A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

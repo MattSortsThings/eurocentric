@@ -1,9 +1,9 @@
 using System.Net;
 using Eurocentric.PublicApi.V0.Greetings.GetGreetings;
-using Eurocentric.WebApp.AcceptanceTests.Utils;
+using Eurocentric.WebApp.Tests.Acceptance.Utils;
 using RestSharp;
 
-namespace Eurocentric.WebApp.AcceptanceTests.PublicApi.V0.Greetings;
+namespace Eurocentric.WebApp.Tests.Acceptance.PublicApi.V0.Greetings;
 
 public static class GetGreetingsTests
 {

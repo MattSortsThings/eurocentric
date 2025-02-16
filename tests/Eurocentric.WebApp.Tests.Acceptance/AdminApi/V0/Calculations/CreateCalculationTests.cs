@@ -1,10 +1,10 @@
 using System.Net;
 using Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 using Eurocentric.AdminApi.V0.Calculations.Models;
-using Eurocentric.WebApp.AcceptanceTests.Utils;
+using Eurocentric.WebApp.Tests.Acceptance.Utils;
 using RestSharp;
 
-namespace Eurocentric.WebApp.AcceptanceTests.AdminApi.V0.Calculations;
+namespace Eurocentric.WebApp.Tests.Acceptance.AdminApi.V0.Calculations;
 
 public static class CreateCalculationTests
 {

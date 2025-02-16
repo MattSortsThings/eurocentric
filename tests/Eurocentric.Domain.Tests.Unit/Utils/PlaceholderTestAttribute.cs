@@ -1,16 +1,16 @@
 using Xunit.v3;
 
-namespace Eurocentric.WebApp.AcceptanceTests.Utils;
+namespace Eurocentric.Domain.Tests.Unit.Utils;
 
 /// <summary>
-///     Applies the "Category=AcceptanceTest" and "Categorized=true" traits.
+///     Applies the "PlaceholderTest" category trait and the "true" categorized trait to annotated tests.
 /// </summary>
 [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-internal sealed class AcceptanceTestAttribute : Attribute, ITraitAttribute
+public sealed class PlaceholderTestAttribute : Attribute, ITraitAttribute
 {
     public IReadOnlyCollection<KeyValuePair<string, string>> GetTraits() =>
     [
-        new("Category", "AcceptanceTest"),
+        new("Category", "PlaceholderTest"),
         new("Categorized", "true")
     ];
 }

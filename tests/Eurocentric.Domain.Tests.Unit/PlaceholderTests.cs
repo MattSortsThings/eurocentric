@@ -1,6 +1,6 @@
-using Eurocentric.Domain.UnitTests.Utils;
+using Eurocentric.Domain.Tests.Unit.Utils;
 
-namespace Eurocentric.Domain.UnitTests;
+namespace Eurocentric.Domain.Tests.Unit;
 
 [UnitTest]
 [PlaceholderTest]

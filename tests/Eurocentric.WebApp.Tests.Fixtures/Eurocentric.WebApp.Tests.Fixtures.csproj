@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>Eurocentric.WebApp.Fixtures</RootNamespace>
+    <RootNamespace>Eurocentric.WebApp.Tests.Fixtures</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
