@@ -15,15 +15,17 @@ internal static class Startup
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     internal static IServiceCollection AddErrorHandling(this IServiceCollection services)
     {
-        services.AddProblemDetails(config =>
-        {
-            config.CustomizeProblemDetails = ctx =>
+        services.AddExceptionHandler<BadHttpRequestExceptionHandler>()
+            .AddExceptionHandler<FallbackExceptionHandler>()
+            .AddProblemDetails(config =>
             {
-                HttpRequest request = ctx.HttpContext.Request;
+                config.CustomizeProblemDetails = ctx =>
+                {
+                    HttpRequest request = ctx.HttpContext.Request;
 
-                ctx.ProblemDetails.Instance = $"{request.Method} {request.Path}{request.QueryString}";
-            };
-        });
+                    ctx.ProblemDetails.Instance = $"{request.Method} {request.Path}{request.QueryString}";
+                };
+            });
 
         return services;
     }
