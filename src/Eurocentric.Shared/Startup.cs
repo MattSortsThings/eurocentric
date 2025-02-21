@@ -1,7 +1,8 @@
-using Eurocentric.Shared.ApiMapping;
+using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Timing;
+using Eurocentric.Shared.Versioning;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,7 +22,8 @@ public static class Startup
     {
         services.AddAppPipeline()
             .AddJsonOptionsConfiguration()
-            .AddTimeProvider();
+            .AddTimeProvider()
+            .AddVersioning();
 
         return services;
     }

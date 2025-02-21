@@ -1,5 +1,5 @@
 using Eurocentric.AdminApi.Common;
-using Eurocentric.Shared.ApiMapping;
+using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +17,7 @@ public static class Startup
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddAdminApiServices(this IServiceCollection services)
     {
-        services.AddTransient<IApiEndpointsMapper, ApiEndpointsMapper>()
+        services.AddTransient<IApiEndpointsMapper, AdminApiModule>()
             .AddTransient<IAppPipelineConfigurator, AppPipelineConfigurator>();
 
         return services;

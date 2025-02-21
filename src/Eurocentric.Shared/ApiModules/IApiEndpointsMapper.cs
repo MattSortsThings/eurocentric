@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Routing;
 
-namespace Eurocentric.Shared.ApiMapping;
+namespace Eurocentric.Shared.ApiModules;
 
 /// <summary>
 ///     Defines a method for mapping all the endpoints for an API.
