@@ -1,7 +1,33 @@
-### Admin API placeholder endpoint
+### Admin API v0.1 placeholder GET endpoint
 
-GET http://localhost:5203/admin/api/v0.1/placeholder
+GET http://localhost:5203/admin/api/v0.1/calculations/c8272b90-226a-4697-af31-e651c2d4ceea
+Accept: application/json, application/problem+json
 
-### Public API placeholder endpoint
+### Admin API v0.2 placeholder GET endpoint
 
-GET http://localhost:5203/public/api/v0.1/placeholder
+GET http://localhost:5203/admin/api/v0.2/calculations/c8272b90-226a-4697-af31-e651c2d4ceea
+Accept: application/json, application/problem+json
+
+### Admin API v0.2 placeholder POST endpoint
+
+POST http://localhost:5203/admin/api/v0.2/calculations
+Accept: application/json, application/problem+json
+Content-Type: application/json
+
+{
+  "x": 10,
+  "y": 3,
+  "operation": "Modulus"
+}
+
+### Public API v0.1 placeholder GET endpoint (1 of 3)
+
+GET http://localhost:5203/public/api/v0.1/stations?line=Northern
+
+### Public API v0.1 placeholder GET endpoint (2 of 3)
+
+GET http://localhost:5203/public/api/v0.1/stations?line=HammersmithAndCity
+
+### Public API v0.1 placeholder GET endpoint (3 of 3)
+
+GET http://localhost:5203/public/api/v0.1/stations?line=Jubilee

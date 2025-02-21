@@ -1,3 +1,6 @@
+using Eurocentric.PublicApi.Common;
+using Eurocentric.Shared.ApiMapping;
+using Eurocentric.Shared.AppPipeline;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.PublicApi;
@@ -12,5 +15,11 @@ public static class Startup
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    public static IServiceCollection AddPublicApiServices(this IServiceCollection services) => services;
+    public static IServiceCollection AddPublicApiServices(this IServiceCollection services)
+    {
+        services.AddTransient<IApiEndpointsMapper, ApiEndpointsMapper>()
+            .AddTransient<IAppPipelineConfigurator, AppPipelineConfigurator>();
+
+        return services;
+    }
 }
