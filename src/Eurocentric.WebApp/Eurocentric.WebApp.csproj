@@ -2,4 +2,8 @@
   <PropertyGroup>
     <RootNamespace>Eurocentric.WebApp</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.AdminApi\Eurocentric.AdminApi.csproj"/>
+    <ProjectReference Include="..\Eurocentric.PublicApi\Eurocentric.PublicApi.csproj"/>
+  </ItemGroup>
 </Project>

@@ -1,9 +1,7 @@
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+using Eurocentric.WebApp;
 
-WebApplication app = builder.Build();
-
-app.UseHttpsRedirection();
-
-app.MapGet("placeholder", () => TypedResults.Ok("You don't have to tell me twice! But during the Stone Age..."));
-
-app.Run();
+WebApplication.CreateBuilder(args)
+    .ConfigureServices()
+    .Build()
+    .ConfigureMiddleware()
+    .Run();

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Eurocentric.PublicApi</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.DataAccess\Eurocentric.DataAccess.csproj"/>
+    <ProjectReference Include="..\Eurocentric.Shared\Eurocentric.Shared.csproj"/>
+  </ItemGroup>
+</Project>
