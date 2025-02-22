@@ -10,5 +10,5 @@ internal sealed class PublicApiModule : ApiModule
 
     protected override string EndpointGroupName => "public-api";
 
-    protected override string? AuthorizationPolicyName => null;
+    protected override string? AuthorizationPolicyName => nameof(PublicApiAuthorizationPolicy);
 }

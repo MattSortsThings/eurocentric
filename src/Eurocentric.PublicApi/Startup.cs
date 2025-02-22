@@ -1,6 +1,7 @@
 using Eurocentric.PublicApi.Common;
 using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Security;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.PublicApi;
@@ -17,7 +18,8 @@ public static class Startup
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddPublicApiServices(this IServiceCollection services)
     {
-        services.AddTransient<IApiEndpointsMapper, PublicApiModule>()
+        services.AddTransient<IApiAuthorizationPolicy, PublicApiAuthorizationPolicy>()
+            .AddTransient<IApiEndpointsMapper, PublicApiModule>()
             .AddTransient<IAppPipelineConfigurator, AppPipelineConfigurator>();
 
         return services;

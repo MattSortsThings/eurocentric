@@ -17,7 +17,8 @@ public static class GetStationsTests
             const Line line = Line.HammersmithAndCity;
 
             RestRequest request = Get("public/api/v0.1/stations")
-                .AddQueryParameter("line", line);
+                .AddQueryParameter("line", line)
+                .UsePublicApiKey();
 
             // Act
             (HttpStatusCode statusCode, GetStationsResult result) = await SendAsync<GetStationsResult>(request);
