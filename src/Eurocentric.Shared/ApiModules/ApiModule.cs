@@ -34,6 +34,14 @@ public abstract class ApiModule : IApiEndpointsMapper
     /// </example>
     protected abstract string EndpointGroupName { get; }
 
+    /// <summary>
+    ///     Gets the authorization policy name for the API.
+    /// </summary>
+    /// <example>
+    ///     <c>"CustomersApiAuthorizationPolicy".</c>
+    /// </example>
+    protected abstract string? AuthorizationPolicyName { get; }
+
     public void Map(IEndpointRouteBuilder app)
     {
         RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiName)
@@ -43,6 +51,11 @@ public abstract class ApiModule : IApiEndpointsMapper
         foreach (Action<IEndpointRouteBuilder> mapper in GetEndpointMappers())
         {
             mapper(apiGroup);
+        }
+
+        if (AuthorizationPolicyName is not null)
+        {
+            apiGroup.RequireAuthorization(AuthorizationPolicyName);
         }
     }
 

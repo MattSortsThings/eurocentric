@@ -9,4 +9,6 @@ internal sealed class PublicApiModule : ApiModule
     protected override string UrlPrefix => "public/api/v{version:apiVersion}";
 
     protected override string EndpointGroupName => "public-api";
+
+    protected override string? AuthorizationPolicyName => null;
 }

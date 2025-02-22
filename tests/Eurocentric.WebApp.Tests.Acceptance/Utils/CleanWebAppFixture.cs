@@ -1,3 +1,4 @@
+using Eurocentric.Shared.Security;
 using Eurocentric.WebApp.Tests.Fixtures;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Json;
@@ -36,6 +37,24 @@ public sealed class CleanWebAppFixture : WebAppFixture
         }
     }
 
+    /// <summary>
+    ///     Sends the request to the web app fixture and returns its response
+    /// </summary>
+    /// <param name="request">The request to be sent.</param>
+    /// <param name="cancellationToken">Cancels the operation.</param>
+    /// <returns>A completed task containing the response.</returns>
+    public async Task<RestResponse> SendAsync(RestRequest request, CancellationToken cancellationToken = default)
+    {
+        return await ExecuteScopedAsync(Function);
+
+        Task<RestResponse> Function(IServiceProvider serviceProvider)
+        {
+            IRestClient client = serviceProvider.GetRequiredService<IRestClient>();
+
+            return client.ExecuteAsync(request, cancellationToken);
+        }
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
     {
         services.AddSingleton<IRestClient>(serviceProvider =>
@@ -49,6 +68,12 @@ public sealed class CleanWebAppFixture : WebAppFixture
 
             return new RestClient(httpClient,
                 configureSerialization: config => config.UseSystemTextJson(jsonOptions.Value.SerializerOptions));
+        });
+
+        services.Configure<ApiKeysOptions>(options =>
+        {
+            options.AdminApiKey = TestApiKeys.Admin;
+            options.PublicApiKey = TestApiKeys.Public;
         });
     });
 }

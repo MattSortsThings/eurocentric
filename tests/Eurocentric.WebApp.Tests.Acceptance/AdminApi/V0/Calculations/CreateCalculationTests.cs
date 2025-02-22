@@ -19,6 +19,7 @@ public static class CreateCalculationTests
             object expectedResult = new { Calculation = new { X = 5, Y = 10, Operation = Operation.Product, Output = 50 } };
 
             RestRequest request = Post("admin/api/v0.2/calculations")
+                .UseAdminApiKey()
                 .AddJsonBody(command);
 
             // Act

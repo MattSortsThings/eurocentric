@@ -23,6 +23,13 @@ public abstract class AcceptanceTest(CleanWebAppFixture fixture) : IDisposable
     private protected async Task<RestResponse<T>> SendAsync<T>(RestRequest request) => await fixture.SendAsync<T>(request);
 
     /// <summary>
+    ///     Sends the request to the web app fixture and returns its response, with the raw text content.
+    /// </summary>
+    /// <param name="request">The request to be sent to the web app fixture.</param>
+    /// <returns>A completed task containing the response.</returns>
+    private protected async Task<RestResponse> SendAsync(RestRequest request) => await fixture.SendAsync(request);
+
+    /// <summary>
     ///     Creates a new GET request to the specified resource, with a pre-filled "Accept" header.
     /// </summary>
     /// <param name="resource">The resource path.</param>

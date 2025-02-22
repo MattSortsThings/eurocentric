@@ -9,4 +9,6 @@ internal sealed class AdminApiModule : ApiModule
     protected override string UrlPrefix => "admin/api/v{version:apiVersion}";
 
     protected override string EndpointGroupName => "admin-api";
+
+    protected override string? AuthorizationPolicyName => nameof(AdminApiAuthorizationPolicy);
 }
