@@ -23,7 +23,7 @@ public static class GetCalculationTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, statusCode),
+                () => statusCode.ShouldBe(HttpStatusCode.OK),
                 () => Assert.Equal(calculationId, result.Calculation.Id)
             );
         }

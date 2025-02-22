@@ -1,5 +1,6 @@
 using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.ErrorHandling;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Security;
 using Eurocentric.Shared.Timing;
@@ -22,6 +23,7 @@ public static class Startup
     public static IServiceCollection AddSharedServices(this IServiceCollection services)
     {
         services.AddAppPipeline()
+            .AddErrorHandling()
             .AddJsonOptionsConfiguration()
             .AddSecurity()
             .AddTimeProvider()

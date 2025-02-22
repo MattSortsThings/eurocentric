@@ -25,7 +25,7 @@ public static class GetStationsTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, statusCode),
+                () => statusCode.ShouldBe(HttpStatusCode.OK),
                 () => Assert.NotEmpty(result.Stations),
                 () => Assert.All(result.Stations, station => Assert.Equal(line, station.Line))
             );

@@ -28,7 +28,7 @@ public static class CreateCalculationTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.Created, statusCode),
+                () => statusCode.ShouldBe(HttpStatusCode.Created),
                 () => Assert.Equivalent(expectedResult, result),
                 () => Assert.EndsWith($"admin/api/v0.2/calculations/{result.Calculation.Id}", location)
             );

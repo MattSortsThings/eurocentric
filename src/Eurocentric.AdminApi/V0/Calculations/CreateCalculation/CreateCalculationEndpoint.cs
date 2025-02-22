@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using ErrorOr;
 using Eurocentric.Shared.ApiModules;
+using Eurocentric.Shared.ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -17,9 +18,7 @@ internal sealed class CreateCalculationEndpoint : IApiEndpoint
     {
         ErrorOr<CreateCalculationResult> errorsOrResult = await sender.Send(command, cancellationToken);
 
-        return TypedResults.CreatedAtRoute(errorsOrResult.Value,
-            nameof(GetCalculation),
-            new RouteValueDictionary { ["calculationId"] = errorsOrResult.Value.Calculation.Id });
+        return errorsOrResult.ToHttpResult(MapToCreatedAtRoute);
     };
 
     public string EndpointName => nameof(CreateCalculation);
@@ -31,4 +30,8 @@ internal sealed class CreateCalculationEndpoint : IApiEndpoint
             .WithSummary("Create calculation")
             .WithTags("Calculations")
             .Produces<CreateCalculationResult>(StatusCodes.Status201Created);
+
+    private static IResult MapToCreatedAtRoute(CreateCalculationResult result) => TypedResults.CreatedAtRoute(result,
+        nameof(GetCalculation),
+        new RouteValueDictionary { ["calculationId"] = result.Calculation.Id });
 }

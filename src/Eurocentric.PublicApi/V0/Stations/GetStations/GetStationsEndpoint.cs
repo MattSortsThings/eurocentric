@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using ErrorOr;
 using Eurocentric.Shared.ApiModules;
+using Eurocentric.Shared.ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,7 @@ internal sealed class GetStationsEndpoint : IApiEndpoint
     {
         ErrorOr<GetStationsResult> errorsOrResult = await sender.Send(query, cancellationToken);
 
-        return TypedResults.Ok(errorsOrResult.Value);
+        return errorsOrResult.ToHttpResult(TypedResults.Ok);
     };
 
     public string EndpointName => nameof(GetStations);

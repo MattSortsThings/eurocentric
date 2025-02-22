@@ -20,7 +20,7 @@ public static class AdminApiKeySecurityTests
             RestResponse response = await SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -33,7 +33,7 @@ public static class AdminApiKeySecurityTests
             RestResponse response = await SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ public static class AdminApiKeySecurityTests
             RestResponse response = await SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ public static class AdminApiKeySecurityTests
             RestResponse response = await SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
     }
 }
