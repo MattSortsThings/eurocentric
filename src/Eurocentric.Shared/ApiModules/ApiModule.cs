@@ -1,6 +1,9 @@
 using Asp.Versioning;
+using Eurocentric.Shared.Documentation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Shared.ApiModules;
 
@@ -8,7 +11,7 @@ namespace Eurocentric.Shared.ApiModules;
 ///     Abstract base class for an API module.
 /// </summary>
 /// <remarks>Define a concrete derivative of this abstract base class in each API project.</remarks>
-public abstract class ApiModule : IApiEndpointsMapper
+public abstract class ApiModule : IApiEndpointsMapper, IApiDocumentsRegistrar
 {
     /// <summary>
     ///     Gets the unique name of the API.
@@ -42,6 +45,18 @@ public abstract class ApiModule : IApiEndpointsMapper
     /// </example>
     protected abstract string? AuthorizationPolicyName { get; }
 
+    protected abstract string OpenApiDocumentTitle { get; }
+
+    protected abstract string OpenApiDocumentDescription { get; }
+
+    public void AddOpenApiDocuments(IServiceCollection services)
+    {
+        foreach (var (docName, configureAction) in GetOpenApiDocumentData())
+        {
+            services.AddOpenApi(docName, configureAction);
+        }
+    }
+
     public void Map(IEndpointRouteBuilder app)
     {
         RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiName)
@@ -71,6 +86,36 @@ public abstract class ApiModule : IApiEndpointsMapper
         }
     }
 
+    private IEnumerable<OpenApiDocumentDatum> GetOpenApiDocumentData()
+    {
+        (ApiVersion[] apiVersions, IApiEndpoint[] endpoints) = ScanAssemblyForVersionedApiEndpointTypes();
+
+        foreach (ApiVersion apiVersion in apiVersions)
+        {
+            string docName = $"{EndpointGroupName}-v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}";
+
+            Action<OpenApiOptions> configureAction = options =>
+            {
+                options.ShouldInclude = description => description.Matches(EndpointGroupName, apiVersion);
+                options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>();
+                options.AddDocumentTransformer((document, _, _) =>
+                {
+                    document.Info.Title = OpenApiDocumentTitle;
+                    document.Info.Description = OpenApiDocumentDescription;
+                    document.Info.Version = $"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}";
+
+                    return Task.CompletedTask;
+                });
+            };
+
+            configureAction = endpoints
+                .Where(apiEndpoint => apiEndpoint.InitialApiVersion.MajorVersion == apiVersion.MajorVersion &&
+                                      apiEndpoint.InitialApiVersion.MinorVersion <= apiVersion.MinorVersion)
+                .Aggregate(configureAction, (current, apiEndpoint) => current + apiEndpoint.Configure);
+
+            yield return new OpenApiDocumentDatum(docName, configureAction);
+        }
+    }
 
     private (ApiVersion[], IApiEndpoint[]) ScanAssemblyForVersionedApiEndpointTypes()
     {
@@ -86,4 +131,6 @@ public abstract class ApiModule : IApiEndpointsMapper
 
         return (apiVersions, endpoints);
     }
+
+    private readonly record struct OpenApiDocumentDatum(string DocumentName, Action<OpenApiOptions> ConfigureAction);
 }

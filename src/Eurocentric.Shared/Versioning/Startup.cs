@@ -21,7 +21,7 @@ internal static class Startup
             options.ApiVersionReader = new UrlSegmentApiVersionReader();
         }).AddApiExplorer(options =>
         {
-            options.GroupNameFormat = "'VV";
+            options.GroupNameFormat = "VV";
             options.SubstituteApiVersionInUrl = true;
         });
 

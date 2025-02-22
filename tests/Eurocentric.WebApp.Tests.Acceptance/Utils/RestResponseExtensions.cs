@@ -5,6 +5,12 @@ namespace Eurocentric.WebApp.Tests.Acceptance.Utils;
 
 internal static class RestResponseExtensions
 {
+    internal static void Deconstruct(this RestResponse response, out HttpStatusCode statusCode, out string content)
+    {
+        statusCode = response.StatusCode;
+        content = response.Content!;
+    }
+
     internal static void Deconstruct<T>(this RestResponse<T> response, out HttpStatusCode statusCode, out T result)
     {
         statusCode = response.StatusCode;

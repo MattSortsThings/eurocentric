@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.AdminApi.V0.Calculations.GetCalculation;
@@ -31,4 +32,6 @@ internal sealed class GetCalculationEndpoint : IApiEndpoint
             .WithSummary("Get calculation")
             .WithTags("Calculations")
             .Produces<GetCalculationResult>();
+
+    public void Configure(OpenApiOptions openApiOptions) { }
 }

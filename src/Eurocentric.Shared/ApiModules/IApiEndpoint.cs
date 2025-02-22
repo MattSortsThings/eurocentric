@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Shared.ApiModules;
@@ -11,4 +12,6 @@ public interface IApiEndpoint
     public ApiVersion InitialApiVersion { get; }
 
     public RouteHandlerBuilder Map(IEndpointRouteBuilder apiGroup);
+
+    public void Configure(OpenApiOptions openApiOptions);
 }

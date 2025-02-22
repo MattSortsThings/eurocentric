@@ -42,6 +42,8 @@ internal static class Startup
 
         app.UseAuthorization();
 
+        app.UseDocumentationEndpoints();
+
         app.UseApiEndpoints();
 
         return app;

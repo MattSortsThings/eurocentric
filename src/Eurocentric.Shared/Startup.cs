@@ -1,12 +1,15 @@
 using Eurocentric.Shared.ApiModules;
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Documentation;
 using Eurocentric.Shared.ErrorHandling;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Security;
 using Eurocentric.Shared.Timing;
 using Eurocentric.Shared.Versioning;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Scalar.AspNetCore;
 
 namespace Eurocentric.Shared;
 
@@ -23,6 +26,7 @@ public static class Startup
     public static IServiceCollection AddSharedServices(this IServiceCollection services)
     {
         services.AddAppPipeline()
+            .AddDocumentation()
             .AddErrorHandling()
             .AddJsonOptionsConfiguration()
             .AddSecurity()
@@ -30,6 +34,20 @@ public static class Startup
             .AddVersioning();
 
         return services;
+    }
+
+    /// <summary>
+    ///     Configures the web app to use API documentation endpoints.
+    /// </summary>
+    /// <remarks>All documentation endpoints allow anonymous requests.</remarks>
+    /// <param name="app">The web application.</param>
+    public static void UseDocumentationEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.MapOpenApi()
+            .AllowAnonymous();
+
+        app.MapScalarApiReference("docs")
+            .AllowAnonymous();
     }
 
     /// <summary>

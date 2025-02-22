@@ -19,6 +19,7 @@ public static class Startup
     public static IServiceCollection AddAdminApiServices(this IServiceCollection services)
     {
         services.AddTransient<IApiAuthorizationPolicy, AdminApiAuthorizationPolicy>()
+            .AddTransient<IApiDocumentsRegistrar, AdminApiModule>()
             .AddTransient<IApiEndpointsMapper, AdminApiModule>()
             .AddTransient<IAppPipelineConfigurator, AppPipelineConfigurator>();
 

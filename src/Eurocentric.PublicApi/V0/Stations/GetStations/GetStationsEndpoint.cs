@@ -5,6 +5,7 @@ using Eurocentric.Shared.ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.PublicApi.V0.Stations.GetStations;
@@ -29,4 +30,6 @@ internal sealed class GetStationsEndpoint : IApiEndpoint
             .WithSummary("Get stations")
             .WithTags("Stations")
             .Produces<GetStationsResult>();
+
+    public void Configure(OpenApiOptions openApiOptions) { }
 }

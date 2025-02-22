@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
@@ -30,6 +31,9 @@ internal sealed class CreateCalculationEndpoint : IApiEndpoint
             .WithSummary("Create calculation")
             .WithTags("Calculations")
             .Produces<CreateCalculationResult>(StatusCodes.Status201Created);
+
+    public void Configure(OpenApiOptions openApiOptions) { }
+
 
     private static IResult MapToCreatedAtRoute(CreateCalculationResult result) => TypedResults.CreatedAtRoute(result,
         nameof(GetCalculation),
