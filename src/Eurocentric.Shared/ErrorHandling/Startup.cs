@@ -15,7 +15,9 @@ internal static class Startup
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     internal static IServiceCollection AddErrorHandling(this IServiceCollection services)
     {
-        services.AddProblemDetails(ConfigureProblemDetailsOptions);
+        services.AddProblemDetails(ConfigureProblemDetailsOptions)
+            .AddExceptionHandler<BadHttpRequestExceptionHandler>()
+            .AddExceptionHandler<FallbackExceptionHandler>();
 
         return services;
     }

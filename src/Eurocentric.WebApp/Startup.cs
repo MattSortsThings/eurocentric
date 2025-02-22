@@ -34,6 +34,10 @@ internal static class Startup
     {
         app.UseHttpsRedirection();
 
+        app.UseStatusCodePages();
+
+        app.UseExceptionHandler();
+
         app.UseAuthentication();
 
         app.UseAuthorization();
