@@ -1,4 +1,4 @@
-using Eurocentric.Shared.ApiModules;
+using Eurocentric.Shared.ApiRegistration;
 using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Documentation;
 using Eurocentric.Shared.ErrorHandling;
@@ -43,11 +43,9 @@ public static class Startup
     /// <param name="app">The web application.</param>
     public static void UseDocumentationEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapOpenApi()
-            .AllowAnonymous();
+        app.MapOpenApi().AllowAnonymous();
 
-        app.MapScalarApiReference("docs")
-            .AllowAnonymous();
+        app.MapScalarApiReference("docs").AllowAnonymous();
     }
 
     /// <summary>
@@ -58,9 +56,9 @@ public static class Startup
     {
         using IServiceScope scope = app.ServiceProvider.CreateScope();
 
-        foreach (IApiEndpointsMapper mapper in scope.ServiceProvider.GetRequiredService<IEnumerable<IApiEndpointsMapper>>())
+        foreach (IApiRegistrar registrar in scope.ServiceProvider.GetRequiredService<IEnumerable<IApiRegistrar>>())
         {
-            mapper.Map(app);
+            registrar.MapVersionedEndpoints(app);
         }
     }
 }

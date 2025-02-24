@@ -8,6 +8,8 @@ internal sealed class ScalarOptionsConfigurator : IConfigureOptions<ScalarOption
 {
     public void Configure(ScalarOptions options) => options.WithTheme(ScalarTheme.Kepler)
         .WithTitle("API documentation")
+        .WithModels(false)
+        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.RestSharp)
         .WithPreferredScheme(ApiKeyAuthenticationHandler.SchemeName)
         .WithApiKeyAuthentication(apiKey => apiKey.Token = "YOUR_API_KEY");
 }

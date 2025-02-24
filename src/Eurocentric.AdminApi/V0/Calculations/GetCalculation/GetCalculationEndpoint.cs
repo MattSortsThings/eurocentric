@@ -1,19 +1,19 @@
 using Asp.Versioning;
 using ErrorOr;
-using Eurocentric.Shared.ApiModules;
+using Eurocentric.AdminApi.Common;
+using Eurocentric.Shared.ApiRegistration;
 using Eurocentric.Shared.ErrorHandling;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.AdminApi.V0.Calculations.GetCalculation;
 
-internal sealed class GetCalculationEndpoint : IApiEndpoint
+internal sealed record GetCalculationEndpoint : IEndpointInfo
 {
-    private static Delegate Handler => async ([FromRoute(Name = "calculationId")] Guid calculationId,
+    internal const string Name = "GetCalculation";
+
+    public Delegate Handler => async ([FromRoute(Name = "calculationId")] Guid calculationId,
         ISender sender,
         CancellationToken cancellationToken = default) =>
     {
@@ -23,15 +23,17 @@ internal sealed class GetCalculationEndpoint : IApiEndpoint
         return errorsOrResult.ToHttpResult(TypedResults.Ok);
     };
 
-    public string EndpointName => nameof(GetCalculation);
+    public string Resource => "calculations/{calculationId:guid}";
 
-    public ApiVersion InitialApiVersion => new(0, 1);
+    public HttpMethod Method => HttpMethod.Get;
 
-    public RouteHandlerBuilder Map(IEndpointRouteBuilder apiGroup) =>
-        apiGroup.MapGet("calculations/{calculationId:guid}", Handler)
-            .WithSummary("Get calculation")
-            .WithTags("Calculations")
-            .Produces<GetCalculationResult>();
+    public string EndpointId => Name;
 
-    public void Configure(OpenApiOptions openApiOptions) { }
+    public ApiVersion InitialApiVersion => ApiVersions.V0.Point1;
+
+    public string Tag => ApiTags.Calculations;
+
+    public string Summary => "Get calculation";
+
+    public string Description => "Retrieves a single calculation.";
 }

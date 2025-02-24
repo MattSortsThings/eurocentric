@@ -1,18 +1,18 @@
 using Asp.Versioning;
 using ErrorOr;
-using Eurocentric.Shared.ApiModules;
+using Eurocentric.PublicApi.Common;
+using Eurocentric.Shared.ApiRegistration;
 using Eurocentric.Shared.ErrorHandling;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.PublicApi.V0.Stations.GetStations;
 
-internal sealed class GetStationsEndpoint : IApiEndpoint
+internal sealed record GetStationsEndpoint : IEndpointInfo
 {
-    private static Delegate Handler => async ([AsParameters] GetStationsQuery query,
+    private const string Name = "GetStations";
+
+    public Delegate Handler => async ([AsParameters] GetStationsQuery query,
         ISender sender,
         CancellationToken cancellationToken = default) =>
     {
@@ -21,15 +21,17 @@ internal sealed class GetStationsEndpoint : IApiEndpoint
         return errorsOrResult.ToHttpResult(TypedResults.Ok);
     };
 
-    public string EndpointName => nameof(GetStations);
+    public string Resource => "stations";
 
-    public ApiVersion InitialApiVersion => new(0, 1);
+    public HttpMethod Method => HttpMethod.Get;
 
-    public RouteHandlerBuilder Map(IEndpointRouteBuilder apiGroup) =>
-        apiGroup.MapGet("stations", Handler)
-            .WithSummary("Get stations")
-            .WithTags("Stations")
-            .Produces<GetStationsResult>();
+    public string EndpointId => Name;
 
-    public void Configure(OpenApiOptions openApiOptions) { }
+    public ApiVersion InitialApiVersion => ApiVersions.V0.Point1;
+
+    public string Tag => ApiTags.Stations;
+
+    public string Summary => "Get stations";
+
+    public string Description => "Retrieves a list of stations matching the query.";
 }

@@ -1,41 +1,42 @@
 using Asp.Versioning;
 using ErrorOr;
-using Eurocentric.Shared.ApiModules;
+using Eurocentric.AdminApi.Common;
+using Eurocentric.AdminApi.V0.Calculations.GetCalculation;
+using Eurocentric.Shared.ApiRegistration;
 using Eurocentric.Shared.ErrorHandling;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 
-internal sealed class CreateCalculationEndpoint : IApiEndpoint
+internal sealed record CreateCalculationEndpoint : IEndpointInfo
 {
-    private static Delegate Handler => async ([FromBody] CreateCalculationCommand command,
+    private const string Name = "CreateCalculation";
+
+    public Delegate Handler => async ([FromBody] CreateCalculationCommand command,
         ISender sender,
         CancellationToken cancellationToken = default) =>
     {
         ErrorOr<CreateCalculationResult> errorsOrResult = await sender.Send(command, cancellationToken);
 
-        return errorsOrResult.ToHttpResult(MapToCreatedAtRoute);
+        return errorsOrResult.ToHttpResult(result => TypedResults.CreatedAtRoute(result,
+            GetCalculationEndpoint.Name,
+            new RouteValueDictionary { ["calculationId"] = result.Calculation.Id }));
     };
 
-    public string EndpointName => nameof(CreateCalculation);
+    public string Resource => "calculations";
 
-    public ApiVersion InitialApiVersion => new(0, 2);
+    public HttpMethod Method => HttpMethod.Post;
 
-    public RouteHandlerBuilder Map(IEndpointRouteBuilder apiGroup) =>
-        apiGroup.MapPost("calculations", Handler)
-            .WithSummary("Create calculation")
-            .WithTags("Calculations")
-            .Produces<CreateCalculationResult>(StatusCodes.Status201Created);
+    public string EndpointId => Name;
 
-    public void Configure(OpenApiOptions openApiOptions) { }
+    public ApiVersion InitialApiVersion => ApiVersions.V0.Point2;
 
+    public string Tag => ApiTags.Calculations;
 
-    private static IResult MapToCreatedAtRoute(CreateCalculationResult result) => TypedResults.CreatedAtRoute(result,
-        nameof(GetCalculation),
-        new RouteValueDictionary { ["calculationId"] = result.Calculation.Id });
+    public string Summary => "Create calculation";
+
+    public string Description => "Creates a new calculation in the system.";
 }
