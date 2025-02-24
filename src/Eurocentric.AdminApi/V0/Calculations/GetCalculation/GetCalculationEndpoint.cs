@@ -29,9 +29,9 @@ internal sealed record GetCalculationEndpoint : IEndpointInfo
 
     public string EndpointId => Name;
 
-    public ApiVersion InitialApiVersion => ApiVersions.V0.Point1;
+    public ApiVersion InitialApiVersion => AdminApiInfo.Versions.V0.Point1;
 
-    public string Tag => ApiTags.Calculations;
+    public string Tag => AdminApiInfo.Tags.Calculations;
 
     public string Summary => "Get calculation";
 

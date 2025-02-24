@@ -27,9 +27,9 @@ internal sealed record GetStationsEndpoint : IEndpointInfo
 
     public string EndpointId => Name;
 
-    public ApiVersion InitialApiVersion => ApiVersions.V0.Point1;
+    public ApiVersion InitialApiVersion => PublicApiInfo.Versions.V0.Point1;
 
-    public string Tag => ApiTags.Stations;
+    public string Tag => PublicApiInfo.Tags.Stations;
 
     public string Summary => "Get stations";
 
