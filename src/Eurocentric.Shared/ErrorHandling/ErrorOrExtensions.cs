@@ -58,14 +58,14 @@ public static class ErrorOrExtensions
 
     private static string GetErrorTypeUrl(this Error error) => error.Type switch
     {
-        ErrorType.Failure => "https://tools.ietf.org/html/rfc9110#section-15.5.21",
-        ErrorType.Unexpected => "https://tools.ietf.org/html/rfc9110#section-15.6.1",
-        ErrorType.Validation => "https://tools.ietf.org/html/rfc9110#section-15.5.1",
-        ErrorType.Conflict => "https://tools.ietf.org/html/rfc9110#section-15.5.10",
-        ErrorType.NotFound => "https://tools.ietf.org/html/rfc9110#section-15.5.5",
-        ErrorType.Unauthorized => "https://tools.ietf.org/html/rfc9110#section-15.5.2",
-        ErrorType.Forbidden => "https://tools.ietf.org/html/rfc9110#section-15.5.4",
-        _ => "https://tools.ietf.org/html/rfc9110#section-15.6.1"
+        ErrorType.Failure => StatusCodeUrls.Status422UnprocessableEntity,
+        ErrorType.Unexpected => StatusCodeUrls.Status500InternalServerError,
+        ErrorType.Validation => StatusCodeUrls.Status400BadRequest,
+        ErrorType.Conflict => StatusCodeUrls.Status409Conflict,
+        ErrorType.NotFound => StatusCodeUrls.Status404NotFound,
+        ErrorType.Unauthorized => StatusCodeUrls.Status401Unauthorized,
+        ErrorType.Forbidden => StatusCodeUrls.Status403Forbidden,
+        _ => StatusCodeUrls.Status500InternalServerError
     };
 
     private static Dictionary<string, object?> GetExtensions(this Error error) =>

@@ -80,8 +80,6 @@ public sealed class ApiRegistrar<TApi> : IApiRegistrar
     private Action<OpenApiOptions> CreateOpenApiConfigurationAction(ApiVersion apiVersion, IEndpointInfo[] endpoints)
     {
         string groupName = _apiInfo.EndpointGroupName;
-        string title = _apiInfo.OpenApiDocumentTitle;
-        string description = _apiInfo.OpenApiDocumentDescription;
 
         ApiVersion version = apiVersion;
 
@@ -89,14 +87,8 @@ public sealed class ApiRegistrar<TApi> : IApiRegistrar
         {
             options.ShouldInclude = apiDescription => apiDescription.ShouldIncludeIn(groupName, version);
             options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>();
-            options.AddDocumentTransformer((document, _, _) =>
-            {
-                document.Info.Title = title;
-                document.Info.Description = description;
-                document.Info.Version = $"v{version.MajorVersion}.{version.MinorVersion}";
-
-                return Task.CompletedTask;
-            });
+            options.AddDocumentTransformer(new DocumentInfoTransformer(_apiInfo, version));
+            options.AddOperationTransformer<ProblemDetailsResponseTransformer>();
         };
     }
 
