@@ -39,4 +39,9 @@ internal sealed record CreateCalculationEndpoint : IEndpointInfo
     public string Summary => "Create calculation";
 
     public string Description => "Creates a new calculation in the system.";
+
+    public IEnumerable<int> ProblemStatusCodes =>
+        AdminApiInfo.UniversalProblemStatusCodes
+            .Append(StatusCodes.Status400BadRequest)
+            .Append(StatusCodes.Status422UnprocessableEntity);
 }

@@ -1,9 +1,13 @@
 using Eurocentric.Shared.ApiRegistration;
+using Microsoft.AspNetCore.Http;
 
 namespace Eurocentric.AdminApi.Common;
 
 public sealed record AdminApiInfo : IApiInfo
 {
+    internal static readonly int[] UniversalProblemStatusCodes =
+        [StatusCodes.Status401Unauthorized, StatusCodes.Status403Forbidden];
+
     public string ApiId => "AdminApi";
 
     public string UrlPrefix => "admin/api";

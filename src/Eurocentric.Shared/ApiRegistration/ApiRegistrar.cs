@@ -59,6 +59,7 @@ public sealed class ApiRegistrar<TApi> : IApiRegistrar
                 .Invoke(builder)
                 .WithName(endpoint.EndpointId)
                 .HasApiVersions(apiVersions.Where(version => endpoint.InitialApiVersion.ShouldIncludeIn(version)))
+                .ProducesProblem(endpoint.ProblemStatusCodes)
                 .WithSummary(endpoint.Summary)
                 .WithDescription(endpoint.Description)
                 .WithTags(endpoint.Tag);

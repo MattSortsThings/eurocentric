@@ -50,4 +50,9 @@ public interface IEndpointInfo
     ///     Gets the OpenAPI description for the endpoint.
     /// </summary>
     public string Description { get; }
+
+    /// <summary>
+    ///     Gets a list of all the ProblemDetails status codes returned by the endpoint.
+    /// </summary>
+    public IEnumerable<int> ProblemStatusCodes { get; }
 }

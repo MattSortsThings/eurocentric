@@ -36,4 +36,6 @@ internal sealed record GetCalculationEndpoint : IEndpointInfo
     public string Summary => "Get calculation";
 
     public string Description => "Retrieves a single calculation.";
+
+    public IEnumerable<int> ProblemStatusCodes => AdminApiInfo.UniversalProblemStatusCodes.Append(StatusCodes.Status404NotFound);
 }

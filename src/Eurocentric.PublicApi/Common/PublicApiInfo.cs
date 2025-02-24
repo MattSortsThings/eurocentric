@@ -1,9 +1,12 @@
 using Eurocentric.Shared.ApiRegistration;
+using Microsoft.AspNetCore.Http;
 
 namespace Eurocentric.PublicApi.Common;
 
 public sealed record PublicApiInfo : IApiInfo
 {
+    internal static readonly int[] UniversalProblemStatusCodes = [StatusCodes.Status401Unauthorized];
+
     public string ApiId => "PublicApi";
 
     public string UrlPrefix => "public/api";

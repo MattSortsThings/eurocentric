@@ -34,4 +34,7 @@ internal sealed record GetStationsEndpoint : IEndpointInfo
     public string Summary => "Get stations";
 
     public string Description => "Retrieves a list of stations matching the query.";
+
+    public IEnumerable<int> ProblemStatusCodes =>
+        PublicApiInfo.UniversalProblemStatusCodes.Append(StatusCodes.Status400BadRequest);
 }
