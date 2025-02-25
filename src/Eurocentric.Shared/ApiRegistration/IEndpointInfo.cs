@@ -55,4 +55,9 @@ public interface IEndpointInfo
     ///     Gets a list of all the ProblemDetails status codes returned by the endpoint.
     /// </summary>
     public IEnumerable<int> ProblemStatusCodes { get; }
+
+    /// <summary>
+    ///     Gets examples of the endpoint's request and/or response types.
+    /// </summary>
+    public IEnumerable<object> Examples { get; }
 }

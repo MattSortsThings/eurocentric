@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using ErrorOr;
 using Eurocentric.PublicApi.Common;
+using Eurocentric.PublicApi.V0.Stations.Models;
 using Eurocentric.Shared.ApiRegistration;
 using Eurocentric.Shared.ErrorHandling;
 using MediatR;
@@ -37,4 +38,18 @@ internal sealed record GetStationsEndpoint : IEndpointInfo
 
     public IEnumerable<int> ProblemStatusCodes =>
         PublicApiInfo.UniversalProblemStatusCodes.Append(StatusCodes.Status400BadRequest);
+
+    public IEnumerable<object> Examples
+    {
+        get
+        {
+            yield return new GetStationsResult([
+                new Station("Green Park", Line.Jubilee),
+                new Station("Westminster", Line.Jubilee),
+                new Station("Canada Water", Line.Jubilee),
+                new Station("Canary Wharf", Line.Jubilee),
+                new Station("North Greenwich", Line.Jubilee)
+            ]);
+        }
+    }
 }

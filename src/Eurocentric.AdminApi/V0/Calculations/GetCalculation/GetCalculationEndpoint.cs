@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using ErrorOr;
 using Eurocentric.AdminApi.Common;
+using Eurocentric.AdminApi.V0.Calculations.Models;
 using Eurocentric.Shared.ApiRegistration;
 using Eurocentric.Shared.ErrorHandling;
 using MediatR;
@@ -38,4 +39,12 @@ internal sealed record GetCalculationEndpoint : IEndpointInfo
     public string Description => "Retrieves a single calculation.";
 
     public IEnumerable<int> ProblemStatusCodes => AdminApiInfo.UniversalProblemStatusCodes.Append(StatusCodes.Status404NotFound);
+
+    public IEnumerable<object> Examples
+    {
+        get
+        {
+            yield return new GetCalculationResult(new Calculation(Guid.NewGuid(), 5, 10, Operation.Product, 50));
+        }
+    }
 }

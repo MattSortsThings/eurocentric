@@ -2,6 +2,7 @@ using Asp.Versioning;
 using ErrorOr;
 using Eurocentric.AdminApi.Common;
 using Eurocentric.AdminApi.V0.Calculations.GetCalculation;
+using Eurocentric.AdminApi.V0.Calculations.Models;
 using Eurocentric.Shared.ApiRegistration;
 using Eurocentric.Shared.ErrorHandling;
 using MediatR;
@@ -44,4 +45,13 @@ internal sealed record CreateCalculationEndpoint : IEndpointInfo
         AdminApiInfo.UniversalProblemStatusCodes
             .Append(StatusCodes.Status400BadRequest)
             .Append(StatusCodes.Status422UnprocessableEntity);
+
+    public IEnumerable<object> Examples
+    {
+        get
+        {
+            yield return new CreateCalculationCommand { X = 5, Y = 10, Operation = Operation.Product };
+            yield return new CreateCalculationResult(new Calculation(Guid.NewGuid(), 5, 10, Operation.Product, 50));
+        }
+    }
 }

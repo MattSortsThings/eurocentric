@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Any;
 
 namespace Eurocentric.Shared.ApiRegistration;
 
@@ -68,16 +69,17 @@ public sealed class ApiRegistrar<TApi> : IApiRegistrar
 
     private IEnumerable<Action<IServiceCollection>> GetOpenApiDocumentCreationActions()
     {
-        var (apiVersions, endpoints) = ScanAssemblyForApiVersionsAndEndpoints();
+        var (apiVersions, examples) = ScanAssemblyForApiVersionsAndExamples();
 
         foreach (ApiVersion apiVersion in apiVersions)
         {
             yield return services => services.AddOpenApi(CreateOpenApiDocumentName(apiVersion),
-                CreateOpenApiConfigurationAction(apiVersion, endpoints));
+                CreateOpenApiConfigurationAction(apiVersion, examples));
         }
     }
 
-    private Action<OpenApiOptions> CreateOpenApiConfigurationAction(ApiVersion apiVersion, IEndpointInfo[] endpoints)
+    private Action<OpenApiOptions> CreateOpenApiConfigurationAction(ApiVersion apiVersion,
+        Dictionary<Type, IOpenApiAny> examples)
     {
         string groupName = _apiInfo.EndpointGroupName;
 
@@ -89,7 +91,30 @@ public sealed class ApiRegistrar<TApi> : IApiRegistrar
             options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>();
             options.AddDocumentTransformer(new DocumentInfoTransformer(_apiInfo, version));
             options.AddOperationTransformer<ProblemDetailsResponseTransformer>();
+            options.AddSchemaTransformer(new SchemaExampleTransformer(examples));
         };
+    }
+
+    private (ApiVersion[] ApiVersions, Dictionary<Type, IOpenApiAny> Examples) ScanAssemblyForApiVersionsAndExamples()
+    {
+        IEndpointInfo[] endpoints = _apiInfo.GetType().Assembly.GetTypes()
+            .Where(type => typeof(IEndpointInfo).IsAssignableFrom(type) && type is { IsAbstract: false, IsInterface: false })
+            .OrderBy(type => type.Name)
+            .Select(type => Activator.CreateInstance(type) as IEndpointInfo is var info && info is not null
+                ? info
+                : throw new InvalidOperationException($"Could not instantiate type {type.Name} as IEndpointInfo."))
+            .ToArray();
+
+        ApiVersion[] apiVersions = endpoints.Select(endpoint => endpoint.InitialApiVersion)
+            .Distinct()
+            .OrderBy(apiVersion => apiVersion)
+            .ToArray();
+
+        Dictionary<Type, IOpenApiAny> examples = endpoints.SelectMany(endpoint => endpoint.Examples)
+            .ToDictionary(example => example.GetType(), example => example.ToOpenApiAny());
+
+
+        return (apiVersions, examples);
     }
 
 
