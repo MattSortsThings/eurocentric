@@ -1,3 +1,7 @@
-### Placeholder endpoint
+### Admin API placeholder endpoint
 
-GET http://localhost:5055/placeholder
+GET http://localhost:5055/admin/api/v0.1/placeholder
+
+### Public API placeholder endpoint
+
+GET http://localhost:5055/public/api/v0.1/placeholder
