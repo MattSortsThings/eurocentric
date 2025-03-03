@@ -9,7 +9,7 @@ namespace Eurocentric.WebApp.Tests.Acceptance.AdminApi.V0.Calculations;
 
 public static class CreateCalculationTests
 {
-    private const string Route = "/admin/api/v0.1/calculations";
+    private const string Route = "/admin/api/v0.2/calculations";
 
     public sealed class Api(CleanWebAppFixture fixture) : AcceptanceTest(fixture)
     {

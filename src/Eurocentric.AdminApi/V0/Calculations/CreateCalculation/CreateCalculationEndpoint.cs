@@ -25,6 +25,10 @@ internal sealed record CreateCalculationEndpoint : IEndpointInfo
 
     public string Route => "calculations";
 
+    public int MajorApiVersion => 0;
+
+    public int MinorApiVersion => 2;
+
     private static CreatedAtRoute<CreateCalculationResult> MapToCreatedAtRoute(CreateCalculationResult result) =>
         TypedResults.CreatedAtRoute(result,
             nameof(GetCalculation),

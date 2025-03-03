@@ -21,4 +21,8 @@ internal sealed record GetStationsEndpoint : IEndpointInfo
     public HttpMethod Method => HttpMethod.Get;
 
     public string Route => "stations";
+
+    public int MajorApiVersion => 0;
+
+    public int MinorApiVersion => 1;
 }

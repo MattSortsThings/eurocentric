@@ -4,6 +4,7 @@ using Eurocentric.PublicApi;
 using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Endpoints;
 using Eurocentric.Shared.Json;
+using Eurocentric.Shared.Versioning;
 
 namespace Eurocentric.WebApp;
 
@@ -23,7 +24,8 @@ public static class Startup
             .AddPublicApi()
             .AddAppPipeline()
             .AddDataAccess()
-            .AddJsonConfiguration();
+            .AddJsonConfiguration()
+            .AddVersioning();
 
         return builder;
     }

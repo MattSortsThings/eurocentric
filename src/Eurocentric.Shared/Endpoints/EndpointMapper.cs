@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Eurocentric.Shared.ApiAbstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -11,18 +12,56 @@ public sealed class EndpointMapper<TApiInfo> : IEndpointMapper
 
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder apiGroup = app.MapGroup(_apiInfo.UrlPrefix)
+        RouteGroupBuilder api = app.NewVersionedApi(_apiInfo.Id)
+            .MapGroup(_apiInfo.UrlPrefix)
             .WithGroupName(_apiInfo.EndpointGroupName);
 
-        IEnumerable<IEndpointInfo> endpoints = _apiInfo.GetType().Assembly.GetTypes()
-            .Where(type => typeof(IEndpointInfo).IsAssignableFrom(type) && type is { IsAbstract : false, IsInterface: false })
-            .Select(type => (IEndpointInfo)Activator.CreateInstance(type)!);
+        foreach (Action<IEndpointRouteBuilder> mapper in GetEndpointMappingActions())
+        {
+            mapper.Invoke(api);
+        }
+
+        Console.WriteLine(api);
+    }
+
+    private IEnumerable<Action<IEndpointRouteBuilder>> GetEndpointMappingActions()
+    {
+        var (endpoints, versions) = ScanAssemblyForEndpointsAndApiVersions();
 
         foreach (IEndpointInfo endpoint in endpoints)
         {
-            Func<IEndpointRouteBuilder, RouteHandlerBuilder>? builder = InitializeRouteHandlerBuilder(endpoint);
-            builder.Invoke(apiGroup).WithName(endpoint.Name);
+            yield return builder => InitializeRouteHandlerBuilder(endpoint)
+                .Invoke(builder)
+                .WithName(endpoint.Name)
+                .HasApiVersions(GetApplicableApiVersions(endpoint, versions));
         }
+    }
+
+
+    private (IEndpointInfo[] Endpoints, ApiVersion[] ApiVersions) ScanAssemblyForEndpointsAndApiVersions()
+    {
+        IEndpointInfo[] endpoints = _apiInfo.GetType().Assembly.GetTypes()
+            .Where(CanInstantiateAsEndpoint)
+            .Select(type => (IEndpointInfo)Activator.CreateInstance(type)!)
+            .ToArray();
+
+        ApiVersion[] apiVersions = endpoints.GroupBy(endpoint => endpoint.MajorApiVersion)
+            .SelectMany(grouping => grouping.GroupBy(endpoint => endpoint.MinorApiVersion)
+                .Select(subGrouping => new ApiVersion(grouping.Key, subGrouping.Key)))
+            .OrderBy(apiVersion => apiVersion)
+            .ToArray();
+
+        return (endpoints, apiVersions);
+    }
+
+    private static bool CanInstantiateAsEndpoint(Type type) =>
+        typeof(IEndpointInfo).IsAssignableFrom(type) && type is { IsAbstract : false, IsInterface: false };
+
+    private static IEnumerable<ApiVersion> GetApplicableApiVersions(IEndpointInfo endpoint, ApiVersion[] apiVersions)
+    {
+        (int major, int minor) = (endpoint.MajorApiVersion, endpoint.MinorApiVersion);
+
+        return apiVersions.Where(version => version.MajorVersion == major && version.MinorVersion >= minor);
     }
 
     private static Func<IEndpointRouteBuilder, RouteHandlerBuilder> InitializeRouteHandlerBuilder(IEndpointInfo endpoint)

@@ -23,5 +23,9 @@ public sealed record GetCalculationEndpoint : IEndpointInfo
 
     public string Route => "calculations/{calculationId:guid}";
 
+    public int MajorApiVersion => 0;
+
+    public int MinorApiVersion => 1;
+
     private static GetCalculationQuery MapToQuery(Guid calculationId) => new(calculationId);
 }

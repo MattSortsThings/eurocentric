@@ -28,4 +28,14 @@ public interface IEndpointInfo
     /// </summary>
     /// <example>"songs/{id}"</example>
     public string Route { get; }
+
+    /// <summary>
+    ///     Gets the major API version number in which the endpoint was added.
+    /// </summary>
+    public int MajorApiVersion { get; }
+
+    /// <summary>
+    ///     Gets the minor API version number in which the endpoint was added.
+    /// </summary>
+    public int MinorApiVersion { get; }
 }

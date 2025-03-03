@@ -4,7 +4,9 @@ namespace Eurocentric.PublicApi.Common;
 
 internal sealed record ApiInfo : IApiInfo
 {
-    public string UrlPrefix => "public/api/v0.1";
+    public string Id => nameof(PublicApi);
+
+    public string UrlPrefix => "public/api/v{version:apiVersion}";
 
     public string EndpointGroupName => "public-api";
 }
