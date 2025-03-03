@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+using Eurocentric.AdminApi.Common;
+using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Endpoints;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.AdminApi;
 
@@ -9,7 +10,16 @@ namespace Eurocentric.AdminApi;
 /// </summary>
 public static class Startup
 {
-    public static void MapAdminApiPlaceholderEndpoint(this IEndpointRouteBuilder endpoints) =>
-        endpoints.MapGet("admin/api/v0.1/placeholder",
-            () => TypedResults.Ok($"Admin API zapped to the extreme at {DateTime.Now}."));
+    /// <summary>
+    ///     Adds the Admin API services to the application service descriptor collection.
+    /// </summary>
+    /// <param name="services">Contains service descriptors for the application.</param>
+    /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
+    public static IServiceCollection AddAdminApi(this IServiceCollection services)
+    {
+        services.AddTransient<IAppPipelineConfigurator, AppPipelineConfigurator>()
+            .AddTransient<IEndpointMapper, EndpointMapper<ApiInfo>>();
+
+        return services;
+    }
 }

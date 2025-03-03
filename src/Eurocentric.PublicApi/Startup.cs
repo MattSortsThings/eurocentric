@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+using Eurocentric.PublicApi.Common;
+using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Endpoints;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.PublicApi;
 
@@ -9,7 +10,16 @@ namespace Eurocentric.PublicApi;
 /// </summary>
 public static class Startup
 {
-    public static void MapPublicApiPlaceholderEndpoint(this IEndpointRouteBuilder endpoints) =>
-        endpoints.MapGet("public/api/v0.1/placeholder",
-            () => TypedResults.Ok($"Public API zapped to the extreme at {DateTime.Now}."));
+    /// <summary>
+    ///     Adds the Public API services to the application service descriptor collection.
+    /// </summary>
+    /// <param name="services">Contains service descriptors for the application.</param>
+    /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
+    public static IServiceCollection AddPublicApi(this IServiceCollection services)
+    {
+        services.AddTransient<IAppPipelineConfigurator, AppPipelineConfigurator>()
+            .AddTransient<IEndpointMapper, EndpointMapper<ApiInfo>>();
+
+        return services;
+    }
 }

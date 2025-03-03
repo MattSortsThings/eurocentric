@@ -2,6 +2,8 @@ using Eurocentric.AdminApi;
 using Eurocentric.DataAccess;
 using Eurocentric.PublicApi;
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Endpoints;
+using Eurocentric.Shared.Json;
 
 namespace Eurocentric.WebApp;
 
@@ -17,8 +19,11 @@ public static class Startup
     /// <returns>The same <see cref="WebApplicationBuilder" /> instance, so that method invocations can be chained.</returns>
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddAppPipeline()
-            .AddDataAccess();
+        builder.Services.AddAdminApi()
+            .AddPublicApi()
+            .AddAppPipeline()
+            .AddDataAccess()
+            .AddJsonConfiguration();
 
         return builder;
     }
@@ -32,9 +37,7 @@ public static class Startup
     {
         app.UseHttpsRedirection();
 
-        app.MapAdminApiPlaceholderEndpoint();
-
-        app.MapPublicApiPlaceholderEndpoint();
+        app.UseApiEndpoints();
 
         return app;
     }
