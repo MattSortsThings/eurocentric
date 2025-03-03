@@ -11,6 +11,6 @@ internal sealed class GetCalculationHandler : QueryHandler<GetCalculationQuery, 
     {
         await Task.CompletedTask;
 
-        return new GetCalculationResult(new Calculation(Guid.NewGuid(), 5, 10, Operation.Product, 50));
+        return new GetCalculationResult(new Calculation(query.CalculationId, 5, 10, Operation.Product, 50));
     }
 }
