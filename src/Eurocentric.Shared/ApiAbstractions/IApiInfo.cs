@@ -15,7 +15,8 @@ public interface IApiInfo
     ///     Gets the URL prefix for the API.
     /// </summary>
     /// <remarks>
-    ///     The URL prefix must include an API version segment template as shown in the example.
+    ///     The URL prefix must include an API version segment template as shown in the example. This will be replaced with the
+    ///     version number when endpoints are mapped.
     /// </remarks>
     /// <example>
     ///     <c>"music/api/v{version:apiVersion}"</c>
@@ -29,4 +30,19 @@ public interface IApiInfo
     ///     <c>"music-api"</c>
     /// </example>
     public string EndpointGroupName { get; }
+
+    /// <summary>
+    ///     Gets the sequence of problem status codes returned by every endpoint in the API.
+    /// </summary>
+    public IEnumerable<int> ProblemStatusCodes { get; }
+
+    /// <summary>
+    ///     Gets the OpenAPI document title for the API.
+    /// </summary>
+    public string Title { get; }
+
+    /// <summary>
+    ///     Gets the OpenAPI document description for the API.
+    /// </summary>
+    public string Description { get; }
 }

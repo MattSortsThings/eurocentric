@@ -1,5 +1,6 @@
 using Eurocentric.PublicApi.Common;
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Documentation;
 using Eurocentric.Shared.Endpoints;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +19,8 @@ public static class Startup
     public static IServiceCollection AddPublicApi(this IServiceCollection services)
     {
         services.AddTransient<IAppPipelineConfigurator, AppPipelineConfigurator>()
-            .AddTransient<IEndpointMapper, EndpointMapper<ApiInfo>>();
+            .AddTransient<IEndpointMapper, EndpointMapper<ApiInfo>>()
+            .AddTransient<IOpenApiGenerator, OpenApiGenerator<ApiInfo>>();
 
         return services;
     }

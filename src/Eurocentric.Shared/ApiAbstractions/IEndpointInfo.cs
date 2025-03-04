@@ -26,7 +26,9 @@ public interface IEndpointInfo
     /// <summary>
     ///     Gets the relative route pattern for the endpoint.
     /// </summary>
-    /// <example>"songs/{id}"</example>
+    /// <example>
+    ///     <c>"songs/{id}"</c>
+    /// </example>
     public string Route { get; }
 
     /// <summary>
@@ -38,4 +40,40 @@ public interface IEndpointInfo
     ///     Gets the minor API version number in which the endpoint was added.
     /// </summary>
     public int MinorApiVersion { get; }
+
+    /// <summary>
+    ///     Gets the OpenAPI summary for the endpoint.
+    /// </summary>
+    /// <example>
+    ///     <c>"Get a song"</c>
+    /// </example>
+    public string Summary { get; }
+
+    /// <summary>
+    ///     Gets the OpenAPI description for the endpoint.
+    /// </summary>
+    /// <example>
+    ///     <c>"Retrieves a single song. The client must supply the song ID as a route parameter."</c>
+    /// </example>
+    public string Description { get; }
+
+    /// <summary>
+    ///     Gets the OpenAPI tag for the endpoint.
+    /// </summary>
+    /// <example>
+    ///     <c>"Songs"</c>
+    /// </example>
+    public string Tag { get; }
+
+    /// <summary>
+    ///     Gets the sequence of problem status codes returned by the endpoint.
+    /// </summary>
+    /// <remarks>This sequence should exclude all problem status codes defined at the API level.</remarks>
+    public IEnumerable<int> ProblemStatusCodes { get; }
+
+    /// <summary>
+    ///     Gets the sequence of example request body and/or response body objects for the endpoint.
+    /// </summary>
+    /// <remarks>There can only be a single example of any given type.</remarks>
+    public IEnumerable<object> Examples { get; }
 }

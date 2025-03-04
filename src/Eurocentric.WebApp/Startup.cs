@@ -2,6 +2,7 @@ using Eurocentric.AdminApi;
 using Eurocentric.DataAccess;
 using Eurocentric.PublicApi;
 using Eurocentric.Shared.AppPipeline;
+using Eurocentric.Shared.Documentation;
 using Eurocentric.Shared.Endpoints;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Versioning;
@@ -24,6 +25,7 @@ public static class Startup
             .AddPublicApi()
             .AddAppPipeline()
             .AddDataAccess()
+            .AddDocumentation()
             .AddJsonConfiguration()
             .AddVersioning();
 
@@ -40,6 +42,8 @@ public static class Startup
         app.UseHttpsRedirection();
 
         app.UseApiEndpoints();
+
+        app.UseDocumentationEndpoints();
 
         return app;
     }

@@ -1,20 +1,20 @@
 using Asp.Versioning;
 using Eurocentric.Shared.ApiAbstractions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Shared.Endpoints;
 
-public sealed class EndpointMapper<TApiInfo> : IEndpointMapper
+public sealed class EndpointMapper<TApiInfo> : ApiAssemblyScanner<TApiInfo>, IEndpointMapper
     where TApiInfo : class, IApiInfo, new()
 {
-    private readonly TApiInfo _apiInfo = new();
-
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder api = app.NewVersionedApi(_apiInfo.Id)
-            .MapGroup(_apiInfo.UrlPrefix)
-            .WithGroupName(_apiInfo.EndpointGroupName);
+        RouteGroupBuilder api = app.NewVersionedApi(ApiInfo.Id)
+            .MapGroup(ApiInfo.UrlPrefix)
+            .WithGroupName(ApiInfo.EndpointGroupName)
+            .ProducesProblems(ApiInfo.ProblemStatusCodes);
 
         foreach (Action<IEndpointRouteBuilder> mapper in GetEndpointMappingActions())
         {
@@ -33,29 +33,12 @@ public sealed class EndpointMapper<TApiInfo> : IEndpointMapper
             yield return builder => InitializeRouteHandlerBuilder(endpoint)
                 .Invoke(builder)
                 .WithName(endpoint.Name)
+                .WithSummary(endpoint.Summary)
+                .WithDescription(endpoint.Description)
+                .ProducesProblems(endpoint.ProblemStatusCodes)
                 .HasApiVersions(GetApplicableApiVersions(endpoint, versions));
         }
     }
-
-
-    private (IEndpointInfo[] Endpoints, ApiVersion[] ApiVersions) ScanAssemblyForEndpointsAndApiVersions()
-    {
-        IEndpointInfo[] endpoints = _apiInfo.GetType().Assembly.GetTypes()
-            .Where(CanInstantiateAsEndpoint)
-            .Select(type => (IEndpointInfo)Activator.CreateInstance(type)!)
-            .ToArray();
-
-        ApiVersion[] apiVersions = endpoints.GroupBy(endpoint => endpoint.MajorApiVersion)
-            .SelectMany(grouping => grouping.GroupBy(endpoint => endpoint.MinorApiVersion)
-                .Select(subGrouping => new ApiVersion(grouping.Key, subGrouping.Key)))
-            .OrderBy(apiVersion => apiVersion)
-            .ToArray();
-
-        return (endpoints, apiVersions);
-    }
-
-    private static bool CanInstantiateAsEndpoint(Type type) =>
-        typeof(IEndpointInfo).IsAssignableFrom(type) && type is { IsAbstract : false, IsInterface: false };
 
     private static IEnumerable<ApiVersion> GetApplicableApiVersions(IEndpointInfo endpoint, ApiVersion[] apiVersions)
     {
