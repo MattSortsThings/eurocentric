@@ -47,6 +47,8 @@ public static class Startup
 
         app.UseStatusCodePages();
 
+        app.UseExceptionHandler();
+
         app.UseAuthentication();
 
         app.UseAuthorization();
