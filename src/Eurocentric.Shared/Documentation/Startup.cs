@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Scalar.AspNetCore;
 
 namespace Eurocentric.Shared.Documentation;
 
@@ -16,10 +17,9 @@ public static class Startup
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddDocumentation(this IServiceCollection services)
     {
-        using ServiceProvider serviceProvider = services.BuildServiceProvider();
-        using IServiceScope scope = serviceProvider.CreateScope();
+        services.ConfigureOptions<ScalarConfigurator>();
 
-        foreach (IOpenApiGenerator generator in scope.ServiceProvider.GetRequiredService<IEnumerable<IOpenApiGenerator>>())
+        foreach (IOpenApiGenerator generator in GetOpenApiGenerators(services))
         {
             generator.AddOpenApiDocuments(services);
         }
@@ -32,5 +32,18 @@ public static class Startup
     /// </summary>
     /// <remarks>Documentation endpoints allow anonymous access with no authentication.</remarks>
     /// <param name="app">The web application.</param>
-    public static void UseDocumentationEndpoints(this IEndpointRouteBuilder app) => app.MapOpenApi().AllowAnonymous();
+    public static void UseDocumentationEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.MapOpenApi().AllowAnonymous();
+
+        app.MapScalarApiReference("docs").AllowAnonymous();
+    }
+
+    private static IEnumerable<IOpenApiGenerator> GetOpenApiGenerators(IServiceCollection services)
+    {
+        using ServiceProvider serviceProvider = services.BuildServiceProvider();
+        using IServiceScope scope = serviceProvider.CreateScope();
+
+        return scope.ServiceProvider.GetRequiredService<IEnumerable<IOpenApiGenerator>>();
+    }
 }
