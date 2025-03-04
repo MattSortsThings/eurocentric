@@ -45,4 +45,9 @@ public interface IApiInfo
     ///     Gets the OpenAPI document description for the API.
     /// </summary>
     public string Description { get; }
+
+    /// <summary>
+    ///     Gets the authorization policy name for the API.
+    /// </summary>
+    public string AuthorizationPolicyName { get; }
 }

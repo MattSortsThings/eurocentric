@@ -4,7 +4,8 @@
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": false,
+      "launchBrowser": true,
+      "launchUrl": "docs/public-api-v0.1",
       "applicationUrl": "http://localhost:5055",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

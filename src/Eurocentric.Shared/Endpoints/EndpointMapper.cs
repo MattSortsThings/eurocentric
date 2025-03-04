@@ -14,6 +14,7 @@ public sealed class EndpointMapper<TApiInfo> : ApiAssemblyScanner<TApiInfo>, IEn
         RouteGroupBuilder api = app.NewVersionedApi(ApiInfo.Id)
             .MapGroup(ApiInfo.UrlPrefix)
             .WithGroupName(ApiInfo.EndpointGroupName)
+            .RequireAuthorization(ApiInfo.AuthorizationPolicyName)
             .ProducesProblems(ApiInfo.ProblemStatusCodes);
 
         foreach (Action<IEndpointRouteBuilder> mapper in GetEndpointMappingActions())

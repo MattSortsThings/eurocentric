@@ -23,4 +23,6 @@ internal sealed record ApiInfo : IApiInfo
     public string Title => "Eurocentric Admin API";
 
     public string Description => "A web API for modelling the Eurovision Song Contest, 2016-present.";
+
+    public string AuthorizationPolicyName => AuthorizationPolicyConfigurator.Name;
 }

@@ -19,7 +19,7 @@ public static class GetStationsTests
             // Arrange
             const Line line = Line.Jubilee;
 
-            RestRequest request = Get(Route).AddQueryParameter(nameof(line), line);
+            RestRequest request = Get(Route).AddQueryParameter(nameof(line), line).UsePublicApiKey();
 
             // Act
             (HttpStatusCode statusCode, GetStationsResult result) = await SendAsync<GetStationsResult>(request);

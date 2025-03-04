@@ -18,7 +18,7 @@ public static class GetCalculationTests
             // Arrange
             Guid calculationId = Guid.Parse("174b7955-dbaf-421f-aa91-d996c699c48f");
 
-            RestRequest request = Get($"{Route}/{calculationId}");
+            RestRequest request = Get($"{Route}/{calculationId}").UseAdminApiKey();
 
             // Act
             (HttpStatusCode statusCode, CreateCalculationResult result) = await SendAsync<CreateCalculationResult>(request);

@@ -5,6 +5,7 @@ using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Documentation;
 using Eurocentric.Shared.Endpoints;
 using Eurocentric.Shared.Json;
+using Eurocentric.Shared.Security;
 using Eurocentric.Shared.Versioning;
 
 namespace Eurocentric.WebApp;
@@ -27,6 +28,7 @@ public static class Startup
             .AddDataAccess()
             .AddDocumentation()
             .AddJsonConfiguration()
+            .AddSecurity()
             .AddVersioning();
 
         return builder;
@@ -40,6 +42,10 @@ public static class Startup
     public static WebApplication ConfigureMiddleware(this WebApplication app)
     {
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
 
         app.UseApiEndpoints();
 

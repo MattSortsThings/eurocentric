@@ -1,3 +1,4 @@
+using Eurocentric.Shared.Security;
 using Eurocentric.WebApp.Tests.Fixtures;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Json;
@@ -17,9 +18,16 @@ public sealed class CleanWebAppFixture : WebAppFixture
     /// </summary>
     public void Reset() { }
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder) =>
-        builder.ConfigureTestServices(services =>
-            services.AddSingleton(CreateRestClient));
+    protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
+    {
+        services.AddSingleton(CreateRestClient);
+
+        services.Configure<ApiKeysOptions>(options =>
+        {
+            options.AdminApiKey = TestApiKeys.Admin;
+            options.PublicApiKey = TestApiKeys.Public;
+        });
+    });
 
     private IRestClient CreateRestClient(IServiceProvider serviceProvider)
     {

@@ -29,6 +29,7 @@ public sealed class OpenApiGenerator<TApiInfo> : ApiAssemblyScanner<TApiInfo>, I
             {
                 options.ShouldInclude = CreateInclusionPredicate(apiVersion);
                 options.AddDocumentTransformer(CreateDocumentInfoTransformer(apiVersion));
+                options.AddDocumentTransformer<DocumentSecuritySchemeTransformer>();
                 options.AddOperationTransformer<OperationProblemDetailsResponseTransformer>();
                 options.AddSchemaTransformer(new SchemaExampleTransformer(examples));
             });

@@ -19,7 +19,7 @@ public static class CreateCalculationTests
             // Arrange
             CreateCalculationCommand command = new() { X = 10, Y = 100, Operation = Operation.Product };
 
-            RestRequest request = Post(Route).AddJsonBody(command);
+            RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(command);
 
             // Act
             (HttpStatusCode statusCode, CreateCalculationResult result, string location) =

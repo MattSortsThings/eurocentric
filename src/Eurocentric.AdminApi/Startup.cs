@@ -2,6 +2,7 @@ using Eurocentric.AdminApi.Common;
 using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Documentation;
 using Eurocentric.Shared.Endpoints;
+using Eurocentric.Shared.Security;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.AdminApi;
@@ -19,6 +20,7 @@ public static class Startup
     public static IServiceCollection AddAdminApi(this IServiceCollection services)
     {
         services.AddTransient<IAppPipelineConfigurator, AppPipelineConfigurator>()
+            .AddTransient<IAuthorizationPolicyConfigurator, AuthorizationPolicyConfigurator>()
             .AddTransient<IEndpointMapper, EndpointMapper<ApiInfo>>()
             .AddTransient<IOpenApiGenerator, OpenApiGenerator<ApiInfo>>();
 
