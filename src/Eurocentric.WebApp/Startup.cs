@@ -4,6 +4,7 @@ using Eurocentric.PublicApi;
 using Eurocentric.Shared.AppPipeline;
 using Eurocentric.Shared.Documentation;
 using Eurocentric.Shared.Endpoints;
+using Eurocentric.Shared.ErrorHandling;
 using Eurocentric.Shared.Json;
 using Eurocentric.Shared.Security;
 using Eurocentric.Shared.Versioning;
@@ -27,6 +28,7 @@ public static class Startup
             .AddAppPipeline()
             .AddDataAccess()
             .AddDocumentation()
+            .AddErrorHandling()
             .AddJsonConfiguration()
             .AddSecurity()
             .AddVersioning();
@@ -42,6 +44,8 @@ public static class Startup
     public static WebApplication ConfigureMiddleware(this WebApplication app)
     {
         app.UseHttpsRedirection();
+
+        app.UseStatusCodePages();
 
         app.UseAuthentication();
 

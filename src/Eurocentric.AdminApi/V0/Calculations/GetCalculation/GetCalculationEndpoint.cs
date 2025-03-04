@@ -2,6 +2,7 @@ using ErrorOr;
 using Eurocentric.AdminApi.Common;
 using Eurocentric.AdminApi.V0.Calculations.Models;
 using Eurocentric.Shared.ApiAbstractions;
+using Eurocentric.Shared.ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public sealed record GetCalculationEndpoint : IEndpointInfo
     {
         ErrorOr<GetCalculationResult> errorsOrResult = await sender.Send(MapToQuery(calculationId), cancellationToken);
 
-        return TypedResults.Ok(errorsOrResult.Value);
+        return errorsOrResult.ToHttpResult(TypedResults.Ok);
     };
 
     public HttpMethod Method => HttpMethod.Get;

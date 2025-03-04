@@ -2,6 +2,7 @@ using ErrorOr;
 using Eurocentric.AdminApi.Common;
 using Eurocentric.AdminApi.V0.Calculations.Models;
 using Eurocentric.Shared.ApiAbstractions;
+using Eurocentric.Shared.ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -20,7 +21,7 @@ internal sealed record CreateCalculationEndpoint : IEndpointInfo
     {
         ErrorOr<CreateCalculationResult> errorsOrResult = await sender.Send(command, cancellationToken);
 
-        return MapToCreatedAtRoute(errorsOrResult.Value);
+        return errorsOrResult.ToHttpResult(MapToCreatedAtRoute);
     };
 
     public HttpMethod Method => HttpMethod.Post;

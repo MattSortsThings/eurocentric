@@ -2,6 +2,7 @@ using ErrorOr;
 using Eurocentric.PublicApi.Common;
 using Eurocentric.PublicApi.Stations.Models;
 using Eurocentric.Shared.ApiAbstractions;
+using Eurocentric.Shared.ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
@@ -17,7 +18,7 @@ internal sealed record GetStationsEndpoint : IEndpointInfo
     {
         ErrorOr<GetStationsResult> errorsOrResult = await sender.Send(query, cancellationToken);
 
-        return TypedResults.Ok(errorsOrResult.Value);
+        return errorsOrResult.ToHttpResult(TypedResults.Ok);
     };
 
     public HttpMethod Method => HttpMethod.Get;
