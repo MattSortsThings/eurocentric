@@ -14,6 +14,7 @@ public static class OpenApiDocumentsTests
         [Theory]
         [InlineData("admin-api-v0.1.json")]
         [InlineData("admin-api-v0.2.json")]
+        [InlineData("admin-api-v1.0.json")]
         [InlineData("public-api-v0.1.json")]
         public async Task Should_return_200_with_OpenAPI_JSON_when_document_requested(string documentName)
         {

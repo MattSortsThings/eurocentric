@@ -182,11 +182,12 @@ This section outlines the business rules that cannot be violated during any tran
 1. A broadcast status value must be one of { `Incomplete`, `Complete` }.
 2. A contest stage value must be one of { `FirstSemiFinal`, `SecondSemiFinal`, `GrandFinal` }.
 3. A contest status value must be one of { `Incomplete`, `Complete` }.
-4. A points status value must be one of { `NotAwarded`, `Awarded` }.
-5. A qualification route value must be one of { `SemiFinalCompetitor`, `AutoQualifier` }.
-6. A Semi-Final allocation value must be one of { `First`, `Second` }.
-7. A voting method value must be one of { `Televote`, `Jury` }.
-8. A voting rules value must be one of { `Stockholm`, `Liverpool` }.
+4. A country type value must be one of { `Real`, `Pseudo` }.
+5. A points status value must be one of { `NotAwarded`, `Awarded` }.
+6. A qualification route value must be one of { `SemiFinalCompetitor`, `AutoQualifier` }.
+7. A Semi-Final allocation value must be one of { `First`, `Second` }.
+8. A voting method value must be one of { `Televote`, `Jury` }.
+9. A voting rules value must be one of { `Stockholm`, `Liverpool` }.
 
 ### Rules that apply during instantiation of a single value object
 

@@ -14,6 +14,7 @@ public static class DocumentationWebPagesTests
         [Theory]
         [InlineData("admin-api-v0.1")]
         [InlineData("admin-api-v0.2")]
+        [InlineData("admin-api-v1.0")]
         [InlineData("public-api-v0.1")]
         public async Task Should_return_200_with_HTML_when_documentation_page_requested(string documentName)
         {
