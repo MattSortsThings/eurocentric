@@ -6,15 +6,17 @@ using Eurocentric.Shared.AppPipeline;
 
 namespace Eurocentric.AdminApi.V1.Countries.CreateCountry;
 
-internal sealed class CreateCountryHandler(AppDbContext dbContext, IUniqueCountryCodeRule uniqueCountryCodeRule)
-    : CommandHandler<CreateCountryCommand, CreateCountryResult>
+internal sealed class CreateCountryHandler(
+    AppDbContext dbContext,
+    TimeProvider timeProvider,
+    IUniqueCountryCodeRule uniqueCountryCodeRule) : CommandHandler<CreateCountryCommand, CreateCountryResult>
 {
     public override async Task<ErrorOr<CreateCountryResult>> Handle(CreateCountryCommand command,
         CancellationToken cancellationToken) =>
         await command.CountryType.ToBuilder().Invoke()
             .WithCountryCode(command.CountryCode)
             .AndCountryName(command.CountryName)
-            .Build(DateTimeOffset.UtcNow)
+            .Build(timeProvider.GetUtcNow())
             .Then(uniqueCountryCodeRule.Validate)
             .ThenDo(country => dbContext.Countries.Add(country))
             .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
