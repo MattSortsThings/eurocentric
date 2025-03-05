@@ -81,7 +81,7 @@ public static class CreateCountryTests
 
             isError.ShouldBeTrue();
 
-            firstError.ShouldHaveConflictErrorType();
+            firstError.ShouldHaveErrorType(ErrorType.Conflict);
             firstError.ShouldHaveCode("Country code conflict");
             firstError.ShouldHaveDescription("A country already exists with the specified country code value.");
             firstError.ShouldHaveMetadata("countryCode", sharedCountryCode);
@@ -103,7 +103,7 @@ public static class CreateCountryTests
 
             isError.ShouldBeTrue();
 
-            firstError.ShouldHaveFailureErrorType();
+            firstError.ShouldHaveErrorType(ErrorType.Failure);
             firstError.ShouldHaveCode("Invalid country code");
             firstError.ShouldHaveDescription("Country code value must be a string of 2 upper-case letters.");
             firstError.ShouldHaveMetadata("countryCode", invalidCountryCode);
@@ -125,7 +125,7 @@ public static class CreateCountryTests
 
             isError.ShouldBeTrue();
 
-            firstError.ShouldHaveFailureErrorType();
+            firstError.ShouldHaveErrorType(ErrorType.Failure);
             firstError.ShouldHaveCode("Invalid country name");
             firstError.ShouldHaveDescription("Country name value must be a non-empty, non-white-space string " +
                                              "of no more than 200 characters.");
