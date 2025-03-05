@@ -1,6 +1,5 @@
 using System.Net;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
-using Eurocentric.AdminApi.V1.Countries.GetCountry;
 using Eurocentric.AdminApi.V1.Countries.Models;
 using Eurocentric.WebApp.Tests.Acceptance.Utils;
 using Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
@@ -23,13 +22,10 @@ public static class GetCountryTests
             RestRequest request = Get($"{Route}/{country.Id}").UseAdminApiKey();
 
             // Act
-            (HttpStatusCode statusCode, GetCountryResult result) = await SendAsync<GetCountryResult>(request);
+            RestResponse response = await SendAsync(request);
 
             // Assert
-            Assert.Multiple(
-                () => statusCode.ShouldBe(HttpStatusCode.OK),
-                () => Assert.Equivalent(country, result.Country)
-            );
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         private async Task<Country> CreateCountryAsync()

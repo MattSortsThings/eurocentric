@@ -1,25 +1,22 @@
 using ErrorOr;
 using Eurocentric.AdminApi.V1.Countries.Models;
-using Eurocentric.DataAccess.InMemory;
+using Eurocentric.DataAccess.EfCore;
 using Eurocentric.Domain.Rules;
 using Eurocentric.Shared.AppPipeline;
 
 namespace Eurocentric.AdminApi.V1.Countries.CreateCountry;
 
-internal sealed class CreateCountryHandler(InMemoryRepository repository, IUniqueCountryCodeRule uniqueCountryCodeRule)
+internal sealed class CreateCountryHandler(AppDbContext dbContext, IUniqueCountryCodeRule uniqueCountryCodeRule)
     : CommandHandler<CreateCountryCommand, CreateCountryResult>
 {
     public override async Task<ErrorOr<CreateCountryResult>> Handle(CreateCountryCommand command,
-        CancellationToken cancellationToken)
-    {
-        await Task.CompletedTask;
-
-        return command.CountryType.ToBuilder().Invoke()
+        CancellationToken cancellationToken) =>
+        await command.CountryType.ToBuilder().Invoke()
             .WithCountryCode(command.CountryCode)
             .AndCountryName(command.CountryName)
             .Build(DateTimeOffset.UtcNow)
             .Then(uniqueCountryCodeRule.Validate)
-            .ThenDo(country => repository.Countries.Add(country))
+            .ThenDo(country => dbContext.Countries.Add(country))
+            .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
             .Then(country => new CreateCountryResult(country.ToModelCountry()));
-    }
 }

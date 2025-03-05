@@ -1,4 +1,8 @@
+using Eurocentric.DataAccess.EfCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
 using Xunit;
@@ -13,9 +17,13 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyMarke
 {
     protected static readonly Uri BaseAddress = new("http://localhost:5055");
 
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().WithCleanUp(true).Build();
 
-    public async ValueTask InitializeAsync() => await _dbContainer.StartAsync();
+    public async ValueTask InitializeAsync()
+    {
+        await _dbContainer.StartAsync();
+        MigrateDatabase();
+    }
 
     public override async ValueTask DisposeAsync()
     {
@@ -62,13 +70,35 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyMarke
     /// </param>
     /// <typeparam name="TResult">The result type.</typeparam>
     /// <returns>
-    ///     A task that represents the asynchronous operation. The task result contains the result returned by the
-    ///     operation.
+    ///     A task that represents the asynchronous operation. The task result contains the result returned by the operation.
     /// </returns>
     public async Task<TResult> ExecuteScopedAsync<TResult>(Func<IServiceProvider, Task<TResult>> function)
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
 
         return await function.Invoke(scope.ServiceProvider);
+    }
+
+    /// <summary>
+    ///     Configures the web host.
+    /// </summary>
+    /// <remarks>A derivative that overrides this method <i>must</i> invoke the base class method.</remarks>
+    /// <param name="builder">The web host builder.</param>
+    protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
+    {
+        if (services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>)) is { } descriptor)
+        {
+            services.Remove(descriptor);
+        }
+
+        services.AddAppDbContext(_dbContainer.GetConnectionString());
+    });
+
+    private void MigrateDatabase()
+    {
+        using IServiceScope scope = Services.CreateScope();
+        using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        dbContext.Database.Migrate();
     }
 }

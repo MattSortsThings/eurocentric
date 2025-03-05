@@ -26,7 +26,7 @@ public static class Startup
         builder.Services.AddAdminApi()
             .AddPublicApi()
             .AddAppPipeline()
-            .AddDataAccess()
+            .AddDataAccess(builder.Configuration)
             .AddDocumentation()
             .AddErrorHandling()
             .AddJsonConfiguration()
