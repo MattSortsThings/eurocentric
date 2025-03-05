@@ -27,7 +27,7 @@ public static class GetCountryTests
             // Assert
             (bool isError, GetCountryResult result) = errorsOrResult.ParseAsSuccess();
 
-            isError.ShouldBeTrue();
+            isError.ShouldBeFalse();
 
             result.Country.ShouldBeEquivalentTo(targetCountry);
         }
