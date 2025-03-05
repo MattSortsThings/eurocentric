@@ -1,4 +1,7 @@
 using System.Net;
+using Eurocentric.AdminApi.V1.Countries.CreateCountry;
+using Eurocentric.AdminApi.V1.Countries.GetCountry;
+using Eurocentric.AdminApi.V1.Countries.Models;
 using Eurocentric.WebApp.Tests.Acceptance.Utils;
 using Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
 using RestSharp;
@@ -15,15 +18,32 @@ public static class GetCountryTests
         public async Task Should_return_200_with_placeholder_country_given_any_request()
         {
             // Arrange
-            Guid guid = Guid.NewGuid();
+            Country country = await CreateCountryAsync();
 
-            RestRequest request = Get($"{Route}/{guid}").UseAdminApiKey();
+            RestRequest request = Get($"{Route}/{country.Id}").UseAdminApiKey();
 
             // Act
-            var (statusCode, _) = await SendAsync(request);
+            (HttpStatusCode statusCode, GetCountryResult result) = await SendAsync<GetCountryResult>(request);
 
             // Assert
-            statusCode.ShouldBe(HttpStatusCode.OK);
+            Assert.Multiple(
+                () => statusCode.ShouldBe(HttpStatusCode.OK),
+                () => Assert.Equivalent(country, result.Country)
+            );
+        }
+
+        private async Task<Country> CreateCountryAsync()
+        {
+            CreateCountryCommand command = new()
+            {
+                CountryCode = "GB", CountryName = "United Kingdom", CountryType = CountryType.Real
+            };
+
+            RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(command);
+
+            var (_, result) = await SendAsync<CreateCountryResult>(request);
+
+            return result.Country;
         }
     }
 }

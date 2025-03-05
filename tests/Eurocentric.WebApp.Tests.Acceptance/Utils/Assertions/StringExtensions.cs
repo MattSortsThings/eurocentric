@@ -1,6 +1,6 @@
 namespace Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
 
-public static class StringAssertions
+public static class StringExtensions
 {
     public static void ShouldEndWith(this string subject, string expectedSuffix) => Assert.EndsWith(expectedSuffix, subject);
 

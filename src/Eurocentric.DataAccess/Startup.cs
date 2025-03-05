@@ -1,3 +1,5 @@
+using Eurocentric.DataAccess.InMemory;
+using Eurocentric.Domain.Rules;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.DataAccess;
@@ -12,5 +14,7 @@ public static class Startup
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    public static IServiceCollection AddDataAccess(this IServiceCollection services) => services;
+    public static IServiceCollection AddDataAccess(this IServiceCollection services) =>
+        services.AddSingleton<InMemoryRepository>()
+            .AddScoped<IUniqueCountryCodeRule, InMemoryUniqueCountryCodeRule>();
 }

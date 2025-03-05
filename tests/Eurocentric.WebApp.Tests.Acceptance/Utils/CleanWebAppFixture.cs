@@ -1,3 +1,4 @@
+using Eurocentric.DataAccess.InMemory;
 using Eurocentric.Shared.Security;
 using Eurocentric.WebApp.Tests.Fixtures;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +17,13 @@ public sealed class CleanWebAppFixture : WebAppFixture
     /// <summary>
     ///     Resets the web app fixture to its initial state.
     /// </summary>
-    public void Reset() { }
+    public void Reset()
+    {
+        using IServiceScope scope = Services.CreateScope();
+        InMemoryRepository? inMemoryRepository = scope.ServiceProvider.GetRequiredService<InMemoryRepository>();
+
+        inMemoryRepository.Countries.Clear();
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
     {
