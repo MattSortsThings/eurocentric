@@ -17,13 +17,13 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_400_with_ProblemDetails_given_request_body_with_missing_required_property()
         {
             // Arrange
-            const string resource = "/admin/api/v0.2/calculations";
+            const string resource = "/admin/api/v1.0/countries";
 
-            const string missingYPropertyJson = """{ "x": 1, "operation": "Product" }""";
+            const string missingCountryCodePropertyJson = """{ "countryName": "Austria", "countryType": "Real" }""";
 
             RestRequest request = Post(resource)
                 .UseAdminApiKey()
-                .AddJsonBody(missingYPropertyJson);
+                .AddJsonBody(missingCountryCodePropertyJson);
 
             // Act
             (HttpStatusCode statusCode, ProblemDetails problemDetails) = await SendAsync<ProblemDetails>(request);
@@ -34,7 +34,7 @@ public static class GlobalExceptionHandlingTests
                 () => problemDetails.ShouldHaveStatus(StatusCodes.Status400BadRequest),
                 () => problemDetails.ShouldHaveType("https://tools.ietf.org/html/rfc9110#section-15.5.1"),
                 () => problemDetails.ShouldHaveTitle("Bad HTTP request"),
-                () => problemDetails.ShouldHaveDetail("Failed to read parameter \"CreateCalculationCommand command\" " +
+                () => problemDetails.ShouldHaveDetail("Failed to read parameter \"CreateCountryCommand command\" " +
                                                       "from the request body as JSON."),
                 () => problemDetails.ShouldHaveInstance("POST " + resource)
             );
@@ -44,13 +44,19 @@ public static class GlobalExceptionHandlingTests
         public async Task Should_return_400_with_ProblemDetails_given_request_body_with_unparseable_enum_property()
         {
             // Arrange
-            const string resource = "/admin/api/v0.2/calculations";
+            const string resource = "/admin/api/v1.0/countries";
 
-            const string invalidOperationPropertyJson = """{ "x": 1, "y": 1, "operation": "NOT_AN_OPERATION_ENUM_VALUE" }""";
+            const string invalidCountryTypePropertyJson = """
+                                                          {
+                                                            "countryCode": "AT",
+                                                            "countryCode": "Austria",
+                                                            "countryType": "NOT_A_COUNTRY_TYPE_ENUM_VALUE"
+                                                          }
+                                                          """;
 
             RestRequest request = Post(resource)
                 .UseAdminApiKey()
-                .AddJsonBody(invalidOperationPropertyJson);
+                .AddJsonBody(invalidCountryTypePropertyJson);
 
             // Act
             (HttpStatusCode statusCode, ProblemDetails problemDetails) = await SendAsync<ProblemDetails>(request);
@@ -61,7 +67,7 @@ public static class GlobalExceptionHandlingTests
                 () => problemDetails.ShouldHaveStatus(StatusCodes.Status400BadRequest),
                 () => problemDetails.ShouldHaveType("https://tools.ietf.org/html/rfc9110#section-15.5.1"),
                 () => problemDetails.ShouldHaveTitle("Bad HTTP request"),
-                () => problemDetails.ShouldHaveDetail("Failed to read parameter \"CreateCalculationCommand command\" " +
+                () => problemDetails.ShouldHaveDetail("Failed to read parameter \"CreateCountryCommand command\" " +
                                                       "from the request body as JSON."),
                 () => problemDetails.ShouldHaveInstance("POST " + resource)
             );
