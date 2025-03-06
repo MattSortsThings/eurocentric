@@ -3,7 +3,7 @@ using Eurocentric.Domain.Tests.Unit.Utils;
 using Eurocentric.Domain.Tests.Unit.Utils.Assertions;
 using Eurocentric.Domain.ValueObjects;
 
-namespace Eurocentric.Domain.Tests.Unit.ValueTypes;
+namespace Eurocentric.Domain.Tests.Unit.ValueObjects;
 
 public static class CountryNameTests
 {
@@ -26,7 +26,7 @@ public static class CountryNameTests
         }
 
         [Fact]
-        public void Should_return_true_when_instance_and_other_arg_have_equal_Value_property_values()
+        public void Should_return_true_when_instance_and_other_arg_have_equal_Value()
         {
             // Arrange
             const string sharedValue = "Austria";
@@ -42,7 +42,7 @@ public static class CountryNameTests
         }
 
         [Fact]
-        public void Should_return_false_when_instance_and_other_arg_have_unequal_Value_property_values()
+        public void Should_return_false_when_instance_and_other_arg_have_unequal_Value()
         {
             // Arrange
             CountryName sut = CountryName.FromValue("Austria");

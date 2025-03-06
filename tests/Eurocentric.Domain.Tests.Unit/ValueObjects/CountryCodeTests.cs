@@ -3,12 +3,85 @@ using Eurocentric.Domain.Tests.Unit.Utils;
 using Eurocentric.Domain.Tests.Unit.Utils.Assertions;
 using Eurocentric.Domain.ValueObjects;
 
-namespace Eurocentric.Domain.Tests.Unit.ValueTypes;
+namespace Eurocentric.Domain.Tests.Unit.ValueObjects;
 
 public static class CountryCodeTests
 {
     private static void ShouldHaveValue(this CountryCode subject, string expectedValue) =>
         Assert.Equal(expectedValue, subject.Value);
+
+    public sealed class CompareToMethod : UnitTest
+    {
+        [Fact]
+        public void Should_return_zero_when_instance_given_itself_as_other_arg()
+        {
+            // Arrange
+            CountryCode sut = CountryCode.FromValue("AT");
+
+            // Act
+            int result = sut.CompareTo(sut);
+
+            // Assert
+            result.ShouldBeZero();
+        }
+
+        [Fact]
+        public void Should_return_zero_when_instance_and_other_arg_have_equal_Value()
+        {
+            // Arrange
+            const string sharedValue = "AT";
+
+            CountryCode sut = CountryCode.FromValue(sharedValue);
+            CountryCode other = CountryCode.FromValue(sharedValue);
+
+            // Act
+            int result = sut.CompareTo(other);
+
+            // Assert
+            result.ShouldBeZero();
+        }
+
+        [Fact]
+        public void Should_return_negative_value_when_instance_Value_precedes_other_arg_Value()
+        {
+            // Arrange
+            CountryCode sut = CountryCode.FromValue("AT");
+            CountryCode other = CountryCode.FromValue("SE");
+
+            // Act
+            int result = sut.CompareTo(other);
+
+            // Assert
+            result.ShouldBeNegative();
+        }
+
+        [Fact]
+        public void Should_return_positive_value_when_instance_Value_follows_other_arg_Value()
+        {
+            // Arrange
+            CountryCode sut = CountryCode.FromValue("SE");
+            CountryCode other = CountryCode.FromValue("AT");
+
+            // Act
+            int result = sut.CompareTo(other);
+
+            // Assert
+            result.ShouldBePositive();
+        }
+
+        [Fact]
+        public void Should_return_positive_value_when_other_arg_is_null()
+        {
+            // Arrange
+            CountryCode sut = CountryCode.FromValue("AT");
+
+            // Act
+            int result = sut.CompareTo(null);
+
+            // Assert
+            result.ShouldBePositive();
+        }
+    }
 
     public sealed class EqualsMethod : UnitTest
     {
@@ -26,7 +99,7 @@ public static class CountryCodeTests
         }
 
         [Fact]
-        public void Should_return_true_when_instance_and_other_arg_have_equal_Value_property_values()
+        public void Should_return_true_when_instance_and_other_arg_have_equal_Value()
         {
             // Arrange
             const string sharedValue = "AT";
@@ -42,7 +115,7 @@ public static class CountryCodeTests
         }
 
         [Fact]
-        public void Should_return_false_when_instance_and_other_arg_have_unequal_Value_property_values()
+        public void Should_return_false_when_instance_and_other_arg_have_unequal_Value()
         {
             // Arrange
             CountryCode sut = CountryCode.FromValue("AT");
