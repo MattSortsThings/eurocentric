@@ -1,7 +1,7 @@
 using System.Net;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
 using Eurocentric.AdminApi.V1.Countries.GetCountries;
-using Eurocentric.AdminApi.V1.Countries.Models;
+using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.WebApp.Tests.Acceptance.Utils;
 using Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
 using RestSharp;

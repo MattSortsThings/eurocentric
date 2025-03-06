@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using Eurocentric.Domain.Countries;
-using ModelCountry = Eurocentric.AdminApi.V1.Countries.Models.Country;
+using ModelCountry = Eurocentric.AdminApi.V1.Models.Country;
 using DomainCountry = Eurocentric.Domain.Countries.Country;
 
-namespace Eurocentric.AdminApi.V1.Countries.Models;
+namespace Eurocentric.AdminApi.V1.Models;
 
 internal static class Mapping
 {

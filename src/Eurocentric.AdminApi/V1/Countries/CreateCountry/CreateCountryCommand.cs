@@ -1,4 +1,4 @@
-using Eurocentric.AdminApi.V1.Countries.Models;
+using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.Shared.AppPipeline;
 
 namespace Eurocentric.AdminApi.V1.Countries.CreateCountry;

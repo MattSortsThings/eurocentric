@@ -2,7 +2,7 @@ using ErrorOr;
 using Eurocentric.AdminApi.Tests.Integration.Utils;
 using Eurocentric.AdminApi.Tests.Integration.Utils.Assertions;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
-using Eurocentric.AdminApi.V1.Countries.Models;
+using Eurocentric.AdminApi.V1.Models;
 
 namespace Eurocentric.AdminApi.Tests.Integration.V1.Countries;
 

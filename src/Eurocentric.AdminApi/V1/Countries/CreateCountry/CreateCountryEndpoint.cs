@@ -1,6 +1,6 @@
 using ErrorOr;
 using Eurocentric.AdminApi.Common;
-using Eurocentric.AdminApi.V1.Countries.Models;
+using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.Shared.ApiAbstractions;
 using Eurocentric.Shared.ErrorHandling;
 using MediatR;

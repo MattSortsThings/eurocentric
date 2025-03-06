@@ -1,5 +1,5 @@
 using ErrorOr;
-using Eurocentric.AdminApi.V1.Countries.Models;
+using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.DataAccess.EfCore;
 using Eurocentric.Domain.DomainErrors;
 using Eurocentric.Domain.ValueObjects;

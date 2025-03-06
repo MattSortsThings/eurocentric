@@ -1,7 +1,7 @@
 using System.Net;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
 using Eurocentric.AdminApi.V1.Countries.GetCountry;
-using Eurocentric.AdminApi.V1.Countries.Models;
+using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.WebApp.Tests.Acceptance.Utils;
 using Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
 using Microsoft.AspNetCore.Http;
