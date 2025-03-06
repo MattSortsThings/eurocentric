@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Eurocentric.AdminApi.Tests.Utils</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="Xunit"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit.analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="xunit.v3.assert"/>
+    <PackageReference Include="xunit.v3.extensibility.core"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Eurocentric.AdminApi\Eurocentric.AdminApi.csproj"/>
+    <ProjectReference Include="..\Eurocentric.Tests.Assertions\Eurocentric.Tests.Assertions.csproj"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="V1\"/>
+  </ItemGroup>
+</Project>

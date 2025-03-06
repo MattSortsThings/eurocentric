@@ -1,4 +1,5 @@
 using System.Net;
+using Eurocentric.AdminApi.Tests.Utils.V1.Assertions;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
 using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.Tests.Assertions;
@@ -12,14 +13,6 @@ namespace Eurocentric.WebApp.Tests.Acceptance.AdminApi.V1.Countries;
 public static class CreateCountryTests
 {
     private const string Route = "/admin/api/v1.0/countries";
-
-    private static void ShouldBeCorrectlyCreatedFrom(this Country country, CreateCountryCommand command)
-    {
-        Assert.Equal(command.CountryCode, country.CountryCode);
-        Assert.Equal(command.CountryName, country.CountryName);
-        Assert.Equal(command.CountryType, country.CountryType);
-        Assert.Empty(country.ContestIds);
-    }
 
     public sealed class Api(CleanWebAppFixture fixture) : AcceptanceTest(fixture)
     {

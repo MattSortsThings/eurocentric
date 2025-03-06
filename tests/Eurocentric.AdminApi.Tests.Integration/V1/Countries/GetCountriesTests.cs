@@ -1,5 +1,6 @@
 using ErrorOr;
 using Eurocentric.AdminApi.Tests.Integration.Utils;
+using Eurocentric.AdminApi.Tests.Utils.V1.Assertions;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
 using Eurocentric.AdminApi.V1.Countries.GetCountries;
 using Eurocentric.AdminApi.V1.Models;
@@ -9,13 +10,6 @@ namespace Eurocentric.AdminApi.Tests.Integration.V1.Countries;
 
 public static class GetCountriesTests
 {
-    private static void ShouldBeSequenceEqualTo(this Country[] subject, Country[] expected) =>
-        Assert.Equal(subject, expected, (c1, c2) => c1.Id == c2.Id
-                                                    && c1.CountryCode == c2.CountryCode
-                                                    && c1.CountryName == c2.CountryName
-                                                    && c1.CountryType == c2.CountryType
-                                                    && c1.ContestIds.SequenceEqual(c2.ContestIds));
-
     public sealed class AppPipeline(CleanWebAppFixture fixture) : IntegrationTest(fixture)
     {
         [Fact]
@@ -56,7 +50,7 @@ public static class GetCountriesTests
 
             isError.ShouldBeFalse();
 
-            result.Countries.ShouldBeSequenceEqualTo(expectedCountries);
+            result.Countries.ShouldBe(expectedCountries);
         }
 
         private async Task<Country> CreateCountryAsync(string countryCode, string countryName)
