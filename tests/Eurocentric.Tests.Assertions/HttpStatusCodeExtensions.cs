@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
+namespace Eurocentric.Tests.Assertions;
 
 public static class HttpStatusCodeExtensions
 {

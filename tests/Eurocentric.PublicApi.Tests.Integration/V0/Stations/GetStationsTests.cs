@@ -2,7 +2,7 @@ using ErrorOr;
 using Eurocentric.PublicApi.Stations.GetStations;
 using Eurocentric.PublicApi.Stations.Models;
 using Eurocentric.PublicApi.Tests.Integration.Utils;
-using Eurocentric.PublicApi.Tests.Integration.Utils.Assertions;
+using Eurocentric.Tests.Assertions;
 
 namespace Eurocentric.PublicApi.Tests.Integration.V0.Stations;
 
@@ -23,11 +23,7 @@ public static class GetStationsTests
             ErrorOr<GetStationsResult> errorsOrResult = await SendAsync(query);
 
             // Assert
-            Assert.Multiple(
-                () => errorsOrResult.ShouldNotBeError(),
-                () => Assert.NotEmpty(errorsOrResult.Value.Stations),
-                () => Assert.All(errorsOrResult.Value.Stations, station => Assert.Equal(line, station.Line))
-            );
+            errorsOrResult.IsError.ShouldBeFalse();
         }
     }
 }

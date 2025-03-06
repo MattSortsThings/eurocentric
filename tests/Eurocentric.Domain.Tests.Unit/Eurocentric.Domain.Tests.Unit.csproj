@@ -19,5 +19,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Eurocentric.Domain\Eurocentric.Domain.csproj"/>
+    <ProjectReference Include="..\Eurocentric.Tests.Assertions\Eurocentric.Tests.Assertions.csproj"/>
   </ItemGroup>
 </Project>

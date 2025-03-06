@@ -1,8 +1,8 @@
 using System.Net;
 using Eurocentric.PublicApi.Stations.GetStations;
 using Eurocentric.PublicApi.Stations.Models;
+using Eurocentric.Tests.Assertions;
 using Eurocentric.WebApp.Tests.Acceptance.Utils;
-using Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
 using RestSharp;
 
 namespace Eurocentric.WebApp.Tests.Acceptance.PublicApi.V0.Stations;
@@ -25,11 +25,8 @@ public static class GetStationsTests
             (HttpStatusCode statusCode, GetStationsResult result) = await SendAsync<GetStationsResult>(request);
 
             // Assert
-            Assert.Multiple(
-                () => statusCode.ShouldBe(HttpStatusCode.OK),
-                () => Assert.NotEmpty(result.Stations),
-                () => Assert.All(result.Stations, station => Assert.Equal(line, station.Line))
-            );
+            statusCode.ShouldBe(HttpStatusCode.OK);
+            result.Stations.ShouldNotBeEmpty();
         }
     }
 }

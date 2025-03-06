@@ -1,4 +1,4 @@
-namespace Eurocentric.AdminApi.Tests.Integration.Utils.Assertions;
+namespace Eurocentric.Tests.Assertions;
 
 public static class BooleanExtensions
 {

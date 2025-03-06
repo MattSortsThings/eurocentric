@@ -1,6 +1,6 @@
 using ErrorOr;
 
-namespace Eurocentric.AdminApi.Tests.Integration.Utils;
+namespace Eurocentric.Tests.Assertions;
 
 public static class ErrorOrExtensions
 {

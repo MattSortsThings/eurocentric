@@ -1,4 +1,4 @@
-namespace Eurocentric.Domain.Tests.Unit.Utils.Assertions;
+namespace Eurocentric.Tests.Assertions;
 
 public static class ActionExtensions
 {

@@ -1,7 +1,7 @@
 using Eurocentric.Domain.BaseTypes;
 using Eurocentric.Domain.Tests.Unit.Utils;
-using Eurocentric.Domain.Tests.Unit.Utils.Assertions;
 using Eurocentric.Domain.ValueObjects;
+using Eurocentric.Tests.Assertions;
 
 namespace Eurocentric.Domain.Tests.Unit.BaseTypes;
 

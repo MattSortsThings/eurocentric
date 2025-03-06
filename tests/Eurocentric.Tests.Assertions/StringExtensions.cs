@@ -1,4 +1,4 @@
-namespace Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
+namespace Eurocentric.Tests.Assertions;
 
 public static class StringExtensions
 {

@@ -1,7 +1,7 @@
 using ErrorOr;
 using Eurocentric.Domain.Tests.Unit.Utils;
-using Eurocentric.Domain.Tests.Unit.Utils.Assertions;
 using Eurocentric.Domain.ValueObjects;
+using Eurocentric.Tests.Assertions;
 
 namespace Eurocentric.Domain.Tests.Unit.ValueObjects;
 
@@ -98,7 +98,7 @@ public static class CountryNameTests
 
             // Assert
             isError.ShouldBeTrue();
-            firstError.ShouldHaveFailureErrorType();
+            firstError.ShouldHaveErrorType(ErrorType.Failure);
             firstError.ShouldHaveCode("Invalid country name");
             firstError.ShouldHaveDescription("Country name value must be a non-empty, non-white-space string " +
                                              "of no more than 200 characters.");

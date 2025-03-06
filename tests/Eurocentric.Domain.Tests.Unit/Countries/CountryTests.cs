@@ -2,8 +2,8 @@ using ErrorOr;
 using Eurocentric.Domain.Countries;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Tests.Unit.Utils;
-using Eurocentric.Domain.Tests.Unit.Utils.Assertions;
 using Eurocentric.Domain.ValueObjects;
+using Eurocentric.Tests.Assertions;
 
 namespace Eurocentric.Domain.Tests.Unit.Countries;
 
@@ -40,13 +40,13 @@ public static class CountryTests
             ContestId contestId = ContestId.FromValue(FixedContestId);
 
             // Assert
-            sut.ContestIds.ShouldNotContain(contestId);
+            sut.ContestIds.ShouldNotContain(item => item == contestId);
 
             // Act
             sut.AddContestId(contestId);
 
             // Assert
-            sut.ContestIds.ShouldContainSingle(contestId);
+            sut.ContestIds.ShouldContainSingle(item => item == contestId);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ public static class CountryTests
             sut.AddContestId(contestId);
 
             // Assert
-            sut.ContestIds.ShouldContainSingle(contestId);
+            sut.ContestIds.ShouldContainSingle(item => item == contestId);
 
             // Act
             Action action = () => sut.AddContestId(contestId);
@@ -105,13 +105,13 @@ public static class CountryTests
             sut.AddContestId(contestId);
 
             // Assert
-            sut.ContestIds.ShouldContainSingle(contestId);
+            sut.ContestIds.ShouldContainSingle(item => item == contestId);
 
             // Act
             sut.RemoveContestId(contestId);
 
             // Assert
-            sut.ContestIds.ShouldNotContain(contestId);
+            sut.ContestIds.ShouldNotContain(item => item == contestId);
         }
 
         [Fact]
@@ -123,7 +123,7 @@ public static class CountryTests
             ContestId contestId = ContestId.FromValue(FixedContestId);
 
             // Assert
-            sut.ContestIds.ShouldNotContain(contestId);
+            sut.ContestIds.ShouldNotContain(item => item == contestId);
 
             // Act
             Action action = () => sut.RemoveContestId(contestId);
@@ -206,7 +206,7 @@ public static class CountryTests
 
             // Assert
             isError.ShouldBeTrue();
-            firstError.ShouldHaveFailureErrorType();
+            firstError.ShouldHaveErrorType(ErrorType.Failure);
             firstError.ShouldHaveCode("Invalid country code");
         }
 
@@ -225,7 +225,7 @@ public static class CountryTests
 
             // Assert
             isError.ShouldBeTrue();
-            firstError.ShouldHaveFailureErrorType();
+            firstError.ShouldHaveErrorType(ErrorType.Failure);
             firstError.ShouldHaveCode("Invalid country name");
         }
     }

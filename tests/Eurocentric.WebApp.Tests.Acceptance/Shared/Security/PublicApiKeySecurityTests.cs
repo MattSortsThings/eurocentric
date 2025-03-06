@@ -1,7 +1,7 @@
 using System.Net;
 using Eurocentric.Shared.Security;
+using Eurocentric.Tests.Assertions;
 using Eurocentric.WebApp.Tests.Acceptance.Utils;
-using Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
 using RestSharp;
 
 namespace Eurocentric.WebApp.Tests.Acceptance.Shared.Security;

@@ -1,7 +1,7 @@
 using ErrorOr;
 using Eurocentric.Shared.ErrorHandling;
 using Eurocentric.Shared.Tests.Unit.Utils;
-using Eurocentric.Shared.Tests.Unit.Utils.Assertions;
+using Eurocentric.Tests.Assertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 

@@ -16,6 +16,7 @@
     <PackageReference Include="xunit.runner.visualstudio"/>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.Tests.Assertions\Eurocentric.Tests.Assertions.csproj"/>
     <ProjectReference Include="..\Eurocentric.WebApp.Tests.Fixtures\Eurocentric.WebApp.Tests.Fixtures.csproj"/>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 using ErrorOr;
 using Eurocentric.Domain.Tests.Unit.Utils;
-using Eurocentric.Domain.Tests.Unit.Utils.Assertions;
 using Eurocentric.Domain.ValueObjects;
+using Eurocentric.Tests.Assertions;
 
 namespace Eurocentric.Domain.Tests.Unit.ValueObjects;
 
@@ -176,7 +176,7 @@ public static class CountryCodeTests
 
             // Assert
             isError.ShouldBeTrue();
-            firstError.ShouldHaveFailureErrorType();
+            firstError.ShouldHaveErrorType(ErrorType.Failure);
             firstError.ShouldHaveCode("Invalid country code");
             firstError.ShouldHaveDescription("Country code value must be a string of 2 upper-case letters.");
             firstError.ShouldHaveMetadata("countryCode", value);

@@ -1,8 +1,8 @@
 using System.Net;
 using Eurocentric.AdminApi.V0.Calculations.CreateCalculation;
 using Eurocentric.AdminApi.V0.Calculations.Models;
+using Eurocentric.Tests.Assertions;
 using Eurocentric.WebApp.Tests.Acceptance.Utils;
-using Eurocentric.WebApp.Tests.Acceptance.Utils.Assertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;

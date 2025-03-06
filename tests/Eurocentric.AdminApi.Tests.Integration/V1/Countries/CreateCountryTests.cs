@@ -1,8 +1,8 @@
 using ErrorOr;
 using Eurocentric.AdminApi.Tests.Integration.Utils;
-using Eurocentric.AdminApi.Tests.Integration.Utils.Assertions;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
 using Eurocentric.AdminApi.V1.Models;
+using Eurocentric.Tests.Assertions;
 
 namespace Eurocentric.AdminApi.Tests.Integration.V1.Countries;
 
@@ -121,7 +121,7 @@ public static class CreateCountryTests
             ErrorOr<CreateCountryResult> errorsOrResult = await SendAsync(command);
 
             // Assert
-            var (isError, firstError) = errorsOrResult.ParseAsError();
+            (bool isError, Error firstError) = errorsOrResult.ParseAsError();
 
             isError.ShouldBeTrue();
 
