@@ -36,6 +36,7 @@ public sealed class EndpointMapper<TApiInfo> : ApiAssemblyScanner<TApiInfo>, IEn
                 .WithName(endpoint.Name)
                 .WithSummary(endpoint.Summary)
                 .WithDescription(endpoint.Description)
+                .WithTags(endpoint.Tag)
                 .ProducesProblems(endpoint.ProblemStatusCodes)
                 .HasApiVersions(GetApplicableApiVersions(endpoint, versions));
         }
