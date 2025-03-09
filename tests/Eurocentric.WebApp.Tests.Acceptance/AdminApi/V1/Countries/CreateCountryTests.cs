@@ -1,7 +1,7 @@
 using System.Net;
 using Eurocentric.AdminApi.Tests.Utils.V1.Assertions;
+using Eurocentric.AdminApi.Tests.Utils.V1.SampleData;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
-using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.Tests.Assertions;
 using Eurocentric.WebApp.Tests.Acceptance.Utils;
 using Microsoft.AspNetCore.Http;
@@ -16,19 +16,11 @@ public static class CreateCountryTests
 
     public sealed class Api(CleanWebAppFixture fixture) : AcceptanceTest(fixture)
     {
-        private static CreateCountryCommand CreateCountryCommand => new()
-        {
-            CountryCode = "AA", CountryName = "CountryName", CountryType = CountryType.Real
-        };
-
         [Fact]
         public async Task Should_return_201_with_created_country_and_location_given_valid_real_country_request()
         {
             // Arrange
-            CreateCountryCommand command = new()
-            {
-                CountryCode = "GB", CountryName = "United Kingdom", CountryType = CountryType.Real
-            };
+            CreateCountryCommand command = TestCommands.CreateRealCountry();
 
             RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(command);
 
@@ -49,10 +41,7 @@ public static class CreateCountryTests
         public async Task Should_return_201_with_created_country_and_location_given_valid_pseudo_country_request()
         {
             // Arrange
-            CreateCountryCommand command = new()
-            {
-                CountryCode = "XX", CountryName = "Rest of the World", CountryType = CountryType.Pseudo
-            };
+            CreateCountryCommand command = TestCommands.CreatePseudoCountry();
 
             RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(command);
 
@@ -70,16 +59,35 @@ public static class CreateCountryTests
         }
 
         [Fact]
+        public async Task Should_return_404_with_ProblemDetails_given_malformed_request()
+        {
+            // Arrange
+            RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody("""{ "this": "is_malformed" }""");
+
+            // Act
+            RestResponse<ProblemDetails> response = await SendAsync<ProblemDetails>(request);
+
+            // Assert
+            (HttpStatusCode statusCode, ProblemDetails problemDetails) = response;
+
+            statusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+            problemDetails.ShouldHaveStatus(StatusCodes.Status400BadRequest);
+            problemDetails.ShouldHaveTitle("Bad HTTP request");
+            problemDetails.ShouldHaveDetail("Failed to read parameter \"CreateCountryCommand command\" " +
+                                            "from the request body as JSON.");
+            problemDetails.ShouldHaveInstance($"POST {Route}");
+        }
+
+        [Fact]
         public async Task Should_return_409_with_ProblemDetails_given_request_with_duplicate_country_code()
         {
             // Arrange
-            const string sharedCountryCode = "XX";
+            string sharedCountryCode = await CreateCountryAndReturnItsCountryCodeAsync();
 
-            await CreateCountryWithCountryCodeAsync(sharedCountryCode);
+            CreateCountryCommand command = TestCommands.CreateRealCountry() with { CountryCode = sharedCountryCode };
 
-            RestRequest request = Post(Route)
-                .UseAdminApiKey()
-                .AddJsonBody(CreateCountryCommand with { CountryCode = sharedCountryCode });
+            RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(command);
 
             // Act
             RestResponse<ProblemDetails> response = await SendAsync<ProblemDetails>(request);
@@ -102,9 +110,9 @@ public static class CreateCountryTests
             // Arrange
             const string invalidCountryCode = "";
 
-            RestRequest request = Post(Route)
-                .UseAdminApiKey()
-                .AddJsonBody(CreateCountryCommand with { CountryCode = invalidCountryCode });
+            CreateCountryCommand command = TestCommands.CreateRealCountry() with { CountryCode = invalidCountryCode };
+
+            RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(command);
 
             // Act
             RestResponse<ProblemDetails> response = await SendAsync<ProblemDetails>(request);
@@ -127,9 +135,9 @@ public static class CreateCountryTests
             // Arrange
             const string invalidCountryName = "";
 
-            RestRequest request = Post(Route)
-                .UseAdminApiKey()
-                .AddJsonBody(CreateCountryCommand with { CountryName = invalidCountryName });
+            CreateCountryCommand command = TestCommands.CreateRealCountry() with { CountryName = invalidCountryName };
+
+            RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(command);
 
             // Act
             RestResponse<ProblemDetails> response = await SendAsync<ProblemDetails>(request);
@@ -147,9 +155,13 @@ public static class CreateCountryTests
             problemDetails.ShouldHaveExtension("countryName", invalidCountryName);
         }
 
-        private async Task CreateCountryWithCountryCodeAsync(string countryCode) =>
-            await SendAsync(Post(Route)
-                .UseAdminApiKey()
-                .AddJsonBody(CreateCountryCommand with { CountryCode = countryCode }));
+        private async Task<string> CreateCountryAndReturnItsCountryCodeAsync()
+        {
+            RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(TestCommands.CreatePseudoCountry());
+
+            RestResponse<CreateCountryResult> response = await SendAsync<CreateCountryResult>(request);
+
+            return response.Data!.Country.CountryCode;
+        }
     }
 }

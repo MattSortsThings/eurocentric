@@ -1,8 +1,8 @@
 using ErrorOr;
 using Eurocentric.AdminApi.Tests.Integration.Utils;
 using Eurocentric.AdminApi.Tests.Utils.V1.Assertions;
+using Eurocentric.AdminApi.Tests.Utils.V1.SampleData;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
-using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.Tests.Assertions;
 
 namespace Eurocentric.AdminApi.Tests.Integration.V1.Countries;
@@ -11,19 +11,11 @@ public static class CreateCountryTests
 {
     public sealed class AppPipeline(CleanWebAppFixture fixture) : IntegrationTest(fixture)
     {
-        private static CreateCountryCommand CreateCountryCommand => new()
-        {
-            CountryCode = "AA", CountryName = "CountryName", CountryType = CountryType.Real
-        };
-
         [Fact]
         public async Task Should_return_created_country_given_valid_real_country_command()
         {
             // Arrange
-            CreateCountryCommand command = new()
-            {
-                CountryCode = "GB", CountryName = "United Kingdom", CountryType = CountryType.Real
-            };
+            CreateCountryCommand command = TestCommands.CreateRealCountry();
 
             // Act
             ErrorOr<CreateCountryResult> errorsOrResult = await SendAsync(command);
@@ -40,10 +32,7 @@ public static class CreateCountryTests
         public async Task Should_return_created_country_given_valid_pseudo_country_command()
         {
             // Arrange
-            CreateCountryCommand command = new()
-            {
-                CountryCode = "XX", CountryName = "Rest of the World", CountryType = CountryType.Pseudo
-            };
+            CreateCountryCommand command = TestCommands.CreatePseudoCountry();
 
             // Act
             ErrorOr<CreateCountryResult> errorsOrResult = await SendAsync(command);
@@ -60,11 +49,9 @@ public static class CreateCountryTests
         public async Task Should_return_errors_given_command_with_duplicate_country_code()
         {
             // Arrange
-            const string sharedCountryCode = "XX";
+            string sharedCountryCode = await CreateCountryAndReturnItsCountryCodeAsync();
 
-            await CreateCountryWithCountryCodeAsync(sharedCountryCode);
-
-            CreateCountryCommand command = CreateCountryCommand with { CountryCode = sharedCountryCode };
+            CreateCountryCommand command = TestCommands.CreateRealCountry() with { CountryCode = sharedCountryCode };
 
             // Act
             ErrorOr<CreateCountryResult> errorsOrResult = await SendAsync(command);
@@ -86,7 +73,7 @@ public static class CreateCountryTests
             // Arrange
             const string invalidCountryCode = "";
 
-            CreateCountryCommand command = CreateCountryCommand with { CountryCode = invalidCountryCode };
+            CreateCountryCommand command = TestCommands.CreateRealCountry() with { CountryCode = invalidCountryCode };
 
             // Act
             ErrorOr<CreateCountryResult> errorsOrResult = await SendAsync(command);
@@ -108,7 +95,7 @@ public static class CreateCountryTests
             // Arrange
             const string invalidCountryName = "";
 
-            CreateCountryCommand command = CreateCountryCommand with { CountryName = invalidCountryName };
+            CreateCountryCommand command = TestCommands.CreateRealCountry() with { CountryName = invalidCountryName };
 
             // Act
             ErrorOr<CreateCountryResult> errorsOrResult = await SendAsync(command);
@@ -125,7 +112,11 @@ public static class CreateCountryTests
             firstError.ShouldHaveMetadata("countryName", invalidCountryName);
         }
 
-        private async Task CreateCountryWithCountryCodeAsync(string countryCode) =>
-            await SendAsync(CreateCountryCommand with { CountryCode = countryCode });
+        private async Task<string> CreateCountryAndReturnItsCountryCodeAsync()
+        {
+            ErrorOr<CreateCountryResult> errorsOrResult = await SendAsync(TestCommands.CreatePseudoCountry());
+
+            return errorsOrResult.Value.Country.CountryCode;
+        }
     }
 }

@@ -1,6 +1,6 @@
 using ErrorOr;
 using Eurocentric.Domain.BaseTypes;
-using Eurocentric.Domain.DomainErrors;
+using Eurocentric.Domain.Rules.Internal;
 
 namespace Eurocentric.Domain.ValueObjects;
 
@@ -9,8 +9,6 @@ namespace Eurocentric.Domain.ValueObjects;
 /// </summary>
 public sealed class CountryName : ValueObject
 {
-    public const int MaxLengthInChars = 200;
-
     private CountryName(string value)
     {
         Value = value;
@@ -38,7 +36,7 @@ public sealed class CountryName : ValueObject
     {
         ArgumentNullException.ThrowIfNull(value);
 
-        return Valid(value) ? new CountryName(value) : Errors.Countries.InvalidCountryName(value);
+        return FromValue(value).EnforceInternalRules();
     }
 
     /// <summary>
@@ -54,6 +52,4 @@ public sealed class CountryName : ValueObject
 
         return new CountryName(value);
     }
-
-    private static bool Valid(string value) => value.Length <= MaxLengthInChars && !string.IsNullOrWhiteSpace(value);
 }

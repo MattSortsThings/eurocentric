@@ -1,6 +1,6 @@
 using ErrorOr;
 using Eurocentric.Domain.BaseTypes;
-using Eurocentric.Domain.DomainErrors;
+using Eurocentric.Domain.Rules.Internal;
 
 namespace Eurocentric.Domain.ValueObjects;
 
@@ -9,8 +9,6 @@ namespace Eurocentric.Domain.ValueObjects;
 /// </summary>
 public sealed class CountryCode : ValueObject, IComparable<CountryCode>
 {
-    public const int RequiredLengthInChars = 2;
-
     private CountryCode(string value)
     {
         Value = value;
@@ -46,7 +44,7 @@ public sealed class CountryCode : ValueObject, IComparable<CountryCode>
     {
         ArgumentNullException.ThrowIfNull(value);
 
-        return Valid(value) ? new CountryCode(value) : Errors.Countries.InvalidCountryCode(value);
+        return FromValue(value).EnforceInternalRules();
     }
 
     /// <summary>
@@ -62,6 +60,4 @@ public sealed class CountryCode : ValueObject, IComparable<CountryCode>
 
         return new CountryCode(value);
     }
-
-    private static bool Valid(string value) => value.Length == RequiredLengthInChars && value.All(char.IsAsciiLetterUpper);
 }

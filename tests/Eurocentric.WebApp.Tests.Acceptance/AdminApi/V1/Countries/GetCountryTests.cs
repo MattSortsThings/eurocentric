@@ -1,4 +1,5 @@
 using System.Net;
+using Eurocentric.AdminApi.Tests.Utils.V1.SampleData;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
 using Eurocentric.AdminApi.V1.Countries.GetCountry;
 using Eurocentric.AdminApi.V1.Models;
@@ -22,7 +23,7 @@ public static class GetCountryTests
         public async Task Should_return_200_with_requested_country_when_existing_country_requested()
         {
             // Arrange
-            Country targetCountry = await CreateCountryAsync();
+            Country targetCountry = await CreateCountryAndReturnItAsync();
 
             RestRequest request = Get($"{Route}/{targetCountry.Id}").UseAdminApiKey();
 
@@ -60,12 +61,9 @@ public static class GetCountryTests
             problemDetails.ShouldHaveExtension("countryId", countryId);
         }
 
-        private async Task<Country> CreateCountryAsync()
+        private async Task<Country> CreateCountryAndReturnItAsync()
         {
-            CreateCountryCommand command = new()
-            {
-                CountryCode = "GB", CountryName = "United Kingdom", CountryType = CountryType.Real
-            };
+            CreateCountryCommand command = TestCommands.CreateRealCountry();
 
             RestRequest request = Post(Route).UseAdminApiKey().AddJsonBody(command);
 

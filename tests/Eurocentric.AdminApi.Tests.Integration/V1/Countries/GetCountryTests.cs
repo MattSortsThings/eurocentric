@@ -1,5 +1,6 @@
 using ErrorOr;
 using Eurocentric.AdminApi.Tests.Integration.Utils;
+using Eurocentric.AdminApi.Tests.Utils.V1.SampleData;
 using Eurocentric.AdminApi.V1.Countries.CreateCountry;
 using Eurocentric.AdminApi.V1.Countries.GetCountry;
 using Eurocentric.AdminApi.V1.Models;
@@ -17,7 +18,7 @@ public static class GetCountryTests
         public async Task Should_return_requested_country_when_existing_country_queried()
         {
             // Arrange
-            Country targetCountry = await CreateCountryAsync();
+            Country targetCountry = await CreateCountryAndReturnItAsync();
 
             GetCountryQuery query = new(targetCountry.Id);
 
@@ -54,12 +55,9 @@ public static class GetCountryTests
             firstError.ShouldHaveMetadata("countryId", countryId);
         }
 
-        private async Task<Country> CreateCountryAsync()
+        private async Task<Country> CreateCountryAndReturnItAsync()
         {
-            CreateCountryCommand command = new()
-            {
-                CountryCode = "GB", CountryName = "United Kingdom", CountryType = CountryType.Real
-            };
+            CreateCountryCommand command = TestCommands.CreateRealCountry();
 
             ErrorOr<CreateCountryResult> errorsOrResult = await SendAsync(command);
 

@@ -13,12 +13,14 @@ internal sealed class GetCountryHandler(AppDbContext dbContext) : QueryHandler<G
 {
     public override async Task<ErrorOr<GetCountryResult>> Handle(GetCountryQuery query, CancellationToken cancellationToken)
     {
+        CountryId countryId = CountryId.FromValue(query.CountryId);
+
         Country? country = await dbContext.Countries.AsNoTracking()
-            .Where(country => country.Id.Equals(CountryId.FromValue(query.CountryId)))
+            .Where(country => country.Id.Equals(countryId))
             .SingleOrDefaultAsync(cancellationToken);
 
         return country is not null
             ? new GetCountryResult(country.ToModelCountry())
-            : Errors.Countries.CountryNotFound(query.CountryId);
+            : Errors.Countries.CountryNotFound(countryId);
     }
 }

@@ -26,9 +26,9 @@ namespace Eurocentric.DataAccess.EfCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_country", x => x.id);
-                    table.UniqueConstraint("ak_country_country_code", x => x.country_code);
-                    table.CheckConstraint("CK_country_country_type_Enum", "[country_type] IN (0, 1)");
+                    table.PrimaryKey("pk_country", x => x.id)
+                        .Annotation("SqlServer:Clustered", true);
+                    table.CheckConstraint("ck_country_country_type_enum", "[country_type] IN (0, 1)");
                 });
 
             migrationBuilder.CreateTable(
@@ -43,7 +43,8 @@ namespace Eurocentric.DataAccess.EfCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_country_contest", x => x.id);
+                    table.PrimaryKey("pk_country_contest", x => x.id)
+                        .Annotation("SqlServer:Clustered", true);
                     table.ForeignKey(
                         name: "fk_country_contest_country_country_id",
                         column: x => x.country_id,
@@ -52,6 +53,13 @@ namespace Eurocentric.DataAccess.EfCore.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_country_country_code",
+                schema: "euro",
+                table: "country",
+                column: "country_code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_country_contest_country_id_contest_id",

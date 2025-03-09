@@ -14,10 +14,10 @@ internal static class Mapping
             Enum.Parse<CountryType>(country.CountryType.ToString()),
             country.ContestIds.Select(id => id.Value).ToArray());
 
-    internal static Func<ICountryBuilder> ToBuilder(this CountryType countryType) => countryType switch
+    internal static ICountryBuilder ToBuilder(this CountryType countryType) => countryType switch
     {
-        CountryType.Real => DomainCountry.CreateReal,
-        CountryType.Pseudo => DomainCountry.CreatePseudo,
+        CountryType.Real => DomainCountry.CreateReal(),
+        CountryType.Pseudo => DomainCountry.CreatePseudo(),
         _ => throw new InvalidEnumArgumentException("countryType", (int)countryType, typeof(CountryType))
     };
 }

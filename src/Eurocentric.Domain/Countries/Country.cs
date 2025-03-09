@@ -1,7 +1,7 @@
 using ErrorOr;
 using Eurocentric.Domain.BaseTypes;
 using Eurocentric.Domain.Enums;
-using Eurocentric.Domain.Utils;
+using Eurocentric.Domain.ErrorHandling;
 using Eurocentric.Domain.ValueObjects;
 
 namespace Eurocentric.Domain.Countries;
@@ -120,8 +120,9 @@ public sealed class Country : AggregateRoot<CountryId>
         }
 
         public ErrorOr<Country> Build(DateTimeOffset dateTimeOffset) =>
-            ErrorOrTupleFactory.Combine(_errorOrCountryCode, _errorOrCountryName)
-                .Then(tuple => CreateCountry(tuple.Item1, tuple.Item2, dateTimeOffset));
+            (_errorOrCountryCode, _errorOrCountryName)
+            .Combine()
+            .Then(tuple => CreateCountry(tuple.Item1, tuple.Item2, dateTimeOffset));
 
         public ICountryFinisher AndCountryName(string countryName)
         {

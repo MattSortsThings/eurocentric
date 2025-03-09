@@ -1,4 +1,5 @@
 using Eurocentric.Domain.Countries;
+using Eurocentric.Domain.Rules;
 using Eurocentric.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -18,13 +19,13 @@ internal sealed class CountryConfig : IEntityTypeConfiguration<Country>
 
         country.Property(c => c.CountryCode)
             .IsRequired()
-            .HasMaxLength(CountryCode.RequiredLengthInChars)
+            .HasMaxLength(DomainConstants.CountryCode.RequiredLengthInChars)
             .IsFixedLength()
             .HasConversion(src => src.Value, value => CountryCode.FromValue(value));
 
         country.Property(c => c.CountryName)
             .IsRequired()
-            .HasMaxLength(CountryName.MaxLengthInChars)
+            .HasMaxLength(DomainConstants.CountryName.MaxPermittedLengthInChars)
             .HasConversion(src => src.Value, value => CountryName.FromValue(value));
 
         country.Property(c => c.CountryType)
@@ -34,9 +35,9 @@ internal sealed class CountryConfig : IEntityTypeConfiguration<Country>
         country.OwnsMany(c => c.ContestIds, ConfigureAsTable)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        country.HasKey(c => c.Id);
+        country.HasKey(c => c.Id).IsClustered();
 
-        country.HasAlternateKey(c => c.CountryCode);
+        country.HasIndex(c => c.CountryCode).IsUnique();
     }
 
     private static void ConfigureAsTable(OwnedNavigationBuilder<Country, ContestId> contestId)
@@ -55,7 +56,7 @@ internal sealed class CountryConfig : IEntityTypeConfiguration<Country>
             .IsRequired()
             .ValueGeneratedNever();
 
-        contestId.HasKey("Id");
+        contestId.HasKey("Id").IsClustered();
 
         contestId.HasIndex("CountryId", "Value").IsUnique();
     }

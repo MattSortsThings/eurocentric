@@ -17,7 +17,4 @@
     <ProjectReference Include="..\..\src\Eurocentric.AdminApi\Eurocentric.AdminApi.csproj"/>
     <ProjectReference Include="..\Eurocentric.Tests.Assertions\Eurocentric.Tests.Assertions.csproj"/>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="V1\"/>
-  </ItemGroup>
 </Project>

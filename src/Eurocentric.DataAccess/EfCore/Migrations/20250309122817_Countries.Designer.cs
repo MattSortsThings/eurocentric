@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250305132420_Countries")]
+    [Migration("20250309122817_Countries")]
     partial class Countries
     {
         /// <inheritdoc />
@@ -52,12 +52,15 @@ namespace Eurocentric.DataAccess.EfCore.Migrations
                     b.HasKey("Id")
                         .HasName("pk_country");
 
-                    b.HasAlternateKey("CountryCode")
-                        .HasName("ak_country_country_code");
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.HasIndex("CountryCode")
+                        .IsUnique()
+                        .HasDatabaseName("ix_country_country_code");
 
                     b.ToTable("country", "euro", t =>
                         {
-                            t.HasCheckConstraint("CK_country_country_type_Enum", "[country_type] IN (0, 1)");
+                            t.HasCheckConstraint("ck_country_country_type_enum", "[country_type] IN (0, 1)");
                         });
                 });
 
@@ -82,6 +85,8 @@ namespace Eurocentric.DataAccess.EfCore.Migrations
 
                             b1.HasKey("Id")
                                 .HasName("pk_country_contest");
+
+                            SqlServerKeyBuilderExtensions.IsClustered(b1.HasKey("Id"));
 
                             b1.HasIndex("CountryId", "Value")
                                 .IsUnique()

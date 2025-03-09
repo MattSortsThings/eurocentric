@@ -49,8 +49,11 @@ namespace Eurocentric.DataAccess.EfCore.Migrations
                     b.HasKey("Id")
                         .HasName("pk_country");
 
-                    b.HasAlternateKey("CountryCode")
-                        .HasName("ak_country_country_code");
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.HasIndex("CountryCode")
+                        .IsUnique()
+                        .HasDatabaseName("ix_country_country_code");
 
                     b.ToTable("country", "euro", t =>
                         {
@@ -79,6 +82,8 @@ namespace Eurocentric.DataAccess.EfCore.Migrations
 
                             b1.HasKey("Id")
                                 .HasName("pk_country_contest");
+
+                            SqlServerKeyBuilderExtensions.IsClustered(b1.HasKey("Id"));
 
                             b1.HasIndex("CountryId", "Value")
                                 .IsUnique()
