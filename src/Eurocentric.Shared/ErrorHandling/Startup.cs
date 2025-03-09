@@ -16,6 +16,7 @@ public static class Startup
     public static IServiceCollection AddErrorHandling(this IServiceCollection services)
     {
         services.AddProblemDetails(ConfigureProblemDetailsOptions)
+            .AddExceptionHandler<InvalidEnumArgumentExceptionHandler>()
             .AddExceptionHandler<BadHttpRequestExceptionHandler>()
             .AddExceptionHandler<FallbackExceptionHandler>();
 
