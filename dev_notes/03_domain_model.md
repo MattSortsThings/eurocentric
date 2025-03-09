@@ -89,7 +89,7 @@ The following is a list of all Admin transactions that change the system state.
 
 - **Trigger:** the Admin requests to create a new **CONTEST** aggregate in the system, specifying:
   1. the contest year, and
-  2. the host city name, and
+  2. the city name, and
   3. the voting rules, and
   4. the global televote *CountryId* (optional), and
   5. the **Participant**s, for each:
@@ -193,7 +193,7 @@ This section outlines the business rules that cannot be violated during any tran
 
 1. An act name must be a non-empty, non-white-space string of no more than 200 letters.
 2. A broadcast date must be a date in the range \[2016-01-01, 2050-12-31\].
-3. A host city name must be a non-empty, non-white-space string of no more than 200 letters.
+3. A city name must be a non-empty, non-white-space string of no more than 200 letters.
 4. A contest year must be an integer in the range \[2016, 2050\].
 5. A country code must be a string of 2 upper-case letters.
 6. A country name must be a non-empty, non-white-space string of no more than 200 letters.
