@@ -101,7 +101,7 @@ This document contains the feature specification for the initial release of *Eur
 - **As** the Admin
 - **I want to** create a contest
   - providing its contest year
-  - and its host city name
+  - and its city name
   - and its voting rules
   - and for each of its participants
     - providing its country ID
