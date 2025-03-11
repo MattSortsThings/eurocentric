@@ -1,7 +1,7 @@
-using Eurocentric.Domain.Rules.External.DbCheckers;
+using Eurocentric.Domain.Rules.DataCheckers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Eurocentric.DataAccess.DbCheckers;
+namespace Eurocentric.DataAccess.DataCheckers;
 
 /// <summary>
 ///     Extension methods to be invoked at application startup.
@@ -9,13 +9,13 @@ namespace Eurocentric.DataAccess.DbCheckers;
 internal static class Startup
 {
     /// <summary>
-    ///     Adds all the database checker services to the application services container.
+    ///     Adds all the data checker services to the application services container.
     /// </summary>
     /// <param name="services">Contains service descriptors for the application</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    internal static IServiceCollection AddDbCheckers(this IServiceCollection services)
+    internal static IServiceCollection AddDataCheckers(this IServiceCollection services)
     {
-        services.AddScoped<ICountryDbChecker, CountryDbChecker>();
+        services.AddScoped<IDataChecker, DataChecker>();
 
         return services;
     }

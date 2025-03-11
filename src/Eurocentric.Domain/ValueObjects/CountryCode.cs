@@ -44,7 +44,7 @@ public sealed class CountryCode : ValueObject, IComparable<CountryCode>
     {
         ArgumentNullException.ThrowIfNull(value);
 
-        return FromValue(value).EnforceInternalRules();
+        return FromValue(value).ToErrorOr().EnforceInternalRules();
     }
 
     /// <summary>

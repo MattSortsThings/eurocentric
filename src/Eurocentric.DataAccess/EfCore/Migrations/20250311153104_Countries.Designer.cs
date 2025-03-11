@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250311125331_Countries")]
+    [Migration("20250311153104_Countries")]
     partial class Countries
     {
         /// <inheritdoc />

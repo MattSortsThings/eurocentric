@@ -1,5 +1,5 @@
+using Eurocentric.Domain.Constants;
 using Eurocentric.Domain.Countries;
-using Eurocentric.Domain.Rules;
 using Eurocentric.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -19,13 +19,13 @@ internal sealed class CountryConfig : IEntityTypeConfiguration<Country>
 
         country.Property(c => c.CountryCode)
             .IsRequired()
-            .HasMaxLength(DomainConstants.CountryCode.RequiredLengthInChars)
+            .HasMaxLength(DomainConstants.ValueObjects.CountryCodes.RequiredLengthInChars)
             .IsFixedLength()
             .HasConversion(src => src.Value, value => CountryCode.FromValue(value));
 
         country.Property(c => c.CountryName)
             .IsRequired()
-            .HasMaxLength(DomainConstants.CountryName.MaxPermittedLengthInChars)
+            .HasMaxLength(DomainConstants.ValueObjects.CountryNames.MaxPermittedLengthInChars)
             .HasConversion(src => src.Value, value => CountryName.FromValue(value));
 
         country.Property(c => c.CountryType)

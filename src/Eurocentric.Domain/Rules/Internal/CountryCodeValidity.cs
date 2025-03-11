@@ -1,17 +1,22 @@
 using ErrorOr;
-using Eurocentric.Domain.DomainErrors;
+using Eurocentric.Domain.Constants;
+using Eurocentric.Domain.ErrorHandling;
+using Eurocentric.Domain.Errors;
 using Eurocentric.Domain.ValueObjects;
 
 namespace Eurocentric.Domain.Rules.Internal;
 
 internal static class CountryCodeValidity
 {
-    internal static ErrorOr<CountryCode> EnforceInternalRules(this CountryCode countryCode) => countryCode.ToErrorOr()
-        .FailIf(ValueLengthIsNot2Chars, Errors.Countries.InvalidCountryCode(countryCode))
-        .FailIf(ValueIsNotAllUpperCaseLetters, Errors.Countries.InvalidCountryCode(countryCode));
+    internal static ErrorOr<CountryCode> EnforceInternalRules(this ErrorOr<CountryCode> subject) =>
+        subject.FailIfValueHasInvalidLength()
+            .FailIfValueIsNotAllUpperCaseLetters();
 
-    private static bool ValueLengthIsNot2Chars(CountryCode countryCode) =>
-        countryCode.Value.Length != DomainConstants.CountryCode.RequiredLengthInChars;
+    private static ErrorOr<CountryCode> FailIfValueHasInvalidLength(this ErrorOr<CountryCode> subject) =>
+        subject.FailIf(c => c.Value.Length != DomainConstants.ValueObjects.CountryCodes.RequiredLengthInChars,
+            DomainErrors.ValueObjects.CountryCodes.InvalidCountryCode);
 
-    private static bool ValueIsNotAllUpperCaseLetters(CountryCode countryCode) => !countryCode.Value.All(char.IsUpper);
+    private static ErrorOr<CountryCode> FailIfValueIsNotAllUpperCaseLetters(this ErrorOr<CountryCode> subject) =>
+        subject.FailIf(c => !c.Value.All(char.IsUpper),
+            DomainErrors.ValueObjects.CountryCodes.InvalidCountryCode);
 }

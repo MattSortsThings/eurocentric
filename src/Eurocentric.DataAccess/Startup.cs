@@ -1,4 +1,4 @@
-using Eurocentric.DataAccess.DbCheckers;
+using Eurocentric.DataAccess.DataCheckers;
 using Eurocentric.DataAccess.EfCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +18,7 @@ public static class Startup
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbCheckers()
+        services.AddDataCheckers()
             .AddAppDbContext(configuration.GetConnectionString("Eurocentric"));
 
         return services;

@@ -36,7 +36,7 @@ public sealed class CountryName : ValueObject
     {
         ArgumentNullException.ThrowIfNull(value);
 
-        return FromValue(value).EnforceInternalRules();
+        return FromValue(value).ToErrorOr().EnforceInternalRules();
     }
 
     /// <summary>

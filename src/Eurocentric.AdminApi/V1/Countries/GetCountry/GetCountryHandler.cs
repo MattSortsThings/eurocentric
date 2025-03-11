@@ -1,7 +1,7 @@
 using ErrorOr;
 using Eurocentric.AdminApi.V1.Models;
 using Eurocentric.DataAccess.EfCore;
-using Eurocentric.Domain.DomainErrors;
+using Eurocentric.Domain.Errors;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Shared.AppPipeline;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +21,6 @@ internal sealed class GetCountryHandler(AppDbContext dbContext) : QueryHandler<G
 
         return country is not null
             ? new GetCountryResult(country.ToModelCountry())
-            : Errors.Countries.CountryNotFound(countryId);
+            : DomainErrors.Countries.CountryNotFound(countryId);
     }
 }
