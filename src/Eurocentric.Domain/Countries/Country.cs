@@ -40,9 +40,9 @@ public sealed class Country : AggregateRoot<CountryId>
     public CountryType CountryType { get; private set; }
 
     /// <summary>
-    ///     Gets a collection of the IDs of all the contest aggregates in which this country aggregate is involved.
+    ///     Gets the ordered sequence of the IDs of all the contest aggregates in which this country aggregate is involved.
     /// </summary>
-    public IReadOnlyList<ContestId> ContestIds => _contestIds.OrderBy(id => id.Value).ToArray().AsReadOnly();
+    public IEnumerable<ContestId> ContestIds => _contestIds.OrderBy(id => id.Value);
 
     /// <summary>
     ///     Adds the specified <see cref="ContestId" /> value to this instance's <see cref="ContestIds" /> collection.
