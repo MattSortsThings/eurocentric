@@ -15,7 +15,7 @@ public sealed class GetStationsTests(WebAppFixture webAppFixture) : AcceptanceTe
     [InlineData(Line.Jubilee)]
     [InlineData(Line.Metropolitan)]
     [InlineData(Line.Northern)]
-    public async Task PublicApi_should_return_OK_with_GetStationsResponse_given_valid_query(Line line)
+    public async Task PublicApi_should_return_OK_with_all_stations_matching_query(Line line)
     {
         // Arrange
         RestRequest restRequest = Get(Route).AddQueryParameter(nameof(line), line);

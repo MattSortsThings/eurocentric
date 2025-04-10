@@ -12,7 +12,7 @@ public sealed class CreateStationTests(WebAppFixture webAppFixture) : Acceptance
     private const string Route = "admin/api/v0.2/stations";
 
     [Fact]
-    public async Task AdminApi_should_return_Created_with_CreateStationResponse_given_valid_request()
+    public async Task AdminApi_should_return_Created_with_created_station_given_valid_request()
     {
         // Arrange
         CreateStationCommand request = new() { Name = "Oval", Line = Line.Northern };

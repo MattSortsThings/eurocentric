@@ -11,7 +11,7 @@ public sealed class GetStationTests(WebAppFixture webAppFixture) : AcceptanceTes
     private const string Route = "admin/api/v0.2/stations/{stationId}";
 
     [Fact]
-    public async Task AdminApi_should_return_OK_with_GetStationResponse_when_requested_station_exists()
+    public async Task AdminApi_should_return_OK_with_requested_station_when_requested_station_exists()
     {
         // Arrange
         const int stationId = 1;

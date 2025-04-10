@@ -7,12 +7,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RestSharp;
 using RestSharp.Serializers.Json;
+using SlimMessageBus;
 using Testcontainers.MsSql;
 using Xunit;
 
 namespace Eurocentric.TestUtils.WebAppFixtures;
 
-public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator>, IAsyncLifetime, ITestHttpClient
+public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator>,
+    IAsyncLifetime,
+    ITestHttpClient,
+    ITestMessageBus
 {
     private static readonly Uri BaseAddress = new("http://localhost:5263");
 
@@ -42,6 +46,14 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
         IRestClient restClient = scope.ServiceProvider.GetRequiredService<IRestClient>();
 
         return await restClient.ExecuteAsync<T>(request, cancellationToken);
+    }
+
+    public async Task<T> SendAsync<T>(IRequest<T> request, CancellationToken cancellationToken = default)
+    {
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        IRequestResponseBus bus = scope.ServiceProvider.GetRequiredService<IRequestResponseBus>();
+
+        return await bus.Send(request, cancellationToken: cancellationToken);
     }
 
     public void Reset() { }
