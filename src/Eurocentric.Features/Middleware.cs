@@ -1,5 +1,8 @@
+using Eurocentric.Features.AdminApi.Stations.CreateStation;
+using Eurocentric.Features.AdminApi.Stations.GetStation;
+using Eurocentric.Features.PublicApi.Stations.GetStations;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Features;
 
@@ -17,8 +20,14 @@ public static class Middleware
     {
         app.UseHttpsRedirection();
 
-        app.MapGet("admin/api/v0.1/placeholder", () => TypedResults.Ok($"Admin API zapped to the extreme at {DateTime.Now}!"));
-        app.MapGet("public/api/v0.1/placeholder", () => TypedResults.Ok($"Public API zapped to the extreme at {DateTime.Now}!"));
+        RouteGroupBuilder adminApi = app.MapGroup("admin/api").WithGroupName("AdminApi").AllowAnonymous();
+
+        adminApi.MapGetStation();
+        adminApi.MapCreateStation();
+
+        RouteGroupBuilder publicApi = app.MapGroup("public/api").WithGroupName("PublicApi").AllowAnonymous();
+
+        publicApi.MapGetStations();
 
         return app;
     }
