@@ -13,4 +13,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AdminApi\V0\"/>
+    <Folder Include="PublicApi\V0\"/>
+  </ItemGroup>
 </Project>

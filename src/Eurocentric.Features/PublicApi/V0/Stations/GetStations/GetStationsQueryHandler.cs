@@ -1,10 +1,10 @@
 using System.ComponentModel;
 using ErrorOr;
 using Eurocentric.Domain.Placeholders;
-using Eurocentric.Features.PublicApi.Stations.Models;
+using Eurocentric.Features.PublicApi.V0.Stations.Models;
 using Eurocentric.Features.Shared.Messaging;
 
-namespace Eurocentric.Features.PublicApi.Stations.GetStations;
+namespace Eurocentric.Features.PublicApi.V0.Stations.GetStations;
 
 internal sealed class GetStationsQueryHandler : RequestHandler<GetStationsQuery, GetStationsResponse>
 {

@@ -1,6 +1,6 @@
-using Eurocentric.Features.AdminApi.Stations.CreateStation;
-using Eurocentric.Features.AdminApi.Stations.GetStation;
-using Eurocentric.Features.PublicApi.Stations.GetStations;
+using Eurocentric.Features.AdminApi.V0.Stations.CreateStation;
+using Eurocentric.Features.AdminApi.V0.Stations.GetStation;
+using Eurocentric.Features.PublicApi.V0.Stations.GetStations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 

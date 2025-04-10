@@ -1,7 +1,7 @@
 using System.Net;
 using Eurocentric.Domain.Placeholders;
 using Eurocentric.Features.AcceptanceTests.Utils;
-using Eurocentric.Features.PublicApi.Stations.GetStations;
+using Eurocentric.Features.PublicApi.V0.Stations.GetStations;
 using Eurocentric.TestUtils.WebAppFixtures;
 using RestSharp;
 

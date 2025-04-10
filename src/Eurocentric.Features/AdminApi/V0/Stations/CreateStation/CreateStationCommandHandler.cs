@@ -1,9 +1,9 @@
 using ErrorOr;
 using Eurocentric.Domain.Placeholders;
-using Eurocentric.Features.AdminApi.Stations.Models;
+using Eurocentric.Features.AdminApi.V0.Stations.Models;
 using Eurocentric.Features.Shared.Messaging;
 
-namespace Eurocentric.Features.AdminApi.Stations.CreateStation;
+namespace Eurocentric.Features.AdminApi.V0.Stations.CreateStation;
 
 internal sealed class CreateStationCommandHandler : RequestHandler<CreateStationCommand, CreateStationResponse>
 {

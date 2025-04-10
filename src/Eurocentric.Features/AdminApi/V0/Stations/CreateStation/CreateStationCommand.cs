@@ -1,7 +1,7 @@
 using Eurocentric.Domain.Placeholders;
 using Eurocentric.Features.Shared.Messaging;
 
-namespace Eurocentric.Features.AdminApi.Stations.CreateStation;
+namespace Eurocentric.Features.AdminApi.V0.Stations.CreateStation;
 
 public sealed record CreateStationCommand : Request<CreateStationResponse>
 {

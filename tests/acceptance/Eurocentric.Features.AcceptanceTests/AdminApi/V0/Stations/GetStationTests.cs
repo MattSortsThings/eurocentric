@@ -1,6 +1,6 @@
 using System.Net;
 using Eurocentric.Features.AcceptanceTests.Utils;
-using Eurocentric.Features.AdminApi.Stations.GetStation;
+using Eurocentric.Features.AdminApi.V0.Stations.GetStation;
 using Eurocentric.TestUtils.WebAppFixtures;
 using RestSharp;
 

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
 
-namespace Eurocentric.Features.PublicApi.Stations.GetStations;
+namespace Eurocentric.Features.PublicApi.V0.Stations.GetStations;
 
 internal static class GetStationsEndpoint
 {

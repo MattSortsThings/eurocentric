@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
 
-namespace Eurocentric.Features.AdminApi.Stations.GetStation;
+namespace Eurocentric.Features.AdminApi.V0.Stations.GetStation;
 
 internal static class GetStationEndpoint
 {
