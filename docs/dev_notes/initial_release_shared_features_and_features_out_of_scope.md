@@ -13,8 +13,9 @@ This document contains the shared feature specification for the initial release 
     - [S05: Global Exception Handling](#s05-global-exception-handling)
     - [S06: Problem Details Responses](#s06-problem-details-responses)
   - [Security](#security)
-    - [S07: *Admin API* Key Security](#s07-admin-api-key-security)
-    - [S08: *Public API* Key Security](#s08-public-api-key-security)
+    - [S07: API Key Authentication](#s07-api-key-authentication)
+    - [S08: *Admin API* Authorization](#s08-admin-api-authorization)
+    - [S09: *Public API* Authorization](#s09-public-api-authorization)
   - [Features out of scope](#features-out-of-scope)
 
 ## API Registration
@@ -88,20 +89,36 @@ This document contains the shared feature specification for the initial release 
 
 ## Security
 
-### S07: *Admin API* Key Security
+### S07: API Key Authentication
 
 **User Story**
 
 - **As** the Dev
-- **I want** every *Admin API* endpoint to require a secret *Admin API key* as an `"X-Api-Key"` HTTP request header
+- **I want** requests to API endpoints to use API key authentication
+  - with an API key passed as an `"X-Api-Key"` HTTP request header
+  - defining a secret API key
+  - and a demo API key
+- **So that** I can exert some control over who can access the API endpoints.
+
+### S08: *Admin API* Authorization
+
+**User Story**
+
+- **As** the Dev
+- **I want** every *Admin API* endpoint to be restricted to clients with the `"Administrator"` role
+  - assigned during API key authentication
+    - when the request contains the secret API key
 - **So that** I can ensure that only the Admin can modify the system database.
 
-### S08: *Public API* Key Security
+### S09: *Public API* Authorization
 
 **User Story**
 
 - **As** the Dev
-- **I want** every *Public API* endpoint to require either a *Public API key* or a secret *Admin API key* as an `"X-Api-Key"` HTTP request header
+- **I want** every *Public API* endpoint to be restricted to clients with the `"User"` role
+  - assigned during API key authentication
+    - when the request contains the secret API key
+    - or the demo API key
 - **So that** I can exert some control over who can run queries using the *Public API*.
 
 ## Features out of scope
