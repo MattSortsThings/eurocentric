@@ -1,0 +1,32 @@
+name: Publish and deploy ASP.Net Core app to an Azure Web App
+
+env:
+  AZURE_WEBAPP_NAME: 'eurocentric'
+  DOTNET_VERSION: '9.x.x'
+  WEBAPP_PROJECT_FILE: './src/Eurocentric.WebApp/Eurocentric.WebApp.csproj'
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build with dotnet
+        run: dotnet build ${{ env.WEBAPP_PROJECT_FILE }} -c Release
+
+      - name: Publish with dotnet
+        run: dotnet publish ${{ env.WEBAPP_PROJECT_FILE }} -c Release -o ${{env.DOTNET_ROOT}}/myapp
