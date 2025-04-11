@@ -16,6 +16,10 @@ internal sealed class AdminApiInfo : IApiInfo
         new("admin-api-v0.2", 0, 2)
     ];
 
+    public string OpenApiDocumentTitle => "Eurocentric Admin API";
+
+    public string OpenApiDocumentDescription => "A web API for modelling the Eurovision Song Contest, 2016-present.";
+
     internal static class Tags
     {
         internal const string Stations = "Stations";

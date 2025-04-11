@@ -1,4 +1,5 @@
 using Eurocentric.Features.Shared.ApiDiscovery;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Json;
 using Eurocentric.Features.Shared.Messaging;
@@ -20,6 +21,7 @@ public static class DependencyInjection
     public static IServiceCollection AddFeatures(this IServiceCollection services)
     {
         services.DiscoverApis()
+            .AddDocumentation()
             .AddErrorHandling()
             .AddMessaging()
             .AddVersioning()

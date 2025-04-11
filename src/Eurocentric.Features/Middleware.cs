@@ -1,3 +1,4 @@
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.EndpointMapping;
 using Microsoft.AspNetCore.Builder;
 
@@ -22,6 +23,8 @@ public static class Middleware
         app.UseExceptionHandler();
 
         app.UseVersionedApiEndpoints();
+
+        app.UseDocumentationEndpoints();
 
         return app;
     }
