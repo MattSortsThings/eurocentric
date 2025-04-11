@@ -1,4 +1,5 @@
 using Eurocentric.Features.Shared.ApiDiscovery;
+using Eurocentric.Features.Shared.Security;
 
 namespace Eurocentric.Features.PublicApi.Common;
 
@@ -18,6 +19,8 @@ internal sealed class PublicApiInfo : IApiInfo
     public string OpenApiDocumentTitle => "Eurocentric Public API";
 
     public string OpenApiDocumentDescription => "A web API for (over)analysing the Eurovision Song Contest, 2016-present.";
+
+    public string AuthorizationPolicyName => nameof(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole);
 
     internal static class Tags
     {

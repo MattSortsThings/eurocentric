@@ -21,7 +21,9 @@ internal static class DependencyInjection
             .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationScheme>(ApiKeyAuthenticationScheme.SchemeName, null);
 
         services.AddAuthorizationBuilder()
-            .AddPolicy(nameof(AuthorizationPolicies.RequireAuthenticatedUser), AuthorizationPolicies.RequireAuthenticatedUser);
+            .AddPolicy(nameof(AuthorizationPolicies.RequireAuthenticatedUser), AuthorizationPolicies.RequireAuthenticatedUser)
+            .AddPolicy(nameof(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole),
+                AuthorizationPolicies.RequireAuthenticatedClientWithUserRole);
 
         return services;
     }

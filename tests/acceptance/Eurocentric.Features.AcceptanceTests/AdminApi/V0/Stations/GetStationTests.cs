@@ -16,7 +16,7 @@ public sealed class GetStationTests(WebAppFixture webAppFixture) : AcceptanceTes
         // Arrange
         const int stationId = 1;
 
-        RestRequest restRequest = Get(Route).UseAdminApiKey().AddUrlSegment(nameof(stationId), stationId);
+        RestRequest restRequest = Get(Route).UseSecretApiKey().AddUrlSegment(nameof(stationId), stationId);
 
         // Act
         (HttpStatusCode statusCode, GetStationResponse response, _) =
@@ -34,7 +34,7 @@ public sealed class GetStationTests(WebAppFixture webAppFixture) : AcceptanceTes
         // Arrange
         const int stationId = 0;
 
-        RestRequest restRequest = Get(Route).UseAdminApiKey().AddUrlSegment(nameof(stationId), stationId);
+        RestRequest restRequest = Get(Route).UseSecretApiKey().AddUrlSegment(nameof(stationId), stationId);
 
         // Act
         RestResponse restResponse = await Sut.SendAsync(restRequest, TestContext.Current.CancellationToken);

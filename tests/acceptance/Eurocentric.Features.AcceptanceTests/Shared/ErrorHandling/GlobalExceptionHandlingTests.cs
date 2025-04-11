@@ -13,7 +13,7 @@ public sealed class GlobalExceptionHandlingTests(WebAppFixture webAppFixture) : 
     public async Task Api_should_return_BadRequest_with_ProblemDetails_when_BadHttpRequestException_thrown()
     {
         // Arrange
-        RestRequest restRequest = Post("admin/api/v0.2/stations").UseAdminApiKey().AddJsonBody(new { MalformedRequest = true });
+        RestRequest restRequest = Post("admin/api/v0.2/stations").UseSecretApiKey().AddJsonBody(new { MalformedRequest = true });
 
         // Act
         (HttpStatusCode statusCode, ProblemDetails problemDetails, _) =
@@ -34,7 +34,7 @@ public sealed class GlobalExceptionHandlingTests(WebAppFixture webAppFixture) : 
     public async Task Api_should_return_BadRequest_with_ProblemDetails_when_InvalidEnumArgumentException_thrown()
     {
         // Arrange
-        RestRequest restRequest = Get("public/api/v0.1/stations").UsePublicApiKey().AddQueryParameter("line", 999999);
+        RestRequest restRequest = Get("public/api/v0.1/stations").UseDemoApiKey().AddQueryParameter("line", 999999);
 
         // Act
         (HttpStatusCode statusCode, ProblemDetails problemDetails, _) =

@@ -42,15 +42,39 @@ internal sealed class ApiKeyAuthenticationScheme(
     private bool EndpointAllowsAnonymous() =>
         Context.GetEndpoint()?.Metadata.OfType<AllowAnonymousAttribute>().Any() is null or true;
 
-    private AuthenticateResult TryAuthenticateFromApiKey() =>
-        Request.Headers.TryGetValue(HttpRequestHeaderName, out StringValues apiKey)
-            ? AuthenticateAsAnonymous()
-            : AuthenticateResult.Fail("Must provide a valid API key as an \"X-Api-Key\" request header value.");
+    private AuthenticateResult TryAuthenticateFromApiKey()
+    {
+        Request.Headers.TryGetValue(HttpRequestHeaderName, out StringValues apiKey);
+
+        return apiKey.Equals(apiKeysOptions.CurrentValue.DemoApiKey)
+            ? AuthenticateAsUser()
+            : apiKey.Equals(apiKeysOptions.CurrentValue.SecretApiKey)
+                ? AuthenticateAsAdministrator()
+                : AuthenticateResult.Fail("Must provide a valid API key as an \"X-Api-Key\" request header value.");
+    }
+
+    private AuthenticateResult AuthenticateAsAdministrator()
+    {
+        ClaimsIdentity identity = new([new Claim("ClientID", ClientIds.Administrator)], Scheme.Name);
+        GenericPrincipal principal = new(identity, [Roles.Administrator, Roles.User]);
+        AuthenticationTicket ticket = new(principal, Scheme.Name);
+
+        return AuthenticateResult.Success(ticket);
+    }
 
     private AuthenticateResult AuthenticateAsAnonymous()
     {
-        ClaimsIdentity identity = new([new Claim("ClientID", "Anonymous")], Scheme.Name);
+        ClaimsIdentity identity = new([new Claim("ClientID", ClientIds.Anonymous)], Scheme.Name);
         GenericPrincipal principal = new(identity, null);
+        AuthenticationTicket ticket = new(principal, Scheme.Name);
+
+        return AuthenticateResult.Success(ticket);
+    }
+
+    private AuthenticateResult AuthenticateAsUser()
+    {
+        ClaimsIdentity identity = new([new Claim("ClientID", ClientIds.User)], Scheme.Name);
+        GenericPrincipal principal = new(identity, [Roles.User]);
         AuthenticationTicket ticket = new(principal, Scheme.Name);
 
         return AuthenticateResult.Success(ticket);

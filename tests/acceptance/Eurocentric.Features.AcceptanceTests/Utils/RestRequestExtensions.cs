@@ -5,7 +5,7 @@ namespace Eurocentric.Features.AcceptanceTests.Utils;
 
 internal static class RestRequestExtensions
 {
-    internal static RestRequest UseAdminApiKey(this RestRequest request) => request.AddHeader("X-Api-Key", TestApiKeys.Admin);
+    internal static RestRequest UseSecretApiKey(this RestRequest request) => request.AddHeader("X-Api-Key", TestApiKeys.Secret);
 
-    internal static RestRequest UsePublicApiKey(this RestRequest request) => request.AddHeader("X-Api-Key", TestApiKeys.Public);
+    internal static RestRequest UseDemoApiKey(this RestRequest request) => request.AddHeader("X-Api-Key", TestApiKeys.Demo);
 }

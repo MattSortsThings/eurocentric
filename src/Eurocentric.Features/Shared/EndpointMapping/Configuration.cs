@@ -1,5 +1,4 @@
 using Eurocentric.Features.Shared.ApiDiscovery;
-using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -21,7 +20,7 @@ internal static class Configuration
             RouteGroupBuilder apiGroup = app.NewVersionedApi(api.Name)
                 .MapGroup(api.UrlPrefix)
                 .WithGroupName(api.Name)
-                .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedUser);
+                .RequireAuthorization(api.AuthorizationPolicyName);
 
             foreach (IEndpointInfo endpoint in endpoints.Where(endpoint => endpoint.ApiName == api.Name))
             {

@@ -77,8 +77,8 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
 
         services.Configure<ApiKeysOptions>(options =>
         {
-            options.AdminApiKey = TestApiKeys.Admin;
-            options.PublicApiKey = TestApiKeys.Public;
+            options.SecretApiKey = TestApiKeys.Secret;
+            options.DemoApiKey = TestApiKeys.Demo;
         });
     });
 }

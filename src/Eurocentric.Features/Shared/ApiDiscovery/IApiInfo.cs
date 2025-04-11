@@ -11,4 +11,6 @@ public interface IApiInfo
     public string OpenApiDocumentTitle { get; }
 
     public string OpenApiDocumentDescription { get; }
+
+    public string AuthorizationPolicyName { get; }
 }
