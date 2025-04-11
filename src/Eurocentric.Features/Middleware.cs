@@ -22,6 +22,8 @@ public static class Middleware
 
         app.UseStatusCodePages();
 
+        app.UseExceptionHandler();
+
         RouteGroupBuilder adminApi = app.MapGroup("admin/api").WithGroupName("AdminApi").AllowAnonymous();
 
         adminApi.MapGetStation();
