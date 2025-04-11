@@ -7,6 +7,9 @@ internal static class AuthorizationPolicies
     internal static Action<AuthorizationPolicyBuilder> RequireAuthenticatedUser =>
         static builder => builder.RequireAuthenticatedUser();
 
+    internal static Action<AuthorizationPolicyBuilder> RequireAuthenticatedClientWithAdministratorRole =>
+        static builder => builder.RequireAuthenticatedUser().RequireRole(Roles.Administrator);
+
     internal static Action<AuthorizationPolicyBuilder> RequireAuthenticatedClientWithUserRole =>
         static builder => builder.RequireAuthenticatedUser().RequireRole(Roles.User);
 }

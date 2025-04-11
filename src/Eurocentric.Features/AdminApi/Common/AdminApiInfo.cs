@@ -21,7 +21,7 @@ internal sealed class AdminApiInfo : IApiInfo
 
     public string OpenApiDocumentDescription => "A web API for modelling the Eurovision Song Contest, 2016-present.";
 
-    public string AuthorizationPolicyName => nameof(AuthorizationPolicies.RequireAuthenticatedUser);
+    public string AuthorizationPolicyName => nameof(AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole);
 
     internal static class Tags
     {
