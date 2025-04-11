@@ -82,6 +82,7 @@ public sealed class OpenApiDocumentsTests(WebAppFixture webAppFixture) : Accepta
         {
             Add("admin-api-v0.1", "/admin/api/v0.1/");
             Add("admin-api-v0.2", "/admin/api/v0.2/");
+            Add("admin-api-v1.0", "/admin/api/v1.0/");
             Add("public-api-v0.1", "/public/api/v0.1/");
         }
     }
@@ -99,6 +100,11 @@ public sealed class OpenApiDocumentsTests(WebAppFixture webAppFixture) : Accepta
                 "Eurocentric Admin API",
                 "A web API for modelling the Eurovision Song Contest, 2016-present.",
                 "0.2");
+
+            Add("admin-api-v1.0",
+                "Eurocentric Admin API",
+                "A web API for modelling the Eurovision Song Contest, 2016-present.",
+                "1.0");
 
             Add("public-api-v0.1",
                 "Eurocentric Public API",

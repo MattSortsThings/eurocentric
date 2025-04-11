@@ -14,7 +14,8 @@ internal sealed class AdminApiInfo : IApiInfo
     public IReadOnlyList<ApiRelease> Releases { get; } =
     [
         new("admin-api-v0.1", 0, 1),
-        new("admin-api-v0.2", 0, 2)
+        new("admin-api-v0.2", 0, 2),
+        new("admin-api-v1.0", 1, 0)
     ];
 
     public string OpenApiDocumentTitle => "Eurocentric Admin API";
@@ -25,6 +26,7 @@ internal sealed class AdminApiInfo : IApiInfo
 
     internal static class Tags
     {
+        internal const string Countries = "Countries";
         internal const string Stations = "Stations";
     }
 }
