@@ -1,4 +1,4 @@
-namespace Eurocentric.Features.Shared.ApiRegistration;
+namespace Eurocentric.Features.Shared.ApiDiscovery;
 
 public interface IEndpointInfo
 {

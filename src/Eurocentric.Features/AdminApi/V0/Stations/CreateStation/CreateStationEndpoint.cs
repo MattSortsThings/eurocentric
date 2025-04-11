@@ -1,7 +1,7 @@
 using ErrorOr;
 using Eurocentric.Features.AdminApi.Common;
 using Eurocentric.Features.AdminApi.V0.Stations.GetStation;
-using Eurocentric.Features.Shared.ApiRegistration;
+using Eurocentric.Features.Shared.ApiDiscovery;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;

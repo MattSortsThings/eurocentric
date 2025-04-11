@@ -1,7 +1,8 @@
-using Eurocentric.Features.Shared.ApiRegistration;
+using Eurocentric.Features.Shared.ApiDiscovery;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Json;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Features.Shared.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features;
@@ -21,6 +22,7 @@ public static class DependencyInjection
         services.DiscoverApis()
             .AddErrorHandling()
             .AddMessaging()
+            .AddVersioning()
             .ConfigureOptions<ConfigureJsonOptions>();
 
         return services;

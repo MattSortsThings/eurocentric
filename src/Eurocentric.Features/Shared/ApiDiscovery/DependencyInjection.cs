@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Eurocentric.Features.Shared.ApiRegistration;
+namespace Eurocentric.Features.Shared.ApiDiscovery;
 
 internal static class DependencyInjection
 {

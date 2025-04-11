@@ -1,4 +1,4 @@
-using Eurocentric.Features.Shared.ApiRegistration;
+using Eurocentric.Features.Shared.ApiDiscovery;
 
 namespace Eurocentric.Features.AdminApi.Common;
 
@@ -8,7 +8,13 @@ internal sealed class AdminApiInfo : IApiInfo
 
     public string Name => ApiName;
 
-    public string UrlPrefix => "admin/api/v0.2";
+    public string UrlPrefix => "admin/api/v{version:apiVersion}";
+
+    public IReadOnlyList<ApiRelease> Releases { get; } =
+    [
+        new("admin-api-v0.1", 0, 1),
+        new("admin-api-v0.2", 0, 2)
+    ];
 
     internal static class Tags
     {

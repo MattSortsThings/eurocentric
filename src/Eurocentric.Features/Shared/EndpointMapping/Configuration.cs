@@ -1,4 +1,4 @@
-using Eurocentric.Features.Shared.ApiRegistration;
+using Eurocentric.Features.Shared.ApiDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -17,18 +17,27 @@ internal static class Configuration
 
         foreach (IApiInfo api in apis)
         {
-            RouteGroupBuilder apiGroup = app.MapGroup(api.UrlPrefix)
+            RouteGroupBuilder apiGroup = app.NewVersionedApi(api.Name)
+                .MapGroup(api.UrlPrefix)
                 .WithGroupName(api.Name)
                 .AllowAnonymous();
 
             foreach (IEndpointInfo endpoint in endpoints.Where(endpoint => endpoint.ApiName == api.Name))
             {
-                apiGroup.MapEndpoint(endpoint.HttpMethod, endpoint.Route, endpoint.Handler)
+                RouteHandlerBuilder routeBuilder = apiGroup.MapEndpoint(endpoint.HttpMethod, endpoint.Route, endpoint.Handler)
                     .WithName(endpoint.Name)
                     .WithSummary(endpoint.Summary)
                     .WithDescription(endpoint.Description)
                     .WithTags(endpoint.Tag)
                     .ProducesProblems(endpoint.ProblemStatusCodes);
+
+                foreach (var (_, major, minor) in api.Releases)
+                {
+                    if (endpoint.MajorApiVersion == major && endpoint.MinorApiVersion <= minor)
+                    {
+                        routeBuilder.HasApiVersion(major, minor);
+                    }
+                }
             }
         }
     }
