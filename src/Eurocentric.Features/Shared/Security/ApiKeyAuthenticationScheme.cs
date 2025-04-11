@@ -28,7 +28,7 @@ internal sealed class ApiKeyAuthenticationScheme(
     UrlEncoder urlEncoder) : AuthenticationHandler<AuthenticationSchemeOptions>(authenticationSchemeOptions, logger, urlEncoder)
 {
     internal const string HttpRequestHeaderName = "X-Api-Key";
-    internal const string SchemeName = nameof(ApiKeyAuthenticationScheme);
+    internal const string SchemeName = "ApiKeyAuthenticationScheme";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
