@@ -1,6 +1,8 @@
 using ErrorOr;
+using Eurocentric.Features.AdminApi.Common;
+using Eurocentric.Features.AdminApi.V0.Stations.GetStation;
+using Eurocentric.Features.Shared.ApiRegistration;
 using Eurocentric.Features.Shared.ErrorHandling;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -9,25 +11,44 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.AdminApi.V0.Stations.CreateStation;
 
-internal static class CreateStationEndpoint
+internal sealed record CreateStationEndpoint : IEndpointInfo
 {
-    private const string V0Point2Route = "v0.2/stations";
+    public string Name => nameof(CreateStationEndpoint);
 
-    private static Delegate Handler => static async ([FromBody] CreateStationCommand request,
+    public HttpMethod HttpMethod => HttpMethod.Post;
+
+    public string Route => "stations";
+
+    public Delegate Handler => static async ([FromBody] CreateStationCommand request,
         IRequestResponseBus bus,
         CancellationToken cancellationToken = default) => await ErrorOrFactory.From(request)
         .ThenAsync(command => bus.Send(command, cancellationToken: cancellationToken))
         .ToResultOrProblemAsync(MapToCreatedAtRoute);
 
-    internal static void MapCreateStation(this IEndpointRouteBuilder api) => api.MapPost(V0Point2Route, Handler)
-        .WithName("CreateStationV0.2")
-        .WithSummary("Create a station")
-        .WithDescription("Creates a new station from parameters supplied in the request body.")
-        .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithTags("Stations");
+    public string Summary => "Create a station";
+
+    public string Description => "Creates a new station from the request body.";
+
+    public string Tag => AdminApiInfo.Tags.Stations;
+
+    public IEnumerable<int> ProblemStatusCodes
+    {
+        get
+        {
+            yield return StatusCodes.Status400BadRequest;
+            yield return StatusCodes.Status409Conflict;
+            yield return StatusCodes.Status422UnprocessableEntity;
+        }
+    }
+
+    public string ApiName => AdminApiInfo.ApiName;
+
+    public int MajorApiVersion => 0;
+
+    public int MinorApiVersion => 2;
 
     private static CreatedAtRoute<CreateStationResponse> MapToCreatedAtRoute(CreateStationResponse response) =>
         TypedResults.CreatedAtRoute(response,
-            "GetStationV0.2",
+            nameof(GetStationEndpoint),
             new RouteValueDictionary { ["stationId"] = response.Station.Id });
 }

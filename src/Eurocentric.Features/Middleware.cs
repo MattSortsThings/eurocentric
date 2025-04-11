@@ -1,8 +1,5 @@
-using Eurocentric.Features.AdminApi.V0.Stations.CreateStation;
-using Eurocentric.Features.AdminApi.V0.Stations.GetStation;
-using Eurocentric.Features.PublicApi.V0.Stations.GetStations;
+using Eurocentric.Features.Shared.EndpointMapping;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Features;
 
@@ -24,14 +21,7 @@ public static class Middleware
 
         app.UseExceptionHandler();
 
-        RouteGroupBuilder adminApi = app.MapGroup("admin/api").WithGroupName("AdminApi").AllowAnonymous();
-
-        adminApi.MapGetStation();
-        adminApi.MapCreateStation();
-
-        RouteGroupBuilder publicApi = app.MapGroup("public/api").WithGroupName("PublicApi").AllowAnonymous();
-
-        publicApi.MapGetStations();
+        app.UseVersionedApiEndpoints();
 
         return app;
     }
