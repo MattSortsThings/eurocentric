@@ -1,4 +1,5 @@
 using Eurocentric.Features.Shared.ApiDiscovery;
+using Eurocentric.Features.Shared.Json;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,8 @@ internal static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     internal static IServiceCollection AddDocumentation(this IServiceCollection services)
     {
+        services.ConfigureOptions<ConfigureJsonOptions>();
+
         using IServiceScope scope = services.BuildServiceProvider().CreateScope();
 
         IEnumerable<IApiInfo> apis = scope.ServiceProvider.GetRequiredService<IEnumerable<IApiInfo>>();
