@@ -17,7 +17,7 @@ public sealed class ProblemDetailsResponsesTests(WebAppFixture webAppFixture) : 
         const string route = "/admin/api/v0.2/stations/{stationId}";
         const int stationId = 0;
 
-        RestRequest restRequest = Get(route).AddUrlSegment(nameof(stationId), stationId);
+        RestRequest restRequest = Get(route).UseAdminApiKey().AddUrlSegment(nameof(stationId), stationId);
 
         // Act
         var (statusCode, problemDetails, _) =

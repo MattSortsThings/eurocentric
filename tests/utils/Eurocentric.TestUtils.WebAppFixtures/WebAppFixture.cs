@@ -1,3 +1,4 @@
+using Eurocentric.Features.Shared.Security;
 using Eurocentric.WebApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Json;
@@ -72,6 +73,12 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
             return new RestClient(httpClient,
                 configureRestClient: options => options.Timeout = TimeSpan.FromSeconds(10),
                 configureSerialization: config => config.UseSystemTextJson(jsonOptions.Value.SerializerOptions));
+        });
+
+        services.Configure<ApiKeysOptions>(options =>
+        {
+            options.AdminApiKey = TestApiKeys.Admin;
+            options.PublicApiKey = TestApiKeys.Public;
         });
     });
 }

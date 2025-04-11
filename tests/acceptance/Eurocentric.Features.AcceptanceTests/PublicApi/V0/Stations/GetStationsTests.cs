@@ -18,7 +18,7 @@ public sealed class GetStationsTests(WebAppFixture webAppFixture) : AcceptanceTe
     public async Task PublicApi_should_return_OK_with_all_stations_matching_query(Line line)
     {
         // Arrange
-        RestRequest restRequest = Get(Route).AddQueryParameter(nameof(line), line);
+        RestRequest restRequest = Get(Route).UsePublicApiKey().AddQueryParameter(nameof(line), line);
 
         // Act
         (HttpStatusCode statusCode, GetStationsResponse response, _) =

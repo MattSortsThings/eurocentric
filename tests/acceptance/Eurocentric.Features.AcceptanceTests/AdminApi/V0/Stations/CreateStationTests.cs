@@ -17,7 +17,7 @@ public sealed class CreateStationTests(WebAppFixture webAppFixture) : Acceptance
         // Arrange
         CreateStationCommand request = new() { Name = "Oval", Line = Line.Northern };
 
-        RestRequest restRequest = Post(Route).AddJsonBody(request);
+        RestRequest restRequest = Post(Route).UseAdminApiKey().AddJsonBody(request);
 
         // Act
         (HttpStatusCode statusCode, CreateStationResponse response, IReadOnlyCollection<HeaderParameter> headers) =
@@ -37,7 +37,7 @@ public sealed class CreateStationTests(WebAppFixture webAppFixture) : Acceptance
     public async Task AdminApi_should_return_BadRequest_when_request_Line_property_has_invalid_enum_int_value()
     {
         // Arrange
-        RestRequest restRequest = Post(Route).AddJsonBody(new { Name = "Name", Line = 999999 });
+        RestRequest restRequest = Post(Route).UseAdminApiKey().AddJsonBody(new { Name = "Name", Line = 999999 });
 
         // Act
         RestResponse restResponse = await Sut.SendAsync(restRequest, TestContext.Current.CancellationToken);

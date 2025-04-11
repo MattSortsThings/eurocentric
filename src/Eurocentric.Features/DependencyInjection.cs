@@ -3,6 +3,7 @@ using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Json;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Features.Shared.Security;
 using Eurocentric.Features.Shared.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +25,7 @@ public static class DependencyInjection
             .AddDocumentation()
             .AddErrorHandling()
             .AddMessaging()
+            .AddSecurity()
             .AddVersioning()
             .ConfigureOptions<ConfigureJsonOptions>();
 
