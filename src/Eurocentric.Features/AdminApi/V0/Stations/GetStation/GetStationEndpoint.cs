@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ internal static class GetStationEndpoint
         IRequestResponseBus bus,
         CancellationToken cancellationToken = default) => await ErrorOrFactory.From(new GetStationQuery(stationId))
         .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
-        .MatchFirst<GetStationResponse, IResult>(TypedResults.Ok, _ => TypedResults.NotFound());
+        .ToResultOrProblemAsync(TypedResults.Ok);
 
     internal static void MapGetStation(this IEndpointRouteBuilder api)
     {
@@ -24,7 +25,6 @@ internal static class GetStationEndpoint
             .WithName("GetStationV0.1")
             .WithSummary("Get a station")
             .WithDescription("Retrieves a single station. The station ID must be supplied as a route parameter.")
-            .Produces<GetStationResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithTags("Stations");
 
@@ -32,7 +32,6 @@ internal static class GetStationEndpoint
             .WithName("GetStationV0.2")
             .WithSummary("Get a station")
             .WithDescription("Retrieves a single station. The station ID must be supplied as a route parameter.")
-            .Produces<GetStationResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithTags("Stations");
     }

@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -14,13 +15,12 @@ internal static class GetStationsEndpoint
         IRequestResponseBus bus,
         CancellationToken cancellationToken = default) => await ErrorOrFactory.From(request)
         .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
-        .MatchFirst<GetStationsResponse, IResult>(TypedResults.Ok, _ => TypedResults.BadRequest());
+        .ToResultOrProblemAsync(TypedResults.Ok);
 
     internal static void MapGetStations(this IEndpointRouteBuilder api) => api.MapGet(V0Point1Route, Handler)
         .WithName("GetStationsV0.1")
         .WithSummary("Get stations")
         .WithDescription("Retrieves a list of stations matching the query string parameters.")
-        .Produces<GetStationsResponse>()
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithTags("Stations");
 }

@@ -20,6 +20,8 @@ public static class Middleware
     {
         app.UseHttpsRedirection();
 
+        app.UseStatusCodePages();
+
         RouteGroupBuilder adminApi = app.MapGroup("admin/api").WithGroupName("AdminApi").AllowAnonymous();
 
         adminApi.MapGetStation();
