@@ -1,0 +1,41 @@
+### Admin API v0.1: Get contests
+
+GET http://localhost:5062/admin/api/v0.1/contests
+Accept: application/json, application/problem+json
+
+### Admin API v0.1: Get contest
+
+GET http://localhost:5062/admin/api/v0.1/contests/9c9cc0a6-a9af-457a-a49f-a3e5d097cb9e
+Accept: application/json, application/problem+json
+
+### Admin API v0.2: Get contests
+
+GET http://localhost:5062/admin/api/v0.2/contests
+Accept: application/json, application/problem+json
+
+### Admin API v0.2: Get contest
+
+GET http://localhost:5062/admin/api/v0.2/contests/9c9cc0a6-a9af-457a-a49f-a3e5d097cb9e
+Accept: application/json, application/problem+json
+
+### Admin API v0.2: Create contest
+
+POST http://localhost:5062/admin/api/v0.2/contests
+Accept: application/json, application/problem+json
+Content-Type: application/json
+
+{
+  "contestYear": 2024,
+  "cityName": "Malmö",
+  "format": "Liverpool"
+}
+
+### Public API v0.1: Get queryable countries
+
+GET http://localhost:5062/public/api/v0.1/queryable-countries
+Accept: application/json, application/problem+json
+
+### Public API v0.1: Get points in range competitor rankings
+
+GET http://localhost:5062/public/api/v0.1/competitor-rankings/points-in-range?minValue=1&maxValue=10
+Accept: application/json, application/problem+json

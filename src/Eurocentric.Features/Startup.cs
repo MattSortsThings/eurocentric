@@ -1,5 +1,6 @@
+using Eurocentric.Features.AdminApi;
+using Eurocentric.Features.PublicApi;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 
 namespace Eurocentric.Features;
 
@@ -17,11 +18,9 @@ public static class Startup
     {
         app.UseHttpsRedirection();
 
-        app.MapGet("admin/api/v0.1/placeholder", () =>
-            TypedResults.Ok($"Admin API zapped to the extreme at {DateTime.Now}!"));
+        app.MapAdminApiEndpoints();
 
-        app.MapGet("public/api/v0.1/placeholder", () =>
-            TypedResults.Ok($"Public API zapped to the extreme at {DateTime.Now}!"));
+        app.MapPublicApiEndpoints();
 
         return app;
     }

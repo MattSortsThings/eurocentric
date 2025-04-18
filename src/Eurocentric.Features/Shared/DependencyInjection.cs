@@ -1,21 +1,23 @@
-using Eurocentric.Features.Shared;
+using Eurocentric.Features.Shared.Json;
+using Eurocentric.Features.Shared.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Eurocentric.Features;
+namespace Eurocentric.Features.Shared;
 
 /// <summary>
 ///     Extension methods to be invoked at the application composition root.
 /// </summary>
-public static class DependencyInjection
+internal static class DependencyInjection
 {
     /// <summary>
-    ///     Adds the feature services to the application service descriptor collection.
+    ///     Adds the shared services to the application service descriptor collection.
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    public static IServiceCollection AddFeatures(this IServiceCollection services)
+    internal static IServiceCollection AddSharedServices(this IServiceCollection services)
     {
-        services.AddSharedServices();
+        services.AddHttpJsonOptionsConfiguration()
+            .AddMessaging();
 
         return services;
     }
