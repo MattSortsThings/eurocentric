@@ -7,5 +7,4 @@ public sealed class InfrastructurePlaceholderTests : UnitTestBase
 {
     [Fact]
     public void Should_always_pass() => Assert.True(true);
-
 }

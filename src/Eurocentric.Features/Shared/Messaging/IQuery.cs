@@ -7,4 +7,4 @@ namespace Eurocentric.Features.Shared.Messaging;
 ///     A query that, once handled, returns <i>either</i> a successful response value <i>or</i> a list of errors.
 /// </summary>
 /// <typeparam name="TResponse">The successful response type.</typeparam>
-internal interface IQuery<TResponse> : IRequest<ErrorOr<TResponse>>;
+public interface IQuery<TResponse> : IRequest<ErrorOr<TResponse>>;
