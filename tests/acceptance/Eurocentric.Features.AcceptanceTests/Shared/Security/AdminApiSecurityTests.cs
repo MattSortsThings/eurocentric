@@ -12,7 +12,7 @@ public sealed class AdminApiSecurityTests : AcceptanceTestBase
     public AdminApiSecurityTests(WebAppFixture fixture) : base(fixture) { }
 
     [Fact]
-    public async Task Should_authenticate_request_with_X_Api_Key_request_header_containing_secret_API_key()
+    public async Task Should_authenticate_and_authorize_request_with_X_Api_Key_request_header_containing_secret_API_key()
     {
         // Arrange
         RestRequest request = new(Route);
@@ -29,7 +29,7 @@ public sealed class AdminApiSecurityTests : AcceptanceTestBase
     }
 
     [Fact]
-    public async Task Should_authenticate_request_with_X_Api_Key_request_header_containing_demo_API_key()
+    public async Task Should_authenticate_but_not_authorize_request_with_X_Api_Key_request_header_containing_demo_API_key()
     {
         // Arrange
         RestRequest request = new(Route);
@@ -39,10 +39,10 @@ public sealed class AdminApiSecurityTests : AcceptanceTestBase
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);
 
-        HttpStatusCode statusCode = responseOrProblem.AsT0.StatusCode;
+        HttpStatusCode statusCode = responseOrProblem.AsT1.StatusCode;
 
         // Assert
-        Assert.Equal(HttpStatusCode.OK, statusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, statusCode);
     }
 
     [Fact]

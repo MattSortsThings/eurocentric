@@ -2,6 +2,7 @@ using Eurocentric.Features.PublicApi.V0.Filters;
 using Eurocentric.Features.PublicApi.V0.VotingCountryRankings;
 using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Features.PublicApi;
@@ -20,7 +21,8 @@ internal static class Middleware
         RouteGroupBuilder apiGroup = app.NewVersionedApi("PublicApi")
             .MapGroup("public/api/v{version:apiVersion}")
             .WithGroupName("PublicApi")
-            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole);
+            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole)
+            .ProducesProblem(StatusCodes.Status401Unauthorized);
 
         apiGroup.MapGetAvailableVotingMethods()
             .MapGetPointsShareVotingCountryRankings();
