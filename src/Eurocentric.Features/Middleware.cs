@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,9 +16,7 @@ public static class Middleware
     /// <param name="app">The web application.</param>
     public static void UseApiEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("admin/api/v0.1/placeholder", () =>
-                TypedResults.Ok($"Admin API zapped to the extreme at {DateTime.Now}!"))
-            .AllowAnonymous();
+        app.MapAdminApiEndpoints();
 
         app.MapGet("public/api/v0.1/placeholder", () =>
                 TypedResults.Ok($"Public API zapped to the extreme at {DateTime.Now}!"))

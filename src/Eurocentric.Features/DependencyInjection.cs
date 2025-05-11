@@ -1,3 +1,5 @@
+using Eurocentric.Features.Shared.Json;
+using Eurocentric.Features.Shared.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features;
@@ -13,5 +15,11 @@ public static class DependencyInjection
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    public static IServiceCollection AddFeatures(this IServiceCollection services) => services;
+    public static IServiceCollection AddFeatures(this IServiceCollection services)
+    {
+        services.AddHttpJsonConfiguration()
+            .AddMessaging();
+
+        return services;
+    }
 }
