@@ -1,5 +1,6 @@
 using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -37,14 +38,10 @@ public static class GetAvailableVotingMethods
 
     internal static class Endpoint
     {
-        internal static async Task<Ok<Response>> HandleAsync(IRequestResponseBus bus,
-            CancellationToken cancellationToken = default)
-        {
-            ErrorOr<Response> errorsOrResponse = await InitializeQuery()
-                .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken));
-
-            return TypedResults.Ok(errorsOrResponse.Value);
-        }
+        internal static async Task<Results<Ok<Response>, ProblemHttpResult>> HandleAsync(IRequestResponseBus bus,
+            CancellationToken cancellationToken = default) => await InitializeQuery()
+            .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+            .ToResultOrProblemAsync(TypedResults.Ok);
 
         private static ErrorOr<Query> InitializeQuery() => ErrorOrFactory.From(new Query());
     }

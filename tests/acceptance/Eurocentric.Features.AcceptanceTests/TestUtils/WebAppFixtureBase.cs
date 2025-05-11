@@ -34,6 +34,18 @@ public abstract class WebAppFixtureBase : WebApplicationFactory<IWebAppAssemblyM
         GC.SuppressFinalize(this);
     }
 
+    public async Task<ResponseOrProblem> SendRequestAsync(RestRequest request, CancellationToken cancellationToken = default)
+    {
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        IRestClient client = scope.ServiceProvider.GetRequiredService<IRestClient>();
+
+        RestResponse response = await client.ExecuteAsync(request, cancellationToken);
+
+        return response.IsSuccessful
+            ? new ResponseOrProblem(response)
+            : new ResponseOrProblem(await client.Deserialize<ProblemDetails>(response, cancellationToken));
+    }
+
     public async Task<ResponseOrProblem<TResponse>> SendRequestAsync<TResponse>(RestRequest request,
         CancellationToken cancellationToken = default)
         where TResponse : class

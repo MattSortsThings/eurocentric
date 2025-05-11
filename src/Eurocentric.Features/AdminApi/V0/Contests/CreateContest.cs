@@ -2,6 +2,7 @@ using System.ComponentModel;
 using ErrorOr;
 using Eurocentric.Features.AdminApi.V0.Common;
 using Eurocentric.Features.AdminApi.V0.Contests.Common;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -71,15 +72,12 @@ public static class CreateContest
 
     internal static class Endpoint
     {
-        internal static async Task<CreatedAtRoute<Response>> HandleAsync([FromBody] Request request,
+        internal static async Task<Results<CreatedAtRoute<Response>, ProblemHttpResult>> HandleAsync(
+            [FromBody] Request request,
             IRequestResponseBus bus,
-            CancellationToken cancellationToken = default)
-        {
-            ErrorOr<Response> errorsOrResponse = await InitializeCommand(request)
-                .ThenAsync(command => bus.Send(command, cancellationToken: cancellationToken));
-
-            return MapToCreatedAtRoute(errorsOrResponse.Value);
-        }
+            CancellationToken cancellationToken = default) => await InitializeCommand(request)
+            .ThenAsync(command => bus.Send(command, cancellationToken: cancellationToken))
+            .ToResultOrProblemAsync(MapToCreatedAtRoute);
 
         private static CreatedAtRoute<Response> MapToCreatedAtRoute(Response response) => TypedResults.CreatedAtRoute(response,
             "AdminApi.V0.GetContest",

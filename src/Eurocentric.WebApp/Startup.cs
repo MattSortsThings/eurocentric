@@ -29,6 +29,8 @@ internal static class Startup
     {
         app.UseHttpsRedirection();
 
+        app.UseStatusCodePages();
+
         app.UseApiEndpoints();
 
         return app;

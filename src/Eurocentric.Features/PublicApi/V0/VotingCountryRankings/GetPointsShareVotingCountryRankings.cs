@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using ErrorOr;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Features.PublicApi.V0.Common;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.FakeRepositories;
 using Microsoft.AspNetCore.Builder;
@@ -166,15 +167,11 @@ public static class GetPointsShareVotingCountryRankings
 
     private static class Endpoint
     {
-        internal static async Task<Ok<Response>> HandleAsync([AsParameters] QueryParams queryParams,
+        internal static async Task<Results<Ok<Response>, ProblemHttpResult>> HandleAsync([AsParameters] QueryParams queryParams,
             IRequestResponseBus bus,
-            CancellationToken cancellationToken = default)
-        {
-            ErrorOr<Response> errorsOrResponse = await InitializeQuery(queryParams)
-                .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken));
-
-            return TypedResults.Ok(errorsOrResponse.Value);
-        }
+            CancellationToken cancellationToken = default) => await InitializeQuery(queryParams)
+            .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+            .ToResultOrProblemAsync(TypedResults.Ok);
 
         private static ErrorOr<Query> InitializeQuery(QueryParams queryParams) => ErrorOrFactory.From(new Query(
             queryParams.CountryCode,
