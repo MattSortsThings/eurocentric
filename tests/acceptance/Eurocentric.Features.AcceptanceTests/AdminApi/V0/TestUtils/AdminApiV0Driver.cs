@@ -21,7 +21,8 @@ public sealed class AdminApiV0Driver
         RestRequest request = new("admin/api/v{apiVersion}/contests", Method.Post);
 
         request.AddUrlSegment("apiVersion", _apiVersion)
-            .AddJsonBody(requestBody);
+            .AddJsonBody(requestBody)
+            .UseSecretApiKey();
 
         return await _client.SendRequestAsync<CreateContest.Response>(request, cancellationToken);
     }
@@ -32,7 +33,8 @@ public sealed class AdminApiV0Driver
         RestRequest request = new("admin/api/v{apiVersion}/contests/{contestId}");
 
         request.AddUrlSegment("apiVersion", _apiVersion)
-            .AddUrlSegment("contestId", contestId);
+            .AddUrlSegment("contestId", contestId)
+            .UseSecretApiKey();
 
         return await _client.SendRequestAsync<GetContest.Response>(request, cancellationToken);
     }
@@ -41,7 +43,8 @@ public sealed class AdminApiV0Driver
     {
         RestRequest request = new("admin/api/v{apiVersion}/contests");
 
-        request.AddUrlSegment("apiVersion", _apiVersion);
+        request.AddUrlSegment("apiVersion", _apiVersion)
+            .UseSecretApiKey();
 
         return await _client.SendRequestAsync<GetContests.Response>(request, cancellationToken);
     }

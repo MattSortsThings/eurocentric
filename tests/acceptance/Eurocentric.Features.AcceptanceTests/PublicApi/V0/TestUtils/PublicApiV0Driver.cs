@@ -28,7 +28,8 @@ public sealed class PublicApiV0Driver
     {
         RestRequest request = new("public/api/v{apiVersion}/filters/voting-methods");
 
-        request.AddUrlSegment("apiVersion", _apiVersion);
+        request.AddUrlSegment("apiVersion", _apiVersion)
+            .UseDemoApiKey();
 
         return await _client.SendRequestAsync<GetAvailableVotingMethods.Response>(request, cancellationToken);
     }
@@ -38,7 +39,8 @@ public sealed class PublicApiV0Driver
     {
         RestRequest request = new("public/api/v{apiVersion}/voting-country-rankings/points-share");
 
-        request.AddUrlSegment("apiVersion", _apiVersion);
+        request.AddUrlSegment("apiVersion", _apiVersion)
+            .UseDemoApiKey();
 
         foreach ((string key, string value) in queryParams)
         {

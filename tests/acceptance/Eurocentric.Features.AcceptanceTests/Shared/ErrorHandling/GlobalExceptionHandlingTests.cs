@@ -19,7 +19,8 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
         RestRequest request = new("public/api/v0.2/voting-country-rankings/points-share");
 
         request.AddQueryParameter("competingCountryCode", "GB")
-            .AddQueryParameter("votingMethod", 999999);
+            .AddQueryParameter("votingMethod", 999999)
+            .UseDemoApiKey();
 
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);
@@ -49,7 +50,8 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
         // Arrange
         RestRequest request = new("admin/api/v0.2/contests", Method.Post);
 
-        request.AddJsonBody(new { CityName = "CityName", ContestFormat = "Stockholm" });
+        request.AddJsonBody(new { CityName = "CityName", ContestFormat = "Stockholm" })
+            .UseSecretApiKey();
 
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);
@@ -77,7 +79,8 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
         // Arrange
         RestRequest request = new("admin/api/v0.2/contests", Method.Post);
 
-        request.AddJsonBody(new { ContestFormat = "INVALID", CityName = "CityName", ContestYear = 2025 });
+        request.AddJsonBody(new { ContestFormat = "INVALID", CityName = "CityName", ContestYear = 2025 })
+            .UseSecretApiKey();
 
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);
@@ -105,7 +108,8 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
         // Arrange
         RestRequest request = new("admin/api/v0.2/contests", Method.Post);
 
-        request.AddJsonBody(new { ContestFormat = 999999, CityName = "CityName", ContestYear = 2025 });
+        request.AddJsonBody(new { ContestFormat = 999999, CityName = "CityName", ContestYear = 2025 })
+            .UseSecretApiKey();
 
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);

@@ -25,7 +25,7 @@ public sealed class ProblemDetailsTests : AcceptanceTestBase
 
         RestRequest request = new("admin/api/v0.2/contests", Method.Post);
 
-        request.AddJsonBody(requestBody);
+        request.AddJsonBody(requestBody).UseSecretApiKey();
 
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);

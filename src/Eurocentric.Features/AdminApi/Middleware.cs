@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V0.Contests;
+using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -18,7 +19,7 @@ internal static class Middleware
         RouteGroupBuilder apiGroup = app.NewVersionedApi("AdminApi")
             .MapGroup("admin/api/v{version:apiVersion}")
             .WithGroupName("AdminApi")
-            .AllowAnonymous();
+            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClient);
 
         apiGroup.MapGetContest()
             .MapGetContests()
