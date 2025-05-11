@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Eurocentric.Domain.ArchitectureTests"/>
+    <InternalsVisibleTo Include="Eurocentric.Domain.UnitTests"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ErrorOr"/>

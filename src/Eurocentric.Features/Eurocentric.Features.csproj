@@ -7,6 +7,7 @@
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Eurocentric.Features.ArchitectureTests"/>
+    <InternalsVisibleTo Include="Eurocentric.Features.UnitTests"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SlimMessageBus.Host.Memory"/>
