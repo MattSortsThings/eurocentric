@@ -107,7 +107,7 @@ This document lists the features with *shared* scope for the initial release of 
 - **I WANT** to use major/minor versioning in the *Admin API* and the *Public API*
   - so that each major version of an API is independent of any previous major versions
   - and each minor version of an API major version includes all previous minor versions without modification
-  - and the user must specify the API version as an URL segment
+  - and the user must specify the API version as a URL segment
 - **SO THAT** the APIs can be updated in the future in a predictable, backwards-compatible manner.
 
 ## Features out of scope

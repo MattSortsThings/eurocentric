@@ -13,7 +13,7 @@ This document lists the features with *public-api* scope for the initial release
     - [P06: Get Points Consensus Competitor Rankings](#p06-get-points-consensus-competitor-rankings)
     - [P07: Get Points In Range Competitor Rankings](#p07-get-points-in-range-competitor-rankings)
     - [P08: Get Points Share Competitor Rankings](#p08-get-points-share-competitor-rankings)
-  - [Facets](#facets)
+  - [Filters](#filters)
     - [P09: Get Available Broadcasts](#p09-get-available-broadcasts)
     - [P10: Get Available Contests](#p10-get-available-contests)
     - [P11: Get Available Contest Stages](#p11-get-available-contest-stages)
@@ -216,7 +216,7 @@ This document lists the features with *public-api* scope for the initial release
   - or a chart
   - or some other illustrative purpose.
 
-## Facets
+## Filters
 
 ### P09: Get Available Broadcasts
 
