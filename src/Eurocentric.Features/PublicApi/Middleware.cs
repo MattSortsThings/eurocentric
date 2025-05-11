@@ -20,7 +20,7 @@ internal static class Middleware
         RouteGroupBuilder apiGroup = app.NewVersionedApi("PublicApi")
             .MapGroup("public/api/v{version:apiVersion}")
             .WithGroupName("PublicApi")
-            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClient);
+            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole);
 
         apiGroup.MapGetAvailableVotingMethods()
             .MapGetPointsShareVotingCountryRankings();

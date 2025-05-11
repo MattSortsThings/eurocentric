@@ -12,7 +12,7 @@ public sealed class PublicApiSecurityTests : AcceptanceTestBase
     public PublicApiSecurityTests(WebAppFixture fixture) : base(fixture) { }
 
     [Fact]
-    public async Task Should_authenticate_request_with_X_Api_Key_request_header_containing_secret_API_key()
+    public async Task Should_authenticate_and_authorize_request_with_X_Api_Key_request_header_containing_secret_API_key()
     {
         // Arrange
         RestRequest request = new(Route);
@@ -29,7 +29,7 @@ public sealed class PublicApiSecurityTests : AcceptanceTestBase
     }
 
     [Fact]
-    public async Task Should_authenticate_request_with_X_Api_Key_request_header_containing_demo_API_key()
+    public async Task Should_authenticate_and_authorize_request_with_X_Api_Key_request_header_containing_demo_API_key()
     {
         // Arrange
         RestRequest request = new(Route);
