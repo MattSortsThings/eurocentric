@@ -1,5 +1,6 @@
 using Eurocentric.Features.Shared.Json;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Features.Shared.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features;
@@ -18,7 +19,8 @@ public static class DependencyInjection
     public static IServiceCollection AddFeatures(this IServiceCollection services)
     {
         services.AddHttpJsonConfiguration()
-            .AddMessaging();
+            .AddMessaging()
+            .AddVersioning();
 
         return services;
     }

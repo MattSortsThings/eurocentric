@@ -18,8 +18,9 @@ public static class GetPointsShareVotingCountryRankings
 {
     internal static IEndpointRouteBuilder MapGetPointsShareVotingCountryRankings(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.2/voting-country-rankings/points-share", Endpoint.HandleAsync)
-            .WithName("PublicApi.V0.2.GetPointsShareVotingCountryRankings")
+        apiGroup.MapGet("voting-country-rankings/points-share", Endpoint.HandleAsync)
+            .WithName("PublicApi.V0.GetPointsShareVotingCountryRankings")
+            .HasApiVersion(0, 2)
             .WithSummary("Get points share voting country rankings")
             .WithDescription("Ranks all voting countries by the sum total points they have given to a specified competing " +
                              "country, as a share of the maximum available points, and returns a page of rankings.")

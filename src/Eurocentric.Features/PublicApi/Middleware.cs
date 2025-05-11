@@ -16,7 +16,8 @@ internal static class Middleware
     /// <param name="app">The web application.</param>
     internal static void MapPublicApiEndpoints(this IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder apiGroup = app.MapGroup("public/api")
+        RouteGroupBuilder apiGroup = app.NewVersionedApi("PublicApi")
+            .MapGroup("public/api/v{version:apiVersion}")
             .WithGroupName("PublicApi")
             .AllowAnonymous();
 

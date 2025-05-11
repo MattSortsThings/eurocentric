@@ -16,8 +16,9 @@ public static class CreateContest
 {
     internal static IEndpointRouteBuilder MapCreateContest(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapPost("v0.2/contests", Endpoint.HandleAsync)
-            .WithName("AdminApi.V0.2.CreateContest")
+        apiGroup.MapPost("contests", Endpoint.HandleAsync)
+            .WithName("AdminApi.V0.CreateContest")
+            .HasApiVersion(0, 2)
             .WithSummary("Create a contest")
             .WithDescription("Creates a new contest from the request body.")
             .WithTags(EndpointTags.Contests)
@@ -81,7 +82,7 @@ public static class CreateContest
         }
 
         private static CreatedAtRoute<Response> MapToCreatedAtRoute(Response response) => TypedResults.CreatedAtRoute(response,
-            "AdminApi.V0.2.GetContest",
+            "AdminApi.V0.GetContest",
             new RouteValueDictionary { { "contestId", response.Contest.Id } });
 
         private static ErrorOr<Command> InitializeCommand(Request request) =>

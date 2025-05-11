@@ -15,16 +15,10 @@ public static class GetContest
 {
     internal static IEndpointRouteBuilder MapGetContest(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.1/contests/{contestId:guid}", Endpoint.HandleAsync)
-            .WithName("AdminApi.V0.1.GetContest")
-            .WithSummary("Get a contest")
-            .WithDescription("Retrieves a single contest.")
-            .WithTags(EndpointTags.Contests)
-            .Produces<Response>()
-            .ProducesProblem(StatusCodes.Status404NotFound);
-
-        apiGroup.MapGet("v0.2/contests/{contestId:guid}", Endpoint.HandleAsync)
-            .WithName("AdminApi.V0.2.GetContest")
+        apiGroup.MapGet("contests/{contestId:guid}", Endpoint.HandleAsync)
+            .WithName("AdminApi.V0.GetContest")
+            .HasApiVersion(0, 1)
+            .HasApiVersion(0, 2)
             .WithSummary("Get a contest")
             .WithDescription("Retrieves a single contest.")
             .WithTags(EndpointTags.Contests)
