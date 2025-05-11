@@ -3,6 +3,9 @@
     <RootNamespace>Eurocentric.Domain</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.Domain.ArchitectureTests"/>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="ErrorOr"/>
   </ItemGroup>
 </Project>

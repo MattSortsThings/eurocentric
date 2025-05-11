@@ -3,12 +3,15 @@
     <RootNamespace>Eurocentric.Features</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
-  </ItemGroup>
-  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"/>
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.Features.ArchitectureTests"/>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="SlimMessageBus.Host.Memory"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
   </ItemGroup>
 </Project>
