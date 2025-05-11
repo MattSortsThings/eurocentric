@@ -33,6 +33,8 @@ internal static class Startup
 
         app.UseApiEndpoints();
 
+        app.UseExceptionHandler();
+
         return app;
     }
 }
