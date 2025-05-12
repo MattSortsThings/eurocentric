@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using ErrorOr;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Features.PublicApi.V0.Common;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.FakeRepositories;
@@ -55,14 +56,22 @@ public static class GetPointsShareVotingCountryRankings
         _ => throw new InvalidEnumArgumentException(nameof(contestStages), (int)contestStages, typeof(ContestStages))
     };
 
-    public sealed record Ranking(int Rank, string CountryCode, string CountryName, double PointsShare);
+    public sealed record Ranking(int Rank, string CountryCode, string CountryName, double PointsShare)
+        : IExampleProvider<Ranking>
+    {
+        public static Ranking CreateExample() => new(1, "UA", "Ukraine", 0.5);
+    }
 
     public sealed record FilteringMetadata(
         string CompetingCountryCode,
         int? MinYear,
         int? MaxYear,
         ContestStages ContestStages,
-        VotingMethod VotingMethod);
+        VotingMethod VotingMethod) : IExampleProvider<FilteringMetadata>
+    {
+        public static FilteringMetadata CreateExample() =>
+            new("GB", 2016, 2025, ContestStages.GrandFinal, VotingMethod.Televote);
+    }
 
     public sealed record Response(Ranking[] Rankings, FilteringMetadata Filtering, PaginationMetadata Pagination);
 

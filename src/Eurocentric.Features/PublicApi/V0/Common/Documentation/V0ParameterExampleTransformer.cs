@@ -13,8 +13,8 @@ internal sealed class V0ParameterExampleTransformer : ParameterExampleTransforme
             ["contestStages"] = new OpenApiString("GrandFinal"),
             ["minYear"] = new OpenApiInteger(2016),
             ["maxYear"] = new OpenApiInteger(2025),
-            ["pageIndex"] = new OpenApiInteger(0),
-            ["pageSize"] = new OpenApiInteger(10),
-            ["descending"] = new OpenApiBoolean(false)
+            ["pageIndex"] = new OpenApiInteger(PaginationDefaults.PageIndex),
+            ["pageSize"] = new OpenApiInteger(PaginationDefaults.PageSize),
+            ["descending"] = new OpenApiBoolean(PaginationDefaults.Descending)
         };
 }

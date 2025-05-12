@@ -25,7 +25,8 @@ internal static class DependencyInjection
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 1 };
 
             options.AddDocumentTransformer<V0Point1DocumentInfoTransformer>()
-                .AddOperationTransformer<V0ParameterExampleTransformer>();
+                .AddOperationTransformer<V0ParameterExampleTransformer>()
+                .AddSchemaTransformer<V0SchemaExampleTransformer>();
         });
 
         services.AddOpenApi("public-api-v0.2", options =>
@@ -35,7 +36,8 @@ internal static class DependencyInjection
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 2 };
 
             options.AddDocumentTransformer<V0Point2DocumentInfoTransformer>()
-                .AddOperationTransformer<V0ParameterExampleTransformer>();
+                .AddOperationTransformer<V0ParameterExampleTransformer>()
+                .AddSchemaTransformer<V0SchemaExampleTransformer>();
         });
 
         return services;

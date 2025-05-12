@@ -2,6 +2,7 @@ using System.ComponentModel;
 using ErrorOr;
 using Eurocentric.Features.AdminApi.V0.Common;
 using Eurocentric.Features.AdminApi.V0.Contests.Common;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
@@ -33,13 +34,18 @@ public static class CreateContest
 
     public sealed record Response(Contest Contest);
 
-    public sealed record Request
+    public sealed record Request : IExampleProvider<Request>
     {
         public required int ContestYear { get; init; }
 
         public required string CityName { get; init; }
 
         public required ContestFormat ContestFormat { get; init; }
+
+        public static Request CreateExample() => new()
+        {
+            ContestYear = 2025, CityName = "Basel", ContestFormat = ContestFormat.Liverpool
+        };
     }
 
     internal sealed record Command(int ContestYear, string CityName, ContestFormat ContestFormat) : ICommand<Response>;
