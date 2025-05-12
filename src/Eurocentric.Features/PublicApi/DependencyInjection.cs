@@ -1,4 +1,4 @@
-using Eurocentric.Features.PublicApi.V0;
+using Eurocentric.Features.PublicApi.V0.Common.Documentation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features.PublicApi;

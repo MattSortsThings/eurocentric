@@ -1,9 +1,8 @@
-using Eurocentric.Features.PublicApi.V0.Common.Documentation;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Eurocentric.Features.PublicApi.V0;
+namespace Eurocentric.Features.PublicApi.V0.Common.Documentation;
 
 /// <summary>
 ///     Extension methods to be invoked at the application composition root.
@@ -28,7 +27,8 @@ internal static class DependencyInjection
             options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>()
                 .AddDocumentTransformer<V0Point1DocumentInfoTransformer>()
                 .AddOperationTransformer<V0ParameterExampleTransformer>()
-                .AddSchemaTransformer<V0SchemaExampleTransformer>();
+                .AddSchemaTransformer<V0SchemaExampleTransformer>()
+                .AddOperationTransformer<ProblemDetailsExampleTransformer>();
         });
 
         services.AddOpenApi("public-api-v0.2", options =>
@@ -40,7 +40,8 @@ internal static class DependencyInjection
             options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>()
                 .AddDocumentTransformer<V0Point2DocumentInfoTransformer>()
                 .AddOperationTransformer<V0ParameterExampleTransformer>()
-                .AddSchemaTransformer<V0SchemaExampleTransformer>();
+                .AddSchemaTransformer<V0SchemaExampleTransformer>()
+                .AddOperationTransformer<ProblemDetailsExampleTransformer>();
         });
 
         return services;
