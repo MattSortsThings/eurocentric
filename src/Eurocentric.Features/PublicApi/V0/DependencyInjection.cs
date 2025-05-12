@@ -1,4 +1,5 @@
 using Eurocentric.Features.PublicApi.V0.Common.Documentation;
+using Eurocentric.Features.Shared.Documentation;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,7 +25,8 @@ internal static class DependencyInjection
                 description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 1 };
 
-            options.AddDocumentTransformer<V0Point1DocumentInfoTransformer>()
+            options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>()
+                .AddDocumentTransformer<V0Point1DocumentInfoTransformer>()
                 .AddOperationTransformer<V0ParameterExampleTransformer>()
                 .AddSchemaTransformer<V0SchemaExampleTransformer>();
         });
@@ -35,7 +37,8 @@ internal static class DependencyInjection
                 description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 2 };
 
-            options.AddDocumentTransformer<V0Point2DocumentInfoTransformer>()
+            options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>()
+                .AddDocumentTransformer<V0Point2DocumentInfoTransformer>()
                 .AddOperationTransformer<V0ParameterExampleTransformer>()
                 .AddSchemaTransformer<V0SchemaExampleTransformer>();
         });
