@@ -2,6 +2,7 @@ using Eurocentric.Features.AdminApi;
 using Eurocentric.Features.PublicApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Scalar.AspNetCore;
 
 namespace Eurocentric.Features;
 
@@ -24,5 +25,9 @@ public static class Middleware
     ///     Configures the web application to use the documentation endpoints that have been defined.
     /// </summary>
     /// <param name="app">The web application.</param>
-    public static void UseDocumentationEndpoints(this IEndpointRouteBuilder app) => app.MapOpenApi().AllowAnonymous();
+    public static void UseDocumentationEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.MapOpenApi().AllowAnonymous();
+        app.MapScalarApiReference("docs").AllowAnonymous();
+    }
 }
