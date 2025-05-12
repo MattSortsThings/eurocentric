@@ -42,7 +42,7 @@ public abstract class GetAvailableVotingMethodsTests : AcceptanceTestBase
         private protected override int MinorApiVersion => 2;
     }
 
-    private sealed class EuroFanActor : ActorBase<GetAvailableVotingMethods.Response>
+    private sealed class EuroFanActor : ActorWithResponse<GetAvailableVotingMethods.Response>
     {
         private readonly PublicApiV0Driver _driver;
 

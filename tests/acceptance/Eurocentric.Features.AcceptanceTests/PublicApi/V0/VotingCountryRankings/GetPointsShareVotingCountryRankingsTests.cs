@@ -32,7 +32,7 @@ public abstract class GetPointsShareVotingCountryRankingsTests : AcceptanceTestB
         euroFan.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
     }
 
-    private sealed class EuroFanActor : ActorBase<GetPointsShareVotingCountryRankings.Response>
+    private sealed class EuroFanActor : ActorWithResponse<GetPointsShareVotingCountryRankings.Response>
     {
         private readonly PublicApiV0Driver _driver;
 

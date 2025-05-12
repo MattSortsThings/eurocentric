@@ -42,7 +42,7 @@ public abstract class GetContestsTests : AcceptanceTestBase
         private protected override int MinorApiVersion => 2;
     }
 
-    private sealed class EuroFanActor : ActorBase<GetContests.Response>
+    private sealed class EuroFanActor : ActorWithResponse<GetContests.Response>
     {
         private readonly AdminApiV0Driver _driver;
 

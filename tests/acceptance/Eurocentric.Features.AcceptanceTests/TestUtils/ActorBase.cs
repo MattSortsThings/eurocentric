@@ -3,31 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eurocentric.Features.AcceptanceTests.TestUtils;
 
-public abstract class ActorBase<TResponse>
-    where TResponse : class
+public abstract class ActorBase
 {
-    private HttpStatusCode StatusCode { get; set; }
+    private protected HttpStatusCode StatusCode { get; set; }
 
-    private ProblemDetails? ProblemDetails { get; set; }
-
-    private protected TResponse? Response { get; set; }
-
-    private protected abstract Func<Task<ResponseOrProblem<TResponse>>> SendMyRequest { get; set; }
-
-    public async Task When_I_send_my_request()
-    {
-        ResponseOrProblem<TResponse> responseOrProblem = await SendMyRequest();
-
-        responseOrProblem.Switch(success =>
-        {
-            StatusCode = success.StatusCode;
-            Response = success.Data;
-        }, problem =>
-        {
-            StatusCode = problem.StatusCode;
-            ProblemDetails = problem.Data;
-        });
-    }
+    private protected ProblemDetails? ProblemDetails { get; set; }
 
     public void Then_my_request_should_succeed_with_status_code(HttpStatusCode expectedStatusCode)
     {
