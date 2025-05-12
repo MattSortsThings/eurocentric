@@ -1,8 +1,5 @@
-using Eurocentric.Features.PublicApi.V0.Filters;
-using Eurocentric.Features.PublicApi.V0.VotingCountryRankings;
-using Eurocentric.Features.Shared.Security;
+using Eurocentric.Features.PublicApi.V0;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Features.PublicApi;
@@ -19,12 +16,8 @@ internal static class Middleware
     internal static void MapPublicApiEndpoints(this IEndpointRouteBuilder app)
     {
         RouteGroupBuilder apiGroup = app.NewVersionedApi("PublicApi")
-            .MapGroup("public/api/v{version:apiVersion}")
-            .WithGroupName("PublicApi")
-            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole)
-            .ProducesProblem(StatusCodes.Status401Unauthorized);
+            .MapGroup("public/api");
 
-        apiGroup.MapGetAvailableVotingMethods()
-            .MapGetPointsShareVotingCountryRankings();
+        apiGroup.MapPublicApiV0Endpoints();
     }
 }

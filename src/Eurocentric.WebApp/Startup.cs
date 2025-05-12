@@ -39,6 +39,8 @@ internal static class Startup
 
         app.UseApiEndpoints();
 
+        app.UseDocumentationEndpoints();
+
         return app;
     }
 }

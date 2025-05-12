@@ -1,7 +1,5 @@
-using Eurocentric.Features.AdminApi.V0.Contests;
-using Eurocentric.Features.Shared.Security;
+using Eurocentric.Features.AdminApi.V0;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Features.AdminApi;
@@ -18,14 +16,8 @@ internal static class Middleware
     internal static void MapAdminApiEndpoints(this IEndpointRouteBuilder app)
     {
         RouteGroupBuilder apiGroup = app.NewVersionedApi("AdminApi")
-            .MapGroup("admin/api/v{version:apiVersion}")
-            .WithGroupName("AdminApi")
-            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole)
-            .ProducesProblem(StatusCodes.Status401Unauthorized)
-            .ProducesProblem(StatusCodes.Status403Forbidden);
+            .MapGroup("admin/api");
 
-        apiGroup.MapGetContest()
-            .MapGetContests()
-            .MapCreateContest();
+        apiGroup.MapAdminApiV0Endpoints();
     }
 }
