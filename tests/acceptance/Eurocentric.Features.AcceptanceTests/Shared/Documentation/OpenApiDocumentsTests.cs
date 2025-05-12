@@ -13,6 +13,7 @@ public sealed class OpenApiDocumentsTests : AcceptanceTestBase
     [Theory]
     [InlineData("admin-api-v0.1", "/admin/api/v0.1")]
     [InlineData("admin-api-v0.2", "/admin/api/v0.2")]
+    [InlineData("admin-api-v1.0", "/admin/api/v1.0")]
     [InlineData("public-api-v0.1", "/public/api/v0.1")]
     [InlineData("public-api-v0.2", "/public/api/v0.2")]
     public async Task Should_return_status_code_200_with_requested_OpenAPI_JSON_document_given_anonymous_request(string docName,
@@ -41,7 +42,7 @@ public sealed class OpenApiDocumentsTests : AcceptanceTestBase
 
     [Theory]
     [InlineData("admin-api-v0.3")]
-    [InlineData("admin-api-v1.0")]
+    [InlineData("admin-api-v1.1")]
     [InlineData("public-api-v0.3")]
     [InlineData("public-api-v1.0")]
     public async Task Should_return_404_when_non_existent_OpenAPI_document_requested(string docName)

@@ -12,6 +12,7 @@ public sealed class DocumentationWebPagesTests : AcceptanceTestBase
     [Theory]
     [InlineData("admin-api-v0.1")]
     [InlineData("admin-api-v0.2")]
+    [InlineData("admin-api-v1.0")]
     [InlineData("public-api-v0.1")]
     [InlineData("public-api-v0.2")]
     public async Task Should_return_status_code_200_with_requested_document_web_page_given_anonymous_request(string docName)

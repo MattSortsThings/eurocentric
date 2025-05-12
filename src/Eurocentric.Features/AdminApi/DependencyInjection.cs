@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V0.Common.Documentation;
+using Eurocentric.Features.AdminApi.V1.Common.Documentation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features.AdminApi;
@@ -16,6 +17,7 @@ internal static class DependencyInjection
     internal static IServiceCollection RegisterAdminApiOpenApiDocuments(this IServiceCollection services)
     {
         services.RegisterAdminApiV0OpenApiDocuments();
+        services.RegisterAdminApiV1OpenApiDocuments();
 
         return services;
     }

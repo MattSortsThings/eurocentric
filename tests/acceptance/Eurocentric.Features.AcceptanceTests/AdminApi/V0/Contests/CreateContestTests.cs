@@ -15,17 +15,17 @@ public abstract class CreateContestTests : AcceptanceTestBase
     [InlineData(2025, "Basel", "Liverpool")]
     public async Task Should_be_able_to_create_a_contest(int contestYear, string cityName, string contestFormat)
     {
-        EuroFanActor euroFan = new(AdminApiV0Driver.Create(Client, MajorApiVersion, MinorApiVersion));
+        AdminActor admin = new(AdminApiV0Driver.Create(Client, MajorApiVersion, MinorApiVersion));
 
         // Given
-        euroFan.Given_I_want_to_create_a_contest(contestYear: contestYear, cityName: cityName, contestFormat: contestFormat);
+        admin.Given_I_want_to_create_a_contest(contestYear: contestYear, cityName: cityName, contestFormat: contestFormat);
 
         // When
-        await euroFan.When_I_send_my_request();
+        await admin.When_I_send_my_request();
 
         // Then
-        euroFan.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
-        euroFan.Then_the_created_contest_should_match_my_requirements();
+        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_the_created_contest_should_match_my_requirements();
     }
 
     public sealed class V0Point2 : CreateContestTests
@@ -37,11 +37,11 @@ public abstract class CreateContestTests : AcceptanceTestBase
         private protected override int MinorApiVersion => 2;
     }
 
-    private sealed class EuroFanActor : ActorWithResponse<CreateContest.Response>
+    private sealed class AdminActor : ActorWithResponse<CreateContest.Response>
     {
         private readonly AdminApiV0Driver _driver;
 
-        public EuroFanActor(AdminApiV0Driver driver)
+        public AdminActor(AdminApiV0Driver driver)
         {
             _driver = driver;
         }

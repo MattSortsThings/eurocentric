@@ -12,16 +12,16 @@ public abstract class GetContestsTests : AcceptanceTestBase
     [Fact]
     public async Task Should_be_able_to_retrieve_all_existing_contests()
     {
-        EuroFanActor euroFan = new(AdminApiV0Driver.Create(Client, MajorApiVersion, MinorApiVersion));
+        AdminActor admin = new(AdminApiV0Driver.Create(Client, MajorApiVersion, MinorApiVersion));
 
         // Given
-        euroFan.Given_I_want_to_retrieve_all_existing_contests();
+        admin.Given_I_want_to_retrieve_all_existing_contests();
 
         // When
-        await euroFan.When_I_send_my_request();
+        await admin.When_I_send_my_request();
 
         // Then
-        euroFan.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
     }
 
     public sealed class V0Point1 : GetContestsTests
@@ -42,11 +42,11 @@ public abstract class GetContestsTests : AcceptanceTestBase
         private protected override int MinorApiVersion => 2;
     }
 
-    private sealed class EuroFanActor : ActorWithResponse<GetContests.Response>
+    private sealed class AdminActor : ActorWithResponse<GetContests.Response>
     {
         private readonly AdminApiV0Driver _driver;
 
-        public EuroFanActor(AdminApiV0Driver driver)
+        public AdminActor(AdminApiV0Driver driver)
         {
             _driver = driver;
         }
