@@ -7,5 +7,5 @@ namespace Eurocentric.Features.AdminApi.V1.Common.Documentation;
 internal sealed class V1SchemaExampleTransformer : SchemaExampleTransformer
 {
     private protected override IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; } =
-        new Dictionary<Type, IOpenApiAny> { [typeof(Country)] = Country.CreateExample().ToOpenApiAny() };
+        new Dictionary<Type, IOpenApiAny> { [typeof(CountryDto)] = CountryDto.CreateExample().ToOpenApiAny() };
 }

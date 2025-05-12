@@ -1,6 +1,8 @@
 using ErrorOr;
+using Eurocentric.Domain.Countries;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
-using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Features.AdminApi.V1.Countries.Common;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
@@ -29,18 +31,21 @@ public static class GetCountry
         return apiVersionGroup;
     }
 
-    public sealed record Response(Country Country);
+    public sealed record Response(CountryDto Country);
 
     internal sealed record Query(Guid CountryId) : IQuery<Response>;
 
     internal sealed class Handler : IQueryHandler<Query, Response>
     {
-        public Task<ErrorOr<Response>> OnHandle(Query request, CancellationToken cancellationToken)
+        public Task<ErrorOr<Response>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            Country country = new(request.CountryId, "GB", "United Kingdom",
-                [new ContestMemo(Guid.NewGuid(), ContestStatus.Completed)]);
+            Country country = Country.Create()
+                .WithCountryCode(CountryCode.FromValue("GB"))
+                .WithName(CountryName.FromValue("United Kingdom"))
+                .Build(() => CountryId.FromValue(query.CountryId))
+                .Value;
 
-            return Task.FromResult(ErrorOrFactory.From(new Response(country)));
+            return Task.FromResult(ErrorOrFactory.From(new Response(country.ToCountryDto())));
         }
     }
 
