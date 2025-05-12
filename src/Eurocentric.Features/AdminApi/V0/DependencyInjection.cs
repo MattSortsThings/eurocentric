@@ -9,6 +9,8 @@ namespace Eurocentric.Features.AdminApi.V0;
 /// </summary>
 internal static class DependencyInjection
 {
+    private const string EndpointGroupName = "AdminApi.V0";
+
     /// <summary>
     ///     Registers the OpenAPI documents for the Admin API Version 0 with the application service descriptor collection.
     /// </summary>
@@ -19,19 +21,21 @@ internal static class DependencyInjection
         services.AddOpenApi("admin-api-v0.1", options =>
         {
             options.ShouldInclude = description =>
-                description.GroupName == "AdminApi.V0"
+                description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 1 };
 
-            options.AddDocumentTransformer<AdminApiV0Point1DocumentInfoTransformer>();
+            options.AddDocumentTransformer<V0Point1DocumentInfoTransformer>()
+                .AddOperationTransformer<V0ParameterExampleTransformer>();
         });
 
         services.AddOpenApi("admin-api-v0.2", options =>
         {
             options.ShouldInclude = description =>
-                description.GroupName == "AdminApi.V0"
+                description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 2 };
 
-            options.AddDocumentTransformer<AdminApiV0Point2DocumentInfoTransformer>();
+            options.AddDocumentTransformer<V0Point2DocumentInfoTransformer>()
+                .AddOperationTransformer<V0ParameterExampleTransformer>();
         });
 
 

@@ -1,3 +1,4 @@
+using Eurocentric.Features.PublicApi.V0.Common.Documentation;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +9,8 @@ namespace Eurocentric.Features.PublicApi.V0;
 /// </summary>
 internal static class DependencyInjection
 {
+    private const string EndpointGroupName = "PublicApi.V0";
+
     /// <summary>
     ///     Registers the OpenAPI documents for the Public API Version 0 with the application service descriptor collection.
     /// </summary>
@@ -18,17 +21,22 @@ internal static class DependencyInjection
         services.AddOpenApi("public-api-v0.1", options =>
         {
             options.ShouldInclude = description =>
-                description.GroupName == "PublicApi.V0"
+                description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 1 };
+
+            options.AddDocumentTransformer<V0Point1DocumentInfoTransformer>()
+                .AddOperationTransformer<V0ParameterExampleTransformer>();
         });
 
         services.AddOpenApi("public-api-v0.2", options =>
         {
             options.ShouldInclude = description =>
-                description.GroupName == "PublicApi.V0"
+                description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 2 };
-        });
 
+            options.AddDocumentTransformer<V0Point2DocumentInfoTransformer>()
+                .AddOperationTransformer<V0ParameterExampleTransformer>();
+        });
 
         return services;
     }

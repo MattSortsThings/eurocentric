@@ -2,7 +2,7 @@ using Eurocentric.Features.Shared.Documentation;
 
 namespace Eurocentric.Features.AdminApi.V0.Common.Documentation;
 
-internal sealed class AdminApiV0Point1DocumentInfoTransformer : DocumentInfoTransformer
+internal sealed class V0Point1DocumentInfoTransformer : DocumentInfoTransformer
 {
     private protected override string Title => "Eurocentric Admin API";
 

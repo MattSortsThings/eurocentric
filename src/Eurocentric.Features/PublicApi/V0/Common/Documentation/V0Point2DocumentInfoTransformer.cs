@@ -2,7 +2,7 @@ using Eurocentric.Features.Shared.Documentation;
 
 namespace Eurocentric.Features.PublicApi.V0.Common.Documentation;
 
-internal sealed class PublicApiV0Point2DocumentInfoTransformer : DocumentInfoTransformer
+internal sealed class V0Point2DocumentInfoTransformer : DocumentInfoTransformer
 {
     private protected override string Title => "Eurocentric Public API";
 
