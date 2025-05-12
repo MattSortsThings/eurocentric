@@ -69,7 +69,7 @@ BROADCAST ||--|{ Televote : owns
 2. A **CONTEST** has a unique contest year.
 3. A **CONTEST** maintains an always up-to-date record of all its child **BROADCASTS**.
 4. A **CONTEST** can only be deleted from the system when it has zero child **BROADCASTS**.
-5. A **CONTEST** has a status, which is one of { `Initialized`, `Initialized`, `Completed` }.
+5. A **CONTEST** has a status, which is one of { `Initialized`, `InProgress`, `Completed` }.
 6. A **CONTEST**'s status is `Completed` when it has created 3 child **BROADCASTS**, and they all have the status `Completed`.
 7. A **CONTEST** using the "Stockholm" format has at least 3 **Participants** in group 1, at least 3 in group 2, and none in group 0.
 8. A **CONTEST** using the "Liverpool" format has at least 3 **Participants** in group 1, at least 3 in group 2, and one in group 0.
