@@ -31,7 +31,7 @@ public sealed class GetCountryTests : AcceptanceTestBase
         admin.Then_the_retrieved_country_should_have_my_target_country_ID();
     }
 
-    private sealed class AdminActor : ActorWithResponse<GetCountry.Response>
+    private sealed class AdminActor : ActorWithResponse<GetCountryResponse>
     {
         private readonly AdminApiV1Driver _driver;
 
@@ -42,7 +42,7 @@ public sealed class GetCountryTests : AcceptanceTestBase
 
         private Guid MyTargetCountryId { get; set; }
 
-        private protected override Func<Task<ResponseOrProblem<GetCountry.Response>>> SendMyRequest { get; set; } = null!;
+        private protected override Func<Task<ResponseOrProblem<GetCountryResponse>>> SendMyRequest { get; set; } = null!;
 
         public void Given_I_want_to_retrieve_the_country_with_the_id(string countryId)
         {

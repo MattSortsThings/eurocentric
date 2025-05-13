@@ -16,6 +16,58 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.PublicApi.V0.VotingCountryRankings;
 
+public sealed record PointsShareVotingCountryRanking(int Rank, string CountryCode, string CountryName, double PointsShare)
+    : IExampleProvider<PointsShareVotingCountryRanking>
+{
+    public static PointsShareVotingCountryRanking CreateExample() => new(1, "UA", "Ukraine", 0.5);
+}
+
+public sealed record GetVotingCountryPointsShareRankingsResponse(
+    PointsShareVotingCountryRanking[] Rankings,
+    PointsShareVotingCountryFilteringMetadata Filtering,
+    PaginationMetadata Pagination);
+
+public sealed record QueryParams
+{
+    [FromQuery(Name = "competingCountryCode")]
+    [Required]
+    public required string CountryCode { get; init; }
+
+    [FromQuery(Name = "minYear")]
+    public int? MinYear { get; init; }
+
+    [FromQuery(Name = "maxYear")]
+    public int? MaxYear { get; init; }
+
+    [FromQuery(Name = "contestStages")]
+    [DefaultValue(typeof(ContestStages), "All")]
+    public ContestStages? ContestStages { get; init; }
+
+    [FromQuery(Name = "votingMethod")]
+    [DefaultValue(typeof(VotingMethod), "Any")]
+    public VotingMethod? VotingMethod { get; init; }
+
+    [FromQuery(Name = "pageIndex")]
+    public int? PageIndex { get; init; }
+
+    [FromQuery(Name = "pageSize")]
+    public int? PageSize { get; init; }
+
+    [FromQuery(Name = "descending")]
+    public bool? Descending { get; init; }
+}
+
+public sealed record PointsShareVotingCountryFilteringMetadata(
+    string CompetingCountryCode,
+    int? MinYear,
+    int? MaxYear,
+    ContestStages ContestStages,
+    VotingMethod VotingMethod) : IExampleProvider<PointsShareVotingCountryFilteringMetadata>
+{
+    public static PointsShareVotingCountryFilteringMetadata CreateExample() =>
+        new("GB", 2016, 2025, ContestStages.GrandFinal, VotingMethod.Televote);
+}
+
 public static class GetPointsShareVotingCountryRankings
 {
     internal static IEndpointRouteBuilder MapGetPointsShareVotingCountryRankings(this IEndpointRouteBuilder apiGroup)
@@ -27,7 +79,7 @@ public static class GetPointsShareVotingCountryRankings
             .WithDescription("Ranks all voting countries by the sum total points they have given to a specified competing " +
                              "country, as a share of the maximum available points, and returns a page of rankings.")
             .WithTags(EndpointTags.VotingCountryRankings)
-            .Produces<Response>()
+            .Produces<GetVotingCountryPointsShareRankingsResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
         return apiGroup;
@@ -56,55 +108,6 @@ public static class GetPointsShareVotingCountryRankings
         _ => throw new InvalidEnumArgumentException(nameof(contestStages), (int)contestStages, typeof(ContestStages))
     };
 
-    public sealed record Ranking(int Rank, string CountryCode, string CountryName, double PointsShare)
-        : IExampleProvider<Ranking>
-    {
-        public static Ranking CreateExample() => new(1, "UA", "Ukraine", 0.5);
-    }
-
-    public sealed record FilteringMetadata(
-        string CompetingCountryCode,
-        int? MinYear,
-        int? MaxYear,
-        ContestStages ContestStages,
-        VotingMethod VotingMethod) : IExampleProvider<FilteringMetadata>
-    {
-        public static FilteringMetadata CreateExample() =>
-            new("GB", 2016, 2025, ContestStages.GrandFinal, VotingMethod.Televote);
-    }
-
-    public sealed record Response(Ranking[] Rankings, FilteringMetadata Filtering, PaginationMetadata Pagination);
-
-    public sealed record QueryParams
-    {
-        [FromQuery(Name = "competingCountryCode")]
-        [Required]
-        public required string CountryCode { get; init; }
-
-        [FromQuery(Name = "minYear")]
-        public int? MinYear { get; init; }
-
-        [FromQuery(Name = "maxYear")]
-        public int? MaxYear { get; init; }
-
-        [FromQuery(Name = "contestStages")]
-        [DefaultValue(typeof(ContestStages), "All")]
-        public ContestStages? ContestStages { get; init; }
-
-        [FromQuery(Name = "votingMethod")]
-        [DefaultValue(typeof(VotingMethod), "Any")]
-        public VotingMethod? VotingMethod { get; init; }
-
-        [FromQuery(Name = "pageIndex")]
-        public int? PageIndex { get; init; }
-
-        [FromQuery(Name = "pageSize")]
-        public int? PageSize { get; init; }
-
-        [FromQuery(Name = "descending")]
-        public bool? Descending { get; init; }
-    }
-
     internal sealed record Query(
         string CompetingCountryCode,
         int? MinYear,
@@ -113,11 +116,13 @@ public static class GetPointsShareVotingCountryRankings
         VotingMethod VotingMethod,
         int PageIndex,
         int PageSize,
-        bool Descending) : IQuery<Response>;
+        bool Descending) : IQuery<GetVotingCountryPointsShareRankingsResponse>;
 
-    internal sealed class Handler(FakeVoterPointsDataRepository repository) : IQueryHandler<Query, Response>
+    internal sealed class Handler(FakeVoterPointsDataRepository repository)
+        : IQueryHandler<Query, GetVotingCountryPointsShareRankingsResponse>
     {
-        public async Task<ErrorOr<Response>> OnHandle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<GetVotingCountryPointsShareRankingsResponse>> OnHandle(Query query,
+            CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
@@ -126,7 +131,7 @@ public static class GetPointsShareVotingCountryRankings
                 .FilterByContestYear(query.MinYear, query.MaxYear)
                 .FilterByContestStages(query.ContestStages);
 
-            Ranking[] fullRankings = data.GroupBy(d => new
+            PointsShareVotingCountryRanking[] fullRankings = data.GroupBy(d => new
                 {
                     CountryCode = d.VotingCountryCode, CountryName = d.VotingCountryName
                 })
@@ -138,10 +143,11 @@ public static class GetPointsShareVotingCountryRankings
                                   / (1.0 * group.Sum(d => d.AvailablePoints))
                 })
                 .OrderByDescending(item => item.PointsShare)
-                .Select((item, index) => new Ranking(index + 1, item.CountryCode, item.CountryName, item.PointsShare))
+                .Select((item, index) =>
+                    new PointsShareVotingCountryRanking(index + 1, item.CountryCode, item.CountryName, item.PointsShare))
                 .ToArray();
 
-            Ranking[] rankings = query.Descending
+            PointsShareVotingCountryRanking[] rankings = query.Descending
                 ? fullRankings.OrderByDescending(ranking => ranking.PointsShare)
                     .Skip(query.PageIndex * query.PageSize)
                     .Take(query.PageSize)
@@ -151,7 +157,7 @@ public static class GetPointsShareVotingCountryRankings
                     .Take(query.PageSize)
                     .ToArray();
 
-            FilteringMetadata filtering = new(query.CompetingCountryCode,
+            PointsShareVotingCountryFilteringMetadata filtering = new(query.CompetingCountryCode,
                 query.MinYear,
                 query.MaxYear,
                 query.ContestStages,
@@ -162,7 +168,7 @@ public static class GetPointsShareVotingCountryRankings
                 query.PageSize,
                 query.Descending);
 
-            return ErrorOrFactory.From(new Response(rankings, filtering, pagination));
+            return ErrorOrFactory.From(new GetVotingCountryPointsShareRankingsResponse(rankings, filtering, pagination));
         }
 
         private IEnumerable<FakeVoterPointsDatum> GetData(VotingMethod votingMethod) => votingMethod switch
@@ -176,7 +182,8 @@ public static class GetPointsShareVotingCountryRankings
 
     private static class Endpoint
     {
-        internal static async Task<Results<Ok<Response>, ProblemHttpResult>> HandleAsync([AsParameters] QueryParams queryParams,
+        internal static async Task<Results<Ok<GetVotingCountryPointsShareRankingsResponse>, ProblemHttpResult>> HandleAsync(
+            [AsParameters] QueryParams queryParams,
             IRequestResponseBus bus,
             CancellationToken cancellationToken = default) => await InitializeQuery(queryParams)
             .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))

@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Any;
 
 namespace Eurocentric.Features.AdminApi.V1.Common.Documentation;
 
-internal sealed class V1ParameterExampleTransformer : ParameterExampleTransformer
+internal sealed class ParameterExampleOperationTransformer : BaseParameterExampleOperationTransformer
 {
     private protected override IReadOnlyDictionary<string, IOpenApiAny> ParameterExamples { get; } =
         new Dictionary<string, IOpenApiAny>

@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Eurocentric.Features.Shared.Documentation;
 
-public abstract class ParameterExampleTransformer : IOpenApiOperationTransformer
+internal abstract class BaseParameterExampleOperationTransformer : IOpenApiOperationTransformer
 {
     private protected abstract IReadOnlyDictionary<string, IOpenApiAny> ParameterExamples { get; }
 

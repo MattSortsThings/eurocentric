@@ -14,7 +14,23 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.AdminApi.V0.Contests;
 
-public static class CreateContest
+public sealed record CreateContestRequest : IExampleProvider<CreateContestRequest>
+{
+    public required int ContestYear { get; init; }
+
+    public required string CityName { get; init; }
+
+    public required ContestFormat ContestFormat { get; init; }
+
+    public static CreateContestRequest CreateExample() => new()
+    {
+        ContestYear = 2025, CityName = "Basel", ContestFormat = ContestFormat.Liverpool
+    };
+}
+
+public sealed record CreateContestResponse(Contest Contest);
+
+internal static class CreateContest
 {
     internal static IEndpointRouteBuilder MapCreateContest(this IEndpointRouteBuilder apiGroup)
     {
@@ -24,7 +40,7 @@ public static class CreateContest
             .WithSummary("Create a contest")
             .WithDescription("Creates a new contest from the request body.")
             .WithTags(EndpointTags.Contests)
-            .Produces<Response>(StatusCodes.Status201Created)
+            .Produces<CreateContestResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
@@ -32,27 +48,12 @@ public static class CreateContest
         return apiGroup;
     }
 
-    public sealed record Response(Contest Contest);
+    internal sealed record Command(int ContestYear, string CityName, ContestFormat ContestFormat)
+        : ICommand<CreateContestResponse>;
 
-    public sealed record Request : IExampleProvider<Request>
+    internal sealed class Handler : ICommandHandler<Command, CreateContestResponse>
     {
-        public required int ContestYear { get; init; }
-
-        public required string CityName { get; init; }
-
-        public required ContestFormat ContestFormat { get; init; }
-
-        public static Request CreateExample() => new()
-        {
-            ContestYear = 2025, CityName = "Basel", ContestFormat = ContestFormat.Liverpool
-        };
-    }
-
-    internal sealed record Command(int ContestYear, string CityName, ContestFormat ContestFormat) : ICommand<Response>;
-
-    internal sealed class Handler : ICommandHandler<Command, Response>
-    {
-        public async Task<ErrorOr<Response>> OnHandle(Command command, CancellationToken cancellationToken)
+        public async Task<ErrorOr<CreateContestResponse>> OnHandle(Command command, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
@@ -72,24 +73,25 @@ public static class CreateContest
                 _ => throw new InvalidEnumArgumentException(nameof(contestFormat), (int)contestFormat, typeof(ContestFormat))
             };
 
-            return ErrorOrFactory.From(new Response(contest));
+            return ErrorOrFactory.From(new CreateContestResponse(contest));
         }
     }
 
-    internal static class Endpoint
+    private static class Endpoint
     {
-        internal static async Task<Results<CreatedAtRoute<Response>, ProblemHttpResult>> HandleAsync(
-            [FromBody] Request request,
+        internal static async Task<Results<CreatedAtRoute<CreateContestResponse>, ProblemHttpResult>> HandleAsync(
+            [FromBody] CreateContestRequest request,
             IRequestResponseBus bus,
             CancellationToken cancellationToken = default) => await InitializeCommand(request)
             .ThenAsync(command => bus.Send(command, cancellationToken: cancellationToken))
             .ToResultOrProblemAsync(MapToCreatedAtRoute);
 
-        private static CreatedAtRoute<Response> MapToCreatedAtRoute(Response response) => TypedResults.CreatedAtRoute(response,
-            "AdminApi.V0.GetContest",
-            new RouteValueDictionary { { "contestId", response.Contest.Id } });
+        private static CreatedAtRoute<CreateContestResponse> MapToCreatedAtRoute(CreateContestResponse response) =>
+            TypedResults.CreatedAtRoute(response,
+                "AdminApi.V0.GetContest",
+                new RouteValueDictionary { { "contestId", response.Contest.Id } });
 
-        private static ErrorOr<Command> InitializeCommand(Request request) =>
+        private static ErrorOr<Command> InitializeCommand(CreateContestRequest request) =>
             ErrorOrFactory.From(new Command(request.ContestYear, request.CityName, request.ContestFormat));
     }
 }

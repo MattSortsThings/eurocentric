@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Eurocentric.Features.Shared.Documentation;
 
-internal sealed class ProblemDetailsExampleTransformer : IOpenApiOperationTransformer
+internal sealed class ProblemDetailsResponseExampleOperationTransformer : IOpenApiOperationTransformer
 {
     public Task TransformAsync(OpenApiOperation operation,
         OpenApiOperationTransformerContext context,

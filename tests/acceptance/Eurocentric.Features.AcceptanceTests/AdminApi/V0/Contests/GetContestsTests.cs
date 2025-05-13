@@ -42,7 +42,7 @@ public abstract class GetContestsTests : AcceptanceTestBase
         private protected override int MinorApiVersion => 2;
     }
 
-    private sealed class AdminActor : ActorWithResponse<GetContests.Response>
+    private sealed class AdminActor : ActorWithResponse<GetContestsResponse>
     {
         private readonly AdminApiV0Driver _driver;
 
@@ -51,7 +51,7 @@ public abstract class GetContestsTests : AcceptanceTestBase
             _driver = driver;
         }
 
-        private protected override Func<Task<ResponseOrProblem<GetContests.Response>>> SendMyRequest { get; set; } = null!;
+        private protected override Func<Task<ResponseOrProblem<GetContestsResponse>>> SendMyRequest { get; set; } = null!;
 
         public void Given_I_want_to_retrieve_all_existing_contests() =>
             SendMyRequest = () => _driver.GetContestsAsync(TestContext.Current.CancellationToken);

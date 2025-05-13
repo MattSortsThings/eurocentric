@@ -24,11 +24,13 @@ internal static class DependencyInjection
                 description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 1 };
 
-            options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>()
-                .AddDocumentTransformer<V0Point1DocumentInfoTransformer>()
-                .AddOperationTransformer<V0ParameterExampleTransformer>()
-                .AddSchemaTransformer<V0SchemaExampleTransformer>()
-                .AddOperationTransformer<ProblemDetailsExampleTransformer>();
+            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()
+                .AddOperationTransformer<ParameterExampleOperationTransformer>()
+                .AddSchemaTransformer<ExampleSchemaTransformer>()
+                .AddOperationTransformer<ProblemDetailsResponseExampleOperationTransformer>()
+                .AddDocumentTransformer(new InfoDocumentTransformer("Eurocentric Public API",
+                    "A web API for (over)analysing the Eurovision Song Contest, 2016-present",
+                    "v0.1"));
         });
 
         services.AddOpenApi("public-api-v0.2", options =>
@@ -37,11 +39,13 @@ internal static class DependencyInjection
                 description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 2 };
 
-            options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>()
-                .AddDocumentTransformer<V0Point2DocumentInfoTransformer>()
-                .AddOperationTransformer<V0ParameterExampleTransformer>()
-                .AddSchemaTransformer<V0SchemaExampleTransformer>()
-                .AddOperationTransformer<ProblemDetailsExampleTransformer>();
+            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()
+                .AddOperationTransformer<ParameterExampleOperationTransformer>()
+                .AddSchemaTransformer<ExampleSchemaTransformer>()
+                .AddOperationTransformer<ProblemDetailsResponseExampleOperationTransformer>()
+                .AddDocumentTransformer(new InfoDocumentTransformer("Eurocentric Public API",
+                    "A web API for (over)analysing the Eurovision Song Contest, 2016-present",
+                    "v0.1"));
         });
 
         return services;

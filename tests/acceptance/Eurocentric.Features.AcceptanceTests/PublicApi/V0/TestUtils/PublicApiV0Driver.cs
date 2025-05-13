@@ -23,7 +23,7 @@ public sealed class PublicApiV0Driver
         return new PublicApiV0Driver(client, routePrefix);
     }
 
-    public async Task<ResponseOrProblem<GetAvailableVotingMethods.Response>> GetAvailableVotingMethodsAsync(
+    public async Task<ResponseOrProblem<GetAvailableVotingMethodsResponse>> GetAvailableVotingMethodsAsync(
         CancellationToken cancellationToken)
     {
         RestRequest request = new("public/api/v{apiVersion}/filters/voting-methods");
@@ -31,10 +31,10 @@ public sealed class PublicApiV0Driver
         request.AddUrlSegment("apiVersion", _apiVersion)
             .UseDemoApiKey();
 
-        return await _client.SendRequestAsync<GetAvailableVotingMethods.Response>(request, cancellationToken);
+        return await _client.SendRequestAsync<GetAvailableVotingMethodsResponse>(request, cancellationToken);
     }
 
-    public async Task<ResponseOrProblem<GetPointsShareVotingCountryRankings.Response>> GetPointsShareVotingCountryRankingsAsync(
+    public async Task<ResponseOrProblem<GetVotingCountryPointsShareRankingsResponse>> GetPointsShareVotingCountryRankingsAsync(
         IReadOnlyDictionary<string, string> queryParams, CancellationToken cancellationToken)
     {
         RestRequest request = new("public/api/v{apiVersion}/voting-country-rankings/points-share");
@@ -47,6 +47,6 @@ public sealed class PublicApiV0Driver
             request.AddQueryParameter(key, value);
         }
 
-        return await _client.SendRequestAsync<GetPointsShareVotingCountryRankings.Response>(request, cancellationToken);
+        return await _client.SendRequestAsync<GetVotingCountryPointsShareRankingsResponse>(request, cancellationToken);
     }
 }

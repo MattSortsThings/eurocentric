@@ -11,7 +11,9 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.AdminApi.V0.Contests;
 
-public static class GetContests
+public sealed record GetContestsResponse(Contest[] Contests);
+
+internal static class GetContests
 {
     internal static IEndpointRouteBuilder MapGetContests(this IEndpointRouteBuilder apiGroup)
     {
@@ -22,28 +24,26 @@ public static class GetContests
             .WithSummary("Get all contests")
             .WithDescription("Retrieves all existing contests, ordered by contest year.")
             .WithTags(EndpointTags.Contests)
-            .Produces<Response>();
+            .Produces<GetContestsResponse>();
 
         return apiGroup;
     }
 
-    public sealed record Response(Contest[] Contests);
+    internal sealed record Query : IQuery<GetContestsResponse>;
 
-    internal sealed record Query : IQuery<Response>;
-
-    internal sealed class Handler : IQueryHandler<Query, Response>
+    internal sealed class Handler : IQueryHandler<Query, GetContestsResponse>
     {
-        public Task<ErrorOr<Response>> OnHandle(Query _, CancellationToken cancellationToken)
+        public Task<ErrorOr<GetContestsResponse>> OnHandle(Query _, CancellationToken cancellationToken)
         {
             Contest contest = new(Guid.NewGuid(), 2025, "Basel", ContestFormat.Liverpool);
 
-            return Task.FromResult(ErrorOrFactory.From(new Response([contest])));
+            return Task.FromResult(ErrorOrFactory.From(new GetContestsResponse([contest])));
         }
     }
 
     private static class Endpoint
     {
-        internal static async Task<Results<Ok<Response>, ProblemHttpResult>> HandleAsync(IRequestResponseBus bus,
+        internal static async Task<Results<Ok<GetContestsResponse>, ProblemHttpResult>> HandleAsync(IRequestResponseBus bus,
             CancellationToken cancellationToken = default) => await InitializeQuery()
             .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
             .ToResultOrProblemAsync(TypedResults.Ok);

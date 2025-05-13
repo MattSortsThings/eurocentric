@@ -70,7 +70,7 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
         Assert.Equal("BadHttpRequestException was thrown while handling the request.", problemDetails.Detail);
         Assert.Contains(problemDetails.Extensions, kvp =>
             kvp is { Key: "exceptionMessage", Value: JsonElement j }
-            && j.GetString() == "Failed to read parameter \"Request request\" from the request body as JSON.");
+            && j.GetString() == "Failed to read parameter \"CreateContestRequest request\" from the request body as JSON.");
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
         Assert.Equal("BadHttpRequestException was thrown while handling the request.", problemDetails.Detail);
         Assert.Contains(problemDetails.Extensions, kvp =>
             kvp is { Key: "exceptionMessage", Value: JsonElement j }
-            && j.GetString() == "Failed to read parameter \"Request request\" from the request body as JSON.");
+            && j.GetString() == "Failed to read parameter \"CreateContestRequest request\" from the request body as JSON.");
     }
 
     [Fact]

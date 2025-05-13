@@ -17,7 +17,7 @@ namespace Eurocentric.Features.Shared.Documentation;
 ///     class in Microsoft's ASP.NET documentation.
 /// </remarks>
 /// <param name="authenticationSchemeProvider">Provides authentication schemes for the web application.</param>
-internal sealed class ApiKeySecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
+internal sealed class ApiKeySecurityDocumentTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
     : IOpenApiDocumentTransformer
 {
     public async Task TransformAsync(OpenApiDocument document,

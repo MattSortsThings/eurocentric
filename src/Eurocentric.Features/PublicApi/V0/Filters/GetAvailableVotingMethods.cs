@@ -10,7 +10,9 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.PublicApi.V0.Filters;
 
-public static class GetAvailableVotingMethods
+public sealed record GetAvailableVotingMethodsResponse(VotingMethod[] AvailableVotingMethods);
+
+internal static class GetAvailableVotingMethods
 {
     internal static IEndpointRouteBuilder MapGetAvailableVotingMethods(this IEndpointRouteBuilder apiGroup)
     {
@@ -21,24 +23,23 @@ public static class GetAvailableVotingMethods
             .WithSummary("Get available voting methods")
             .WithDescription("Retrieves all available voting methods.")
             .WithTags(EndpointTags.Filters)
-            .Produces<Response>();
+            .Produces<GetAvailableVotingMethodsResponse>();
 
         return apiGroup;
     }
 
-    public sealed record Response(VotingMethod[] AvailableVotingMethods);
+    internal sealed record Query : IQuery<GetAvailableVotingMethodsResponse>;
 
-    internal sealed record Query : IQuery<Response>;
-
-    internal sealed class Handler : IQueryHandler<Query, Response>
+    internal sealed class Handler : IQueryHandler<Query, GetAvailableVotingMethodsResponse>
     {
-        public Task<ErrorOr<Response>> OnHandle(Query _, CancellationToken cancellationToken) =>
-            Task.FromResult(ErrorOrFactory.From(new Response(Enum.GetValues<VotingMethod>())));
+        public Task<ErrorOr<GetAvailableVotingMethodsResponse>> OnHandle(Query _, CancellationToken cancellationToken) =>
+            Task.FromResult(ErrorOrFactory.From(new GetAvailableVotingMethodsResponse(Enum.GetValues<VotingMethod>())));
     }
 
-    internal static class Endpoint
+    private static class Endpoint
     {
-        internal static async Task<Results<Ok<Response>, ProblemHttpResult>> HandleAsync(IRequestResponseBus bus,
+        internal static async Task<Results<Ok<GetAvailableVotingMethodsResponse>, ProblemHttpResult>> HandleAsync(
+            IRequestResponseBus bus,
             CancellationToken cancellationToken = default) => await InitializeQuery()
             .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
             .ToResultOrProblemAsync(TypedResults.Ok);

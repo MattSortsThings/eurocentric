@@ -37,7 +37,7 @@ public abstract class CreateContestTests : AcceptanceTestBase
         private protected override int MinorApiVersion => 2;
     }
 
-    private sealed class AdminActor : ActorWithResponse<CreateContest.Response>
+    private sealed class AdminActor : ActorWithResponse<CreateContestResponse>
     {
         private readonly AdminApiV0Driver _driver;
 
@@ -46,15 +46,15 @@ public abstract class CreateContestTests : AcceptanceTestBase
             _driver = driver;
         }
 
-        private CreateContest.Request MyRequirements { get; set; } = null!;
+        private CreateContestRequest MyRequirements { get; set; } = null!;
 
-        private protected override Func<Task<ResponseOrProblem<CreateContest.Response>>> SendMyRequest { get; set; } = null!;
+        private protected override Func<Task<ResponseOrProblem<CreateContestResponse>>> SendMyRequest { get; set; } = null!;
 
         public void Given_I_want_to_create_a_contest(string cityName = "CityName",
             int contestYear = 2025,
             string contestFormat = "Stockholm")
         {
-            MyRequirements = new CreateContest.Request
+            MyRequirements = new CreateContestRequest
             {
                 CityName = cityName, ContestYear = contestYear, ContestFormat = Enum.Parse<ContestFormat>(contestFormat)
             };

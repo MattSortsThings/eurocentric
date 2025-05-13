@@ -32,7 +32,7 @@ public abstract class GetPointsShareVotingCountryRankingsTests : AcceptanceTestB
         euroFan.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
     }
 
-    private sealed class EuroFanActor : ActorWithResponse<GetPointsShareVotingCountryRankings.Response>
+    private sealed class EuroFanActor : ActorWithResponse<GetVotingCountryPointsShareRankingsResponse>
     {
         private readonly PublicApiV0Driver _driver;
 
@@ -43,7 +43,7 @@ public abstract class GetPointsShareVotingCountryRankingsTests : AcceptanceTestB
 
         private Dictionary<string, string> MyQueryParams { get; } = [];
 
-        private protected override Func<Task<ResponseOrProblem<GetPointsShareVotingCountryRankings.Response>>>
+        private protected override Func<Task<ResponseOrProblem<GetVotingCountryPointsShareRankingsResponse>>>
             SendMyRequest { get; set; } = null!;
 
         public void Given_I_want_to_rank_voting_countries_by_points_share(string? contestStages = null,

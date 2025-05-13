@@ -5,12 +5,12 @@ using Microsoft.OpenApi.Any;
 
 namespace Eurocentric.Features.AdminApi.V0.Common.Documentation;
 
-internal sealed class V0SchemaExampleTransformer : SchemaExampleTransformer
+internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
 {
     private protected override IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; } =
         new Dictionary<Type, IOpenApiAny>
         {
             [typeof(Contest)] = Contest.CreateExample().ToOpenApiAny(),
-            [typeof(CreateContest.Request)] = CreateContest.Request.CreateExample().ToOpenApiAny()
+            [typeof(CreateContestRequest)] = CreateContestRequest.CreateExample().ToOpenApiAny()
         };
 }

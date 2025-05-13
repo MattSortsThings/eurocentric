@@ -24,11 +24,12 @@ internal static class DependencyInjection
                 description.GroupName == EndpointGroupName
                 && description.GetApiVersion() is { MajorVersion: 1, MinorVersion: 0 };
 
-            options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>()
-                .AddDocumentTransformer<V1Point0DocumentInfoTransformer>()
-                .AddOperationTransformer<V1ParameterExampleTransformer>()
-                .AddSchemaTransformer<V1SchemaExampleTransformer>()
-                .AddOperationTransformer<ProblemDetailsExampleTransformer>();
+            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()
+                .AddOperationTransformer<ParameterExampleOperationTransformer>()
+                .AddSchemaTransformer<ExampleSchemaTransformer>()
+                .AddOperationTransformer<ProblemDetailsResponseExampleOperationTransformer>()
+                .AddDocumentTransformer(new InfoDocumentTransformer("Eurocentric Admin API",
+                    "A web API for modelling the Eurovision Song Contest, 2016-present"));
         });
 
         return services;

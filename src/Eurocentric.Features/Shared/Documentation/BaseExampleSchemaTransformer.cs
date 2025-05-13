@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Eurocentric.Features.Shared.Documentation;
 
-public abstract class SchemaExampleTransformer : IOpenApiSchemaTransformer
+internal abstract class BaseExampleSchemaTransformer : IOpenApiSchemaTransformer
 {
     private protected abstract IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; }
 

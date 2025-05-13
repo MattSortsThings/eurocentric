@@ -43,7 +43,7 @@ public abstract class GetContestTests : AcceptanceTestBase
         private protected override int MinorApiVersion => 2;
     }
 
-    private sealed class AdminActor : ActorWithResponse<GetContest.Response>
+    private sealed class AdminActor : ActorWithResponse<GetContestResponse>
     {
         private readonly AdminApiV0Driver _driver;
 
@@ -54,7 +54,7 @@ public abstract class GetContestTests : AcceptanceTestBase
 
         private Guid MyTargetContestId { get; set; }
 
-        private protected override Func<Task<ResponseOrProblem<GetContest.Response>>> SendMyRequest { get; set; } = null!;
+        private protected override Func<Task<ResponseOrProblem<GetContestResponse>>> SendMyRequest { get; set; } = null!;
 
         public void Given_I_want_to_retrieve_the_contest_with_id(string contestId)
         {

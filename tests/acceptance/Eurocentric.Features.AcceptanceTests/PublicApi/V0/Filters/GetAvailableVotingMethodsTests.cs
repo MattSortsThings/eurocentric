@@ -42,7 +42,7 @@ public abstract class GetAvailableVotingMethodsTests : AcceptanceTestBase
         private protected override int MinorApiVersion => 2;
     }
 
-    private sealed class EuroFanActor : ActorWithResponse<GetAvailableVotingMethods.Response>
+    private sealed class EuroFanActor : ActorWithResponse<GetAvailableVotingMethodsResponse>
     {
         private readonly PublicApiV0Driver _driver;
 
@@ -51,7 +51,7 @@ public abstract class GetAvailableVotingMethodsTests : AcceptanceTestBase
             _driver = driver;
         }
 
-        private protected override Func<Task<ResponseOrProblem<GetAvailableVotingMethods.Response>>>
+        private protected override Func<Task<ResponseOrProblem<GetAvailableVotingMethodsResponse>>>
             SendMyRequest { get; set; } = null!;
 
         public void Given_I_want_to_retrieve_all_available_voting_methods() => SendMyRequest = () =>

@@ -1,5 +1,4 @@
 using ErrorOr;
-using Eurocentric.Domain.Countries;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
@@ -12,10 +11,13 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using Country = Eurocentric.Features.AdminApi.V1.Countries.Common.Country;
 
 namespace Eurocentric.Features.AdminApi.V1.Countries;
 
-public static class GetCountry
+public sealed record GetCountryResponse(Country Country);
+
+internal static class GetCountry
 {
     internal static IEndpointRouteBuilder MapGetCountry(this IEndpointRouteBuilder apiVersionGroup)
     {
@@ -25,33 +27,31 @@ public static class GetCountry
             .WithSummary("Get a country")
             .WithDescription("Retrieves a single country.")
             .WithTags(EndpointTags.Countries)
-            .Produces<Response>()
+            .Produces<GetCountryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);
 
         return apiVersionGroup;
     }
 
-    public sealed record Response(CountryDto Country);
+    internal sealed record Query(Guid CountryId) : IQuery<GetCountryResponse>;
 
-    internal sealed record Query(Guid CountryId) : IQuery<Response>;
-
-    internal sealed class Handler : IQueryHandler<Query, Response>
+    internal sealed class Handler : IQueryHandler<Query, GetCountryResponse>
     {
-        public Task<ErrorOr<Response>> OnHandle(Query query, CancellationToken cancellationToken)
+        public Task<ErrorOr<GetCountryResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            Country country = Country.Create()
+            Country country = Domain.Countries.Country.Create()
                 .WithCountryCode(CountryCode.FromValue("GB"))
                 .WithName(CountryName.FromValue("United Kingdom"))
                 .Build(() => CountryId.FromValue(query.CountryId))
-                .Value;
+                .Value.ToCountryDto();
 
-            return Task.FromResult(ErrorOrFactory.From(new Response(country.ToCountryDto())));
+            return Task.FromResult(ErrorOrFactory.From(new GetCountryResponse(country)));
         }
     }
 
     private static class Endpoint
     {
-        internal static async Task<Results<Ok<Response>, ProblemHttpResult>> HandleAsync(
+        internal static async Task<Results<Ok<GetCountryResponse>, ProblemHttpResult>> HandleAsync(
             [FromRoute(Name = "countryId")] Guid countryId,
             IRequestResponseBus bus,
             CancellationToken cancellationToken = default) => await InitializeQuery(countryId)

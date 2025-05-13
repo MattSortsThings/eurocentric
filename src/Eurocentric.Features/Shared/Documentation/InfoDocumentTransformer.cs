@@ -3,13 +3,21 @@ using Microsoft.OpenApi.Models;
 
 namespace Eurocentric.Features.Shared.Documentation;
 
-public abstract class DocumentInfoTransformer : IOpenApiDocumentTransformer
+internal sealed class InfoDocumentTransformer : IOpenApiDocumentTransformer
 {
-    private protected abstract string Title { get; }
+    public InfoDocumentTransformer(string title = "OpenAPI Document Title", string description = "OpenAPI document description.",
+        string version = "v1.0")
+    {
+        Title = title;
+        Description = description;
+        Version = version;
+    }
 
-    private protected abstract string Description { get; }
+    private string Title { get; }
 
-    private protected abstract string Version { get; }
+    private string Description { get; }
+
+    private string Version { get; }
 
     public Task TransformAsync(OpenApiDocument document,
         OpenApiDocumentTransformerContext context,

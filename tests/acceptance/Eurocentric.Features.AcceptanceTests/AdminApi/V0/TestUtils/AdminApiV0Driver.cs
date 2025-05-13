@@ -15,7 +15,7 @@ public sealed class AdminApiV0Driver
         _apiVersion = apiVersion;
     }
 
-    public async Task<ResponseOrProblem<CreateContest.Response>> CreateContestAsync(CreateContest.Request requestBody,
+    public async Task<ResponseOrProblem<CreateContestResponse>> CreateContestAsync(CreateContestRequest requestBody,
         CancellationToken cancellationToken)
     {
         RestRequest request = new("admin/api/v{apiVersion}/contests", Method.Post);
@@ -24,10 +24,10 @@ public sealed class AdminApiV0Driver
             .AddJsonBody(requestBody)
             .UseSecretApiKey();
 
-        return await _client.SendRequestAsync<CreateContest.Response>(request, cancellationToken);
+        return await _client.SendRequestAsync<CreateContestResponse>(request, cancellationToken);
     }
 
-    public async Task<ResponseOrProblem<GetContest.Response>> GetContestAsync(Guid contestId,
+    public async Task<ResponseOrProblem<GetContestResponse>> GetContestAsync(Guid contestId,
         CancellationToken cancellationToken)
     {
         RestRequest request = new("admin/api/v{apiVersion}/contests/{contestId}");
@@ -36,17 +36,17 @@ public sealed class AdminApiV0Driver
             .AddUrlSegment("contestId", contestId)
             .UseSecretApiKey();
 
-        return await _client.SendRequestAsync<GetContest.Response>(request, cancellationToken);
+        return await _client.SendRequestAsync<GetContestResponse>(request, cancellationToken);
     }
 
-    public async Task<ResponseOrProblem<GetContests.Response>> GetContestsAsync(CancellationToken cancellationToken)
+    public async Task<ResponseOrProblem<GetContestsResponse>> GetContestsAsync(CancellationToken cancellationToken)
     {
         RestRequest request = new("admin/api/v{apiVersion}/contests");
 
         request.AddUrlSegment("apiVersion", _apiVersion)
             .UseSecretApiKey();
 
-        return await _client.SendRequestAsync<GetContests.Response>(request, cancellationToken);
+        return await _client.SendRequestAsync<GetContestsResponse>(request, cancellationToken);
     }
 
     public static AdminApiV0Driver Create(ITestClient client, int majorVersion, int minorVersion)
