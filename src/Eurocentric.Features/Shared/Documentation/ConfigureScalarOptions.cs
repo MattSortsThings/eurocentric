@@ -17,7 +17,7 @@ internal sealed class ConfigureScalarOptions : IConfigureOptions<ScalarOptions>
         options.OperationSorter = OperationSorter.Method;
         options.TagSorter = TagSorter.Alpha;
         options.DefaultHttpClient = new KeyValuePair<ScalarTarget, ScalarClient>(ScalarTarget.JavaScript, ScalarClient.Fetch);
-        options.WithPreferredScheme(ApiKeyAuthenticationScheme.SchemeName);
+        options.AddPreferredSecuritySchemes(ApiKeyAuthenticationScheme.SchemeName);
         options.AddApiKeyAuthentication(ApiKeyAuthenticationScheme.SchemeName, scheme =>
             scheme.Name = ApiKeyAuthenticationScheme.HttpRequestHeaderName);
     }
