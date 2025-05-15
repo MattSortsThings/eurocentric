@@ -1,5 +1,7 @@
 using Eurocentric.Infrastructure.EfCore;
 using Eurocentric.Infrastructure.FakeRepositories;
+using Eurocentric.Infrastructure.IdProviders;
+using Eurocentric.Infrastructure.Timing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +22,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddEfCore(configuration)
-            .AddFakeDataRepositories();
+            .AddFakeDataRepositories()
+            .AddIdProviders()
+            .AddTiming();
 
         return services;
     }

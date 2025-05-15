@@ -15,6 +15,18 @@ public sealed class AdminApiV1Driver
         _apiVersion = apiVersion;
     }
 
+    public async Task<ResponseOrProblem<CreateCountryResponse>> CreateCountryAsync(CreateCountryRequest requestBody,
+        CancellationToken cancellationToken = default)
+    {
+        RestRequest request = new("/admin/api/v{apiVersion}/countries", Method.Post);
+
+        request.UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddJsonBody(requestBody);
+
+        return await _client.SendRequestAsync<CreateCountryResponse>(request, cancellationToken);
+    }
+
     public async Task<ResponseOrProblem<GetCountryResponse>> GetCountryAsync(Guid countryId,
         CancellationToken cancellationToken = default)
     {
