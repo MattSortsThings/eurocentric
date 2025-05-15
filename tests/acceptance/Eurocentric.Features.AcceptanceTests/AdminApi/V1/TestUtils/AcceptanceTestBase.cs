@@ -1,5 +1,3 @@
-using Eurocentric.Features.AcceptanceTests.TestUtils;
-
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 
 [Trait("Category", "container")]
@@ -7,22 +5,18 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 [Collection(nameof(AdminApiV1TestCollection))]
 public abstract class AcceptanceTestBase : IDisposable
 {
-    private readonly WebAppFixture _fixture;
-
     protected AcceptanceTestBase(WebAppFixture webAppFixture)
     {
-        _fixture = webAppFixture;
+        Sut = webAppFixture;
     }
 
-    private protected ITestClient Client => _fixture;
-
-    private protected abstract int MajorApiVersion { get; }
-
-    private protected abstract int MinorApiVersion { get; }
+    private protected WebAppFixture Sut { get; }
 
     public void Dispose()
     {
-        _fixture.Reset();
+        Sut.Reset();
         GC.SuppressFinalize(this);
     }
+
+    private protected abstract AdminApiV1Driver CreateAdminApiV1Driver();
 }

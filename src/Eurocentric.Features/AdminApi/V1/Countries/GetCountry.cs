@@ -1,15 +1,16 @@
 using ErrorOr;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Countries.Common;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Infrastructure.EfCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 using Country = Eurocentric.Features.AdminApi.V1.Countries.Common.Country;
 
@@ -35,17 +36,18 @@ internal static class GetCountry
 
     internal sealed record Query(Guid CountryId) : IQuery<GetCountryResponse>;
 
-    internal sealed class Handler : IQueryHandler<Query, GetCountryResponse>
+    internal sealed class Handler(AppDbContext dbContext) : IQueryHandler<Query, GetCountryResponse>
     {
-        public Task<ErrorOr<GetCountryResponse>> OnHandle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<GetCountryResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            Country country = Domain.Countries.Country.Create()
-                .WithCountryCode(CountryCode.FromValue("GB"))
-                .WithName(CountryName.FromValue("United Kingdom"))
-                .Build(() => CountryId.FromValue(query.CountryId))
-                .Value.ToCountryDto();
+            CountryId targetId = CountryId.FromValue(query.CountryId);
 
-            return Task.FromResult(ErrorOrFactory.From(new GetCountryResponse(country)));
+            Country country = await dbContext.Countries
+                .Where(c => c.Id == targetId)
+                .Select(c => c.ToCountryDto())
+                .FirstAsync(cancellationToken);
+
+            return ErrorOrFactory.From(new GetCountryResponse(country));
         }
     }
 

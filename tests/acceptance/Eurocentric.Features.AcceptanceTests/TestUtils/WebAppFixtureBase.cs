@@ -1,9 +1,11 @@
 using Eurocentric.Features.Shared.Security;
+using Eurocentric.Infrastructure.EfCore;
 using Eurocentric.WebApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RestSharp;
@@ -82,6 +84,8 @@ public abstract class WebAppFixtureBase : WebApplicationFactory<IWebAppAssemblyM
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
     {
+        ConfigureAppDbContextUsingDbContainerConnectionString(services);
+        MigrateDb(services);
         ConfigureTestApiKeys(services);
         ConfigureRestClient(services);
     });
@@ -100,10 +104,28 @@ public abstract class WebAppFixtureBase : WebApplicationFactory<IWebAppAssemblyM
             configureSerialization: config => config.UseSystemTextJson(jsonOptions.Value.SerializerOptions));
     });
 
+    private void ConfigureAppDbContextUsingDbContainerConnectionString(IServiceCollection services)
+    {
+        if (services.SingleOrDefault(serviceDescriptor =>
+                serviceDescriptor.ServiceType == typeof(DbContextOptions<AppDbContext>)) is { } descriptor)
+        {
+            services.Remove(descriptor);
+        }
+
+        services.AddAppDbContext(DbConnectionString);
+    }
+
     private static void ConfigureTestApiKeys(IServiceCollection services) =>
         services.Configure<ApiKeySecurityOptions>(options =>
         {
             options.SecretApiKey = TestApiKeys.Secret;
             options.DemoApiKey = TestApiKeys.Demo;
         });
+
+    private static void MigrateDb(IServiceCollection services)
+    {
+        using IServiceScope scope = services.BuildServiceProvider().CreateScope();
+        using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.Database.Migrate();
+    }
 }

@@ -1,4 +1,6 @@
+using Eurocentric.Infrastructure.EfCore;
 using Eurocentric.Infrastructure.FakeRepositories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Infrastructure;
@@ -13,10 +15,12 @@ public static class DependencyInjection
     ///     descriptor collection.
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
+    /// <param name="configuration">Contains configuration properties for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddFakeDataRepositories();
+        services.AddEfCore(configuration)
+            .AddFakeDataRepositories();
 
         return services;
     }

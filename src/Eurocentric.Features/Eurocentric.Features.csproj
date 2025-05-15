@@ -6,6 +6,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App"/>
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.Features.AcceptanceTests"/>
     <InternalsVisibleTo Include="Eurocentric.Features.ArchitectureTests"/>
     <InternalsVisibleTo Include="Eurocentric.Features.UnitTests"/>
   </ItemGroup>

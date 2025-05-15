@@ -17,6 +17,7 @@ public class InfrastructureArchitectureTests
     public void Public_non_abstract_classes_should_be_sealed() => Classes()
         .That().ArePublic()
         .And().AreNotAbstract()
+        .And().DoNotResideInNamespace("Eurocentric.Infrastructure.EfCore.Migrations")
         .Should()
         .BeSealed()
         .Check(Architecture);
