@@ -45,4 +45,15 @@ public sealed class AdminApiV1Driver
 
         return new AdminApiV1Driver(client, routePrefix);
     }
+
+    public async Task<ResponseOrProblem<GetCountriesResponse>> GetAllCountriesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        RestRequest request = new("/admin/api/v{apiVersion}/countries");
+
+        request.UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion);
+
+        return await _client.SendRequestAsync<GetCountriesResponse>(request, cancellationToken);
+    }
 }

@@ -26,6 +26,7 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
         v1Group.MapGetCountry()
+            .MapGetCountries()
             .MapCreateCountry();
     }
 }

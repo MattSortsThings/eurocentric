@@ -70,15 +70,7 @@ public sealed class GetCountryTests : AcceptanceTestBase
 
         private protected override Func<Task<ResponseOrProblem<GetCountryResponse>>> SendMyRequest { get; set; } = null!;
 
-        public async Task Given_I_have_created_a_country()
-        {
-            CreateCountryRequest requestBody = new() { CountryCode = "GB", CountryName = "CountryName" };
-
-            ResponseOrProblem<CreateCountryResponse> responseOrProblem =
-                await _driver.CreateCountryAsync(requestBody, TestContext.Current.CancellationToken);
-
-            MyCountry = responseOrProblem.AsT0.Data!.Country;
-        }
+        public async Task Given_I_have_created_a_country() => MyCountry = await CreateCountryAsync("GB");
 
         public void Given_I_want_to_retrieve_my_country_by_its_ID()
         {
@@ -102,6 +94,15 @@ public sealed class GetCountryTests : AcceptanceTestBase
 
             Assert.Contains(ProblemDetails.Extensions,
                 kvp => kvp is { Key: "countryId", Value: JsonElement j } && j.GetGuid() == MyCountry!.Id);
+        }
+
+        private async Task<Country> CreateCountryAsync(string countryCode)
+        {
+            CreateCountryRequest requestBody = new() { CountryCode = countryCode, CountryName = countryCode.ToCountryName() };
+
+            ResponseOrProblem<CreateCountryResponse> responseOrProblem = await _driver.CreateCountryAsync(requestBody);
+
+            return responseOrProblem.AsT0.Data!.Country;
         }
     }
 
