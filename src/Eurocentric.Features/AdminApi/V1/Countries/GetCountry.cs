@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Domain.Countries;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Countries.Common;
@@ -44,12 +45,12 @@ internal static class GetCountry
         {
             CountryId targetId = CountryId.FromValue(query.CountryId);
 
-            Country country = await dbContext.Countries
+            Country? country = await dbContext.Countries
                 .Where(c => c.Id == targetId)
                 .Select(c => c.ToCountryDto())
-                .FirstAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
 
-            return ErrorOrFactory.From(new GetCountryResponse(country));
+            return country is not null ? new GetCountryResponse(country) : CountryErrors.CountryNotFound(targetId);
         }
     }
 
