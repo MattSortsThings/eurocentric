@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Infrastructure.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250515070316_Country_Aggregate")]
+    [Migration("20250517150209_Country_Aggregate")]
     partial class Country_Aggregate
     {
         /// <inheritdoc />
@@ -49,7 +49,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(200)")
-                                .HasColumnName("name");
+                                .HasColumnName("country_name");
                         });
 
                     b.HasKey("Id")
@@ -82,7 +82,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
                             b1.Property<string>("Status")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(20)")
-                                .HasColumnName("status");
+                                .HasColumnName("contest_status");
 
                             b1.HasKey("Id")
                                 .HasName("pk_country_contest_memo");
@@ -93,7 +93,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
 
                             b1.ToTable("country_contest_memo", null, t =>
                                 {
-                                    t.HasCheckConstraint("ck_country_contest_memo_status_enum", "[status] IN (N'Initialized', N'InProgress', N'Completed')");
+                                    t.HasCheckConstraint("ck_country_contest_memo_contest_status_enum", "[contest_status] IN (N'Initialized', N'InProgress', N'Completed')");
                                 });
 
                             b1.WithOwner()

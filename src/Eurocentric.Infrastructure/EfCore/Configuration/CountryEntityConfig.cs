@@ -42,7 +42,7 @@ internal sealed class CountryEntityConfig : IEntityTypeConfiguration<Country>
 
         builder.Property(countryName => countryName.Value)
             .IsRequired()
-            .HasColumnName("name")
+            .HasColumnName("country_name")
             .HasColumnType("nvarchar(200)");
     }
 
@@ -68,6 +68,7 @@ internal sealed class CountryEntityConfig : IEntityTypeConfiguration<Country>
 
         builder.Property(contestMemo => contestMemo.Status)
             .IsRequired()
+            .HasColumnName("contest_status")
             .HasColumnType("nvarchar(20)")
             .HasConversion<string>();
 

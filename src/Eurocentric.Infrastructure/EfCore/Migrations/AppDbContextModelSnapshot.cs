@@ -46,7 +46,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(200)")
-                                .HasColumnName("name");
+                                .HasColumnName("country_name");
                         });
 
                     b.HasKey("Id")
@@ -79,7 +79,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
                             b1.Property<string>("Status")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(20)")
-                                .HasColumnName("status");
+                                .HasColumnName("contest_status");
 
                             b1.HasKey("Id")
                                 .HasName("pk_country_contest_memo");
@@ -90,7 +90,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
 
                             b1.ToTable("country_contest_memo", null, t =>
                                 {
-                                    t.HasCheckConstraint("CK_country_contest_memo_status_Enum", "[status] IN (N'Initialized', N'InProgress', N'Completed')");
+                                    t.HasCheckConstraint("CK_country_contest_memo_contest_status_Enum", "[contest_status] IN (N'Initialized', N'InProgress', N'Completed')");
                                 });
 
                             b1.WithOwner()

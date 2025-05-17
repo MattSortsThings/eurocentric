@@ -17,7 +17,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     country_code = table.Column<string>(type: "nchar(2)", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(200)", nullable: false)
+                    country_name = table.Column<string>(type: "nvarchar(200)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,13 +32,13 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     contest_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    contest_status = table.Column<string>(type: "nvarchar(20)", nullable: false),
                     country_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_country_contest_memo", x => x.id);
-                    table.CheckConstraint("ck_country_contest_memo_status_enum", "[status] IN (N'Initialized', N'InProgress', N'Completed')");
+                    table.CheckConstraint("ck_country_contest_memo_contest_status_enum", "[contest_status] IN (N'Initialized', N'InProgress', N'Completed')");
                     table.ForeignKey(
                         name: "fk_country_contest_memo_country_country_id",
                         column: x => x.country_id,
@@ -53,12 +53,10 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
                 columns: ["country_id", "contest_id"],
                 unique: true);
 
-            migrationBuilder.CreateIndex(
-                name: "ix_country_country_code",
+            migrationBuilder.CreateIndex(name: "ix_country_country_code",
                 table: "country",
                 column: "country_code",
-                unique: true
-            );
+                unique: true);
         }
 
         /// <inheritdoc />
