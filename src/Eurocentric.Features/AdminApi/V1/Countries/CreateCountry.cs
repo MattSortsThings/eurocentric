@@ -25,7 +25,7 @@ public sealed record CreateCountryRequest : IExampleProvider<CreateCountryReques
 
     public required string CountryName { get; init; }
 
-    public static CreateCountryRequest CreateExample() => new() { CountryCode = "GB", CountryName = "United Kingdom" };
+    public static CreateCountryRequest CreateExample() => new() { CountryCode = "AL", CountryName = "Albania" };
 }
 
 public sealed record CreateCountryResponse(Country Country) : IExampleProvider<CreateCountryResponse>
