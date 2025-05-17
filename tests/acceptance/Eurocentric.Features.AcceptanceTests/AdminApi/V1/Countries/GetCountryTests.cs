@@ -22,7 +22,8 @@ public sealed class GetCountryTests : AcceptanceTestBase
     [Fact]
     public async Task Should_be_able_to_retrieve_a_country_by_its_ID()
     {
-        AdminActor admin = new(CreateAdminApiV1Driver(), new WebAppBackdoor(Sut));
+        AdminActor admin = AdminActor.WithDriverAndBackdoor(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion),
+            new WebAppBackdoor(Sut));
 
         // Given
         await admin.Given_I_have_created_a_country();
@@ -39,7 +40,8 @@ public sealed class GetCountryTests : AcceptanceTestBase
     [Fact]
     public async Task Should_be_unable_to_retrieve_a_non_existent_country_by_its_ID()
     {
-        AdminActor admin = new(CreateAdminApiV1Driver(), new WebAppBackdoor(Sut));
+        AdminActor admin = AdminActor.WithDriverAndBackdoor(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion),
+            new WebAppBackdoor(Sut));
 
         // Given
         await admin.Given_I_have_created_a_country();
@@ -62,7 +64,7 @@ public sealed class GetCountryTests : AcceptanceTestBase
         private readonly WebAppBackdoor _backdoor;
         private readonly AdminApiV1Driver _driver;
 
-        public AdminActor(AdminApiV1Driver driver, WebAppBackdoor backdoor)
+        private AdminActor(AdminApiV1Driver driver, WebAppBackdoor backdoor)
         {
             _backdoor = backdoor;
             _driver = driver;
@@ -106,6 +108,9 @@ public sealed class GetCountryTests : AcceptanceTestBase
 
             return responseOrProblem.AsT0.Data!.Country;
         }
+
+        public static AdminActor WithDriverAndBackdoor(AdminApiV1Driver driver, WebAppBackdoor backdoor) =>
+            new(driver, backdoor);
     }
 
     private sealed class WebAppBackdoor(WebAppFixture webAppFixture)

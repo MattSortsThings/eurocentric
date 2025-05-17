@@ -21,7 +21,4 @@ public abstract class AcceptanceTestBase : IDisposable
         Sut.Reset();
         GC.SuppressFinalize(this);
     }
-
-    private protected AdminApiV1Driver CreateAdminApiV1Driver() =>
-        AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion);
 }

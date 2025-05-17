@@ -18,7 +18,7 @@ public sealed class GetCountriesTests : AcceptanceTestBase
     [Fact]
     public async Task Should_be_able_to_retrieve_all_existing_countries_in_country_code_order()
     {
-        AdminActor admin = new(CreateAdminApiV1Driver());
+        AdminActor admin = AdminActor.WithDriver(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion));
 
         // Given
         await admin.Given_I_have_created_the_countries("AT", "FI", "BE", "XX", "GB");
@@ -35,7 +35,7 @@ public sealed class GetCountriesTests : AcceptanceTestBase
     [Fact]
     public async Task Should_be_able_to_retrieve_an_empty_list_when_no_countries_exist()
     {
-        AdminActor admin = new(CreateAdminApiV1Driver());
+        AdminActor admin = AdminActor.WithDriver(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion));
 
         // Given
         admin.Given_I_want_to_retrieve_all_existing_countries();
@@ -52,7 +52,7 @@ public sealed class GetCountriesTests : AcceptanceTestBase
     {
         private readonly AdminApiV1Driver _driver;
 
-        public AdminActor(AdminApiV1Driver driver)
+        private AdminActor(AdminApiV1Driver driver)
         {
             _driver = driver;
         }
@@ -95,5 +95,7 @@ public sealed class GetCountriesTests : AcceptanceTestBase
 
             return responseOrProblem.AsT0.Data!.Country;
         }
+
+        public static AdminActor WithDriver(AdminApiV1Driver driver) => new(driver);
     }
 }

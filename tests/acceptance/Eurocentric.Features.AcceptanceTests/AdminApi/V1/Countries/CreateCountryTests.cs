@@ -21,7 +21,7 @@ public sealed class CreateCountryTests : AcceptanceTestBase
     [InlineData("XX", "Rest of the World")]
     public async Task Should_be_able_to_create_a_country(string countryCode, string countryName)
     {
-        AdminActor admin = new(CreateAdminApiV1Driver());
+        AdminActor admin = AdminActor.WithDriver(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion));
 
         // Given
         admin.Given_I_want_to_create_a_country(countryCode: countryCode, countryName: countryName);
@@ -38,7 +38,7 @@ public sealed class CreateCountryTests : AcceptanceTestBase
     [Fact]
     public async Task Should_be_unable_to_create_a_country_with_an_illegal_country_code_value()
     {
-        AdminActor admin = new(CreateAdminApiV1Driver());
+        AdminActor admin = AdminActor.WithDriver(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion));
         const string illegalCountryCode = "11";
 
         // Given
@@ -58,7 +58,7 @@ public sealed class CreateCountryTests : AcceptanceTestBase
     [Fact]
     public async Task Should_be_unable_to_create_a_country_with_an_illegal_country_name_value()
     {
-        AdminActor admin = new(CreateAdminApiV1Driver());
+        AdminActor admin = AdminActor.WithDriver(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion));
         const string illegalCountryName = "";
 
         // Given
@@ -78,7 +78,7 @@ public sealed class CreateCountryTests : AcceptanceTestBase
     [Fact]
     public async Task Should_be_unable_to_create_a_country_with_a_non_unique_country_code()
     {
-        AdminActor admin = new(CreateAdminApiV1Driver());
+        AdminActor admin = AdminActor.WithDriver(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion));
         const string duplicateCountryCode = "GB";
 
         // Given
@@ -100,7 +100,7 @@ public sealed class CreateCountryTests : AcceptanceTestBase
     {
         private readonly AdminApiV1Driver _driver;
 
-        public AdminActor(AdminApiV1Driver driver)
+        private AdminActor(AdminApiV1Driver driver)
         {
             _driver = driver;
         }
@@ -152,5 +152,7 @@ public sealed class CreateCountryTests : AcceptanceTestBase
 
             return responseOrProblem.AsT0.Data!.Country;
         }
+
+        public static AdminActor WithDriver(AdminApiV1Driver driver) => new(driver);
     }
 }
