@@ -12,11 +12,16 @@ public abstract class AcceptanceTestBase : IDisposable
 
     private protected WebAppFixture Sut { get; }
 
+    private protected abstract int ApiMajorVersion { get; }
+
+    private protected abstract int ApiMinorVersion { get; }
+
     public void Dispose()
     {
         Sut.Reset();
         GC.SuppressFinalize(this);
     }
 
-    private protected abstract AdminApiV1Driver CreateAdminApiV1Driver();
+    private protected AdminApiV1Driver CreateAdminApiV1Driver() =>
+        AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion);
 }

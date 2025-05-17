@@ -15,6 +15,10 @@ public sealed class GetCountryTests : AcceptanceTestBase
 {
     public GetCountryTests(WebAppFixture webAppFixture) : base(webAppFixture) { }
 
+    private protected override int ApiMajorVersion => 1;
+
+    private protected override int ApiMinorVersion => 0;
+
     [Fact]
     public async Task Should_be_able_to_retrieve_a_country_by_its_ID()
     {
@@ -52,8 +56,6 @@ public sealed class GetCountryTests : AcceptanceTestBase
             detail: "No country exists with the provided country ID.");
         admin.Then_the_problem_details_extensions_should_contain_my_country_ID();
     }
-
-    private protected override AdminApiV1Driver CreateAdminApiV1Driver() => AdminApiV1Driver.Create(Sut, 1, 0);
 
     private sealed class AdminActor : ActorWithResponse<GetCountryResponse>
     {

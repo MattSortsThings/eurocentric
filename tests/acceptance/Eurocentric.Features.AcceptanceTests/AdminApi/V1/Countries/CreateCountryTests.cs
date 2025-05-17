@@ -11,6 +11,10 @@ public sealed class CreateCountryTests : AcceptanceTestBase
 {
     public CreateCountryTests(WebAppFixture webAppFixture) : base(webAppFixture) { }
 
+    private protected override int ApiMajorVersion => 1;
+
+    private protected override int ApiMinorVersion => 0;
+
     [Theory]
     [InlineData("AT", "Austria")]
     [InlineData("BA", "Bosnia & Herzegovina")]
@@ -91,8 +95,6 @@ public sealed class CreateCountryTests : AcceptanceTestBase
             detail: "Country already exists with the provided country code.");
         admin.Then_the_problem_details_extensions_should_contain("countryCode", duplicateCountryCode);
     }
-
-    private protected override AdminApiV1Driver CreateAdminApiV1Driver() => AdminApiV1Driver.Create(Sut, 1, 0);
 
     private sealed class AdminActor : ActorWithResponse<CreateCountryResponse>
     {

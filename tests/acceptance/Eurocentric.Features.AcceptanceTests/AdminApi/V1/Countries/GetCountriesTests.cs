@@ -11,6 +11,10 @@ public sealed class GetCountriesTests : AcceptanceTestBase
 {
     public GetCountriesTests(WebAppFixture webAppFixture) : base(webAppFixture) { }
 
+    private protected override int ApiMajorVersion => 1;
+
+    private protected override int ApiMinorVersion => 0;
+
     [Fact]
     public async Task Should_be_able_to_retrieve_all_existing_countries_in_country_code_order()
     {
@@ -43,8 +47,6 @@ public sealed class GetCountriesTests : AcceptanceTestBase
         admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
         admin.Then_the_retrieved_countries_should_be_an_empty_list();
     }
-
-    private protected override AdminApiV1Driver CreateAdminApiV1Driver() => AdminApiV1Driver.Create(Sut, 1, 0);
 
     private sealed class AdminActor : ActorWithResponse<GetCountriesResponse>
     {
