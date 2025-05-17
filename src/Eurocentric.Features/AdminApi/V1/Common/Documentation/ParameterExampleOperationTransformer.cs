@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.OpenApi.Any;
 
@@ -8,7 +9,8 @@ internal sealed class ParameterExampleOperationTransformer : BaseParameterExampl
     private protected override IReadOnlyDictionary<string, IOpenApiAny> ParameterExamples { get; } =
         new Dictionary<string, IOpenApiAny>
         {
-            ["countryId"] = new OpenApiString("13008a45-7363-4065-bbdb-59643f975903"),
-            ["contestId"] = new OpenApiString("ff0c1d46-8031-42e8-8b7d-d33552623957")
+            ["broadcastId"] = new OpenApiString(ExampleValues.BroadcastId.ToString()),
+            ["contestId"] = new OpenApiString(ExampleValues.ContestId.ToString()),
+            ["countryId"] = new OpenApiString(ExampleValues.CountryId.ToString())
         };
 }

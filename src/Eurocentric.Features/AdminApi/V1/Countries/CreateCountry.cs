@@ -35,12 +35,10 @@ public sealed record CreateCountryResponse(Country Country) : IExampleProvider<C
 
 internal static class CreateCountry
 {
-    private const string RouteId = "AdminApi.V1.CreateCountry";
-
     internal static IEndpointRouteBuilder MapCreateCountry(this IEndpointRouteBuilder apiVersionGroup)
     {
         apiVersionGroup.MapPost("countries", Endpoint.HandleAsync)
-            .WithName(RouteId)
+            .WithName(RouteIds.Countries.CreateCountry)
             .HasApiVersion(1, 0)
             .WithSummary("Create a country")
             .WithDescription("Creates a new country.")
@@ -87,7 +85,7 @@ internal static class CreateCountry
 
         private static CreatedAtRoute<CreateCountryResponse> MapToCreatedAtRoute(CreateCountryResponse response) =>
             TypedResults.CreatedAtRoute(response,
-                GetCountry.RouteId,
+                RouteIds.Countries.GetCountry,
                 new RouteValueDictionary { { "countryId", response.Country.Id } });
     }
 }

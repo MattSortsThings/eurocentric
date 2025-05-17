@@ -21,12 +21,10 @@ public sealed record GetCountryResponse(Country Country);
 
 internal static class GetCountry
 {
-    internal const string RouteId = "AdminApi.V1.GetCountry";
-
     internal static IEndpointRouteBuilder MapGetCountry(this IEndpointRouteBuilder apiVersionGroup)
     {
         apiVersionGroup.MapGet("countries/{countryId:guid}", Endpoint.HandleAsync)
-            .WithName(RouteId)
+            .WithName(RouteIds.Countries.GetCountry)
             .HasApiVersion(1, 0)
             .WithSummary("Get a country")
             .WithDescription("Retrieves a single country.")

@@ -17,12 +17,10 @@ public sealed record GetCountriesResponse(Country[] Countries);
 
 internal static class GetCountries
 {
-    private const string RouteId = "AdminApi.V1.GetCountries";
-
     internal static IEndpointRouteBuilder MapGetCountries(this IEndpointRouteBuilder apiVersionGroup)
     {
         apiVersionGroup.MapGet("countries", Endpoint.HandleAsync)
-            .WithName(RouteId)
+            .WithName(RouteIds.Countries.GetCountries)
             .HasApiVersion(1, 0)
             .WithSummary("Get all countries")
             .WithDescription("Retrieves all existing countries, ordered by country code.")
