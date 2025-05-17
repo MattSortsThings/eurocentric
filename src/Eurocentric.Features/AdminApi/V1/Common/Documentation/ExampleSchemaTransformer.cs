@@ -1,5 +1,5 @@
+using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Countries;
-using Eurocentric.Features.AdminApi.V1.Countries.Common;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.OpenApi.Any;
 

@@ -2,7 +2,7 @@ using ErrorOr;
 using Eurocentric.Domain.Countries;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
-using Eurocentric.Features.AdminApi.V1.Countries.Common;
+using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
-using CountryDto = Eurocentric.Features.AdminApi.V1.Countries.Common.Country;
+using Country = Eurocentric.Features.AdminApi.V1.Common.Dtos.Country;
 using DomainCountry = Eurocentric.Domain.Countries.Country;
 
 namespace Eurocentric.Features.AdminApi.V1.Countries;
@@ -28,9 +28,9 @@ public sealed record CreateCountryRequest : IExampleProvider<CreateCountryReques
     public static CreateCountryRequest CreateExample() => new() { CountryCode = "GB", CountryName = "United Kingdom" };
 }
 
-public sealed record CreateCountryResponse(CountryDto Country) : IExampleProvider<CreateCountryResponse>
+public sealed record CreateCountryResponse(Country Country) : IExampleProvider<CreateCountryResponse>
 {
-    public static CreateCountryResponse CreateExample() => new(CountryDto.CreateExample() with { ContestMemos = [] });
+    public static CreateCountryResponse CreateExample() => new(Country.CreateExample() with { ContestMemos = [] });
 }
 
 internal static class CreateCountry

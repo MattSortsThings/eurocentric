@@ -1,4 +1,4 @@
-using Eurocentric.Features.AdminApi.V1.Countries.Common;
+using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries.TestUtils;
 

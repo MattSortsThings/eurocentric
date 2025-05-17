@@ -131,4 +131,13 @@ public class FeaturesArchitectureTests
             .Should().BeInternal()
             .AndShould().HaveNameEndingWith("SchemaTransformer")
             .Check(Architecture);
+
+    [Fact]
+    public void Non_abstract_classes_in_Dtos_namespace_should_be_public_immutable_records() => Classes()
+        .That().AreNotAbstract()
+        .And().HaveFullNameContaining(".Dtos.")
+        .Should().BePublic()
+        .AndShould().BeImmutable()
+        .AndShould().BeRecord()
+        .Check(Architecture);
 }

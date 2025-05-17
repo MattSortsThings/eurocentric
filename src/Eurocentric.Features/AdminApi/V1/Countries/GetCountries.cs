@@ -1,6 +1,6 @@
 using ErrorOr;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
-using Eurocentric.Features.AdminApi.V1.Countries.Common;
+using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.EfCore;

@@ -2,8 +2,8 @@ using System.Net;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
+using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Countries;
-using Eurocentric.Features.AdminApi.V1.Countries.Common;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries;
 

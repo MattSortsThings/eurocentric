@@ -1,6 +1,6 @@
 using Eurocentric.Features.Shared.Documentation;
 
-namespace Eurocentric.Features.AdminApi.V1.Countries.Common;
+namespace Eurocentric.Features.AdminApi.V1.Common.Dtos;
 
 public sealed record Country(
     Guid Id,

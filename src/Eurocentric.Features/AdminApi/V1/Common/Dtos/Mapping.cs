@@ -1,6 +1,6 @@
 using Eurocentric.Features.AdminApi.V1.Common.Enums;
 
-namespace Eurocentric.Features.AdminApi.V1.Countries.Common;
+namespace Eurocentric.Features.AdminApi.V1.Common.Dtos;
 
 internal static class Mapping
 {
