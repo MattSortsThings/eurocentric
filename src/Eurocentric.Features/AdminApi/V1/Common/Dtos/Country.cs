@@ -16,8 +16,8 @@ public sealed record Country : IExampleProvider<Country>
     public static Country CreateExample() => new()
     {
         Id = ExampleValues.CountryId,
-        CountryCode = "AL",
-        Name = "Albania",
+        CountryCode = "AT",
+        Name = "Austria",
         ContestMemos =
         [
             ContestMemo.CreateExample()

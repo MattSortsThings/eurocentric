@@ -10,8 +10,12 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
     private protected override IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; } =
         new Dictionary<Type, IOpenApiAny>
         {
+            [typeof(BroadcastMemo)] = BroadcastMemo.CreateExample().ToOpenApiAny(),
+            [typeof(Contest)] = Contest.CreateExample().ToOpenApiAny(),
+            [typeof(ContestMemo)] = ContestMemo.CreateExample().ToOpenApiAny(),
             [typeof(Country)] = Country.CreateExample().ToOpenApiAny(),
             [typeof(CreateCountryRequest)] = CreateCountryRequest.CreateExample().ToOpenApiAny(),
-            [typeof(CreateCountryResponse)] = CreateCountryResponse.CreateExample().ToOpenApiAny()
+            [typeof(CreateCountryResponse)] = CreateCountryResponse.CreateExample().ToOpenApiAny(),
+            [typeof(Participant)] = Participant.CreateExample().ToOpenApiAny()
         };
 }
