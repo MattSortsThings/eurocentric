@@ -1,4 +1,5 @@
 using Eurocentric.Domain.Abstractions;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -41,42 +42,60 @@ public sealed class Country : AggregateRoot<CountryId>
         .AsReadOnly();
 
     /// <summary>
-    ///     Adds the specified <see cref="ContestMemo" /> value to this instance's <see cref="ContestMemos" /> collection,
-    ///     replacing any existing item with the same <see cref="ContestMemo.ContestId" /> value.
+    ///     Adds a new <see cref="ContestMemo" /> to this instance's <see cref="ContestMemos" /> collection, with the
+    ///     provided <see cref="ContestMemo.ContestId" /> value and a <see cref="ContestMemo.Status" /> value of
+    ///     <see cref="ContestStatus.Initialized" />.
     /// </summary>
-    /// <param name="contestMemo">The memo to be added.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="contestMemo" /> is <see langword="null" />.</exception>
-    public void AddOrReplaceMemo(ContestMemo contestMemo)
+    /// <param name="contestId">Identifies the contest aggregate.</param>
+    /// <exception cref="ArgumentException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance contains a <see cref="ContestMemo" /> instance with a
+    ///     <see cref="ContestMemo.ContestId" /> value equal to the <paramref name="contestId" /> argument.
+    /// </exception>
+    public void AddMemo(ContestId contestId)
     {
-        ArgumentNullException.ThrowIfNull(contestMemo);
+        ArgumentNullException.ThrowIfNull(contestId);
 
-        if (_contestMemos.FirstOrDefault(memo => memo.ContestId == contestMemo.ContestId) is { } existingMemo)
+        if (_contestMemos.Any(memo => memo.ContestId == contestId))
         {
-            _contestMemos.Remove(existingMemo);
+            throw new ArgumentException("ContestMemos collection contains item with the provided ContestId value.");
         }
 
-        _contestMemos.Add(contestMemo);
+        _contestMemos.Add(new ContestMemo(contestId, ContestStatus.Initialized));
     }
 
     /// <summary>
-    ///     Removes the memo with the provided <see cref="ContestMemo.ContestId" /> value from this instance's
-    ///     <see cref="ContestMemos" /> collection.
+    ///     Replaces an existing <see cref="ContestMemo" /> in this instance's <see cref="ContestMemos" /> collection.
     /// </summary>
-    /// <param name="contestId">The <see cref="ContestMemo.ContestId" /> value of the memo to be removed.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
-    /// <exception cref="ArgumentException">No memo matches the <paramref name="contestId" /> parameter.</exception>
+    /// <param name="contestId">Identifies the contest aggregate.</param>
+    /// <param name="status">The current status of the contest aggregate.</param>
+    /// <exception cref="ArgumentException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance contains no <see cref="ContestMemo" /> instance with a
+    ///     <see cref="ContestMemo.ContestId" /> value equal to the <paramref name="contestId" /> argument.
+    /// </exception>
+    public void ReplaceMemo(ContestId contestId, ContestStatus status)
+    {
+        ArgumentNullException.ThrowIfNull(contestId);
+
+        ContestMemo removed = RemoveExistingMemoOrThrowIfNotFound(contestId);
+        _contestMemos.Add(new ContestMemo(removed.ContestId, status));
+    }
+
+    /// <summary>
+    ///     Removes an existing <see cref="ContestMemo" /> from this instance's <see cref="ContestMemos" /> collection.
+    /// </summary>
+    /// <param name="contestId">Identifies the contest aggregate.</param>
+    /// <exception cref="ArgumentException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance contains no <see cref="ContestMemo" /> instance with a
+    ///     <see cref="ContestMemo.ContestId" /> value equal to the <paramref name="contestId" /> argument.
+    /// </exception>
     public void RemoveMemo(ContestId contestId)
     {
         ArgumentNullException.ThrowIfNull(contestId);
 
-        if (_contestMemos.FirstOrDefault(memo => memo.ContestId == contestId) is { } existingMemo)
-        {
-            _contestMemos.Remove(existingMemo);
-        }
-        else
-        {
-            throw new ArgumentException($"No contest memo present with contest ID {contestId.Value}.");
-        }
+        _ = RemoveExistingMemoOrThrowIfNotFound(contestId);
     }
 
     /// <summary>
@@ -84,4 +103,16 @@ public sealed class Country : AggregateRoot<CountryId>
     /// </summary>
     /// <returns>A new <see cref="CountryBuilder" /> instance.</returns>
     public static CountryBuilder Create() => new();
+
+    private ContestMemo RemoveExistingMemoOrThrowIfNotFound(ContestId contestId)
+    {
+        if (_contestMemos.SingleOrDefault(memo => memo.ContestId == contestId) is not { } existing)
+        {
+            throw new ArgumentException("ContestMemos collection contains no item with the provided ContestId value.");
+        }
+
+        _contestMemos.Remove(existing);
+
+        return existing;
+    }
 }
