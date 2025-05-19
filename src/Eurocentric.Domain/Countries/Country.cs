@@ -37,7 +37,7 @@ public sealed class Country : AggregateRoot<CountryId>
     ///     Gets a list of memoized contest aggregates in which the country is a participant, ordered by contest ID value.
     /// </summary>
     public IReadOnlyList<ContestMemo> ContestMemos => _contestMemos
-        .OrderBy(memo => memo.ContestId.Value)
+        .OrderBy(memo => memo.ContestId)
         .ToArray()
         .AsReadOnly();
 

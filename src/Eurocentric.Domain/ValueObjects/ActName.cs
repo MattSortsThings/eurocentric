@@ -6,7 +6,7 @@ namespace Eurocentric.Domain.ValueObjects;
 /// <summary>
 ///     Contains an act's performing name.
 /// </summary>
-public sealed class ActName : ValueObject
+public sealed class ActName : ValueObject, IComparable<ActName>
 {
     private const int MaxPermittedLengthInChars = 200;
 
@@ -19,6 +19,17 @@ public sealed class ActName : ValueObject
     ///     Gets the underlying string value of this instance.
     /// </summary>
     public string Value { get; }
+
+    /// <inheritdoc />
+    public int CompareTo(ActName? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+
+        return other is null ? 1 : string.Compare(Value, other.Value, StringComparison.Ordinal);
+    }
 
     /// <summary>
     ///     Creates and returns a new <see cref="ActName" /> instance with the provided <see cref="Value" />.

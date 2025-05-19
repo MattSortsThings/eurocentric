@@ -37,7 +37,7 @@ internal static class GetCountries
         public async Task<ErrorOr<GetCountriesResponse>> OnHandle(Query request, CancellationToken cancellationToken)
         {
             Country[] countries = await dbContext.Countries.AsNoTracking()
-                .OrderBy(country => country.CountryCode.Value)
+                .OrderBy(x => x.CountryCode)
                 .Select(country => country.ToCountryDto())
                 .ToArrayAsync(cancellationToken);
 

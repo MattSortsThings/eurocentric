@@ -6,7 +6,7 @@ namespace Eurocentric.Domain.ValueObjects;
 /// <summary>
 ///     Contains a city's short UK English name.
 /// </summary>
-public sealed class CityName : ValueObject
+public sealed class CityName : ValueObject, IComparable<CityName>
 {
     private const int MaxPermittedLengthInChars = 200;
 
@@ -19,6 +19,17 @@ public sealed class CityName : ValueObject
     ///     Gets the underlying string value of this instance.
     /// </summary>
     public string Value { get; }
+
+    /// <inheritdoc />
+    public int CompareTo(CityName? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+
+        return other is null ? 1 : string.Compare(Value, other.Value, StringComparison.Ordinal);
+    }
 
     /// <summary>
     ///     Creates and returns a new <see cref="CityName" /> instance with the provided <see cref="Value" />.

@@ -5,7 +5,7 @@ namespace Eurocentric.Domain.Identifiers;
 /// <summary>
 ///     Identifies a broadcast aggregate in the system.
 /// </summary>
-public sealed class BroadcastId : ValueObject
+public sealed class BroadcastId : ValueObject, IComparable<BroadcastId>
 {
     private BroadcastId(Guid value)
     {
@@ -16,6 +16,17 @@ public sealed class BroadcastId : ValueObject
     ///     Gets the underlying value of this instance.
     /// </summary>
     public Guid Value { get; }
+
+    /// <inheritdoc />
+    public int CompareTo(BroadcastId? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+
+        return other is null ? 1 : Value.CompareTo(other.Value);
+    }
 
     /// <summary>
     ///     Creates and returns a new <see cref="BroadcastId" /> instance with a random <see cref="Value" />.

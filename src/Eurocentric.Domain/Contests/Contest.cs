@@ -60,7 +60,7 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// </summary>
     public IReadOnlyList<Participant> Participants => _participants
         .OrderBy(participant => participant.Group)
-        .ThenBy(participant => participant.ParticipatingCountryId.Value)
+        .ThenBy(participant => participant.ParticipatingCountryId)
         .ToArray()
         .AsReadOnly();
 

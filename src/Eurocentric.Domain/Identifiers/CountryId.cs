@@ -5,7 +5,7 @@ namespace Eurocentric.Domain.Identifiers;
 /// <summary>
 ///     Identifies a country aggregate in the system.
 /// </summary>
-public sealed class CountryId : ValueObject
+public sealed class CountryId : ValueObject, IComparable<CountryId>
 {
     private CountryId(Guid value)
     {
@@ -16,6 +16,17 @@ public sealed class CountryId : ValueObject
     ///     Gets the underlying value of this instance.
     /// </summary>
     public Guid Value { get; }
+
+    /// <inheritdoc />
+    public int CompareTo(CountryId? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+
+        return other is null ? 1 : Value.CompareTo(other.Value);
+    }
 
     /// <summary>
     ///     Creates and returns a new <see cref="CountryId" /> instance with a random <see cref="Value" />.

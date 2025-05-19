@@ -6,7 +6,7 @@ namespace Eurocentric.Domain.ValueObjects;
 /// <summary>
 ///     Contains the year in which a contest is held.
 /// </summary>
-public sealed class ContestYear : ValueObject
+public sealed class ContestYear : ValueObject, IComparable<ContestYear>
 {
     private const int MinLegalValue = 2016;
     private const int MaxLegalValue = 2050;
@@ -20,6 +20,17 @@ public sealed class ContestYear : ValueObject
     ///     Gets the underlying integer value of this instance.
     /// </summary>
     public int Value { get; }
+
+    /// <inheritdoc />
+    public int CompareTo(ContestYear? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+
+        return other is null ? 1 : Value.CompareTo(other.Value);
+    }
 
     /// <summary>
     ///     Creates and returns a new <see cref="ContestYear" /> instance with the provided <see cref="Value" />.

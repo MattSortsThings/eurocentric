@@ -13,37 +13,27 @@ internal sealed class CountryEntityConfig : IEntityTypeConfiguration<Country>
         builder.ToTable(DbConstants.TableNames.Country);
 
         builder.Property(country => country.Id)
+            .HasConversion(src => src.Value, value => CountryId.FromValue(value))
             .IsRequired()
-            .ValueGeneratedNever()
-            .HasConversion(src => src.Value, value => CountryId.FromValue(value));
+            .ValueGeneratedNever();
 
-        builder.ComplexProperty(country => country.CountryCode, ConfigureAsColumn);
+        builder.Property(country => country.CountryCode)
+            .HasConversion(src => src.Value, value => CountryCode.FromValue(value).Value)
+            .HasMaxLength(2)
+            .IsFixedLength()
+            .IsRequired();
 
-        builder.ComplexProperty(country => country.Name, ConfigureAsColumn);
+        builder.Property(country => country.Name)
+            .HasColumnName("country_name")
+            .HasConversion(src => src.Value, value => CountryName.FromValue(value).Value)
+            .HasMaxLength(200)
+            .IsRequired();
 
         builder.OwnsMany(country => country.ContestMemos, ConfigureAsTable);
 
         builder.HasKey(country => country.Id).IsClustered();
-    }
 
-    private static void ConfigureAsColumn(ComplexPropertyBuilder<CountryCode> builder)
-    {
-        builder.IsRequired();
-
-        builder.Property(countryCode => countryCode.Value)
-            .IsRequired()
-            .HasColumnName("country_code")
-            .HasColumnType("nchar(2)");
-    }
-
-    private static void ConfigureAsColumn(ComplexPropertyBuilder<CountryName> builder)
-    {
-        builder.IsRequired();
-
-        builder.Property(countryName => countryName.Value)
-            .IsRequired()
-            .HasColumnName("country_name")
-            .HasColumnType("nvarchar(200)");
+        builder.HasAlternateKey(country => country.CountryCode);
     }
 
     private static void ConfigureAsTable(OwnedNavigationBuilder<Country, ContestMemo> builder)
@@ -54,23 +44,23 @@ internal sealed class CountryEntityConfig : IEntityTypeConfiguration<Country>
 
         builder.Property<int>("Id")
             .IsRequired()
-            .ValueGeneratedOnAdd()
-            .UseIdentityColumn(1);
+            .UseIdentityColumn(1)
+            .ValueGeneratedOnAdd();
 
         builder.WithOwner()
             .HasForeignKey("CountryId")
             .HasPrincipalKey(country => country.Id);
 
         builder.Property(contestMemo => contestMemo.ContestId)
+            .HasConversion(src => src.Value, value => ContestId.FromValue(value))
             .IsRequired()
-            .ValueGeneratedNever()
-            .HasConversion(src => src.Value, value => ContestId.FromValue(value));
+            .ValueGeneratedNever();
 
         builder.Property(contestMemo => contestMemo.Status)
-            .IsRequired()
             .HasColumnName("contest_status")
-            .HasColumnType("nvarchar(20)")
-            .HasConversion<string>();
+            .HasConversion<string>()
+            .HasMaxLength(20)
+            .IsRequired();
 
         builder.HasKey("Id");
 

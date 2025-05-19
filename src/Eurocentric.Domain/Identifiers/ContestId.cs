@@ -5,7 +5,7 @@ namespace Eurocentric.Domain.Identifiers;
 /// <summary>
 ///     Identifies a contest aggregate in the system.
 /// </summary>
-public sealed class ContestId : ValueObject
+public sealed class ContestId : ValueObject, IComparable<ContestId>
 {
     private ContestId(Guid value)
     {
@@ -16,6 +16,22 @@ public sealed class ContestId : ValueObject
     ///     Gets the underlying value of this instance.
     /// </summary>
     public Guid Value { get; }
+
+    /// <inheritdoc />
+    public int CompareTo(ContestId? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+
+        if (other is null)
+        {
+            return 1;
+        }
+
+        return Value.CompareTo(other.Value);
+    }
 
     /// <summary>
     ///     Creates and returns a new <see cref="ContestId" /> instance with a random <see cref="Value" />.

@@ -6,7 +6,7 @@ namespace Eurocentric.Domain.ValueObjects;
 /// <summary>
 ///     Contains a country's ISO 3166-1 alpha-2 code.
 /// </summary>
-public sealed class CountryCode : ValueObject
+public sealed class CountryCode : ValueObject, IComparable<CountryCode>
 {
     private const int FixedLengthInChars = 2;
 
@@ -19,6 +19,17 @@ public sealed class CountryCode : ValueObject
     ///     Gets the underlying string value of this instance.
     /// </summary>
     public string Value { get; }
+
+    /// <inheritdoc />
+    public int CompareTo(CountryCode? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+
+        return other is null ? 1 : string.Compare(Value, other.Value, StringComparison.Ordinal);
+    }
 
     /// <summary>
     ///     Creates and returns a new <see cref="CountryCode" /> instance with the provided <see cref="Value" />.
