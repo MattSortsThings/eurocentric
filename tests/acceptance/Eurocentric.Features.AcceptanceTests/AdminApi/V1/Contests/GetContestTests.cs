@@ -1,7 +1,16 @@
 using System.Net;
+using System.Text.Json;
+using Eurocentric.Domain.Contests;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
+using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Contests;
+using Eurocentric.Infrastructure.EfCore;
+using Microsoft.Extensions.DependencyInjection;
+using Contest = Eurocentric.Features.AdminApi.V1.Common.Dtos.Contest;
+using Participant = Eurocentric.Domain.Contests.Participant;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests;
 
@@ -14,12 +23,14 @@ public sealed class GetContestTests : AcceptanceTestBase
     private protected override int ApiMinorVersion => 0;
 
     [Fact]
-    public async Task Should_be_able_to_retrieve_dummy_contest()
+    public async Task Should_be_able_to_retrieve_Liverpool_format_contest()
     {
-        AdminActor admin = AdminActor.WithDriver(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion));
+        AdminActor admin = AdminActor.WithDriverAndBackdoor(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion),
+            new WebAppFixtureBackdoor(Sut));
 
         // Given
-        admin.Given_I_want_to_retrieve_the_contest_with_ID("0c0d09b1-b357-44fb-ae4a-2504341937f2");
+        await admin.Given_I_have_created_a_Liverpool_format_contest();
+        admin.Given_I_want_to_retrieve_my_contest();
 
         // When
         await admin.When_I_send_my_request();
@@ -29,32 +40,174 @@ public sealed class GetContestTests : AcceptanceTestBase
         admin.Then_the_retrieved_contest_should_have_the_target_contest_ID();
     }
 
+    [Fact]
+    public async Task Should_be_able_to_retrieve_Stockholm_format_contest()
+    {
+        AdminActor admin = AdminActor.WithDriverAndBackdoor(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion),
+            new WebAppFixtureBackdoor(Sut));
+
+        // Given
+        await admin.Given_I_have_created_a_Stockholm_format_contest();
+        admin.Given_I_want_to_retrieve_my_contest();
+
+        // When
+        await admin.When_I_send_my_request();
+
+        // Then
+        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_the_retrieved_contest_should_have_the_target_contest_ID();
+    }
+
+    [Fact]
+    public async Task Should_be_unable_to_retrieve_a_non_existent_contest()
+    {
+        AdminActor admin = AdminActor.WithDriverAndBackdoor(AdminApiV1Driver.Create(Sut, ApiMajorVersion, ApiMinorVersion),
+            new WebAppFixtureBackdoor(Sut));
+
+        // Given
+        await admin.Given_I_have_created_a_Liverpool_format_contest();
+        admin.Given_I_want_to_retrieve_my_contest();
+        await admin.Given_I_have_deleted_my_contest();
+
+        // When
+        await admin.When_I_send_my_request();
+
+        // Then
+        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.NotFound);
+        admin.Then_the_problem_details_should_match(status: 404,
+            title: "Contest not found",
+            detail: "No contest exists with the provided contest ID.");
+        admin.Then_the_problem_details_extensions_should_contain_my_contest_ID();
+    }
+
     private sealed class AdminActor : ActorWithResponse<GetContestResponse>
     {
+        private readonly WebAppFixtureBackdoor _backdoor;
         private readonly AdminApiV1Driver _driver;
 
-        private AdminActor(AdminApiV1Driver driver)
+        private AdminActor(WebAppFixtureBackdoor backdoor, AdminApiV1Driver driver)
         {
+            _backdoor = backdoor;
             _driver = driver;
         }
 
-        private Guid TargetContestId { get; set; }
+        private Contest? MyContest { get; set; }
 
         private protected override Func<Task<ResponseOrProblem<GetContestResponse>>> SendMyRequest { get; set; } = null!;
 
-        public void Given_I_want_to_retrieve_the_contest_with_ID(string contestId)
+        public async Task Given_I_have_created_a_Stockholm_format_contest() =>
+            MyContest = await _backdoor.PersistContestAsync(CreateStockholmFormatContest());
+
+        public async Task Given_I_have_created_a_Liverpool_format_contest() =>
+            MyContest = await _backdoor.PersistContestAsync(CreateLiverpoolFormatContest());
+
+        public void Given_I_want_to_retrieve_my_contest()
         {
-            TargetContestId = Guid.Parse(contestId);
-            SendMyRequest = () => _driver.GetContestAsync(TargetContestId, TestContext.Current.CancellationToken);
+            Guid contestId = MyContest!.Id;
+
+            SendMyRequest = () => _driver.GetContestAsync(contestId, TestContext.Current.CancellationToken);
         }
+
+        public void Then_the_problem_details_extensions_should_contain_my_contest_ID()
+        {
+            Assert.NotNull(ProblemDetails);
+
+            Assert.Contains(ProblemDetails.Extensions,
+                kvp => kvp is { Key: "contestId", Value: JsonElement j } && j.GetGuid() == MyContest!.Id);
+        }
+
+        private static StockholmFormatContest CreateStockholmFormatContest() => new(ContestId.Create(DateTimeOffset.UtcNow),
+            ContestYear.FromValue(2022).Value,
+            CityName.FromValue("Turin").Value,
+            [
+                Participant.CreateInGroupOne(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupOne(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupOne(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupTwo(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupTwo(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupTwo(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value
+            ]);
+
+        private static LiverpoolFormatContest CreateLiverpoolFormatContest() => new(ContestId.Create(DateTimeOffset.UtcNow),
+            ContestYear.FromValue(2025).Value,
+            CityName.FromValue("Basel").Value,
+            [
+                Participant.CreateInGroupZero(CountryId.Create(DateTimeOffset.UtcNow)),
+                Participant.CreateInGroupOne(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupOne(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupOne(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupTwo(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupTwo(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value,
+                Participant.CreateInGroupTwo(CountryId.Create(DateTimeOffset.UtcNow),
+                    ActName.FromValue("ActName"),
+                    SongTitle.FromValue("SongTitle")).Value
+            ]);
+
 
         public void Then_the_retrieved_contest_should_have_the_target_contest_ID()
         {
             Assert.NotNull(Response);
+            Assert.NotNull(MyContest);
 
-            Assert.Equal(TargetContestId, Response.Contest.Id);
+            Assert.Equal(MyContest.Id, Response.Contest.Id);
         }
 
-        public static AdminActor WithDriver(AdminApiV1Driver driver) => new(driver);
+        public static AdminActor WithDriverAndBackdoor(AdminApiV1Driver driver, WebAppFixtureBackdoor backdoor) =>
+            new(backdoor, driver);
+
+        public async Task Given_I_have_deleted_my_contest() => await _backdoor.DeleteContestAsync(MyContest!.Id);
+    }
+
+    private sealed class WebAppFixtureBackdoor(WebAppFixture fixture)
+    {
+        public async Task<Contest> PersistContestAsync(Domain.Contests.Contest contest)
+        {
+            Func<IServiceProvider, Task> persist = async sp =>
+            {
+                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
+                dbContext.Contests.Add(contest);
+                await dbContext.SaveChangesAsync();
+            };
+
+            await fixture.ExecuteScopedAsync(persist);
+
+            return contest.ToContestDto();
+        }
+
+        public async Task DeleteContestAsync(Guid contestId)
+        {
+            ContestId targetId = ContestId.FromValue(contestId);
+
+            Func<IServiceProvider, Task> persist = async sp =>
+            {
+                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
+                dbContext.Contests.Remove(dbContext.Contests.First(c => c.Id == targetId));
+                await dbContext.SaveChangesAsync();
+            };
+
+            await fixture.ExecuteScopedAsync(persist);
+        }
     }
 }

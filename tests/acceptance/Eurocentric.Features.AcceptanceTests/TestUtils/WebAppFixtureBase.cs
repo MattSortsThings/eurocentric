@@ -82,6 +82,18 @@ public abstract class WebAppFixtureBase : WebApplicationFactory<IWebAppAssemblyM
         return await action(scope.ServiceProvider);
     }
 
+    protected void EraseAllData()
+    {
+        Action<IServiceProvider> eraseAllData = sp =>
+        {
+            using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
+            dbContext.Contests.ExecuteDelete();
+            dbContext.Countries.ExecuteDelete();
+        };
+
+        ExecuteScoped(eraseAllData);
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
     {
         ConfigureAppDbContextUsingDbContainerConnectionString(services);
