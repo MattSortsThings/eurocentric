@@ -42,7 +42,6 @@ public static class DependencyInjection
                 a.MigrationsHistoryTable(DbConstants.TableNames.EfCoreMigration);
             })
             .UseSnakeCaseNamingConvention()
-            .UseEnumCheckConstraints()
             .UseExceptionProcessor());
 
         return services;

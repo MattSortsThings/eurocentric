@@ -86,7 +86,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
 
                             b1.ToTable("country_contest_memo", null, t =>
                                 {
-                                    t.HasCheckConstraint("CK_country_contest_memo_contest_status_Enum", "[contest_status] IN (N'Initialized', N'InProgress', N'Completed')");
+                                    t.HasCheckConstraint("ck_country_contest_memo_contest_status_enum", "[contest_status] IN (N'Initialized', N'InProgress', N'Completed')");
                                 });
 
                             b1.WithOwner()

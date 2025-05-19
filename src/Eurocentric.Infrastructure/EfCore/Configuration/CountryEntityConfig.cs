@@ -1,4 +1,5 @@
 using Eurocentric.Domain.Countries;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -65,5 +66,11 @@ internal sealed class CountryEntityConfig : IEntityTypeConfiguration<Country>
         builder.HasKey("Id");
 
         builder.HasIndex("CountryId", "ContestId").IsUnique();
+
+        builder.ToTable(AddContestStatusEnumCheckConstraint);
     }
+
+    private static void AddContestStatusEnumCheckConstraint(OwnedNavigationTableBuilder<Country, ContestMemo> builder) =>
+        builder.HasCheckConstraint("ck_country_contest_memo_contest_status_enum",
+            $"[contest_status] IN {EnumHelpers.GetSqlNameListInParentheses<ContestStatus>()}");
 }

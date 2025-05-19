@@ -6,7 +6,6 @@
     <InternalsVisibleTo Include="Eurocentric.Infrastructure.ArchitectureTests"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EFCore.CheckConstraints"/>
     <PackageReference Include="EFCore.NamingConventions"/>
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore"/>

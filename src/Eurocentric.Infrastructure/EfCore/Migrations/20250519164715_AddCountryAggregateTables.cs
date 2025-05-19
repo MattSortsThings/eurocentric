@@ -51,7 +51,7 @@ namespace Eurocentric.Infrastructure.EfCore.Migrations
             migrationBuilder.CreateIndex(
                 name: "ix_country_contest_memo_country_id_contest_id",
                 table: "country_contest_memo",
-                columns: ["country_id", "contest_id"],
+                columns: new[] { "country_id", "contest_id" },
                 unique: true);
         }
 
