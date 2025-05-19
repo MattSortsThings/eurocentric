@@ -27,10 +27,10 @@ public sealed class CountryCodeTests : UnitTestBase
         public void Should_return_true_when_instance_and_other_have_equal_values()
         {
             // Arrange
-            const string sutValue = "AT";
+            const string sharedValue = "AT";
 
-            CountryCode sut = CountryCode.FromValue(sutValue).Value;
-            CountryCode other = CountryCode.FromValue(sutValue).Value;
+            CountryCode sut = CountryCode.FromValue(sharedValue).Value;
+            CountryCode other = CountryCode.FromValue(sharedValue).Value;
 
             // Act
             bool result = sut.Equals(other);

@@ -1,4 +1,7 @@
 using ErrorOr;
+using Eurocentric.Domain.Contests;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.Shared.ErrorHandling;
@@ -9,6 +12,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using Contest = Eurocentric.Features.AdminApi.V1.Common.Dtos.Contest;
+using Participant = Eurocentric.Domain.Contests.Participant;
 
 namespace Eurocentric.Features.AdminApi.V1.Contests;
 
@@ -34,12 +39,68 @@ internal static class GetContest
 
     internal sealed class Handler : IQueryHandler<Query, GetContestResponse>
     {
-        public Task<ErrorOr<GetContestResponse>> OnHandle(Query query, CancellationToken cancellationToken)
+        public async Task<ErrorOr<GetContestResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            Contest contest = Contest.CreateExample() with { Id = query.ContestId };
+            await Task.CompletedTask;
 
-            return Task.FromResult(ErrorOrFactory.From(new GetContestResponse(contest)));
+            Contest contest = char.IsDigit(query.ContestId.ToString()[0])
+                ? CreateLiverpoolFormatContest()
+                : CreateStockholmFormatContest();
+
+            contest = contest with { Id = query.ContestId };
+
+            return ErrorOrFactory.From(new GetContestResponse(contest));
         }
+
+        private static Contest CreateStockholmFormatContest()
+        {
+            List<Participant> participants =
+            [
+                CreateGroupOneParticipant(),
+                CreateGroupOneParticipant(),
+                CreateGroupOneParticipant(),
+                CreateGroupTwoParticipant(),
+                CreateGroupTwoParticipant(),
+                CreateGroupTwoParticipant()
+            ];
+
+            return new StockholmFormatContest(ContestId.Create(DateTimeOffset.UtcNow),
+                ContestYear.FromValue(2022).Value,
+                CityName.FromValue("Turin").Value,
+                participants).ToContestDto();
+        }
+
+        private static Contest CreateLiverpoolFormatContest()
+        {
+            List<Participant> participants =
+            [
+                CreateGroupZeroParticipant(),
+                CreateGroupOneParticipant(),
+                CreateGroupOneParticipant(),
+                CreateGroupOneParticipant(),
+                CreateGroupTwoParticipant(),
+                CreateGroupTwoParticipant(),
+                CreateGroupTwoParticipant()
+            ];
+
+            return new LiverpoolFormatContest(ContestId.Create(DateTimeOffset.UtcNow),
+                ContestYear.FromValue(2023).Value,
+                CityName.FromValue("Liverpool").Value,
+                participants).ToContestDto();
+        }
+
+        private static Participant CreateGroupZeroParticipant() =>
+            Participant.CreateInGroupZero(CountryId.Create(DateTimeOffset.UtcNow));
+
+        private static Participant CreateGroupOneParticipant() =>
+            Participant.CreateInGroupOne(CountryId.Create(DateTimeOffset.UtcNow),
+                ActName.FromValue("ActName"),
+                SongTitle.FromValue("SongTitle")).Value;
+
+        private static Participant CreateGroupTwoParticipant() =>
+            Participant.CreateInGroupTwo(CountryId.Create(DateTimeOffset.UtcNow),
+                ActName.FromValue("ActName"),
+                SongTitle.FromValue("SongTitle")).Value;
     }
 
     private static class Endpoint

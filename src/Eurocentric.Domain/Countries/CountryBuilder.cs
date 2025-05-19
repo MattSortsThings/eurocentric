@@ -18,15 +18,15 @@ public sealed class CountryBuilder
     /// <summary>
     ///     Sets the <see cref="Country.CountryCode" /> value of the <see cref="Country" /> to be built.
     /// </summary>
-    /// <param name="errorOrCountryCode">
+    /// <param name="errorsOrCountryCode">
     ///     The discriminated union of a legal <see cref="CountryCode" /> value or a list of
     ///     <see cref="Error" /> values. The success/error status is not evaluated until the <see cref="Build" /> method is
     ///     invoked.
     /// </param>
     /// <returns>The same <see cref="CountryBuilder" /> instance, so that method invocations can be chained.</returns>
-    public CountryBuilder WithCountryCode(ErrorOr<CountryCode> errorOrCountryCode)
+    public CountryBuilder WithCountryCode(ErrorOr<CountryCode> errorsOrCountryCode)
     {
-        _errorOrCountryCode = errorOrCountryCode;
+        _errorOrCountryCode = errorsOrCountryCode;
 
         return this;
     }
@@ -34,15 +34,15 @@ public sealed class CountryBuilder
     /// <summary>
     ///     Sets the <see cref="Country.Name" /> value of the <see cref="Country" /> to be built.
     /// </summary>
-    /// <param name="errorOrCountryName">
+    /// <param name="errorsOrCountryName">
     ///     The discriminated union of a legal <see cref="CountryName" /> value or a list of
     ///     <see cref="Error" /> values. The success/error status is not evaluated until the <see cref="Build" /> method is
     ///     invoked.
     /// </param>
     /// <returns>The same <see cref="CountryBuilder" /> instance, so that method invocations can be chained.</returns>
-    public CountryBuilder WithName(ErrorOr<CountryName> errorOrCountryName)
+    public CountryBuilder WithName(ErrorOr<CountryName> errorsOrCountryName)
     {
-        _errorOrName = errorOrCountryName;
+        _errorOrName = errorsOrCountryName;
 
         return this;
     }

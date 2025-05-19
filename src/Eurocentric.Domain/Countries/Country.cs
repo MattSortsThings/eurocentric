@@ -47,7 +47,7 @@ public sealed class Country : AggregateRoot<CountryId>
     ///     <see cref="ContestStatus.Initialized" />.
     /// </summary>
     /// <param name="contestId">Identifies the contest aggregate.</param>
-    /// <exception cref="ArgumentException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException">
     ///     This instance contains a <see cref="ContestMemo" /> instance with a
     ///     <see cref="ContestMemo.ContestId" /> value equal to the <paramref name="contestId" /> argument.
@@ -58,7 +58,7 @@ public sealed class Country : AggregateRoot<CountryId>
 
         if (_contestMemos.Any(memo => memo.ContestId == contestId))
         {
-            throw new ArgumentException("ContestMemos collection contains item with the provided ContestId value.");
+            throw new ArgumentException("ContestMemos collection contains an item with the provided ContestId value.");
         }
 
         _contestMemos.Add(new ContestMemo(contestId, ContestStatus.Initialized));
@@ -69,7 +69,7 @@ public sealed class Country : AggregateRoot<CountryId>
     /// </summary>
     /// <param name="contestId">Identifies the contest aggregate.</param>
     /// <param name="status">The current status of the contest aggregate.</param>
-    /// <exception cref="ArgumentException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException">
     ///     This instance contains no <see cref="ContestMemo" /> instance with a
     ///     <see cref="ContestMemo.ContestId" /> value equal to the <paramref name="contestId" /> argument.
@@ -86,7 +86,7 @@ public sealed class Country : AggregateRoot<CountryId>
     ///     Removes an existing <see cref="ContestMemo" /> from this instance's <see cref="ContestMemos" /> collection.
     /// </summary>
     /// <param name="contestId">Identifies the contest aggregate.</param>
-    /// <exception cref="ArgumentException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException">
     ///     This instance contains no <see cref="ContestMemo" /> instance with a
     ///     <see cref="ContestMemo.ContestId" /> value equal to the <paramref name="contestId" /> argument.
@@ -106,13 +106,13 @@ public sealed class Country : AggregateRoot<CountryId>
 
     private ContestMemo RemoveExistingMemoOrThrowIfNotFound(ContestId contestId)
     {
-        if (_contestMemos.SingleOrDefault(memo => memo.ContestId == contestId) is not { } existing)
+        if (_contestMemos.SingleOrDefault(memo => memo.ContestId == contestId) is not { } existingMemo)
         {
             throw new ArgumentException("ContestMemos collection contains no item with the provided ContestId value.");
         }
 
-        _contestMemos.Remove(existing);
+        _contestMemos.Remove(existingMemo);
 
-        return existing;
+        return existingMemo;
     }
 }

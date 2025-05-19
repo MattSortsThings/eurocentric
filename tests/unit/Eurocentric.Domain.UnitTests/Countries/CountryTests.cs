@@ -67,7 +67,7 @@ public sealed class CountryTests : UnitTestBase
 
             // Assert
             ArgumentException exception = Assert.Throws<ArgumentException>(act);
-            Assert.Equal("ContestMemos collection contains item with the provided ContestId value.", exception.Message);
+            Assert.Equal("ContestMemos collection contains an item with the provided ContestId value.", exception.Message);
 
             Assert.Single(sut.ContestMemos);
         }
@@ -134,7 +134,7 @@ public sealed class CountryTests : UnitTestBase
             ContestId.FromValue(Guid.Parse("785913e9-dad3-4504-90aa-34e1175fb02e"));
 
         [Fact]
-        public void Should_remove_contest_memo_having_provided_contest_id()
+        public void Should_remove_contest_memo_having_provided_contest_ID()
         {
             // Arrange
             Country sut = CreateCountryWithDefaultValues();
@@ -264,7 +264,7 @@ public sealed class CountryTests : UnitTestBase
         }
 
         [Fact]
-        public void Should_throw_given_null_idProvider_arg()
+        public void Should_throw_given_null_IDProvider_arg()
         {
             // Act
             Action act = () => Country.Create()

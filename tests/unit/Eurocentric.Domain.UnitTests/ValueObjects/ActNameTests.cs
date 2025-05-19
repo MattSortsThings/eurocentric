@@ -4,7 +4,7 @@ using Eurocentric.Domain.ValueObjects;
 
 namespace Eurocentric.Domain.UnitTests.ValueObjects;
 
-public sealed class CountryNameTests : UnitTestBase
+public sealed class ActNameTests : UnitTestBase
 {
     public sealed class EqualsMethod : UnitTestBase
     {
@@ -12,9 +12,9 @@ public sealed class CountryNameTests : UnitTestBase
         public void Should_return_true_when_instance_given_itself_as_other()
         {
             // Arrange
-            const string sutValue = "Austria";
+            const string sutValue = "Sam Ryder";
 
-            CountryName sut = CountryName.FromValue(sutValue).Value;
+            ActName sut = ActName.FromValue(sutValue).Value;
 
             // Act
             bool result = sut.Equals(sut);
@@ -27,10 +27,10 @@ public sealed class CountryNameTests : UnitTestBase
         public void Should_return_true_when_instance_and_other_have_equal_values()
         {
             // Arrange
-            const string sharedValue = "Austria";
+            const string sharedValue = "Sam Ryder";
 
-            CountryName sut = CountryName.FromValue(sharedValue).Value;
-            CountryName other = CountryName.FromValue(sharedValue).Value;
+            ActName sut = ActName.FromValue(sharedValue).Value;
+            ActName other = ActName.FromValue(sharedValue).Value;
 
             // Act
             bool result = sut.Equals(other);
@@ -43,11 +43,11 @@ public sealed class CountryNameTests : UnitTestBase
         public void Should_return_false_when_instance_and_other_have_unequal_values()
         {
             // Arrange
-            const string sutValue = "Austria";
-            const string otherValue = "Rest of the World";
+            const string sutValue = "Sam Ryder";
+            const string otherValue = "Remember Monday";
 
-            CountryName sut = CountryName.FromValue(sutValue).Value;
-            CountryName other = CountryName.FromValue(otherValue).Value;
+            ActName sut = ActName.FromValue(sutValue).Value;
+            ActName other = ActName.FromValue(otherValue).Value;
 
             // Act
             bool result = sut.Equals(other);
@@ -60,9 +60,9 @@ public sealed class CountryNameTests : UnitTestBase
         public void Should_return_false_when_other_arg_is_null()
         {
             // Arrange
-            const string sutValue = "Austria";
+            const string sutValue = "Sam Ryder";
 
-            CountryName sut = CountryName.FromValue(sutValue).Value;
+            ActName sut = ActName.FromValue(sutValue).Value;
 
             // Act
             bool result = sut.Equals(null);
@@ -75,15 +75,15 @@ public sealed class CountryNameTests : UnitTestBase
     public sealed class FromValueStaticMethod : UnitTestBase
     {
         [Theory]
-        [InlineData("Austria")]
-        [InlineData("Bosnia & Herzegovina")]
-        [InlineData("Rest of the World")]
+        [InlineData("Sam Ryder")]
+        [InlineData("Nina Žižić")]
+        [InlineData("Dalal & Deen feat. Ana Rucner and Jala")]
         public void Should_return_instance_with_value_given_non_empty_non_whitespace_string_of_200_chars_or_less(string value)
         {
             // Act
-            ErrorOr<CountryName> errorsOrResult = CountryName.FromValue(value);
+            ErrorOr<ActName> errorsOrResult = ActName.FromValue(value);
 
-            (bool isError, CountryName result) = (errorsOrResult.IsError, errorsOrResult.Value);
+            (bool isError, ActName result) = (errorsOrResult.IsError, errorsOrResult.Value);
 
             // Assert
             Assert.False(isError);
@@ -99,9 +99,9 @@ public sealed class CountryNameTests : UnitTestBase
             const string value = "";
 
             // Act
-            ErrorOr<CountryName> errorsOrResult = CountryName.FromValue(value);
+            ErrorOr<ActName> errorsOrResult = ActName.FromValue(value);
 
-            (bool isError, CountryName result, Error firstError) =
+            (bool isError, ActName result, Error firstError) =
                 (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
 
             // Assert
@@ -109,12 +109,12 @@ public sealed class CountryNameTests : UnitTestBase
 
             Assert.Null(result);
 
-            Assert.Equal("Illegal country name value", firstError.Code);
-            Assert.Equal("Country name value must be a non-empty, non-whitespace string of no more than 200 characters.",
+            Assert.Equal("Illegal act name value", firstError.Code);
+            Assert.Equal("Act name value must be a non-empty, non-whitespace string of no more than 200 characters.",
                 firstError.Description);
             Assert.Equal(ErrorType.Failure, firstError.Type);
             Assert.NotNull(firstError.Metadata);
-            Assert.Single(firstError.Metadata, kvp => kvp is { Key: "countryName", Value: value });
+            Assert.Single(firstError.Metadata, kvp => kvp is { Key: "actName", Value: value });
         }
 
         [Fact]
@@ -124,9 +124,9 @@ public sealed class CountryNameTests : UnitTestBase
             const string value = "        ";
 
             // Act
-            ErrorOr<CountryName> errorsOrResult = CountryName.FromValue(value);
+            ErrorOr<ActName> errorsOrResult = ActName.FromValue(value);
 
-            (bool isError, CountryName result, Error firstError) =
+            (bool isError, ActName result, Error firstError) =
                 (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
 
             // Assert
@@ -134,12 +134,12 @@ public sealed class CountryNameTests : UnitTestBase
 
             Assert.Null(result);
 
-            Assert.Equal("Illegal country name value", firstError.Code);
-            Assert.Equal("Country name value must be a non-empty, non-whitespace string of no more than 200 characters.",
+            Assert.Equal("Illegal act name value", firstError.Code);
+            Assert.Equal("Act name value must be a non-empty, non-whitespace string of no more than 200 characters.",
                 firstError.Description);
             Assert.Equal(ErrorType.Failure, firstError.Type);
             Assert.NotNull(firstError.Metadata);
-            Assert.Single(firstError.Metadata, kvp => kvp is { Key: "countryName", Value: value });
+            Assert.Single(firstError.Metadata, kvp => kvp is { Key: "actName", Value: value });
         }
 
         [Fact]
@@ -149,9 +149,9 @@ public sealed class CountryNameTests : UnitTestBase
             string value = new('X', 201);
 
             // Act
-            ErrorOr<CountryName> errorsOrResult = CountryName.FromValue(value);
+            ErrorOr<ActName> errorsOrResult = ActName.FromValue(value);
 
-            (bool isError, CountryName result, Error firstError) =
+            (bool isError, ActName result, Error firstError) =
                 (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
 
             // Assert
@@ -159,19 +159,19 @@ public sealed class CountryNameTests : UnitTestBase
 
             Assert.Null(result);
 
-            Assert.Equal("Illegal country name value", firstError.Code);
-            Assert.Equal("Country name value must be a non-empty, non-whitespace string of no more than 200 characters.",
+            Assert.Equal("Illegal act name value", firstError.Code);
+            Assert.Equal("Act name value must be a non-empty, non-whitespace string of no more than 200 characters.",
                 firstError.Description);
             Assert.Equal(ErrorType.Failure, firstError.Type);
             Assert.NotNull(firstError.Metadata);
-            Assert.Single(firstError.Metadata, kvp => kvp is { Key: "countryName", Value: string v } && v == value);
+            Assert.Single(firstError.Metadata, kvp => kvp is { Key: "actName", Value: string v } && v == value);
         }
 
         [Fact]
         public void Should_throw_given_null_value_arg()
         {
             // Act
-            Action act = () => CountryName.FromValue(null!);
+            Action act = () => ActName.FromValue(null!);
 
             // Assert
             ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
