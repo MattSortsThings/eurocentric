@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Eurocentric.Features.AcceptanceTests.Shared.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
+using Eurocentric.Features.AdminApi.V1.Contests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
@@ -48,10 +49,12 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
     public async Task Should_return_status_code_400_with_problem_details_given_request_body_with_missing_required_property()
     {
         // Arrange
-        RestRequest request = new("admin/api/v0.2/contests", Method.Post);
+        RestRequest request = new("admin/api/v1.0/countries", Method.Post);
 
-        request.AddJsonBody(new { CityName = "CityName", ContestFormat = "Stockholm" })
-            .UseSecretApiKey();
+        var requestBody = new { CountryName = "CountryName" };
+
+        request.UseSecretApiKey()
+            .AddJsonBody(requestBody);
 
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);
@@ -66,21 +69,30 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
 
         Assert.Equal(StatusCodes.Status400BadRequest, problemDetails.Status);
         Assert.Equal("Bad HTTP request", problemDetails.Title);
-        Assert.Equal("POST /admin/api/v0.2/contests", problemDetails.Instance);
+        Assert.Equal("POST /admin/api/v1.0/countries", problemDetails.Instance);
         Assert.Equal("BadHttpRequestException was thrown while handling the request.", problemDetails.Detail);
         Assert.Contains(problemDetails.Extensions, kvp =>
             kvp is { Key: "exceptionMessage", Value: JsonElement j }
-            && j.GetString() == "Failed to read parameter \"CreateContestRequest request\" from the request body as JSON.");
+            && j.GetString() == "Failed to read parameter \"CreateCountryRequest request\" from the request body as JSON.");
     }
 
     [Fact]
     public async Task Should_return_status_code_400_with_problem_details_given_request_body_with_unparseable_enum_property()
     {
         // Arrange
-        RestRequest request = new("admin/api/v0.2/contests", Method.Post);
+        RestRequest request = new("admin/api/v1.0/contests", Method.Post);
 
-        request.AddJsonBody(new { ContestFormat = "INVALID", CityName = "CityName", ContestYear = 2025 })
-            .UseSecretApiKey();
+        var requestBody = new
+        {
+            ContestFormat = "INVALID",
+            CityName = "CityName",
+            ContestYear = 2025,
+            Group1Participants = CreateArbitraryContestParticipantData(3),
+            Group2Participants = CreateArbitraryContestParticipantData(3)
+        };
+
+        request.UseSecretApiKey()
+            .AddJsonBody(requestBody);
 
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);
@@ -95,7 +107,7 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
 
         Assert.Equal(StatusCodes.Status400BadRequest, problemDetails.Status);
         Assert.Equal("Bad HTTP request", problemDetails.Title);
-        Assert.Equal("POST /admin/api/v0.2/contests", problemDetails.Instance);
+        Assert.Equal("POST /admin/api/v1.0/contests", problemDetails.Instance);
         Assert.Equal("BadHttpRequestException was thrown while handling the request.", problemDetails.Detail);
         Assert.Contains(problemDetails.Extensions, kvp =>
             kvp is { Key: "exceptionMessage", Value: JsonElement j }
@@ -106,10 +118,19 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
     public async Task Should_return_status_code_400_with_problem_details_given_request_body_with_invalid_int_enum_property()
     {
         // Arrange
-        RestRequest request = new("admin/api/v0.2/contests", Method.Post);
+        RestRequest request = new("admin/api/v1.0/contests", Method.Post);
 
-        request.AddJsonBody(new { ContestFormat = 999999, CityName = "CityName", ContestYear = 2025 })
-            .UseSecretApiKey();
+        var requestBody = new
+        {
+            ContestFormat = 999999,
+            CityName = "CityName",
+            ContestYear = 2025,
+            Group1Participants = CreateArbitraryContestParticipantData(3),
+            Group2Participants = CreateArbitraryContestParticipantData(3)
+        };
+
+        request.UseSecretApiKey()
+            .AddJsonBody(requestBody);
 
         // Act
         ResponseOrProblem responseOrProblem = await Client.SendRequestAsync(request, TestContext.Current.CancellationToken);
@@ -124,11 +145,14 @@ public sealed class GlobalExceptionHandlingTests : AcceptanceTestBase
 
         Assert.Equal(StatusCodes.Status400BadRequest, problemDetails.Status);
         Assert.Equal("Bad HTTP request", problemDetails.Title);
-        Assert.Equal("POST /admin/api/v0.2/contests", problemDetails.Instance);
+        Assert.Equal("POST /admin/api/v1.0/contests", problemDetails.Instance);
         Assert.Equal("InvalidEnumArgumentException was thrown while handling the request.", problemDetails.Detail);
         Assert.Contains(problemDetails.Extensions, kvp =>
             kvp is { Key: "exceptionMessage", Value: JsonElement j }
             && j.GetString() == "The value of argument 'contestFormat' (999999) is invalid for Enum type 'ContestFormat'. " +
             "(Parameter 'contestFormat')");
     }
+
+    private static ContestParticipantDatum[] CreateArbitraryContestParticipantData(int count) => Enumerable.Range(0, count)
+        .Select(_ => new ContestParticipantDatum { CountryId = Guid.NewGuid(), ActName = "A", SongTitle = "S" }).ToArray();
 }

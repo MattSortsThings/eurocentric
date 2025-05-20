@@ -11,8 +11,6 @@ public sealed class OpenApiDocumentsTests : AcceptanceTestBase
     public OpenApiDocumentsTests(WebAppFixture fixture) : base(fixture) { }
 
     [Theory]
-    [InlineData("admin-api-v0.1", "/admin/api/v0.1")]
-    [InlineData("admin-api-v0.2", "/admin/api/v0.2")]
     [InlineData("admin-api-v1.0", "/admin/api/v1.0")]
     [InlineData("public-api-v0.1", "/public/api/v0.1")]
     [InlineData("public-api-v0.2", "/public/api/v0.2")]
@@ -41,7 +39,8 @@ public sealed class OpenApiDocumentsTests : AcceptanceTestBase
     }
 
     [Theory]
-    [InlineData("admin-api-v0.3")]
+    [InlineData("admin-api-v0.1")]
+    [InlineData("admin-api-v0.2")]
     [InlineData("admin-api-v1.1")]
     [InlineData("public-api-v0.3")]
     [InlineData("public-api-v1.0")]

@@ -7,7 +7,7 @@ namespace Eurocentric.Features.AcceptanceTests.Shared.Security;
 
 public sealed class AdminApiSecurityTests : AcceptanceTestBase
 {
-    private const string Route = "admin/api/v0.1/contests";
+    private const string Route = "admin/api/v1.0/contests";
 
     public AdminApiSecurityTests(WebAppFixture fixture) : base(fixture) { }
 

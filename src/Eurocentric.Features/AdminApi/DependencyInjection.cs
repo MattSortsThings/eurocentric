@@ -1,4 +1,3 @@
-using Eurocentric.Features.AdminApi.V0.Common.Documentation;
 using Eurocentric.Features.AdminApi.V1.Common.Documentation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +15,6 @@ internal static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     internal static IServiceCollection RegisterAdminApiOpenApiDocuments(this IServiceCollection services)
     {
-        services.RegisterAdminApiV0OpenApiDocuments();
         services.RegisterAdminApiV1OpenApiDocuments();
 
         return services;

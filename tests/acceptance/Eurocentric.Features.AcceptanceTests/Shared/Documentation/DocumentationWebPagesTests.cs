@@ -10,8 +10,6 @@ public sealed class DocumentationWebPagesTests : AcceptanceTestBase
     public DocumentationWebPagesTests(WebAppFixture fixture) : base(fixture) { }
 
     [Theory]
-    [InlineData("admin-api-v0.1")]
-    [InlineData("admin-api-v0.2")]
     [InlineData("admin-api-v1.0")]
     [InlineData("public-api-v0.1")]
     [InlineData("public-api-v0.2")]

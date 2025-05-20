@@ -1,4 +1,3 @@
-using Eurocentric.Features.AdminApi.V0;
 using Eurocentric.Features.AdminApi.V1;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -19,7 +18,6 @@ internal static class Middleware
         RouteGroupBuilder apiGroup = app.NewVersionedApi("AdminApi")
             .MapGroup("admin/api");
 
-        apiGroup.MapAdminApiV0Endpoints();
         apiGroup.MapAdminApiV1Endpoints();
     }
 }
