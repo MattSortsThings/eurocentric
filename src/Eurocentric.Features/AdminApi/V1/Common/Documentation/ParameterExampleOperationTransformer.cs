@@ -11,6 +11,6 @@ internal sealed class ParameterExampleOperationTransformer : BaseParameterExampl
         {
             ["broadcastId"] = new OpenApiString(ExampleValues.BroadcastId.ToString()),
             ["contestId"] = new OpenApiString(ExampleValues.ContestId.ToString()),
-            ["countryId"] = new OpenApiString(ExampleValues.CountryId.ToString())
+            ["countryId"] = new OpenApiString(ExampleValues.CountryId1Of3.ToString())
         };
 }

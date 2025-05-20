@@ -2,6 +2,11 @@ namespace Eurocentric.Features.AdminApi.V1.Common.Constants;
 
 internal static class RouteIds
 {
+    internal static class Broadcasts
+    {
+        internal const string GetBroadcast = "AdminApi.V1.Broadcasts.GetBroadcast";
+    }
+
     internal static class Contests
     {
         internal const string CreateContest = "AdminApi.V1.Contests.CreateContest";

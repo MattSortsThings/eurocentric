@@ -30,10 +30,10 @@ public sealed record CreateContestResponse(Contest Contest) : IExampleProvider<C
         BroadcastMemos = [],
         Participants =
         [
-            new Participant { ParticipatingCountryId = Guid.Parse("c5ca7057-7292-4260-bac2-b8e256a4f7c5"), Group = 0 },
+            new Participant { ParticipatingCountryId = ExampleValues.CountryId3Of3, Group = 0 },
             new Participant
             {
-                ParticipatingCountryId = Guid.Parse("3ac0b1db-4708-4073-91e2-492229737be3"),
+                ParticipatingCountryId = ExampleValues.CountryId2Of3,
                 Group = 1,
                 ActName = "Lucio Corsi",
                 SongTitle = "Volevo Essere Un Duro"
@@ -62,19 +62,17 @@ public sealed record CreateContestRequest : IExampleProvider<CreateContestReques
         ContestYear = 2025,
         CityName = "Basel",
         ContestFormat = ContestFormat.Liverpool,
-        Group0CountryId = Guid.Parse("c5ca7057-7292-4260-bac2-b8e256a4f7c5"),
+        Group0CountryId = ExampleValues.CountryId3Of3,
         Group1Participants =
         [
             new ContestParticipantDatum
             {
-                CountryId = Guid.Parse("3ac0b1db-4708-4073-91e2-492229737be3"),
-                ActName = "Lucio Corsi",
-                SongTitle = "Volevo Essere Un Duro"
+                CountryId = ExampleValues.CountryId2Of3, ActName = "Lucio Corsi", SongTitle = "Volevo Essere Un Duro"
             }
         ],
         Group2Participants =
         [
-            new ContestParticipantDatum { CountryId = ExampleValues.CountryId, ActName = "JJ", SongTitle = "Wasted Love" }
+            new ContestParticipantDatum { CountryId = ExampleValues.CountryId1Of3, ActName = "JJ", SongTitle = "Wasted Love" }
         ]
     };
 }
