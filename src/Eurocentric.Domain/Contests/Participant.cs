@@ -62,7 +62,7 @@ public sealed class Participant : Entity
     /// <param name="countryId">The participating country ID.</param>
     /// <exception cref="ArgumentNullException"><paramref name="countryId" /> is <see langword="null" />.</exception>
     /// <returns>A new <see cref="Participant" /> instance.</returns>
-    public static Participant CreateInGroupZero(CountryId countryId)
+    internal static Participant CreateInGroupZero(CountryId countryId)
     {
         ArgumentNullException.ThrowIfNull(countryId);
 
@@ -82,7 +82,7 @@ public sealed class Participant : Entity
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="countryId" /> is <see langword="null" />.</exception>
     /// <returns>A new <see cref="Participant" /> instance; or a list of <see cref="Error" /> values.</returns>
-    public static ErrorOr<Participant> CreateInGroupOne(CountryId countryId, ErrorOr<ActName> errorsOrActName,
+    internal static ErrorOr<Participant> CreateInGroupOne(CountryId countryId, ErrorOr<ActName> errorsOrActName,
         ErrorOr<SongTitle> errorsOrSongTitle)
     {
         ArgumentNullException.ThrowIfNull(countryId);
@@ -105,7 +105,7 @@ public sealed class Participant : Entity
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="countryId" /> is <see langword="null" />.</exception>
     /// <returns>A new <see cref="Participant" /> instance; or a list of <see cref="Error" /> values.</returns>
-    public static ErrorOr<Participant> CreateInGroupTwo(CountryId countryId, ErrorOr<ActName> errorsOrActName,
+    internal static ErrorOr<Participant> CreateInGroupTwo(CountryId countryId, ErrorOr<ActName> errorsOrActName,
         ErrorOr<SongTitle> errorsOrSongTitle)
     {
         ArgumentNullException.ThrowIfNull(countryId);

@@ -12,25 +12,22 @@ public sealed class LiverpoolFormatContestTests : UnitTestBase
 {
     private static LiverpoolFormatContest CreateContestWithDefaultValues()
     {
-        ContestId id = ContestId.FromValue(Guid.Parse("ca62f352-2283-4e5d-bf07-97749cb4016e"));
-        ContestYear year = ContestYear.FromValue(2025).Value;
-        CityName cityName = CityName.FromValue("CityName").Value;
-
+        ContestId fixedId = ContestId.FromValue(Guid.Parse("ca62f352-2283-4e5d-bf07-97749cb4016e"));
         ErrorOr<ActName> fixedActName = ActName.FromValue("ActName");
         ErrorOr<SongTitle> fixedSongTitle = SongTitle.FromValue("SongTitle");
 
-        List<Participant> participants =
-        [
-            Participant.CreateInGroupZero(CountryIds.Xx),
-            Participant.CreateInGroupOne(CountryIds.At, fixedActName, fixedSongTitle).Value,
-            Participant.CreateInGroupOne(CountryIds.Be, fixedActName, fixedSongTitle).Value,
-            Participant.CreateInGroupOne(CountryIds.Cz, fixedActName, fixedSongTitle).Value,
-            Participant.CreateInGroupTwo(CountryIds.De, fixedActName, fixedSongTitle).Value,
-            Participant.CreateInGroupTwo(CountryIds.Es, fixedActName, fixedSongTitle).Value,
-            Participant.CreateInGroupTwo(CountryIds.Fi, fixedActName, fixedSongTitle).Value
-        ];
-
-        return new LiverpoolFormatContest(id, year, cityName, participants);
+        return (LiverpoolFormatContest)LiverpoolFormatContest.Create()
+            .WithYear(ContestYear.FromValue(2025))
+            .WithCityName(CityName.FromValue("CityName"))
+            .WithGroupZeroParticipant(CountryIds.Xx)
+            .WithGroupOneParticipant(CountryIds.At, fixedActName, fixedSongTitle)
+            .WithGroupOneParticipant(CountryIds.Be, fixedActName, fixedSongTitle)
+            .WithGroupOneParticipant(CountryIds.Cz, fixedActName, fixedSongTitle)
+            .WithGroupTwoParticipant(CountryIds.De, fixedActName, fixedSongTitle)
+            .WithGroupTwoParticipant(CountryIds.Es, fixedActName, fixedSongTitle)
+            .WithGroupTwoParticipant(CountryIds.Fi, fixedActName, fixedSongTitle)
+            .Build(() => fixedId)
+            .Value;
     }
 
     public sealed class AddMemoMethod : UnitTestBase
@@ -231,6 +228,630 @@ public sealed class LiverpoolFormatContestTests : UnitTestBase
             Assert.Equal("BroadcastMemos collection contains no item with the provided BroadcastId value.", exception.Message);
 
             Assert.Empty(sut.BroadcastMemos);
+        }
+    }
+
+    public sealed class FluentBuilder : UnitTestBase
+    {
+        private static readonly ErrorOr<ContestYear> ArbitraryContestYear = ContestYear.FromValue(2025);
+        private static readonly ErrorOr<CityName> ArbitraryCityName = CityName.FromValue("CityName");
+        private static readonly ErrorOr<ActName> ArbitraryActName = ActName.FromValue("ActName");
+        private static readonly ErrorOr<SongTitle> ArbitrarySongTitle = SongTitle.FromValue("SongTitle");
+
+        private static readonly ContestId FixedContestId =
+            ContestId.FromValue(Guid.Parse("989c773a-0306-4136-813d-c10d8de2935b"));
+
+        [Theory]
+        [InlineData(2023, "Liverpool")]
+        [InlineData(2025, "Basel")]
+        public void Should_create_contest_with_provided_values_and_empty_broadcast_memos(int contestYear, string cityName)
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithYear(ContestYear.FromValue(contestYear))
+                .WithCityName(CityName.FromValue(cityName))
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ActName.FromValue("AT Act"), SongTitle.FromValue("AT Song"))
+                .WithGroupOneParticipant(CountryIds.De, ActName.FromValue("DE Act"), SongTitle.FromValue("DE Song"))
+                .WithGroupOneParticipant(CountryIds.Cz, ActName.FromValue("CZ Act"), SongTitle.FromValue("CZ Song"))
+                .WithGroupTwoParticipant(CountryIds.Es, ActName.FromValue("ES Act"), SongTitle.FromValue("ES Song"))
+                .WithGroupTwoParticipant(CountryIds.Fi, ActName.FromValue("FI Act"), SongTitle.FromValue("FI Song"))
+                .WithGroupTwoParticipant(CountryIds.Be, ActName.FromValue("BE Act"), SongTitle.FromValue("BE Song"))
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result) = (errorsOrResult.IsError, errorsOrResult.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.IsType<LiverpoolFormatContest>(result);
+
+            Assert.Equal(FixedContestId, result.Id);
+            Assert.Equal(contestYear, result.Year.Value);
+            Assert.Equal(cityName, result.CityName.Value);
+            Assert.Equal(ContestFormat.Liverpool, result.Format);
+            Assert.Equal(ContestStatus.Initialized, result.Status);
+            Assert.Empty(result.BroadcastMemos);
+            Assert.Collection(result.Participants, p =>
+            {
+                Assert.Equal(ParticipantGroup.Zero, p.Group);
+                Assert.Equal(CountryIds.Xx, p.ParticipatingCountryId);
+                Assert.Null(p.ActName);
+                Assert.Null(p.SongTitle);
+            }, p =>
+            {
+                Assert.Equal(ParticipantGroup.One, p.Group);
+                Assert.Equal(CountryIds.At, p.ParticipatingCountryId);
+                Assert.NotNull(p.ActName);
+                Assert.Equal("AT Act", p.ActName.Value);
+                Assert.NotNull(p.SongTitle);
+                Assert.Equal("AT Song", p.SongTitle.Value);
+            }, p =>
+            {
+                Assert.Equal(ParticipantGroup.One, p.Group);
+                Assert.Equal(CountryIds.Cz, p.ParticipatingCountryId);
+                Assert.NotNull(p.ActName);
+                Assert.Equal("CZ Act", p.ActName.Value);
+                Assert.NotNull(p.SongTitle);
+                Assert.Equal("CZ Song", p.SongTitle.Value);
+            }, p =>
+            {
+                Assert.Equal(ParticipantGroup.One, p.Group);
+                Assert.Equal(CountryIds.De, p.ParticipatingCountryId);
+                Assert.NotNull(p.ActName);
+                Assert.Equal("DE Act", p.ActName.Value);
+                Assert.NotNull(p.SongTitle);
+                Assert.Equal("DE Song", p.SongTitle.Value);
+            }, p =>
+            {
+                Assert.Equal(ParticipantGroup.Two, p.Group);
+                Assert.Equal(CountryIds.Be, p.ParticipatingCountryId);
+                Assert.NotNull(p.ActName);
+                Assert.Equal("BE Act", p.ActName.Value);
+                Assert.NotNull(p.SongTitle);
+                Assert.Equal("BE Song", p.SongTitle.Value);
+            }, p =>
+            {
+                Assert.Equal(ParticipantGroup.Two, p.Group);
+                Assert.Equal(CountryIds.Es, p.ParticipatingCountryId);
+                Assert.NotNull(p.ActName);
+                Assert.Equal("ES Act", p.ActName.Value);
+                Assert.NotNull(p.SongTitle);
+                Assert.Equal("ES Song", p.SongTitle.Value);
+            }, p =>
+            {
+                Assert.Equal(ParticipantGroup.Two, p.Group);
+                Assert.Equal(CountryIds.Fi, p.ParticipatingCountryId);
+                Assert.NotNull(p.ActName);
+                Assert.Equal("FI Act", p.ActName.Value);
+                Assert.NotNull(p.SongTitle);
+                Assert.Equal("FI Song", p.SongTitle.Value);
+            });
+        }
+
+        [Fact]
+        public void Should_return_errors_given_illegal_contest_year_value()
+        {
+            // Arrange
+            ErrorOr<ContestYear> illegalContestYear = ContestYear.FromValue(0);
+
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithYear(illegalContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal contest year value", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_illegal_city_name_value()
+        {
+            // Arrange
+            ErrorOr<CityName> illegalCityName = CityName.FromValue(string.Empty);
+
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithCityName(illegalCityName)
+                .WithYear(ArbitraryContestYear)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal city name value", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_1_participant_with_illegal_act_name_value()
+        {
+            // Arrange
+            ErrorOr<ActName> illegalActName = ActName.FromValue(string.Empty);
+
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupOneParticipant(CountryIds.At, illegalActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal act name value", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_1_participant_with_illegal_song_title_value()
+        {
+            // Arrange
+            ErrorOr<SongTitle> illegalSongTitle = SongTitle.FromValue(string.Empty);
+
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, illegalSongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal song title value", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_2_participant_with_illegal_act_name_value()
+        {
+            // Arrange
+            ErrorOr<ActName> illegalActName = ActName.FromValue(string.Empty);
+
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupTwoParticipant(CountryIds.Fi, illegalActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal act name value", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_2_participant_with_illegal_song_title_value()
+        {
+            // Arrange
+            ErrorOr<SongTitle> illegalSongTitle = SongTitle.FromValue(string.Empty);
+
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, illegalSongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal song title value", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_0_and_group_1_participants_with_same_participating_country_ID()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.Xx, ArbitraryActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Duplicate participating country IDs", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_0_and_group_2_participants_with_same_participating_country_ID()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupTwoParticipant(CountryIds.Xx, ArbitraryActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Duplicate participating country IDs", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_1_and_group_2_participants_with_same_participating_country_ID()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Duplicate participating country IDs", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_1_participants_with_same_participating_country_ID()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Duplicate participating country IDs", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_group_2_participants_with_same_participating_country_ID()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Duplicate participating country IDs", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_zero_group_0_participants()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal Liverpool format group sizes", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_multiple_group_0_participants()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupZeroParticipant(CountryIds.Gb)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal Liverpool format group sizes", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_fewer_than_3_group_1_participants()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal Liverpool format group sizes", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_return_errors_given_fewer_than_3_group_2_participants()
+        {
+            // Act
+            ErrorOr<Contest> errorsOrResult = LiverpoolFormatContest.Create()
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            (bool isError, Contest result, Error firstError) =
+                (errorsOrResult.IsError, errorsOrResult.Value, errorsOrResult.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(result);
+
+            Assert.Equal("Illegal Liverpool format group sizes", firstError.Code);
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_group_0_participant_countryId_arg()
+        {
+            // Act
+            Action act = () => LiverpoolFormatContest.Create()
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(null!)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'countryId')", exception.Message);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_group_1_participant_countryId_arg()
+        {
+            // Act
+            Action act = () => LiverpoolFormatContest.Create()
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(null!, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'countryId')", exception.Message);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_group_2_participant_countryId_arg()
+        {
+            // Act
+            Action act = () => LiverpoolFormatContest.Create()
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(null!, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(() => FixedContestId);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'countryId')", exception.Message);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_idProvider_arg()
+        {
+            // Act
+            Action act = () => LiverpoolFormatContest.Create()
+                .WithYear(ArbitraryContestYear)
+                .WithCityName(ArbitraryCityName)
+                .WithGroupZeroParticipant(CountryIds.Xx)
+                .WithGroupOneParticipant(CountryIds.At, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Be, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupOneParticipant(CountryIds.Cz, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.De, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Es, ArbitraryActName, ArbitrarySongTitle)
+                .WithGroupTwoParticipant(CountryIds.Fi, ArbitraryActName, ArbitrarySongTitle)
+                .Build(null!);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'idProvider')", exception.Message);
         }
     }
 }

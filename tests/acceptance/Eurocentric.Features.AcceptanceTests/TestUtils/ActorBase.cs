@@ -37,4 +37,12 @@ public abstract class ActorBase
         Assert.Contains(ProblemDetails.Extensions,
             kvp => kvp.Key == key && kvp.Value is JsonElement j && j.GetString() == value);
     }
+
+    public void Then_the_problem_details_extensions_should_contain(string key, int value)
+    {
+        Assert.NotNull(ProblemDetails);
+
+        Assert.Contains(ProblemDetails.Extensions,
+            kvp => kvp.Key == key && kvp.Value is JsonElement j && j.GetInt32() == value);
+    }
 }
