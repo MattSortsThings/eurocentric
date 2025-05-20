@@ -123,7 +123,6 @@ public sealed class GetContestTests : AcceptanceTestBase
                 kvp => kvp is { Key: "contestId", Value: JsonElement j } && j.GetGuid() == MyContest!.Id);
         }
 
-
         public static AdminActor WithDriverAndBackdoor(AdminApiV1Driver driver, WebAppFixtureBackdoor backdoor) =>
             new(backdoor, driver);
 

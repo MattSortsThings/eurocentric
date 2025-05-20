@@ -6,6 +6,7 @@ internal static class RouteIds
     {
         internal const string CreateContest = "AdminApi.V1.Contests.CreateContest";
         internal const string GetContest = "AdminApi.V1.Contests.GetContest";
+        internal const string GetContests = "AdminApi.V1.Contests.GetContests";
     }
 
     internal static class Countries
