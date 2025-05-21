@@ -1,19 +1,19 @@
 using ErrorOr;
 using Eurocentric.Domain.Broadcasts;
-using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Infrastructure.EfCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 using Broadcast = Eurocentric.Features.AdminApi.V1.Common.Dtos.Broadcast;
-using Competitor = Eurocentric.Domain.Broadcasts.Competitor;
 
 namespace Eurocentric.Features.AdminApi.V1.Broadcasts;
 
@@ -37,28 +37,19 @@ internal static class GetBroadcast
 
     internal sealed record Query(Guid BroadcastId) : IQuery<GetBroadcastResponse>;
 
-    internal sealed class Handler : IQueryHandler<Query, GetBroadcastResponse>
+    internal sealed class Handler(AppDbContext dbContext) : IQueryHandler<Query, GetBroadcastResponse>
     {
         public async Task<ErrorOr<GetBroadcastResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            BroadcastId broadcastId = BroadcastId.FromValue(query.BroadcastId);
 
-            Broadcast broadcast = CreateDummyBroadcast().ToBroadcastDto() with { Id = query.BroadcastId };
+            Broadcast? broadcast = await dbContext.Broadcasts.AsNoTracking()
+                .Where(broadcast => broadcast.Id == broadcastId)
+                .Select(broadcast => broadcast.ToBroadcastDto())
+                .FirstOrDefaultAsync(cancellationToken);
 
-            return ErrorOrFactory.From(new GetBroadcastResponse(broadcast));
+            return broadcast is null ? BroadcastErrors.BroadcastNotFound(broadcastId) : new GetBroadcastResponse(broadcast);
         }
-
-        private static Domain.Broadcasts.Broadcast CreateDummyBroadcast() => new(
-            BroadcastId.FromValue(ExampleValues.BroadcastId),
-            ContestId.FromValue(ExampleValues.ContestId),
-            ContestStage.GrandFinal,
-            [
-                new Competitor(CountryId.FromValue(ExampleValues.CountryId1Of3), 1)
-            ], [
-                new Jury(CountryId.FromValue(ExampleValues.CountryId2Of3))
-            ], [
-                new Televote(CountryId.FromValue(ExampleValues.CountryId2Of3))
-            ]);
     }
 
     private static class Endpoint

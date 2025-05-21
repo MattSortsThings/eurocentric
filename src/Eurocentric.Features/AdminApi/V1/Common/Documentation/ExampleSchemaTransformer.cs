@@ -23,6 +23,6 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(CreateCountryRequest)] = CreateCountryRequest.CreateExample().ToOpenApiAny(),
             [typeof(CreateCountryResponse)] = CreateCountryResponse.CreateExample().ToOpenApiAny(),
             [typeof(Participant)] = Participant.CreateExample().ToOpenApiAny(),
-            [typeof(Vote)] = Vote.CreateExample().ToOpenApiAny()
+            [typeof(Voter)] = Voter.CreateExample().ToOpenApiAny()
         };
 }

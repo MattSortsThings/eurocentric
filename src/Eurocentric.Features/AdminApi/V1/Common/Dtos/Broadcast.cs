@@ -16,9 +16,9 @@ public sealed record Broadcast : IExampleProvider<Broadcast>
 
     public required Competitor[] Competitors { get; init; }
 
-    public required Vote[] Televotes { get; init; }
+    public required Voter[] Televotes { get; init; }
 
-    public required Vote[] Juries { get; init; }
+    public required Voter[] Juries { get; init; }
 
     public static Broadcast CreateExample() => new()
     {
@@ -27,7 +27,7 @@ public sealed record Broadcast : IExampleProvider<Broadcast>
         ContestStage = ContestStage.GrandFinal,
         Status = BroadcastStatus.InProgress,
         Competitors = [Competitor.CreateExample()],
-        Televotes = [Vote.CreateExample()],
-        Juries = [Vote.CreateExample()]
+        Televotes = [Voter.CreateExample()],
+        Juries = [Voter.CreateExample()]
     };
 }

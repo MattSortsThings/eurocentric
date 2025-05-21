@@ -87,6 +87,7 @@ public abstract class WebAppFixtureBase : WebApplicationFactory<IWebAppAssemblyM
         Action<IServiceProvider> eraseAllData = sp =>
         {
             using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
+            dbContext.Broadcasts.ExecuteDelete();
             dbContext.Contests.ExecuteDelete();
             dbContext.Countries.ExecuteDelete();
         };

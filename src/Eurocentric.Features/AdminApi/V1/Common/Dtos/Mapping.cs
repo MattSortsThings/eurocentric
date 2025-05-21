@@ -62,5 +62,5 @@ internal static class Mapping
     private static Award ToAwardDto(this Domain.ValueObjects.Award award) =>
         new(award.VotingCountryId.Value, (int)award.PointsValue);
 
-    private static Vote ToVoteDto(this Domain.Broadcasts.Vote vote) => new(vote.VotingCountryId.Value, vote.PointsAwarded);
+    private static Voter ToVoteDto(this Domain.Broadcasts.Voter voter) => new(voter.VotingCountryId.Value, voter.PointsAwarded);
 }

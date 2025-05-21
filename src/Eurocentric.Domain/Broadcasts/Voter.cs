@@ -6,13 +6,13 @@ namespace Eurocentric.Domain.Broadcasts;
 /// <summary>
 ///     Represents a voting country awarding points in a broadcast.
 /// </summary>
-public abstract class Vote : Entity
+public abstract class Voter : Entity
 {
-    private protected Vote()
+    private protected Voter()
     {
     }
 
-    protected internal Vote(CountryId votingCountryId)
+    protected internal Voter(CountryId votingCountryId)
     {
         VotingCountryId = votingCountryId;
     }

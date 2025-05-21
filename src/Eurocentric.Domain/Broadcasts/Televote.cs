@@ -5,7 +5,7 @@ namespace Eurocentric.Domain.Broadcasts;
 /// <summary>
 ///     Represents a voting country awarding televote points in a broadcast.
 /// </summary>
-public sealed class Televote : Vote
+public sealed class Televote : Voter
 {
     private Televote()
     {
