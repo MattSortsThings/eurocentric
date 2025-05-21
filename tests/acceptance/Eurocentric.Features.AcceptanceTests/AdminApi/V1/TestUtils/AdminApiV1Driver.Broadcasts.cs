@@ -9,7 +9,7 @@ public sealed partial class AdminApiV1Driver
     public async Task<ResponseOrProblem<GetBroadcastResponse>> GetBroadcastAsync(Guid broadcastId,
         CancellationToken cancellationToken = default)
     {
-        RestRequest request = new("/admin/api/v{apiVersion}/broadcastsre/{broadcastId}");
+        RestRequest request = new("/admin/api/v{apiVersion}/broadcasts/{broadcastId}");
 
         request.UseSecretApiKey()
             .AddUrlSegment("apiVersion", _apiVersion)

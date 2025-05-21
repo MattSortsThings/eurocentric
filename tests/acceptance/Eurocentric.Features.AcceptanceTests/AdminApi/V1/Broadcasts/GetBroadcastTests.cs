@@ -44,8 +44,6 @@ public sealed class GetBroadcastTests : AcceptanceTestBase
 
         private protected override Func<Task<ResponseOrProblem<GetBroadcastResponse>>> SendMyRequest { get; set; } = null!;
 
-        public static AdminActor WithDriver(AdminApiV1Driver driver) => new(driver);
-
         public void Given_I_want_to_retrieve_the_broadcast_with_the_ID(string broadcastId)
         {
             TargetBroadcastId = Guid.Parse(broadcastId);
@@ -59,5 +57,7 @@ public sealed class GetBroadcastTests : AcceptanceTestBase
 
             Assert.Equal(TargetBroadcastId, Response.Broadcast.Id);
         }
+
+        public static AdminActor WithDriver(AdminApiV1Driver driver) => new(driver);
     }
 }

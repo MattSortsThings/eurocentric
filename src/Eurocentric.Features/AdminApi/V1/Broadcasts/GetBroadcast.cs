@@ -1,4 +1,7 @@
 using ErrorOr;
+using Eurocentric.Domain.Broadcasts;
+using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.Shared.ErrorHandling;
@@ -9,6 +12,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using Broadcast = Eurocentric.Features.AdminApi.V1.Common.Dtos.Broadcast;
+using Competitor = Eurocentric.Domain.Broadcasts.Competitor;
 
 namespace Eurocentric.Features.AdminApi.V1.Broadcasts;
 
@@ -38,10 +43,22 @@ internal static class GetBroadcast
         {
             await Task.CompletedTask;
 
-            Broadcast broadcast = Broadcast.CreateExample() with { Id = query.BroadcastId };
+            Broadcast broadcast = CreateDummyBroadcast().ToBroadcastDto() with { Id = query.BroadcastId };
 
             return ErrorOrFactory.From(new GetBroadcastResponse(broadcast));
         }
+
+        private static Domain.Broadcasts.Broadcast CreateDummyBroadcast() => new(
+            BroadcastId.FromValue(ExampleValues.BroadcastId),
+            ContestId.FromValue(ExampleValues.ContestId),
+            ContestStage.GrandFinal,
+            [
+                new Competitor(CountryId.FromValue(ExampleValues.CountryId1Of3), 1)
+            ], [
+                new Jury(CountryId.FromValue(ExampleValues.CountryId2Of3))
+            ], [
+                new Televote(CountryId.FromValue(ExampleValues.CountryId2Of3))
+            ]);
     }
 
     private static class Endpoint
