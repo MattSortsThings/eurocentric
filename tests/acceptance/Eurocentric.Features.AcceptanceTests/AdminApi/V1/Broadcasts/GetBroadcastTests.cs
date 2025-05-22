@@ -3,7 +3,6 @@ using System.Text.Json;
 using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V1.Broadcasts;
@@ -79,8 +78,6 @@ public sealed class GetBroadcastTests : AcceptanceTestBase
         }
 
         private Broadcast? MyBroadcast { get; set; }
-
-        private protected override Func<Task<ResponseOrProblem<GetBroadcastResponse>>> SendMyRequest { get; set; } = null!;
 
         public static AdminActor WithDriverAndBackdoor(AdminApiV1Driver driver, WebAppFixtureBackdoor backdoor) =>
             new(driver, backdoor);

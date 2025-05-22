@@ -51,9 +51,6 @@ public abstract class GetAvailableVotingMethodsTests : AcceptanceTestBase
             _driver = driver;
         }
 
-        private protected override Func<Task<ResponseOrProblem<GetAvailableVotingMethodsResponse>>>
-            SendMyRequest { get; set; } = null!;
-
         public void Given_I_want_to_retrieve_all_available_voting_methods() => SendMyRequest = () =>
             _driver.GetAvailableVotingMethodsAsync(TestContext.Current.CancellationToken);
     }

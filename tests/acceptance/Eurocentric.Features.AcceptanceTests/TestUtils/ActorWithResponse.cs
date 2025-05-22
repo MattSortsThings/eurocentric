@@ -5,7 +5,8 @@ public abstract class ActorWithResponse<TResponse> : ActorBase
 {
     private protected TResponse? Response { get; private set; }
 
-    private protected abstract Func<Task<ResponseOrProblem<TResponse>>> SendMyRequest { get; set; }
+    private protected Func<Task<ResponseOrProblem<TResponse>>> SendMyRequest { get; set; } =
+        () => throw new InvalidOperationException("SendMyRequest function not set.");
 
     public async Task When_I_send_my_request()
     {

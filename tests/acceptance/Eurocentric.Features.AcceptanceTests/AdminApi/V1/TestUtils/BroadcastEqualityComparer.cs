@@ -1,6 +1,6 @@
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 
-namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts.TestUtils;
+namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 
 internal sealed class BroadcastEqualityComparer : IEqualityComparer<Broadcast>
 {
@@ -35,6 +35,11 @@ internal sealed class BroadcastEqualityComparer : IEqualityComparer<Broadcast>
                && x.Juries.SequenceEqual(y.Juries);
     }
 
-    public int GetHashCode(Broadcast obj) => HashCode.Combine(obj.Id, obj.ContestId, (int)obj.ContestStage, (int)obj.Status,
-        obj.Competitors, obj.Televotes, obj.Juries);
+    public int GetHashCode(Broadcast obj) => HashCode.Combine(obj.Id,
+        obj.ContestId,
+        (int)obj.ContestStage,
+        (int)obj.Status,
+        obj.Competitors,
+        obj.Televotes,
+        obj.Juries);
 }

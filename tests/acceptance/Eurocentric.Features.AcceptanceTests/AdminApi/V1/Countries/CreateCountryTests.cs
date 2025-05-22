@@ -1,5 +1,4 @@
 using System.Net;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -107,8 +106,6 @@ public sealed class CreateCountryTests : AcceptanceTestBase
 
         private CreateCountryRequest? MyRequirements { get; set; }
 
-        private protected override Func<Task<ResponseOrProblem<CreateCountryResponse>>> SendMyRequest { get; set; } = null!;
-
         public async Task Given_I_have_created_a_country_with_country_code(string countryCode)
         {
             CreateCountryRequest request = new() { CountryCode = countryCode, CountryName = "CountryName" };
@@ -142,7 +139,7 @@ public sealed class CreateCountryTests : AcceptanceTestBase
             Country createdCountry = Response.Country;
             Country retrievedCountry = await GetCountryAsync(createdCountry.Id);
 
-            Assert.Equal(createdCountry, retrievedCountry, EqualityComparers.Country);
+            Assert.Equal(createdCountry, retrievedCountry, new CountryEqualityComparer());
         }
 
         private async Task<Country> GetCountryAsync(Guid countryId, CancellationToken cancellationToken = default)

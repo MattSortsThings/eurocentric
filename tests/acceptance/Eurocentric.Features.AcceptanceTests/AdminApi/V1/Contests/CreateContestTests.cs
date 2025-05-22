@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -670,8 +669,6 @@ public sealed class CreateContestTests : AcceptanceTestBase
 
         private CreateContestRequest? MyRequirements { get; set; }
 
-        private protected override Func<Task<ResponseOrProblem<CreateContestResponse>>> SendMyRequest { get; set; } = null!;
-
         public async Task Given_I_have_created_the_countries(params string[] countryCodes)
         {
             Country[] countries = await
@@ -744,7 +741,7 @@ public sealed class CreateContestTests : AcceptanceTestBase
             Contest createdContest = Response.Contest;
             Contest retrievedContest = await GetContestAsync(createdContest.Id);
 
-            Assert.Equal(createdContest, retrievedContest, EqualityComparers.Contest);
+            Assert.Equal(createdContest, retrievedContest, new ContestEqualityComparer());
         }
 
         private async Task<Contest> GetContestAsync(Guid contestId, CancellationToken cancellationToken = default)

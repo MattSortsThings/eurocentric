@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -72,8 +71,6 @@ public sealed class GetCountryTests : AcceptanceTestBase
 
         private Country? MyCountry { get; set; }
 
-        private protected override Func<Task<ResponseOrProblem<GetCountryResponse>>> SendMyRequest { get; set; } = null!;
-
         public async Task Given_I_have_created_a_country() => MyCountry = await CreateCountryAsync("GB");
 
         public void Given_I_want_to_retrieve_my_country_by_its_ID()
@@ -89,7 +86,7 @@ public sealed class GetCountryTests : AcceptanceTestBase
             Assert.NotNull(Response);
             Assert.NotNull(MyCountry);
 
-            Assert.Equal(MyCountry, Response.Country, EqualityComparers.Country);
+            Assert.Equal(MyCountry, Response.Country, new CountryEqualityComparer());
         }
 
         public void Then_the_problem_details_extensions_should_contain_my_country_ID()

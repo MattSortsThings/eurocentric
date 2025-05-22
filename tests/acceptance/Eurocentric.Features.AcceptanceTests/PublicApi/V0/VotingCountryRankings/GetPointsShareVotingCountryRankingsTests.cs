@@ -43,9 +43,6 @@ public abstract class GetPointsShareVotingCountryRankingsTests : AcceptanceTestB
 
         private Dictionary<string, string> MyQueryParams { get; } = [];
 
-        private protected override Func<Task<ResponseOrProblem<GetVotingCountryPointsShareRankingsResponse>>>
-            SendMyRequest { get; set; } = null!;
-
         public void Given_I_want_to_rank_voting_countries_by_points_share(string? contestStages = null,
             string? votingMethod = null, string? competingCountryCode = null)
         {

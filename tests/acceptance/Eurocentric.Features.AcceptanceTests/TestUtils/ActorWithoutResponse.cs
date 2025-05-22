@@ -2,7 +2,8 @@ namespace Eurocentric.Features.AcceptanceTests.TestUtils;
 
 public abstract class ActorWithoutResponse : ActorBase
 {
-    private protected abstract Func<Task<ResponseOrProblem>> SendMyRequest { get; set; }
+    private Func<Task<ResponseOrProblem>> SendMyRequest { get; set; } =
+        () => throw new InvalidOperationException("SendMyRequest function not set.");
 
     public async Task When_I_send_my_request()
     {

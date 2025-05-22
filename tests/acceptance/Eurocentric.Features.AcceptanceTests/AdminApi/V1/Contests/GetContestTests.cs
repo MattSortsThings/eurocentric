@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -82,8 +81,6 @@ public sealed class GetContestTests : AcceptanceTestBase
 
         private Contest? MyContest { get; set; }
 
-        private protected override Func<Task<ResponseOrProblem<GetContestResponse>>> SendMyRequest { get; set; } = null!;
-
         public async Task Given_I_have_created_the_countries(params string[] countryCodes)
         {
             Country[] countries = await
@@ -140,26 +137,12 @@ public sealed class GetContestTests : AcceptanceTestBase
             Assert.NotNull(MyContest);
             Assert.NotNull(Response);
 
-            Assert.Equal(MyContest, Response.Contest, EqualityComparers.Contest);
+            Assert.Equal(MyContest, Response.Contest, new ContestEqualityComparer());
         }
     }
 
     private sealed class WebAppFixtureBackdoor(WebAppFixture fixture)
     {
-        public async Task<Contest> PersistContestAsync(Domain.Contests.Contest contest)
-        {
-            Func<IServiceProvider, Task> persist = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                dbContext.Contests.Add(contest);
-                await dbContext.SaveChangesAsync();
-            };
-
-            await fixture.ExecuteScopedAsync(persist);
-
-            return contest.ToContestDto();
-        }
-
         public async Task DeleteContestAsync(Guid contestId)
         {
             ContestId targetId = ContestId.FromValue(contestId);

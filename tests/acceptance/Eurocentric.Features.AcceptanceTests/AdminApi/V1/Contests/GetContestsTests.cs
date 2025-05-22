@@ -1,5 +1,4 @@
 using System.Net;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -80,8 +79,6 @@ public sealed class GetContestsTests : AcceptanceTestBase
 
         private List<Contest> MyContests { get; } = new(3);
 
-        private protected override Func<Task<ResponseOrProblem<GetContestsResponse>>> SendMyRequest { get; set; } = null!;
-
         public async Task Given_I_have_created_the_countries(params string[] countryCodes)
         {
             Country[] countries = await
@@ -124,7 +121,7 @@ public sealed class GetContestsTests : AcceptanceTestBase
         {
             Assert.NotNull(Response);
 
-            Assert.Equal(MyContests.OrderBy(c => c.Year), Response.Contests, EqualityComparers.Contest);
+            Assert.Equal(MyContests.OrderBy(c => c.Year), Response.Contests, new ContestEqualityComparer());
         }
 
         public void Then_the_retrieved_contests_should_be_an_empty_list()
