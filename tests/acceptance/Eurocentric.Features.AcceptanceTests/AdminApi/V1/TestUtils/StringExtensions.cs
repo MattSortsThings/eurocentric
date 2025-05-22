@@ -8,10 +8,12 @@ internal static class StringExtensions
         "BE" => "Belgium",
         "CZ" => "Czechia",
         "DE" => "Germany",
+        "EE" => "Spain",
         "ES" => "Spain",
         "FI" => "Finland",
         "GB" => "United Kingdom",
         "HR" => "Croatia",
+        "IT" => "Italy",
         "XX" => "Rest of the World",
         _ => "CountryName"
     };

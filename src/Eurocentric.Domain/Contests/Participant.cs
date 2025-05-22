@@ -1,5 +1,6 @@
 using ErrorOr;
 using Eurocentric.Domain.Abstractions;
+using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
 using Eurocentric.Domain.Identifiers;
@@ -30,7 +31,7 @@ public sealed class Participant : Entity
     /// <summary>
     ///     Gets the ID of the country aggregate represented by the participant.
     /// </summary>
-    public CountryId ParticipatingCountryId { get; private init; } = null!;
+    public CountryId ParticipatingCountryId { get; } = null!;
 
     /// <summary>
     ///     Gets the participant's group in its contest aggregate.
@@ -54,6 +55,12 @@ public sealed class Participant : Entity
     ///     <see cref="ParticipantGroup.Zero" />; otherwise, it is not <see langword="null" />.
     /// </remarks>
     public SongTitle? SongTitle { get; private init; }
+
+    internal Competitor CreateCompetitor(int runningOrder = 1) => new(ParticipatingCountryId, runningOrder);
+
+    internal Jury CreateJury() => new(ParticipatingCountryId);
+
+    internal Televote CreateTelevote() => new(ParticipatingCountryId);
 
     /// <summary>
     ///     Creates and returns a new <see cref="Participant" /> instance in participant group

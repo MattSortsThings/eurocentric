@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -6,6 +7,11 @@ namespace Eurocentric.Domain.Contests;
 
 public static class ContestErrors
 {
+    public static Error BroadcastContestStageConflict(ContestStage contestStage) =>
+        Error.Conflict("Broadcast contest stage conflict",
+            "Contest already has a child broadcast with the provided contest stage.",
+            new Dictionary<string, object> { { "contestStage", contestStage.ToString() } });
+
     public static Error ContestNotFound(ContestId contestId) => Error.NotFound("Contest not found",
         "No contest exists with the provided contest ID.",
         new Dictionary<string, object> { { "contestId", contestId.Value } });

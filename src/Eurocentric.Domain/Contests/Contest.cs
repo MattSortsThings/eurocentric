@@ -1,4 +1,6 @@
+using ErrorOr;
 using Eurocentric.Domain.Abstractions;
+using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
@@ -129,6 +131,99 @@ public abstract class Contest : AggregateRoot<ContestId>
         _ = RemoveExistingMemoOrThrowIfNotFound(broadcastId);
     }
 
+    /// <summary>
+    ///     Creates and returns a new <see cref="Broadcast" /> aggregate in its initial state representing the
+    ///     <see cref="ContestStage.SemiFinal1" /> stage of the contest.
+    /// </summary>
+    /// <param name="competingCountryIds">The IDs of the competing countries in their running order in the broadcast.</param>
+    /// <param name="idProvider">Provides the <see cref="Broadcast.Id" /> value for the returned instance.</param>
+    /// <returns>
+    ///     A new <see cref="Broadcast" /> instance if it has been successfully built; otherwise, a list of
+    ///     <see cref="Error" /> values.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    ///     <paramref name="competingCountryIds" /> is <see langword="null" />; or,
+    ///     <paramref name="idProvider" /> is <see langword="null" />.
+    /// </exception>
+    public ErrorOr<Broadcast> CreateSemiFinal1Broadcast(IEnumerable<CountryId> competingCountryIds, Func<BroadcastId> idProvider)
+    {
+        ArgumentNullException.ThrowIfNull(competingCountryIds);
+        ArgumentNullException.ThrowIfNull(idProvider);
+
+        return InitializeSemiFinal1Builder()
+            .ThenDo(builder => builder.SetCompetitors(competingCountryIds, _participants)
+                .SetJuries(_participants)
+                .SetTelevotes(_participants))
+            .Then(builder => builder.Build(idProvider));
+    }
+
+    /// <summary>
+    ///     Creates and returns a new <see cref="Broadcast" /> aggregate in its initial state representing the
+    ///     <see cref="ContestStage.SemiFinal2" /> stage of the contest.
+    /// </summary>
+    /// <param name="competingCountryIds">The IDs of the competing countries in their running order in the broadcast.</param>
+    /// <param name="idProvider">Provides the <see cref="Broadcast.Id" /> value for the returned instance.</param>
+    /// <returns>
+    ///     A new <see cref="Broadcast" /> instance if it has been successfully built; otherwise, a list of
+    ///     <see cref="Error" /> values.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    ///     <paramref name="competingCountryIds" /> is <see langword="null" />; or,
+    ///     <paramref name="idProvider" /> is <see langword="null" />.
+    /// </exception>
+    public ErrorOr<Broadcast> CreateSemiFinal2Broadcast(IEnumerable<CountryId> competingCountryIds, Func<BroadcastId> idProvider)
+    {
+        ArgumentNullException.ThrowIfNull(competingCountryIds);
+        ArgumentNullException.ThrowIfNull(idProvider);
+
+        return InitializeSemiFinal2Builder()
+            .ThenDo(builder => builder.SetCompetitors(competingCountryIds, _participants)
+                .SetJuries(_participants)
+                .SetTelevotes(_participants))
+            .Then(builder => builder.Build(idProvider));
+    }
+
+    /// <summary>
+    ///     Creates and returns a new <see cref="Broadcast" /> aggregate in its initial state representing the
+    ///     <see cref="ContestStage.GrandFinal" /> stage of the contest.
+    /// </summary>
+    /// <param name="competingCountryIds">The IDs of the competing countries in their running order in the broadcast.</param>
+    /// <param name="idProvider">Provides the <see cref="Broadcast.Id" /> value for the returned instance.</param>
+    /// <returns>
+    ///     A new <see cref="Broadcast" /> instance if it has been successfully built; otherwise, a list of
+    ///     <see cref="Error" /> values.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    ///     <paramref name="competingCountryIds" /> is <see langword="null" />; or,
+    ///     <paramref name="idProvider" /> is <see langword="null" />.
+    /// </exception>
+    public ErrorOr<Broadcast> CreateGrandFinalBroadcast(IEnumerable<CountryId> competingCountryIds, Func<BroadcastId> idProvider)
+    {
+        ArgumentNullException.ThrowIfNull(competingCountryIds);
+        ArgumentNullException.ThrowIfNull(idProvider);
+
+        return InitializeGrandFinalBuilder()
+            .ThenDo(builder => builder.SetCompetitors(competingCountryIds, _participants)
+                .SetJuries(_participants)
+                .SetTelevotes(_participants))
+            .Then(builder => builder.Build(idProvider));
+    }
+
+    private ErrorOr<BroadcastBuilder> InitializeSemiFinal1Builder() =>
+        _broadcastMemos.Any(memo => memo.ContestStage == ContestStage.SemiFinal1)
+            ? ContestErrors.BroadcastContestStageConflict(ContestStage.SemiFinal1)
+            : CreateSemiFinal1BroadcastBuilder();
+
+    private ErrorOr<BroadcastBuilder> InitializeSemiFinal2Builder() =>
+        _broadcastMemos.Any(memo => memo.ContestStage == ContestStage.SemiFinal2)
+            ? ContestErrors.BroadcastContestStageConflict(ContestStage.SemiFinal2)
+            : CreateSemiFinal2BroadcastBuilder();
+
+    private ErrorOr<BroadcastBuilder> InitializeGrandFinalBuilder() =>
+        _broadcastMemos.Any(memo => memo.ContestStage == ContestStage.GrandFinal)
+            ? ContestErrors.BroadcastContestStageConflict(ContestStage.GrandFinal)
+            : CreateGrandFinalBroadcastBuilder();
+
     private BroadcastMemo RemoveExistingMemoOrThrowIfNotFound(BroadcastId broadcastId)
     {
         if (_broadcastMemos.SingleOrDefault(memo => memo.BroadcastId == broadcastId) is not { } existingMemo)
@@ -140,4 +235,10 @@ public abstract class Contest : AggregateRoot<ContestId>
 
         return existingMemo;
     }
+
+    private protected abstract BroadcastBuilder CreateSemiFinal1BroadcastBuilder();
+
+    private protected abstract BroadcastBuilder CreateSemiFinal2BroadcastBuilder();
+
+    private protected abstract BroadcastBuilder CreateGrandFinalBroadcastBuilder();
 }

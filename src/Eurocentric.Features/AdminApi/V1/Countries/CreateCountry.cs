@@ -43,7 +43,7 @@ internal static class CreateCountry
             .WithSummary("Create a country")
             .WithDescription("Creates a new country.")
             .WithTags(EndpointTags.Countries)
-            .Produces<CreateCountryResponse>()
+            .Produces<CreateCountryResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);

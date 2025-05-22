@@ -103,7 +103,7 @@ internal static class CreateContest
             .WithSummary("Create a contest")
             .WithDescription("Creates a new contest.")
             .WithTags(EndpointTags.Contests)
-            .Produces<CreateContestResponse>()
+            .Produces<CreateContestResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
@@ -111,12 +111,11 @@ internal static class CreateContest
         return apiVersionGroup;
     }
 
-
     private static Action<ContestBuilder> ToContestBuilderMutator(this Command command)
     {
         var (contestYear, cityName, _, group0CountryId, group1Participants, group2Participants) = command;
 
-        Action<ContestBuilder> mutator = builder => { };
+        Action<ContestBuilder> mutator = _ => { };
 
         mutator += builder => builder.WithYear(ContestYear.FromValue(contestYear));
 

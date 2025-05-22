@@ -18,6 +18,20 @@ public sealed partial class AdminApiV1Driver
         return await _client.SendRequestAsync<CreateContestResponse>(request, cancellationToken);
     }
 
+    public async Task<ResponseOrProblem<CreateChildBroadcastResponse>> CreateChildBroadcastAsync(Guid contestId,
+        CreateChildBroadcastRequest requestBody,
+        CancellationToken cancellationToken = default)
+    {
+        RestRequest request = new("/admin/api/v{apiVersion}/contests/{contestId}/broadcasts", Method.Post);
+
+        request.UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("contestId", contestId)
+            .AddJsonBody(requestBody);
+
+        return await _client.SendRequestAsync<CreateChildBroadcastResponse>(request, cancellationToken);
+    }
+
     public async Task<ResponseOrProblem<GetContestResponse>> GetContestAsync(Guid contestId,
         CancellationToken cancellationToken = default)
     {

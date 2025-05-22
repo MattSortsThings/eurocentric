@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Contests;
 using Eurocentric.Domain.Countries;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +17,8 @@ internal static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     internal static IServiceCollection AddIdProviders(this IServiceCollection services)
     {
-        services.AddScoped<IContestIdProvider, ContestIdProvider>()
+        services.AddScoped<IBroadcastIdProvider, BroadcastIdProvider>()
+            .AddScoped<IContestIdProvider, ContestIdProvider>()
             .AddScoped<ICountryIdProvider, CountryIdProvider>();
 
         return services;
