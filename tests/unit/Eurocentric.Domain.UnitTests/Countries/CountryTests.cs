@@ -9,38 +9,67 @@ namespace Eurocentric.Domain.UnitTests.Countries;
 
 public sealed class CountryTests : UnitTestBase
 {
-    private static Country CreateCountryWithDefaultValues() => Country.Create()
-        .WithCountryCode(CountryCode.FromValue("AA"))
-        .WithName(CountryName.FromValue("CountryName"))
-        .Build(() => CountryId.FromValue(Guid.Parse("2963534f-85b8-4546-a240-b82631898035")))
-        .Value;
+    private static readonly CountryId FixedCountryId =
+        CountryId.FromValue(Guid.Parse("989c773a-0306-4136-813d-c10d8de2935b"));
 
     public sealed class AddMemoMethod : UnitTestBase
     {
-        private static readonly ContestId FixedContestId =
-            ContestId.FromValue(Guid.Parse("785913e9-dad3-4504-90aa-34e1175fb02e"));
+        private static Country InitializeCountry() => Country.Create()
+            .WithCountryCode(CountryCode.FromValue("AA"))
+            .WithName(CountryName.FromValue("CountryName"))
+            .Build(() => FixedCountryId)
+            .Value;
 
         [Fact]
-        public void Should_add_contest_memo_with_initialized_status()
+        public void Should_add_memo_with_provided_contest_ID_value_and_Initialized_status()
         {
             // Arrange
-            Country sut = CreateCountryWithDefaultValues();
+            Country sut = InitializeCountry();
+
+            ContestId contestId = ContestIds.GetOne();
 
             // Assert
             Assert.Empty(sut.ContestMemos);
 
             // Act
-            sut.AddMemo(FixedContestId);
+            sut.AddMemo(contestId);
 
             // Assert
-            Assert.Single(sut.ContestMemos, new ContestMemo(FixedContestId, ContestStatus.Initialized));
+            ContestMemo memo = Assert.Single(sut.ContestMemos);
+
+            Assert.Equal(contestId, memo.ContestId);
+            Assert.Equal(ContestStatus.Initialized, memo.Status);
+        }
+
+        [Fact]
+        public void Should_throw_when_has_memo_with_provided_contest_ID_value()
+        {
+            // Arrange
+            Country sut = InitializeCountry();
+
+            ContestId contestId = ContestIds.GetOne();
+
+            sut.AddMemo(contestId);
+
+            // Assert
+            ContestMemo initialMemo = Assert.Single(sut.ContestMemos);
+
+            // Act
+            Action act = () => sut.AddMemo(contestId);
+
+            // Assert
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+            Assert.Equal("ContestMemos collection contains an item with the provided ContestId value.", exception.Message);
+
+            ContestMemo memo = Assert.Single(sut.ContestMemos);
+            Assert.Equal(initialMemo, memo);
         }
 
         [Fact]
         public void Should_throw_given_null_contestId_arg()
         {
             // Arrange
-            Country sut = CreateCountryWithDefaultValues();
+            Country sut = InitializeCountry();
 
             // Act
             Action act = () => sut.AddMemo(null!);
@@ -48,58 +77,72 @@ public sealed class CountryTests : UnitTestBase
             // Assert
             ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
             Assert.Equal("Value cannot be null. (Parameter 'contestId')", exception.Message);
-
-            Assert.Empty(sut.ContestMemos);
-        }
-
-        [Fact]
-        public void Should_throw_when_existing_contest_memo_has_provided_contest_ID()
-        {
-            // Arrange
-            Country sut = CreateCountryWithDefaultValues();
-            sut.AddMemo(FixedContestId);
-
-            // Assert
-            Assert.Single(sut.ContestMemos);
-
-            // Act
-            Action act = () => sut.AddMemo(FixedContestId);
-
-            // Assert
-            ArgumentException exception = Assert.Throws<ArgumentException>(act);
-            Assert.Equal("ContestMemos collection contains an item with the provided ContestId value.", exception.Message);
-
-            Assert.Single(sut.ContestMemos);
         }
     }
 
     public sealed class ReplaceMemoMethod : UnitTestBase
     {
-        private static readonly ContestId FixedContestId =
-            ContestId.FromValue(Guid.Parse("785913e9-dad3-4504-90aa-34e1175fb02e"));
+        private static Country InitializeCountry() => Country.Create()
+            .WithCountryCode(CountryCode.FromValue("AA"))
+            .WithName(CountryName.FromValue("CountryName"))
+            .Build(() => FixedCountryId)
+            .Value;
 
         [Fact]
-        public void Should_replace_contest_memo_with_new_memo_having_provided_status()
+        public void Should_replace_memo_with_provided_contest_ID_and_status_values()
         {
             // Arrange
-            Country sut = CreateCountryWithDefaultValues();
-            sut.AddMemo(FixedContestId);
+            Country sut = InitializeCountry();
+
+            var (contestId1Of2, contestId2Of2) = ContestIds.GetTwo();
+
+            sut.AddMemo(contestId1Of2);
+            sut.AddMemo(contestId2Of2);
 
             // Assert
-            Assert.Single(sut.ContestMemos, new ContestMemo(FixedContestId, ContestStatus.Initialized));
+            Assert.Equivalent((ContestMemo[])
+            [
+                new ContestMemo(contestId1Of2, ContestStatus.Initialized),
+                new ContestMemo(contestId2Of2, ContestStatus.Initialized)
+            ], sut.ContestMemos);
 
             // Act
-            sut.ReplaceMemo(FixedContestId, ContestStatus.InProgress);
+            sut.ReplaceMemo(contestId2Of2, ContestStatus.InProgress);
 
             // Assert
-            Assert.Single(sut.ContestMemos, new ContestMemo(FixedContestId, ContestStatus.InProgress));
+            Assert.Equivalent((ContestMemo[])
+            [
+                new ContestMemo(contestId1Of2, ContestStatus.Initialized),
+                new ContestMemo(contestId2Of2, ContestStatus.InProgress)
+            ], sut.ContestMemos);
+        }
+
+        [Fact]
+        public void Should_throw_when_has_no_memo_with_provided_contest_ID_value()
+        {
+            // Arrange
+            Country sut = InitializeCountry();
+
+            ContestId contestId = ContestIds.GetOne();
+
+            // Assert
+            Assert.Empty(sut.ContestMemos);
+
+            // Act
+            Action act = () => sut.ReplaceMemo(contestId, ContestStatus.InProgress);
+
+            // Assert
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+            Assert.Equal("ContestMemos collection contains no item with the provided ContestId value.", exception.Message);
+
+            Assert.Empty(sut.ContestMemos);
         }
 
         [Fact]
         public void Should_throw_given_null_contestId_arg()
         {
             // Arrange
-            Country sut = CreateCountryWithDefaultValues();
+            Country sut = InitializeCountry();
 
             // Act
             Action act = () => sut.ReplaceMemo(null!, ContestStatus.InProgress);
@@ -107,46 +150,61 @@ public sealed class CountryTests : UnitTestBase
             // Assert
             ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
             Assert.Equal("Value cannot be null. (Parameter 'contestId')", exception.Message);
-
-            Assert.Empty(sut.ContestMemos);
-        }
-
-        [Fact]
-        public void Should_throw_when_no_existing_contest_memo_has_provided_contest_ID()
-        {
-            // Arrange
-            Country sut = CreateCountryWithDefaultValues();
-
-            // Act
-            Action act = () => sut.ReplaceMemo(FixedContestId, ContestStatus.InProgress);
-
-            // Assert
-            ArgumentException exception = Assert.Throws<ArgumentException>(act);
-            Assert.Equal("ContestMemos collection contains no item with the provided ContestId value.", exception.Message);
-
-            Assert.Empty(sut.ContestMemos);
         }
     }
 
     public sealed class RemoveMemoMethod : UnitTestBase
     {
-        private static readonly ContestId FixedContestId =
-            ContestId.FromValue(Guid.Parse("785913e9-dad3-4504-90aa-34e1175fb02e"));
+        private static Country InitializeCountry() => Country.Create()
+            .WithCountryCode(CountryCode.FromValue("AA"))
+            .WithName(CountryName.FromValue("CountryName"))
+            .Build(() => FixedCountryId)
+            .Value;
 
         [Fact]
-        public void Should_remove_contest_memo_having_provided_contest_ID()
+        public void Should_remove_memo_with_provided_contest_ID_value()
         {
             // Arrange
-            Country sut = CreateCountryWithDefaultValues();
-            sut.AddMemo(FixedContestId);
+            Country sut = InitializeCountry();
+
+            var (contestId1Of2, contestId2Of2) = ContestIds.GetTwo();
+
+            sut.AddMemo(contestId1Of2);
+            sut.AddMemo(contestId2Of2);
 
             // Assert
-            Assert.Single(sut.ContestMemos, new ContestMemo(FixedContestId, ContestStatus.Initialized));
+            Assert.Equivalent((ContestMemo[])
+            [
+                new ContestMemo(contestId1Of2, ContestStatus.Initialized),
+                new ContestMemo(contestId2Of2, ContestStatus.Initialized)
+            ], sut.ContestMemos);
 
             // Act
-            sut.RemoveMemo(FixedContestId);
+            sut.RemoveMemo(contestId2Of2);
 
             // Assert
+            ContestMemo remainingMemo = Assert.Single(sut.ContestMemos);
+            Assert.Equal(new ContestMemo(contestId1Of2, ContestStatus.Initialized), remainingMemo);
+        }
+
+        [Fact]
+        public void Should_throw_when_has_no_memo_with_provided_contest_ID_value()
+        {
+            // Arrange
+            Country sut = InitializeCountry();
+
+            ContestId contestId = ContestIds.GetOne();
+
+            // Assert
+            Assert.Empty(sut.ContestMemos);
+
+            // Act
+            Action act = () => sut.RemoveMemo(contestId);
+
+            // Assert
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+            Assert.Equal("ContestMemos collection contains no item with the provided ContestId value.", exception.Message);
+
             Assert.Empty(sut.ContestMemos);
         }
 
@@ -154,7 +212,7 @@ public sealed class CountryTests : UnitTestBase
         public void Should_throw_given_null_contestId_arg()
         {
             // Arrange
-            Country sut = CreateCountryWithDefaultValues();
+            Country sut = InitializeCountry();
 
             // Act
             Action act = () => sut.RemoveMemo(null!);
@@ -162,24 +220,6 @@ public sealed class CountryTests : UnitTestBase
             // Assert
             ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
             Assert.Equal("Value cannot be null. (Parameter 'contestId')", exception.Message);
-
-            Assert.Empty(sut.ContestMemos);
-        }
-
-        [Fact]
-        public void Should_throw_when_no_existing_contest_memo_has_provided_contest_ID()
-        {
-            // Arrange
-            Country sut = CreateCountryWithDefaultValues();
-
-            // Act
-            Action act = () => sut.RemoveMemo(FixedContestId);
-
-            // Assert
-            ArgumentException exception = Assert.Throws<ArgumentException>(act);
-            Assert.Equal("ContestMemos collection contains no item with the provided ContestId value.", exception.Message);
-
-            Assert.Empty(sut.ContestMemos);
         }
     }
 
@@ -187,9 +227,6 @@ public sealed class CountryTests : UnitTestBase
     {
         private static readonly ErrorOr<CountryCode> ArbitraryCountryCode = CountryCode.FromValue("AA");
         private static readonly ErrorOr<CountryName> ArbitraryCountryName = CountryName.FromValue("CountryName");
-
-        private static readonly CountryId FixedCountryId =
-            CountryId.FromValue(Guid.Parse("989c773a-0306-4136-813d-c10d8de2935b"));
 
         [Theory]
         [InlineData("AT", "Austria")]
@@ -264,7 +301,7 @@ public sealed class CountryTests : UnitTestBase
         }
 
         [Fact]
-        public void Should_throw_given_null_IDProvider_arg()
+        public void Should_throw_given_null_idProvider_arg()
         {
             // Act
             Action act = () => Country.Create()

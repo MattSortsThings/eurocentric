@@ -95,6 +95,7 @@ public abstract class Contest : AggregateRoot<ContestId>
         }
 
         _broadcastMemos.Add(new BroadcastMemo(broadcastId, contestStage, BroadcastStatus.Initialized));
+        UpdateStatus();
     }
 
     /// <summary>
@@ -113,6 +114,7 @@ public abstract class Contest : AggregateRoot<ContestId>
 
         BroadcastMemo removed = RemoveExistingMemoOrThrowIfNotFound(broadcastId);
         _broadcastMemos.Add(new BroadcastMemo(removed.BroadcastId, removed.ContestStage, status));
+        UpdateStatus();
     }
 
     /// <summary>
@@ -129,6 +131,7 @@ public abstract class Contest : AggregateRoot<ContestId>
         ArgumentNullException.ThrowIfNull(broadcastId);
 
         _ = RemoveExistingMemoOrThrowIfNotFound(broadcastId);
+        UpdateStatus();
     }
 
     /// <summary>
@@ -235,6 +238,13 @@ public abstract class Contest : AggregateRoot<ContestId>
 
         return existingMemo;
     }
+
+    private void UpdateStatus() => Status = _broadcastMemos.Count switch
+    {
+        0 => ContestStatus.Initialized,
+        3 when _broadcastMemos.All(memo => memo.Status == BroadcastStatus.Completed) => ContestStatus.Completed,
+        _ => ContestStatus.InProgress
+    };
 
     private protected abstract BroadcastBuilder CreateSemiFinal1BroadcastBuilder();
 
