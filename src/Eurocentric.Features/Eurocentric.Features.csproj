@@ -6,9 +6,12 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SlimMessageBus.Host.Memory"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
   </ItemGroup>
 </Project>
