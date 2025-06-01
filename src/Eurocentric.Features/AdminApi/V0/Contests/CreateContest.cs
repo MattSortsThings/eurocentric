@@ -30,7 +30,7 @@ internal static class CreateContest
 {
     internal static IEndpointRouteBuilder MapCreateContest(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapPost("v0.2/contests", Endpoint.HandleAsync)
+        apiGroup.MapPost("v0.2/contests", HandleAsync)
             .WithName("AdminApi.V0.2.CreateContest")
             .WithSummary("Create a contest")
             .WithDescription("Creates a new contest.")
@@ -38,6 +38,18 @@ internal static class CreateContest
             .WithTags(EndpointTags.Contests);
 
         return apiGroup;
+    }
+
+    private static async Task<IResult> HandleAsync([FromBody] CreateContestRequest request,
+        IRequestResponseBus bus,
+        CancellationToken cancellationToken = default)
+    {
+        ErrorOr<CreateContestResponse> errorsOrResponse =
+            await bus.Send(request.ToCommand(), cancellationToken: cancellationToken);
+
+        return TypedResults.CreatedAtRoute(errorsOrResponse.Value,
+            "AdminApi.V0.2.Contests.GetContest",
+            new RouteValueDictionary { ["contestId"] = errorsOrResponse.Value.Contest.Id });
     }
 
     private static Command ToCommand(this CreateContestRequest request) =>
@@ -52,7 +64,7 @@ internal static class CreateContest
         {
             await Task.CompletedTask;
 
-            var (contestYear, cityName, contestFormat) = command;
+            (int contestYear, string cityName, ContestFormat contestFormat) = command;
 
             PlaceholderContest contest = contestFormat switch
             {
@@ -64,21 +76,6 @@ internal static class CreateContest
             repository.Contests.Add(contest);
 
             return ErrorOrFactory.From(new CreateContestResponse(contest.ToContestDto()));
-        }
-    }
-
-    private static class Endpoint
-    {
-        internal static async Task<IResult> HandleAsync([FromBody] CreateContestRequest request,
-            IRequestResponseBus bus,
-            CancellationToken cancellationToken = default)
-        {
-            ErrorOr<CreateContestResponse> errorsOrResponse =
-                await bus.Send(request.ToCommand(), cancellationToken: cancellationToken);
-
-            return TypedResults.CreatedAtRoute(errorsOrResponse.Value,
-                "AdminApi.V0.2.Contests.GetContest",
-                new RouteValueDictionary { ["contestId"] = errorsOrResponse.Value.Contest.Id });
         }
     }
 }

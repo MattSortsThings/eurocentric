@@ -17,14 +17,14 @@ internal static class GetContests
 {
     internal static IEndpointRouteBuilder MapGetContests(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.1/contests", Endpoint.HandleAsync)
+        apiGroup.MapGet("v0.1/contests", HandleAsync)
             .WithName("AdminApi.V0.1.GetContests")
             .WithSummary("Get all contests")
             .WithDescription("Retrieves a list of all existing contests, ordered by contest year.")
             .Produces<GetContestsResponse>()
             .WithTags(EndpointTags.Contests);
 
-        apiGroup.MapGet("v0.2/contests", Endpoint.HandleAsync)
+        apiGroup.MapGet("v0.2/contests", HandleAsync)
             .WithName("AdminApi.V0.2.GetContests")
             .WithSummary("Get all contests")
             .WithDescription("Retrieves a list of all existing contests, ordered by contest year.")
@@ -32,6 +32,14 @@ internal static class GetContests
             .WithTags(EndpointTags.Contests);
 
         return apiGroup;
+    }
+
+    internal static async Task<IResult> HandleAsync(IRequestResponseBus bus,
+        CancellationToken cancellationToken = default)
+    {
+        ErrorOr<GetContestsResponse> errorsOrResponse = await bus.Send(new Query(), cancellationToken: cancellationToken);
+
+        return TypedResults.Ok(errorsOrResponse.Value);
     }
 
     internal sealed record Query : IQuery<GetContestsResponse>;
@@ -47,17 +55,6 @@ internal static class GetContests
                 .ToArray();
 
             return ErrorOrFactory.From(new GetContestsResponse(contests));
-        }
-    }
-
-    private static class Endpoint
-    {
-        internal static async Task<IResult> HandleAsync(IRequestResponseBus bus,
-            CancellationToken cancellationToken = default)
-        {
-            ErrorOr<GetContestsResponse> errorsOrResponse = await bus.Send(new Query(), cancellationToken: cancellationToken);
-
-            return TypedResults.Ok(errorsOrResponse.Value);
         }
     }
 }

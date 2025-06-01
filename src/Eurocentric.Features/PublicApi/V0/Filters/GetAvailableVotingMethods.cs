@@ -15,14 +15,14 @@ internal static class GetAvailableVotingMethods
 {
     internal static IEndpointRouteBuilder MapGetAvailableVotingMethods(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.1/filters/voting-methods", Endpoint.HandleAsync)
+        apiGroup.MapGet("v0.1/filters/voting-methods", HandleAsync)
             .WithName("PublicApi.V0.1.GetAvailableVotingMethods")
             .WithSummary("Get available voting methods")
             .WithDescription("Retrieves a list of all available 'votingMethod' query parameter values.")
             .Produces<GetAvailableVotingMethodsResponse>()
             .WithTags(EndpointTags.Filters);
 
-        apiGroup.MapGet("v0.2/filters/voting-methods", Endpoint.HandleAsync)
+        apiGroup.MapGet("v0.2/filters/voting-methods", HandleAsync)
             .WithName("PublicApi.V0.2.GetAvailableVotingMethods")
             .WithSummary("Get available voting methods")
             .WithDescription("Retrieves a list of all available 'votingMethod' query parameter values.")
@@ -30,6 +30,14 @@ internal static class GetAvailableVotingMethods
             .WithTags(EndpointTags.Filters);
 
         return apiGroup;
+    }
+
+    private static async Task<IResult> HandleAsync(IRequestResponseBus bus, CancellationToken cancellationToken = default)
+    {
+        ErrorOr<GetAvailableVotingMethodsResponse> errorsOrResponse =
+            await bus.Send(new Query(), cancellationToken: cancellationToken);
+
+        return TypedResults.Ok(errorsOrResponse.Value);
     }
 
     internal sealed record Query : IQuery<GetAvailableVotingMethodsResponse>;
@@ -41,17 +49,6 @@ internal static class GetAvailableVotingMethods
             await Task.CompletedTask;
 
             return ErrorOrFactory.From(new GetAvailableVotingMethodsResponse(Enum.GetValues<VotingMethod>()));
-        }
-    }
-
-    private static class Endpoint
-    {
-        public static async Task<IResult> HandleAsync(IRequestResponseBus bus, CancellationToken cancellationToken = default)
-        {
-            ErrorOr<GetAvailableVotingMethodsResponse> errorsOrResponse =
-                await bus.Send(new Query(), cancellationToken: cancellationToken);
-
-            return TypedResults.Ok(errorsOrResponse.Value);
         }
     }
 }

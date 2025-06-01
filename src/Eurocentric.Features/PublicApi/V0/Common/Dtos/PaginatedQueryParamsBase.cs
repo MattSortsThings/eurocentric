@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eurocentric.Features.PublicApi.V0.Common.Dtos;
 
-public abstract record PaginatedQuery
+public abstract record PaginatedQueryParamsBase
 {
     [DefaultValue(0)]
     [FromQuery(Name = "pageIndex")]

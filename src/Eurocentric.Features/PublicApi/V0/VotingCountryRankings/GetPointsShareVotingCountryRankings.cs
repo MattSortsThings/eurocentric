@@ -51,7 +51,7 @@ public sealed record GetPointsShareVotingCountryRankingsResponse(
     PointsShareVotingCountryRankingFilters Filters,
     PaginationMetadata Pagination);
 
-public sealed record GetPointsShareVotingCountryRankingsQuery : PaginatedQuery
+public sealed record GetPointsShareVotingCountryRankingsQueryParams : PaginatedQueryParamsBase
 {
     [Required]
     [FromQuery(Name = "competingCountryCode")]
@@ -76,7 +76,7 @@ internal static class GetPointsShareVotingCountryRankings
 {
     internal static IEndpointRouteBuilder MapGetPointsShareVotingCountryRankings(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.2/voting-country-rankings/points-share", Endpoint.HandleAsync)
+        apiGroup.MapGet("v0.2/voting-country-rankings/points-share", HandleAsync)
             .WithName("PublicApi.V0.2.GetPointsShareVotingCountryRankings")
             .WithSummary("Get points share voting country rankings")
             .WithDescription("Ranks every voting country by the total points it has awarded to a given competing country, " +
@@ -87,7 +87,18 @@ internal static class GetPointsShareVotingCountryRankings
         return apiGroup;
     }
 
-    private static Query ToQuery(this GetPointsShareVotingCountryRankingsQuery queryParams) =>
+    private static async Task<IResult> HandleAsync(
+        [AsParameters] GetPointsShareVotingCountryRankingsQueryParams queryParams,
+        IRequestResponseBus bus,
+        CancellationToken cancellationToken = default)
+    {
+        ErrorOr<GetPointsShareVotingCountryRankingsResponse> errorsOrResponse =
+            await bus.Send(queryParams.ToQuery(), cancellationToken: cancellationToken);
+
+        return TypedResults.Ok(errorsOrResponse.Value);
+    }
+
+    private static Query ToQuery(this GetPointsShareVotingCountryRankingsQueryParams queryParams) =>
         new(queryParams.CompetingCountryCode,
             queryParams.VotingMethod ?? VotingMethod.Any,
             queryParams.StartYear,
@@ -211,20 +222,6 @@ internal static class GetPointsShareVotingCountryRankings
                 _ => throw new InvalidEnumArgumentException(nameof(votingMethod), (int)votingMethod, typeof(VotingMethod))
             };
     }
-
-    private static class Endpoint
-    {
-        internal static async Task<IResult> HandleAsync([AsParameters] GetPointsShareVotingCountryRankingsQuery queryParams,
-            IRequestResponseBus bus,
-            CancellationToken cancellationToken = default)
-        {
-            ErrorOr<GetPointsShareVotingCountryRankingsResponse> errorsOrResponse =
-                await bus.Send(queryParams.ToQuery(), cancellationToken: cancellationToken);
-
-            return TypedResults.Ok(errorsOrResponse.Value);
-        }
-    }
-
 
     private sealed record InterimRanking
     {

@@ -18,14 +18,14 @@ internal static class GetContest
 {
     internal static IEndpointRouteBuilder MapGetContest(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.1/contests/{contestId:guid}", Endpoint.HandleAsync)
+        apiGroup.MapGet("v0.1/contests/{contestId:guid}", HandleAsync)
             .WithName("AdminApi.V0.1.GetContest")
             .WithSummary("Get a contest")
             .WithDescription("Retrieves a single contest.")
             .Produces<GetContestResponse>()
             .WithTags(EndpointTags.Contests);
 
-        apiGroup.MapGet("v0.2/contests/{contestId:guid}", Endpoint.HandleAsync)
+        apiGroup.MapGet("v0.2/contests/{contestId:guid}", HandleAsync)
             .WithName("AdminApi.V0.2.GetContest")
             .WithSummary("Get a contest")
             .WithDescription("Retrieves a single contest.")
@@ -33,6 +33,16 @@ internal static class GetContest
             .WithTags(EndpointTags.Contests);
 
         return apiGroup;
+    }
+
+    private static async Task<IResult> HandleAsync([FromRoute(Name = "contestId")] Guid contestId,
+        IRequestResponseBus bus,
+        CancellationToken cancellationToken = default)
+    {
+        ErrorOr<GetContestResponse> errorsOrResponse = await bus.Send(new Query(contestId),
+            cancellationToken: cancellationToken);
+
+        return TypedResults.Ok(errorsOrResponse.Value);
     }
 
     internal sealed record Query(Guid ContestId) : IQuery<GetContestResponse>;
@@ -49,19 +59,6 @@ internal static class GetContest
                 .First();
 
             return ErrorOrFactory.From(new GetContestResponse(contest));
-        }
-    }
-
-    private static class Endpoint
-    {
-        internal static async Task<IResult> HandleAsync([FromRoute(Name = "contestId")] Guid contestId,
-            IRequestResponseBus bus,
-            CancellationToken cancellationToken = default)
-        {
-            ErrorOr<GetContestResponse> errorsOrResponse = await bus.Send(new Query(contestId),
-                cancellationToken: cancellationToken);
-
-            return TypedResults.Ok(errorsOrResponse.Value);
         }
     }
 }
