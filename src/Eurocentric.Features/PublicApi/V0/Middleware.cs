@@ -1,0 +1,28 @@
+using Eurocentric.Features.PublicApi.V0.Filters;
+using Eurocentric.Features.PublicApi.V0.VotingCountryRankings;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
+
+namespace Eurocentric.Features.PublicApi.V0;
+
+/// <summary>
+///     Extension methods to be invoked when configuring HTTP request pipeline middleware.
+/// </summary>
+internal static class Middleware
+{
+    /// <summary>
+    ///     Maps the versioned endpoints for version 0 of the Public API.
+    /// </summary>
+    /// <param name="app">The web application.</param>
+    internal static void MapPublicApiV0Endpoints(this IEndpointRouteBuilder app)
+    {
+        RouteGroupBuilder apiGroup = app.MapGroup("public/api")
+            .WithGroupName("PublicApi.V0")
+            .AllowAnonymous();
+
+        apiGroup.MapGetAvailableContestStages()
+            .MapGetAvailableVotingMethods();
+
+        apiGroup.MapGetPointsShareVotingCountryRankings();
+    }
+}

@@ -1,3 +1,4 @@
+using Eurocentric.Infrastructure.InMemoryRepositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Infrastructure;
@@ -13,5 +14,10 @@ public static class DependencyInjection
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services) => services;
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    {
+        services.AddInMemoryRepositories();
+
+        return services;
+    }
 }

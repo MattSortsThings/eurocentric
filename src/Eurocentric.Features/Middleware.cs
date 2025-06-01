@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using Eurocentric.Features.AdminApi.V0;
+using Eurocentric.Features.PublicApi.V0;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Features;
 
 /// <summary>
-///     Extension methods to invoked at application startup.
+///     Extension methods to be invoked when configuring HTTP request pipeline middleware.
 /// </summary>
 public static class Middleware
 {
@@ -15,11 +15,7 @@ public static class Middleware
     /// <param name="app">The web application.</param>
     public static void UseApiEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("admin/api/v0.1/placeholder", () => TypedResults.Ok($"Admin API v0 zapped to the extreme at {DateTime.Now}!"))
-            .AllowAnonymous();
-
-        app.MapGet("public/api/v0.1/placeholder",
-                () => TypedResults.Ok($"Public API v0 zapped to the extreme at {DateTime.Now}!"))
-            .AllowAnonymous();
+        app.MapAdminApiV0Endpoints();
+        app.MapPublicApiV0Endpoints();
     }
 }
