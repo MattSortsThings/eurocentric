@@ -21,6 +21,7 @@ internal static class DependencyInjection
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            options.SerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
         });
 
         return services;

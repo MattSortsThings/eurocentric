@@ -18,14 +18,14 @@ internal static class GetContests
     internal static IEndpointRouteBuilder MapGetContests(this IEndpointRouteBuilder apiGroup)
     {
         apiGroup.MapGet("v0.1/contests", HandleAsync)
-            .WithName("AdminApi.V0.1.GetContests")
+            .WithName("AdminApi.V0.1.Contests.GetContests")
             .WithSummary("Get all contests")
             .WithDescription("Retrieves a list of all existing contests, ordered by contest year.")
             .Produces<GetContestsResponse>()
             .WithTags(EndpointTags.Contests);
 
         apiGroup.MapGet("v0.2/contests", HandleAsync)
-            .WithName("AdminApi.V0.2.GetContests")
+            .WithName("AdminApi.V0.2.Contests.GetContests")
             .WithSummary("Get all contests")
             .WithDescription("Retrieves a list of all existing contests, ordered by contest year.")
             .Produces<GetContestsResponse>()
@@ -34,7 +34,7 @@ internal static class GetContests
         return apiGroup;
     }
 
-    internal static async Task<IResult> HandleAsync(IRequestResponseBus bus,
+    private static async Task<IResult> HandleAsync(IRequestResponseBus bus,
         CancellationToken cancellationToken = default)
     {
         ErrorOr<GetContestsResponse> errorsOrResponse = await bus.Send(new Query(), cancellationToken: cancellationToken);

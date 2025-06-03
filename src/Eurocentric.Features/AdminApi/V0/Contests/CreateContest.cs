@@ -31,7 +31,7 @@ internal static class CreateContest
     internal static IEndpointRouteBuilder MapCreateContest(this IEndpointRouteBuilder apiGroup)
     {
         apiGroup.MapPost("v0.2/contests", HandleAsync)
-            .WithName("AdminApi.V0.2.CreateContest")
+            .WithName("AdminApi.V0.2.Contests.CreateContest")
             .WithSummary("Create a contest")
             .WithDescription("Creates a new contest.")
             .Produces<CreateContestResponse>(StatusCodes.Status201Created)

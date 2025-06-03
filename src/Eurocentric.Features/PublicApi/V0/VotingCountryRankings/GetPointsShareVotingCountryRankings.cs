@@ -28,9 +28,9 @@ public sealed record PointsShareVotingCountryRanking
 
     public required int TotalPoints { get; init; }
 
-    public required int MaxPossiblePoints { get; init; }
+    public required int AvailablePoints { get; init; }
 
-    public required double PointsShare { get; init; }
+    public required decimal PointsShare { get; init; }
 }
 
 public sealed record PointsShareVotingCountryRankingFilters
@@ -125,9 +125,18 @@ internal static class GetPointsShareVotingCountryRankings
                 item.TotalPoints,
                 item.MaxPossiblePoints,
                 item.PointsAwards,
-                PointsShare = (double)item.TotalPoints / item.MaxPossiblePoints
+                PointsShare = Math.Round((decimal)(double)item.TotalPoints / item.MaxPossiblePoints, 6)
             }).OrderByDescending(item => item.PointsShare)
-            .Select((item, index) => new InterimRanking
+            .Select((item, index) => new
+            {
+                item.VotingCountryCode,
+                item.TotalPoints,
+                item.MaxPossiblePoints,
+                item.PointsAwards,
+                item.PointsShare,
+                Rank = index + 1
+            }).GroupBy(item => item.PointsShare)
+            .SelectMany((grouping, index) => grouping.Select(item => new InterimRanking
             {
                 Rank = index + 1,
                 VotingCountryCode = item.VotingCountryCode,
@@ -135,7 +144,7 @@ internal static class GetPointsShareVotingCountryRankings
                 TotalPoints = item.TotalPoints,
                 MaxPossiblePoints = item.MaxPossiblePoints,
                 PointsShare = item.PointsShare
-            });
+            }));
 
         return new InterimRankingsInfo(rankings, totalRankings);
     }
@@ -198,7 +207,7 @@ internal static class GetPointsShareVotingCountryRankings
                         PointsShare = ranking.PointsShare,
                         PointsAwards = ranking.PointsAwards,
                         TotalPoints = ranking.TotalPoints,
-                        MaxPossiblePoints = ranking.MaxPossiblePoints
+                        AvailablePoints = ranking.MaxPossiblePoints
                     })
                 .ToArray();
 
@@ -235,7 +244,7 @@ internal static class GetPointsShareVotingCountryRankings
 
         public int MaxPossiblePoints { get; init; }
 
-        public double PointsShare { get; init; }
+        public decimal PointsShare { get; init; }
     }
 
     private sealed record InterimRankingsInfo(IQueryable<InterimRanking> InterimRankings, int TotalRankings);

@@ -10,6 +10,8 @@ public sealed class InMemoryQueryableRepository
 
     public List<QueryableCountry> QueryableCountries { get; init; } = [];
 
+    public List<QueryableCompetitor> QueryableCompetitors { get; init; } = [];
+
     public List<QueryablePointsAward> QueryableJuryPointsAwards { get; init; } = [];
 
     public List<QueryablePointsAward> QueryableTelevotePointsAwards { get; init; } = [];
@@ -19,6 +21,7 @@ public sealed class InMemoryQueryableRepository
         QueryableBroadcasts.Clear();
         QueryableContests.Clear();
         QueryableCountries.Clear();
+        QueryableCompetitors.Clear();
         QueryableJuryPointsAwards.Clear();
         QueryableTelevotePointsAwards.Clear();
     }

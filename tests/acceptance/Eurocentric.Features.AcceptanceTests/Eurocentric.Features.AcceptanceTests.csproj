@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Eurocentric.Features.AcceptanceTests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CsvHelper"/>
+    <PackageReference Include="JetBrains.Annotations"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="OneOf"/>
+    <PackageReference Include="RestSharp"/>
+    <PackageReference Include="Testcontainers.MsSql"/>
+    <PackageReference Include="xunit.v3"/>
+    <PackageReference Include="xunit.runner.visualstudio"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Eurocentric.WebApp\Eurocentric.WebApp.csproj"/>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\PublicApiV0SampleData\countries.csv"/>
+    <EmbeddedResource Include="Resources\PublicApiV0SampleData\turin_2022_competitors.csv"/>
+    <EmbeddedResource Include="Resources\PublicApiV0SampleData\turin_2022_televote_awards.csv"/>
+    <EmbeddedResource Include="Resources\PublicApiV0SampleData\turin_2022_jury_awards.csv"/>
+    <EmbeddedResource Include="Resources\PublicApiV0SampleData\liverpool_2023_competitors.csv"/>
+    <EmbeddedResource Include="Resources\PublicApiV0SampleData\liverpool_2023_jury_awards.csv"/>
+    <EmbeddedResource Include="Resources\PublicApiV0SampleData\liverpool_2023_televote_awards.csv"/>
+  </ItemGroup>
+</Project>
