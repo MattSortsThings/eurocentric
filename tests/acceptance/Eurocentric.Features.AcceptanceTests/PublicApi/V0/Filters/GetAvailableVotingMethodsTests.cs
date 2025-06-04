@@ -33,7 +33,7 @@ public sealed class GetAvailableVotingMethodsTests(WebAppFixture fixture) : Acce
         }
 
         public void Given_I_want_to_retrieve_all_voting_method_values() =>
-            Request = apiDriver => apiDriver.Filters.GetAvailableVotingMethods(TestContext.Current.CancellationToken);
+            SendMyRequest = apiDriver => apiDriver.Filters.GetAvailableVotingMethods(TestContext.Current.CancellationToken);
 
         public void Then_the_retrieved_voting_method_values_should_be(params string[] expectedValues)
         {

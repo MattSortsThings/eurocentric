@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Enums;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
@@ -15,17 +16,12 @@ internal static class GetAvailableContestStages
 {
     internal static IEndpointRouteBuilder MapGetAvailableContestStages(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.1/filters/contest-stages", HandleAsync)
-            .WithName("PublicApi.V0.1.GetAvailableContestStages")
+        apiGroup.MapGet("filters/contest-stages", HandleAsync)
+            .WithName(EndpointIds.Filters.GetAvailableContestStages)
             .WithSummary("Get available contest stages")
             .WithDescription("Retrieves a list of all available 'contestStages' query parameter values.")
-            .Produces<GetAvailableContestStagesResponse>()
-            .WithTags(EndpointTags.Filters);
-
-        apiGroup.MapGet("v0.2/filters/contest-stages", HandleAsync)
-            .WithName("PublicApi.V0.2.GetAvailableContestStages")
-            .WithSummary("Get available contest stages")
-            .WithDescription("Retrieves a list of all available 'contestStages' query parameter values.")
+            .HasApiVersion(0, 1)
+            .HasApiVersion(0, 2)
             .Produces<GetAvailableContestStagesResponse>()
             .WithTags(EndpointTags.Filters);
 

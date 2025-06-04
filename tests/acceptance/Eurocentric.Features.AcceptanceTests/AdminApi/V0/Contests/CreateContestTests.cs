@@ -39,7 +39,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
                 ContestYear = contestYear, CityName = cityName, ContestFormat = Enum.Parse<ContestFormat>(contestFormat)
             };
 
-            Request = apiDriver => apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
+            SendMyRequest = apiDriver => apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Then_the_created_contest_should_match(int contestYear = 0, string cityName = "", string contestFormat = "")

@@ -144,7 +144,7 @@ public sealed class GetPointsShareVotingCountryRankingsTests(WebAppFixture fixtu
                 queryParams.Add("descending", descending);
             }
 
-            Request = apiDriver => apiDriver.VotingCountryRankings.GetPointsShareVotingCountryRankings(queryParams,
+            SendMyRequest = apiDriver => apiDriver.VotingCountryRankings.GetPointsShareVotingCountryRankings(queryParams,
                 TestContext.Current.CancellationToken);
         }
 

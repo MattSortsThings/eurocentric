@@ -15,17 +15,12 @@ internal static class GetAvailableVotingMethods
 {
     internal static IEndpointRouteBuilder MapGetAvailableVotingMethods(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.1/filters/voting-methods", HandleAsync)
-            .WithName("PublicApi.V0.1.GetAvailableVotingMethods")
+        apiGroup.MapGet("filters/voting-methods", HandleAsync)
+            .WithName(EndpointIds.Filters.GetAvailableVotingMethods)
             .WithSummary("Get available voting methods")
             .WithDescription("Retrieves a list of all available 'votingMethod' query parameter values.")
-            .Produces<GetAvailableVotingMethodsResponse>()
-            .WithTags(EndpointTags.Filters);
-
-        apiGroup.MapGet("v0.2/filters/voting-methods", HandleAsync)
-            .WithName("PublicApi.V0.2.GetAvailableVotingMethods")
-            .WithSummary("Get available voting methods")
-            .WithDescription("Retrieves a list of all available 'votingMethod' query parameter values.")
+            .HasApiVersion(0, 1)
+            .HasApiVersion(0, 2)
             .Produces<GetAvailableVotingMethodsResponse>()
             .WithTags(EndpointTags.Filters);
 

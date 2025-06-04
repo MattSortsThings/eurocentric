@@ -62,7 +62,7 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
 
             Guid contestId = MyContest.Id;
 
-            Request = apiDriver => apiDriver.Contests.GetContest(contestId, TestContext.Current.CancellationToken);
+            SendMyRequest = apiDriver => apiDriver.Contests.GetContest(contestId, TestContext.Current.CancellationToken);
         }
 
         public void Then_the_retrieved_contest_should_be_my_contest()

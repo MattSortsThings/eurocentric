@@ -59,7 +59,7 @@ public sealed class GetContestsTests(WebAppFixture fixture) : AcceptanceTestBase
         }
 
         public void Given_I_want_to_retrieve_all_existing_contests() =>
-            Request = apiDriver => apiDriver.Contests.GetContests(TestContext.Current.CancellationToken);
+            SendMyRequest = apiDriver => apiDriver.Contests.GetContests(TestContext.Current.CancellationToken);
 
         public void Then_the_retrieved_contests_should_be_my_contests_in_contest_year_order()
         {

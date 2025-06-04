@@ -76,11 +76,12 @@ internal static class GetPointsShareVotingCountryRankings
 {
     internal static IEndpointRouteBuilder MapGetPointsShareVotingCountryRankings(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.2/voting-country-rankings/points-share", HandleAsync)
-            .WithName("PublicApi.V0.2.GetPointsShareVotingCountryRankings")
+        apiGroup.MapGet("voting-country-rankings/points-share", HandleAsync)
+            .WithName(EndpointIds.VotingCountryRankings.GetPointsShareVotingCountryRankings)
             .WithSummary("Get points share voting country rankings")
             .WithDescription("Ranks every voting country by the total points it has awarded to a given competing country, " +
                              "as a share of the maximum possible points, and returns a page of rankings.")
+            .HasApiVersion(0, 2)
             .Produces<GetPointsShareVotingCountryRankingsResponse>()
             .WithTags(EndpointTags.VotingCountryRankings);
 

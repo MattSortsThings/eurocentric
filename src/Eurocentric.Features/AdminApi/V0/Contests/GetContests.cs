@@ -17,17 +17,12 @@ internal static class GetContests
 {
     internal static IEndpointRouteBuilder MapGetContests(this IEndpointRouteBuilder apiGroup)
     {
-        apiGroup.MapGet("v0.1/contests", HandleAsync)
-            .WithName("AdminApi.V0.1.Contests.GetContests")
+        apiGroup.MapGet("contests", HandleAsync)
+            .WithName(EndpointIds.Contests.GetContests)
             .WithSummary("Get all contests")
             .WithDescription("Retrieves a list of all existing contests, ordered by contest year.")
-            .Produces<GetContestsResponse>()
-            .WithTags(EndpointTags.Contests);
-
-        apiGroup.MapGet("v0.2/contests", HandleAsync)
-            .WithName("AdminApi.V0.2.Contests.GetContests")
-            .WithSummary("Get all contests")
-            .WithDescription("Retrieves a list of all existing contests, ordered by contest year.")
+            .HasApiVersion(0, 1)
+            .HasApiVersion(0, 2)
             .Produces<GetContestsResponse>()
             .WithTags(EndpointTags.Contests);
 

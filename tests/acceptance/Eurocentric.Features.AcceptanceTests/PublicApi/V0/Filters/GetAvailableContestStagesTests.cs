@@ -37,7 +37,7 @@ public sealed class GetAvailableContestStagesTests(WebAppFixture fixture) : Acce
         }
 
         public void Given_I_want_to_retrieve_all_available_contest_stages_values() =>
-            Request = apiDriver => apiDriver.Filters.GetAvailableContestStages(TestContext.Current.CancellationToken);
+            SendMyRequest = apiDriver => apiDriver.Filters.GetAvailableContestStages(TestContext.Current.CancellationToken);
 
         public void Then_the_retrieved_contest_stages_values_should_be(params string[] expectedValues)
         {
