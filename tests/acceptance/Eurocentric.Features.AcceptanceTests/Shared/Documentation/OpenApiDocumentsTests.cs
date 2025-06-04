@@ -13,7 +13,7 @@ public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTes
     [InlineData("admin-api-v0.2", "/admin/api/v0.2/")]
     [InlineData("public-api-v0.1", "/public/api/v0.1/")]
     [InlineData("public-api-v0.2", "/public/api/v0.2/")]
-    public async Task Should_be_able_to_retrieve_OpenAPI_JSON_document_by_name_without_authentication(
+    public async Task Should_be_able_to_retrieve_OpenAPI_JSON_document_by_name_without_using_API_key(
         string docName,
         string pathPrefix)
     {
@@ -47,7 +47,7 @@ public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTes
     [InlineData("public-api-v0")]
     [InlineData("public-api-v0.3")]
     [InlineData("public-api-v1.0")]
-    public async Task Should_be_unable_to_retrieve_OpenAPI_JSON_document_for_non_existent_API_release(string docName)
+    public async Task Should_be_unable_to_retrieve_non_existent_OpenAPI_JSON_document_using_no_API_key(string docName)
     {
         // Arrange
         RestRequest openApiRequest = new("openapi/{docName}.json");
