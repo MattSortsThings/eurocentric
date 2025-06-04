@@ -6,6 +6,7 @@ using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Dtos;
 using Eurocentric.Features.PublicApi.V0.Common.Enums;
 using Eurocentric.Features.PublicApi.V0.Common.QueryHelpers;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.InMemoryRepositories;
@@ -17,7 +18,7 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.PublicApi.V0.VotingCountryRankings;
 
-public sealed record PointsShareVotingCountryRanking
+public sealed record PointsShareVotingCountryRanking : IExampleProvider<PointsShareVotingCountryRanking>
 {
     public required int Rank { get; init; }
 
@@ -32,9 +33,20 @@ public sealed record PointsShareVotingCountryRanking
     public required int AvailablePoints { get; init; }
 
     public required decimal PointsShare { get; init; }
+
+    public static PointsShareVotingCountryRanking CreateExample() => new()
+    {
+        Rank = 1,
+        CountryCode = "AT",
+        CountryName = "Austria",
+        PointsAwards = 5,
+        TotalPoints = 30,
+        AvailablePoints = 60,
+        PointsShare = 0.5m
+    };
 }
 
-public sealed record PointsShareVotingCountryRankingFilters
+public sealed record PointsShareVotingCountryRankingFilters : IExampleProvider<PointsShareVotingCountryRankingFilters>
 {
     public string CompetingCountryCode { get; init; } = string.Empty;
 
@@ -45,6 +57,11 @@ public sealed record PointsShareVotingCountryRankingFilters
     public int? EndYear { get; init; }
 
     public ContestStages ContestStages { get; init; }
+
+    public static PointsShareVotingCountryRankingFilters CreateExample() => new()
+    {
+        CompetingCountryCode = "GB", VotingMethod = VotingMethod.Any, ContestStages = ContestStages.All
+    };
 }
 
 public sealed record GetPointsShareVotingCountryRankingsResponse(
@@ -84,6 +101,7 @@ internal static class GetPointsShareVotingCountryRankings
                              "as a share of the maximum possible points, and returns a page of rankings.")
             .HasApiVersion(0, 2)
             .Produces<GetPointsShareVotingCountryRankingsResponse>()
+            .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithTags(EndpointTags.VotingCountryRankings);
 
         return apiGroup;

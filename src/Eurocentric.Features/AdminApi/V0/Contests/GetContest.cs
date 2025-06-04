@@ -26,6 +26,7 @@ internal static class GetContest
             .HasApiVersion(0, 1)
             .HasApiVersion(0, 2)
             .Produces<GetContestResponse>()
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .WithTags(EndpointTags.Contests);
 
         return apiGroup;

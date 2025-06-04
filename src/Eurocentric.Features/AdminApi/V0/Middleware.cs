@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Contests;
 using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
@@ -17,9 +18,9 @@ internal static class Middleware
     /// <param name="app">The web application.</param>
     internal static void MapAdminApiV0Endpoints(this IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder apiGroup = app.NewVersionedApi("AdminApi.V0")
+        RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiReleases.Id)
             .MapGroup("admin/api/v{version:apiVersion}")
-            .WithGroupName("AdminApi.V0")
+            .WithGroupName(ApiReleases.EndpointGroupName)
             .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole)
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);

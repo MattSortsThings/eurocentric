@@ -1,3 +1,4 @@
+using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Filters;
 using Eurocentric.Features.PublicApi.V0.VotingCountryRankings;
 using Eurocentric.Features.Shared.Security;
@@ -18,9 +19,9 @@ internal static class Middleware
     /// <param name="app">The web application.</param>
     internal static void MapPublicApiV0Endpoints(this IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder apiGroup = app.NewVersionedApi("PublicApi.V0")
+        RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiRelease.Id)
             .MapGroup("public/api/v{version:apiVersion}")
-            .WithGroupName("PublicApi.V0")
+            .WithGroupName(ApiRelease.EndpointGroupName)
             .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole)
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 

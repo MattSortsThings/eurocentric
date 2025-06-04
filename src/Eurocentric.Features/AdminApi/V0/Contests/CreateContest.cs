@@ -4,6 +4,7 @@ using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Common.Dtos;
 using Eurocentric.Features.AdminApi.V0.Common.Enums;
 using Eurocentric.Features.AdminApi.V0.Common.Mapping;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.InMemoryRepositories;
@@ -19,13 +20,18 @@ namespace Eurocentric.Features.AdminApi.V0.Contests;
 
 public sealed record CreateContestResponse(Contest Contest);
 
-public sealed record CreateContestRequest
+public sealed record CreateContestRequest : IExampleProvider<CreateContestRequest>
 {
     public required int ContestYear { get; init; }
 
     public required string CityName { get; init; }
 
     public required ContestFormat ContestFormat { get; init; }
+
+    public static CreateContestRequest CreateExample() => new()
+    {
+        ContestYear = 2025, CityName = "Basel", ContestFormat = ContestFormat.Liverpool
+    };
 }
 
 internal static class CreateContest
@@ -38,6 +44,9 @@ internal static class CreateContest
             .WithDescription("Creates a new contest.")
             .HasApiVersion(0, 2)
             .Produces<CreateContestResponse>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(EndpointTags.Contests);
 
         return apiGroup;
