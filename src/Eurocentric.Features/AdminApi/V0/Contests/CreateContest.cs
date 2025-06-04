@@ -4,10 +4,12 @@ using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Common.Dtos;
 using Eurocentric.Features.AdminApi.V0.Common.Enums;
 using Eurocentric.Features.AdminApi.V0.Common.Mapping;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.InMemoryRepositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
@@ -43,18 +45,17 @@ internal static class CreateContest
 
     private static async Task<IResult> HandleAsync([FromBody] CreateContestRequest request,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<CreateContestResponse> errorsOrResponse =
-            await bus.Send(request.ToCommand(), cancellationToken: cancellationToken);
+        CancellationToken cancellationToken = default) => await InitializeCommand(request)
+        .ThenAsync(command => bus.Send(command, cancellationToken: cancellationToken))
+        .ToProblemOrResponseAsync(MapToCreatedAtRoute);
 
-        return TypedResults.CreatedAtRoute(errorsOrResponse.Value,
+    private static ErrorOr<Command> InitializeCommand(CreateContestRequest request) =>
+        ErrorOrFactory.From(new Command(request.ContestYear, request.CityName, request.ContestFormat));
+
+    private static CreatedAtRoute<CreateContestResponse> MapToCreatedAtRoute(CreateContestResponse response) =>
+        TypedResults.CreatedAtRoute(response,
             EndpointIds.Contests.GetContest,
-            new RouteValueDictionary { ["contestId"] = errorsOrResponse.Value.Contest.Id });
-    }
-
-    private static Command ToCommand(this CreateContestRequest request) =>
-        new(request.ContestYear, request.CityName, request.ContestFormat);
+            new RouteValueDictionary { ["contestId"] = response.Contest.Id });
 
     internal sealed record Command(int ContestYear, string CityName, ContestFormat ContestFormat)
         : ICommand<CreateContestResponse>;

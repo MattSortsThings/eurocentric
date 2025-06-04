@@ -2,6 +2,7 @@ using ErrorOr;
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Common.Dtos;
 using Eurocentric.Features.AdminApi.V0.Common.Mapping;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.InMemoryRepositories;
 using Microsoft.AspNetCore.Builder;
@@ -32,13 +33,11 @@ internal static class GetContest
 
     private static async Task<IResult> HandleAsync([FromRoute(Name = "contestId")] Guid contestId,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetContestResponse> errorsOrResponse = await bus.Send(new Query(contestId),
-            cancellationToken: cancellationToken);
+        CancellationToken cancellationToken = default) => await InitializeQuery(contestId)
+        .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+        .ToProblemOrResponseAsync(TypedResults.Ok);
 
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+    private static ErrorOr<Query> InitializeQuery(Guid contestId) => ErrorOrFactory.From(new Query(contestId));
 
     internal sealed record Query(Guid ContestId) : IQuery<GetContestResponse>;
 
@@ -48,12 +47,16 @@ internal static class GetContest
         {
             await Task.CompletedTask;
 
-            Contest contest = repository.Contests
+            Contest? contest = repository.Contests
                 .Where(contest => contest.Id == query.ContestId)
                 .Select(contest => contest.ToContestDto())
-                .First();
+                .FirstOrDefault();
 
-            return ErrorOrFactory.From(new GetContestResponse(contest));
+            return contest is not null
+                ? ErrorOrFactory.From(new GetContestResponse(contest))
+                : Error.NotFound("Contest not found",
+                    "No contest exists with the provided contest ID.",
+                    new Dictionary<string, object> { ["contestId"] = query.ContestId });
         }
     }
 }

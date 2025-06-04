@@ -6,6 +6,7 @@ using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Dtos;
 using Eurocentric.Features.PublicApi.V0.Common.Enums;
 using Eurocentric.Features.PublicApi.V0.Common.QueryHelpers;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.InMemoryRepositories;
 using Microsoft.AspNetCore.Builder;
@@ -91,16 +92,13 @@ internal static class GetPointsShareVotingCountryRankings
     private static async Task<IResult> HandleAsync(
         [AsParameters] GetPointsShareVotingCountryRankingsQueryParams queryParams,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) => await InitializeQuery(queryParams)
+        .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+        .ToProblemOrResponseAsync(TypedResults.Ok);
+
+    private static ErrorOr<Query> InitializeQuery(GetPointsShareVotingCountryRankingsQueryParams queryParams)
     {
-        ErrorOr<GetPointsShareVotingCountryRankingsResponse> errorsOrResponse =
-            await bus.Send(queryParams.ToQuery(), cancellationToken: cancellationToken);
-
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
-
-    private static Query ToQuery(this GetPointsShareVotingCountryRankingsQueryParams queryParams) =>
-        new(queryParams.CompetingCountryCode,
+        Query query = new(queryParams.CompetingCountryCode,
             queryParams.VotingMethod ?? VotingMethod.Any,
             queryParams.StartYear,
             queryParams.EndYear,
@@ -108,6 +106,9 @@ internal static class GetPointsShareVotingCountryRankings
             queryParams.PageIndex ?? 0,
             queryParams.PageSize ?? 10,
             queryParams.Descending ?? false);
+
+        return ErrorOrFactory.From(query);
+    }
 
     private static InterimRankingsInfo ToInterimRankings(this IQueryable<QueryablePointsAward> awards)
     {

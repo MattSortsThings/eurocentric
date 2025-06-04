@@ -1,6 +1,7 @@
 using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Enums;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -28,13 +29,12 @@ internal static class GetAvailableContestStages
         return apiGroup;
     }
 
-    private static async Task<IResult> HandleAsync(IRequestResponseBus bus, CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetAvailableContestStagesResponse> errorsOrResponse =
-            await bus.Send(new Query(), cancellationToken: cancellationToken);
+    private static async Task<IResult> HandleAsync(IRequestResponseBus bus, CancellationToken cancellationToken = default) =>
+        await InitializeQuery()
+            .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+            .ToProblemOrResponseAsync(TypedResults.Ok);
 
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+    private static ErrorOr<Query> InitializeQuery() => ErrorOrFactory.From(new Query());
 
     internal sealed record Query : IQuery<GetAvailableContestStagesResponse>;
 
