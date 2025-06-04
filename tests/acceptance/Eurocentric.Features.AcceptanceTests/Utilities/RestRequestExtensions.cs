@@ -29,4 +29,8 @@ public static class RestRequestExtensions
 
         return request;
     }
+
+    public static RestRequest UseDemoApiKey(this RestRequest request) => request.AddHeader("X-Api-Key", TestApiKeys.Demo);
+
+    public static RestRequest UseSecretApiKey(this RestRequest request) => request.AddHeader("X-Api-Key", TestApiKeys.Secret);
 }

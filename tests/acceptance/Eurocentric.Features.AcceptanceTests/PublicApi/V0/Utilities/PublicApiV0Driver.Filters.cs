@@ -10,6 +10,7 @@ public sealed partial class PublicApiV0Driver : IPublicApiV0Driver.IFilters
         CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/public/api/{apiVersion}/filters/contest-stages")
+            .UseDemoApiKey()
             .AddUrlSegment("apiVersion", _apiVersion);
 
         return await _restClient.SendRequestAsync<GetAvailableContestStagesResponse>(request, cancellationToken);
@@ -19,6 +20,7 @@ public sealed partial class PublicApiV0Driver : IPublicApiV0Driver.IFilters
         CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/public/api/{apiVersion}/filters/voting-methods")
+            .UseDemoApiKey()
             .AddUrlSegment("apiVersion", _apiVersion);
 
         return await _restClient.SendRequestAsync<GetAvailableVotingMethodsResponse>(request, cancellationToken);

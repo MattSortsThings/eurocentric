@@ -17,6 +17,8 @@ public sealed class ProblemDetailsResponsesTests(WebAppFixture fixture) : Accept
 
         RestRequest getContestRequest = new(getContestRoute);
 
+        getContestRequest.UseSecretApiKey();
+
         // Act
         ProblemOrResponse problemOrResponse =
             await SutRestClient.SendRequestAsync(getContestRequest, TestContext.Current.CancellationToken);

@@ -10,6 +10,7 @@ public sealed partial class PublicApiV0Driver : IPublicApiV0Driver.IVotingCountr
         IReadOnlyDictionary<string, object> queryParams, CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/public/api/{apiVersion}/voting-country-rankings/points-share")
+            .UseDemoApiKey()
             .AddUrlSegment("apiVersion", _apiVersion)
             .AddQueryParameters(queryParams);
 

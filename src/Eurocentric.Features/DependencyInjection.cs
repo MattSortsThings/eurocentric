@@ -1,6 +1,7 @@
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.HttpJson;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Features.Shared.Security;
 using Eurocentric.Features.Shared.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +23,7 @@ public static class DependencyInjection
         services.AddErrorHandling()
             .AddHttpJsonConfiguration()
             .AddMessaging()
+            .AddSecurity()
             .AddVersioning();
 
         return services;

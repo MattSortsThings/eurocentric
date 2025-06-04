@@ -16,7 +16,8 @@ public sealed class GlobalExceptionHandlingTests(WebAppFixture fixture) : Accept
 
         RestRequest createContestRequest = new(createContestRoute, Method.Post);
 
-        createContestRequest.AddJsonBody(new { ContestFormat = "Stockholm", CityName = "Turin" });
+        createContestRequest.UseSecretApiKey()
+            .AddJsonBody(new { ContestFormat = "Stockholm", CityName = "Turin" });
 
         // Act
         ProblemOrResponse problemOrResponse =
@@ -44,7 +45,8 @@ public sealed class GlobalExceptionHandlingTests(WebAppFixture fixture) : Accept
 
         RestRequest createContestRequest = new(createContestRoute, Method.Post);
 
-        createContestRequest.AddJsonBody(new { ContestFormat = "INVALID", CityName = "Turin", ContestYear = 2022 });
+        createContestRequest.UseSecretApiKey()
+            .AddJsonBody(new { ContestFormat = "INVALID", CityName = "Turin", ContestYear = 2022 });
 
         // Act
         ProblemOrResponse problemOrResponse =
@@ -72,7 +74,8 @@ public sealed class GlobalExceptionHandlingTests(WebAppFixture fixture) : Accept
 
         RestRequest createContestRequest = new(createContestRoute, Method.Post);
 
-        createContestRequest.AddJsonBody(new { ContestFormat = 999999, CityName = "Turin", ContestYear = 2022 });
+        createContestRequest.UseSecretApiKey()
+            .AddJsonBody(new { ContestFormat = 999999, CityName = "Turin", ContestYear = 2022 });
 
         // Act
         ProblemOrResponse problemOrResponse =
@@ -100,6 +103,8 @@ public sealed class GlobalExceptionHandlingTests(WebAppFixture fixture) : Accept
 
         RestRequest getRankingsRequest = new(getPointsShareVotingCountryRankingsRoute);
 
+        getRankingsRequest.UseSecretApiKey();
+
         // Act
         ProblemOrResponse problemOrResponse =
             await SutRestClient.SendRequestAsync(getRankingsRequest, TestContext.Current.CancellationToken);
@@ -126,7 +131,8 @@ public sealed class GlobalExceptionHandlingTests(WebAppFixture fixture) : Accept
 
         RestRequest getRankingsRequest = new(getPointsShareVotingCountryRankingsRoute);
 
-        getRankingsRequest.AddQueryParameter("competingCountryCode", "GB")
+        getRankingsRequest.UseSecretApiKey()
+            .AddQueryParameter("competingCountryCode", "GB")
             .AddQueryParameter("votingMethod", "INVALID");
 
         // Act
@@ -156,7 +162,8 @@ public sealed class GlobalExceptionHandlingTests(WebAppFixture fixture) : Accept
 
         RestRequest getRankingsRequest = new(getPointsShareVotingCountryRankingsRoute);
 
-        getRankingsRequest.AddQueryParameter("competingCountryCode", "GB")
+        getRankingsRequest.UseSecretApiKey()
+            .AddQueryParameter("competingCountryCode", "GB")
             .AddQueryParameter("votingMethod", 999999);
 
         // Act

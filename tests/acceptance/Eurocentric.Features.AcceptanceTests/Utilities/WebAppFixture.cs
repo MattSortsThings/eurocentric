@@ -1,3 +1,4 @@
+using Eurocentric.Features.Shared.Security;
 using Eurocentric.Infrastructure.InMemoryRepositories;
 using Eurocentric.WebApp;
 using Microsoft.AspNetCore.Hosting;
@@ -96,7 +97,11 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
         queryableRepo.Reset();
     }
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(ConfigureRestClient);
+    protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
+    {
+        ConfigureRestClient(services);
+        ConfigureTestApiKeys(services);
+    });
 
     private void ConfigureRestClient(IServiceCollection services) => services.AddSingleton<IRestClient>(serviceProvider =>
     {
@@ -111,4 +116,11 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
             configureRestClient: options => options.Timeout = TimeSpan.FromSeconds(10),
             configureSerialization: config => config.UseSystemTextJson(jsonOptions.Value.SerializerOptions));
     });
+
+    private static void ConfigureTestApiKeys(IServiceCollection services) =>
+        services.Configure<ApiKeySecurityOptions>(options =>
+        {
+            options.SecretApiKey = TestApiKeys.Secret;
+            options.DemoApiKey = TestApiKeys.Demo;
+        });
 }

@@ -10,6 +10,7 @@ public sealed partial class AdminApiV0Driver : IAdminApiV0Driver.IContests
         CancellationToken cancellationToken = default)
     {
         RestRequest restRequest = Post("/admin/api/{apiVersion}/contests")
+            .UseSecretApiKey()
             .AddUrlSegment("apiVersion", _apiVersion)
             .AddJsonBody(requestBody);
 
@@ -20,6 +21,7 @@ public sealed partial class AdminApiV0Driver : IAdminApiV0Driver.IContests
         CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/admin/api/{apiVersion}/contests/{contestId}")
+            .UseSecretApiKey()
             .AddUrlSegment("apiVersion", _apiVersion)
             .AddUrlSegment("contestId", contestId);
 
@@ -29,6 +31,7 @@ public sealed partial class AdminApiV0Driver : IAdminApiV0Driver.IContests
     public async Task<ProblemOrResponse<GetContestsResponse>> GetContests(CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/admin/api/{apiVersion}/contests")
+            .UseSecretApiKey()
             .AddUrlSegment("apiVersion", _apiVersion);
 
         return await _restClient.SendRequestAsync<GetContestsResponse>(request, cancellationToken);
