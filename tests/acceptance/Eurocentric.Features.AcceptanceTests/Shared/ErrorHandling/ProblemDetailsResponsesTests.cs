@@ -10,7 +10,7 @@ namespace Eurocentric.Features.AcceptanceTests.Shared.ErrorHandling;
 public sealed class ProblemDetailsResponsesTests(WebAppFixture fixture) : AcceptanceTestBase(fixture)
 {
     [Fact]
-    public async Task Should_receive_response_with_unsuccessful_status_code_and_problem_details_when_request_is_unsuccessful()
+    public async Task Should_receive_unsuccessful_response_with_problem_details_when_request_is_unsuccessful()
     {
         // Arrange
         const string getContestRoute = "/admin/api/v0.2/contests/b32cae3d-2aff-4adc-808e-5e6293c3dd8e";

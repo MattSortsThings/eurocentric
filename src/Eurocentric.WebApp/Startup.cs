@@ -31,6 +31,8 @@ internal static class Startup
 
         app.UseStatusCodePages();
 
+        app.UseExceptionHandler();
+
         app.UseApiEndpoints();
 
         return app;
