@@ -6,7 +6,7 @@ namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Utilities;
 
 public sealed partial class PublicApiV0Driver : IPublicApiV0Driver.IFilters
 {
-    public async Task<ResponseOrProblem<GetAvailableContestStagesResponse>> GetAvailableContestStages(
+    public async Task<ProblemOrResponse<GetAvailableContestStagesResponse>> GetAvailableContestStages(
         CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/public/api/{apiVersion}/filters/contest-stages")
@@ -15,7 +15,7 @@ public sealed partial class PublicApiV0Driver : IPublicApiV0Driver.IFilters
         return await _restClient.SendRequestAsync<GetAvailableContestStagesResponse>(request, cancellationToken);
     }
 
-    public async Task<ResponseOrProblem<GetAvailableVotingMethodsResponse>> GetAvailableVotingMethods(
+    public async Task<ProblemOrResponse<GetAvailableVotingMethodsResponse>> GetAvailableVotingMethods(
         CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/public/api/{apiVersion}/filters/voting-methods")

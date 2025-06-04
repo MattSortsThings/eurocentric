@@ -6,7 +6,7 @@ namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Utilities;
 
 public sealed partial class PublicApiV0Driver : IPublicApiV0Driver.IVotingCountryRankings
 {
-    public async Task<ResponseOrProblem<GetPointsShareVotingCountryRankingsResponse>> GetPointsShareVotingCountryRankings(
+    public async Task<ProblemOrResponse<GetPointsShareVotingCountryRankingsResponse>> GetPointsShareVotingCountryRankings(
         IReadOnlyDictionary<string, object> queryParams, CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/public/api/{apiVersion}/voting-country-rankings/points-share")

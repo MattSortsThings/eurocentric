@@ -9,12 +9,12 @@ public interface IAdminApiV0Driver
 
     public interface IContests
     {
-        public Task<ResponseOrProblem<CreateContestResponse>> CreateContest(CreateContestRequest requestBody,
+        public Task<ProblemOrResponse<CreateContestResponse>> CreateContest(CreateContestRequest requestBody,
             CancellationToken cancellationToken = default);
 
-        public Task<ResponseOrProblem<GetContestResponse>> GetContest(Guid contestId,
+        public Task<ProblemOrResponse<GetContestResponse>> GetContest(Guid contestId,
             CancellationToken cancellationToken = default);
 
-        public Task<ResponseOrProblem<GetContestsResponse>> GetContests(CancellationToken cancellationToken = default);
+        public Task<ProblemOrResponse<GetContestsResponse>> GetContests(CancellationToken cancellationToken = default);
     }
 }

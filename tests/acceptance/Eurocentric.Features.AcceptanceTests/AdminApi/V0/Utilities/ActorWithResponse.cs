@@ -14,20 +14,20 @@ public abstract class ActorWithResponse<TResponse> : ActorBase
 
     private protected TResponse? ResponseObject { get; private set; }
 
-    private protected Func<IAdminApiV0Driver, Task<ResponseOrProblem<TResponse>>> SendMyRequest { get; set; }
+    private protected Func<IAdminApiV0Driver, Task<ProblemOrResponse<TResponse>>> SendMyRequest { get; set; }
 
     public override async Task When_I_send_my_request()
     {
-        ResponseOrProblem<TResponse> responseOrProblem = await SendMyRequest(ApiDriver);
+        ProblemOrResponse<TResponse> problemOrResponse = await SendMyRequest(ApiDriver);
 
-        responseOrProblem.Switch(response =>
-        {
-            ResponseStatusCode = response.StatusCode;
-            ResponseObject = response.Data;
-        }, problem =>
+        problemOrResponse.Switch(problem =>
         {
             ResponseStatusCode = problem.StatusCode;
             ResponseProblemDetails = problem.Data;
+        }, response =>
+        {
+            ResponseStatusCode = response.StatusCode;
+            ResponseObject = response.Data;
         });
     }
 }

@@ -6,7 +6,7 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utilities;
 
 public sealed partial class AdminApiV0Driver : IAdminApiV0Driver.IContests
 {
-    public async Task<ResponseOrProblem<CreateContestResponse>> CreateContest(CreateContestRequest requestBody,
+    public async Task<ProblemOrResponse<CreateContestResponse>> CreateContest(CreateContestRequest requestBody,
         CancellationToken cancellationToken = default)
     {
         RestRequest restRequest = Post("/admin/api/{apiVersion}/contests")
@@ -16,7 +16,7 @@ public sealed partial class AdminApiV0Driver : IAdminApiV0Driver.IContests
         return await _restClient.SendRequestAsync<CreateContestResponse>(restRequest, cancellationToken);
     }
 
-    public async Task<ResponseOrProblem<GetContestResponse>> GetContest(Guid contestId,
+    public async Task<ProblemOrResponse<GetContestResponse>> GetContest(Guid contestId,
         CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/admin/api/{apiVersion}/contests/{contestId}")
@@ -26,7 +26,7 @@ public sealed partial class AdminApiV0Driver : IAdminApiV0Driver.IContests
         return await _restClient.SendRequestAsync<GetContestResponse>(request, cancellationToken);
     }
 
-    public async Task<ResponseOrProblem<GetContestsResponse>> GetContests(CancellationToken cancellationToken = default)
+    public async Task<ProblemOrResponse<GetContestsResponse>> GetContests(CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/admin/api/{apiVersion}/contests")
             .AddUrlSegment("apiVersion", _apiVersion);

@@ -56,7 +56,7 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
     }
 
     /// <inheritdoc />
-    public async Task<ResponseOrProblem> SendRequestAsync(RestRequest request, CancellationToken cancellationToken = default)
+    public async Task<ProblemOrResponse> SendRequestAsync(RestRequest request, CancellationToken cancellationToken = default)
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
         IRestClient client = scope.ServiceProvider.GetRequiredService<IRestClient>();
@@ -64,12 +64,12 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
         RestResponse response = await client.ExecuteAsync(request, cancellationToken);
 
         return response.IsSuccessStatusCode
-            ? new ResponseOrProblem(response)
-            : new ResponseOrProblem(await client.Deserialize<ProblemDetails>(response, cancellationToken));
+            ? new ProblemOrResponse(response)
+            : new ProblemOrResponse(await client.Deserialize<ProblemDetails>(response, cancellationToken));
     }
 
     /// <inheritdoc />
-    public async Task<ResponseOrProblem<T>> SendRequestAsync<T>(RestRequest request,
+    public async Task<ProblemOrResponse<T>> SendRequestAsync<T>(RestRequest request,
         CancellationToken cancellationToken = default)
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
@@ -78,8 +78,8 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
         RestResponse<T> response = await client.ExecuteAsync<T>(request, cancellationToken);
 
         return response.IsSuccessStatusCode
-            ? new ResponseOrProblem<T>(response)
-            : new ResponseOrProblem<T>(await client.Deserialize<ProblemDetails>(response, cancellationToken));
+            ? new ProblemOrResponse<T>(response)
+            : new ProblemOrResponse<T>(await client.Deserialize<ProblemDetails>(response, cancellationToken));
     }
 
     /// <summary>
