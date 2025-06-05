@@ -76,6 +76,12 @@ public sealed class FeaturesArchitectureTests
         .Check(Architecture);
 
     [Fact]
+    public void Classes_that_implement_IRequestHandler_should_not_be_records() => Classes()
+        .That().ImplementInterface(typeof(IRequestHandler<,>))
+        .Should().NotBeRecord()
+        .Check(Architecture);
+
+    [Fact]
     public void Classes_that_implement_IQueryHandler_should_be_internal_sealed_nested_and_named_Handler() => Classes()
         .That().ImplementInterface(typeof(IQueryHandler<,>))
         .Should().BeInternal()

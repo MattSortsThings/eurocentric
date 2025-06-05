@@ -50,7 +50,7 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
         admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.NotFound);
         admin.Then_the_problem_details_should_match(status: 404,
             title: "Country not found",
-            detail:"No country exists with the provided country ID.");
+            detail: "No country exists with the provided country ID.");
         admin.Then_the_problem_details_extensions_should_contain_my_country_ID_with_key("countryId");
     }
 
@@ -106,11 +106,11 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
         {
             Assert.NotNull(MyCountry);
 
-            var targetId = CountryId.FromValue(MyCountry.Id);
+            CountryId targetId = CountryId.FromValue(MyCountry.Id);
 
             Func<IServiceProvider, Task> delete = async sp =>
             {
-                await using var dbContext = sp.GetRequiredService<AppDbContext>();
+                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
                 await dbContext.Countries.Where(country => country.Id == targetId).ExecuteDeleteAsync();
             };
 
