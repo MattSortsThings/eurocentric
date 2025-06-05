@@ -11,14 +11,14 @@ public sealed record Country : IExampleProvider<Country>
 
     public required string CountryName { get; init; }
 
-    public required ContestMemo[] ContestMemos { get; init; }
+    public required ContestMemo[] ParticipatingContests { get; init; }
 
     public static Country CreateExample() => new()
     {
         Id = ExampleIds.Countries.Austria,
         CountryCode = "AT",
         CountryName = "Austria",
-        ContestMemos =
+        ParticipatingContests =
         [
             ContestMemo.CreateExample()
         ]

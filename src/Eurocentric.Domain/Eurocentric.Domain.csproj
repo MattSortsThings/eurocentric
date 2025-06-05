@@ -8,5 +8,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ErrorOr"/>
+    <PackageReference Include="JetBrains.Annotations"/>
   </ItemGroup>
 </Project>
