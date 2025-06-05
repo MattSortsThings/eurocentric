@@ -4,6 +4,7 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utilities;
 
 [Trait("Category", "container")]
 [Trait("Category", "acceptance")]
+[Trait("Feature Scope", "admin-api")]
 [Collection(nameof(AdminApiV0FeaturesTestCollection))]
 public abstract class AcceptanceTestBase(WebAppFixture fixture) : IDisposable
 {
