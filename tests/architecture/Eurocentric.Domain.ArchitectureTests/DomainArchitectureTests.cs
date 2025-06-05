@@ -14,9 +14,14 @@ public sealed class DomainArchitectureTests
         .Build();
 
     [Fact]
-    public void Classes_that_are_public_and_not_static_should_be_sealed() => Classes()
+    public void Public_types_should_not_be_nested() => Types()
         .That().ArePublic()
-        .And().AreNotAbstract()
+        .Should().NotBeNested()
+        .Check(Architecture);
+
+    [Fact]
+    public void Classes_that_are_not_abstract_should_be_sealed() => Classes()
+        .That().AreNotAbstract()
         .Should().BeSealed()
         .Check(Architecture);
 }
