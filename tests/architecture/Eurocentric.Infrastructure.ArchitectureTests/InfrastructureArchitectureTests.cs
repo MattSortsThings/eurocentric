@@ -9,19 +9,23 @@ namespace Eurocentric.Infrastructure.ArchitectureTests;
 [Trait("Category", "architecture")]
 public sealed class InfrastructureArchitectureTests
 {
+    private const string EfCoreMigrationsNamespace = "Eurocentric.Infrastructure.EfCore.Migrations";
+
     private static readonly Architecture Architecture = new ArchLoader()
         .LoadAssembly(typeof(InMemoryContestRepository).Assembly)
         .Build();
 
     [Fact]
     public void Public_types_should_not_be_nested() => Types()
-        .That().ArePublic()
+        .That().DoNotResideInNamespace(EfCoreMigrationsNamespace)
+        .And().ArePublic()
         .Should().NotBeNested()
         .Check(Architecture);
 
     [Fact]
     public void Classes_that_are_not_abstract_should_be_sealed() => Classes()
-        .That().AreNotAbstract()
+        .That().DoNotResideInNamespace(EfCoreMigrationsNamespace)
+        .And().AreNotAbstract()
         .Should().BeSealed()
         .Check(Architecture);
 }

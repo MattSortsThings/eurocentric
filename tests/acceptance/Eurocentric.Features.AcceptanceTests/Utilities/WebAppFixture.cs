@@ -1,10 +1,13 @@
 using Eurocentric.Features.Shared.Security;
+using Eurocentric.Infrastructure;
+using Eurocentric.Infrastructure.EFCore;
 using Eurocentric.Infrastructure.InMemoryRepositories;
 using Eurocentric.WebApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RestSharp;
@@ -89,18 +92,21 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
     public void Reset()
     {
         using IServiceScope scope = Services.CreateScope();
-
+        using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         InMemoryContestRepository contestRepo = scope.ServiceProvider.GetRequiredService<InMemoryContestRepository>();
-        contestRepo.Reset();
-
         InMemoryQueryableRepository queryableRepo = scope.ServiceProvider.GetRequiredService<InMemoryQueryableRepository>();
+
+        contestRepo.Reset();
         queryableRepo.Reset();
+        dbContext.Countries.ExecuteDelete();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureTestServices(services =>
     {
+        ConfigureAppDbContextUsingDbContainerConnectionString(services);
         ConfigureRestClient(services);
         ConfigureTestApiKeys(services);
+        MigrateDb(services);
     });
 
     private void ConfigureRestClient(IServiceCollection services) => services.AddSingleton<IRestClient>(serviceProvider =>
@@ -123,4 +129,22 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
             options.SecretApiKey = TestApiKeys.Secret;
             options.DemoApiKey = TestApiKeys.Demo;
         });
+
+    private void ConfigureAppDbContextUsingDbContainerConnectionString(IServiceCollection services)
+    {
+        if (services.SingleOrDefault(serviceDescriptor =>
+                serviceDescriptor.ServiceType == typeof(DbContextOptions<AppDbContext>)) is { } descriptor)
+        {
+            services.Remove(descriptor);
+        }
+
+        services.AddEfCoreAppDbContext(DbConnectionString);
+    }
+
+    private static void MigrateDb(IServiceCollection services)
+    {
+        using IServiceScope scope = services.BuildServiceProvider().CreateScope();
+        using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.Database.Migrate();
+    }
 }

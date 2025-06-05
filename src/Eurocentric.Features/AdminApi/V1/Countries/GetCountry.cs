@@ -1,22 +1,23 @@
 using ErrorOr;
+using Eurocentric.Domain.Countries;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.DomainMapping;
-using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Infrastructure.EFCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
-using DomainCountry = Eurocentric.Domain.Countries.Country;
+using CountryDto = Eurocentric.Features.AdminApi.V1.Common.Dtos.Country;
 
 namespace Eurocentric.Features.AdminApi.V1.Countries;
 
-public sealed record GetCountryResponse(Country Country);
+public sealed record GetCountryResponse(CountryDto Country);
 
 internal static class GetCountry
 {
@@ -45,17 +46,21 @@ internal static class GetCountry
 
     internal sealed record Query(Guid CountryId) : IQuery<GetCountryResponse>;
 
-    internal sealed record Handler : IQueryHandler<Query, GetCountryResponse>
+    internal sealed class Handler(AppDbContext dbContext) : IQueryHandler<Query, GetCountryResponse>
     {
         public async Task<ErrorOr<GetCountryResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            CountryId targetId = CountryId.FromValue(query.CountryId);
 
-            DomainCountry dummyCountry = new(CountryId.FromValue(query.CountryId),
-                CountryCode.FromValue("GB").Value,
-                CountryName.FromValue("United Kingdom").Value);
+            CountryDto? country = await dbContext.Countries.AsNoTracking()
+                .AsSplitQuery()
+                .Where(country => country.Id == targetId)
+                .Select(country => country.ToCountryDto())
+                .FirstOrDefaultAsync(cancellationToken);
 
-            return ErrorOrFactory.From(new GetCountryResponse(dummyCountry.ToCountryDto()));
+            return country is not null
+                ? ErrorOrFactory.From(new GetCountryResponse(country))
+                : CountryErrors.CountryNotFound(targetId);
         }
     }
 }

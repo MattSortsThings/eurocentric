@@ -1,0 +1,20 @@
+using Eurocentric.Domain.Countries;
+using Microsoft.EntityFrameworkCore;
+
+namespace Eurocentric.Infrastructure.EFCore;
+
+/// <summary>
+///     Represents a session with the application database.
+/// </summary>
+public sealed class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Country> Countries => Set<Country>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        modelBuilder.HasDefaultSchema(DbConstants.SchemaName);
+    }
+}
