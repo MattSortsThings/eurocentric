@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V0;
+using Eurocentric.Features.AdminApi.V1;
 using Eurocentric.Features.PublicApi.V0;
 using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
@@ -30,6 +31,7 @@ public static class DependencyInjection
             .AddSecurity()
             .AddVersioning()
             .AddAdminApiV0OpenApiDocuments()
+            .AddAdminApiV1OpenApiDocuments()
             .AddPublicApiV0OpenApiDocuments();
 
         return services;

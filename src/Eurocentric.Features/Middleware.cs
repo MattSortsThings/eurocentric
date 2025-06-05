@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V0;
+using Eurocentric.Features.AdminApi.V1;
 using Eurocentric.Features.PublicApi.V0;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +20,7 @@ public static class Middleware
     public static void UseApiEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapAdminApiV0Endpoints();
+        app.MapAdminApiV1Endpoints();
         app.MapPublicApiV0Endpoints();
     }
 

@@ -8,7 +8,7 @@ public sealed partial class AdminApiV0Driver : IAdminApiV0Driver
     private readonly string _apiVersion;
     private readonly IWebAppFixtureRestClient _restClient;
 
-    public AdminApiV0Driver(IWebAppFixtureRestClient restClient, string apiVersion)
+    private AdminApiV0Driver(IWebAppFixtureRestClient restClient, string apiVersion)
     {
         _apiVersion = apiVersion;
         _restClient = restClient;

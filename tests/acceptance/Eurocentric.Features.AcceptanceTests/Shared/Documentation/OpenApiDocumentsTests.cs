@@ -11,6 +11,7 @@ public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTes
     [Theory]
     [InlineData("admin-api-v0.1", "/admin/api/v0.1/")]
     [InlineData("admin-api-v0.2", "/admin/api/v0.2/")]
+    [InlineData("admin-api-v1.0", "/admin/api/v1.0/")]
     [InlineData("public-api-v0.1", "/public/api/v0.1/")]
     [InlineData("public-api-v0.2", "/public/api/v0.2/")]
     public async Task Should_be_able_to_retrieve_OpenAPI_JSON_document_by_name_without_using_API_key(
@@ -43,7 +44,6 @@ public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTes
     [Theory]
     [InlineData("admin-api-v0")]
     [InlineData("admin-api-v0.3")]
-    [InlineData("admin-api-v1.0")]
     [InlineData("public-api-v0")]
     [InlineData("public-api-v0.3")]
     [InlineData("public-api-v1.0")]
