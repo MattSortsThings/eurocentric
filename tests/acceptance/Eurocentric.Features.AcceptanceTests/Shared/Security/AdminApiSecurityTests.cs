@@ -7,7 +7,7 @@ namespace Eurocentric.Features.AcceptanceTests.Shared.Security;
 
 public sealed class AdminApiSecurityTests(WebAppFixture fixture) : AcceptanceTestBase(fixture)
 {
-    private const string GetContestsRoute = "/admin/api/v0.2/contests";
+    private const string GetContestsRoute = "/admin/api/v1.0/countries";
 
     [Fact]
     public async Task Should_be_authenticated_and_authorized_given_API_key_request_header_containing_secret_API_key()
