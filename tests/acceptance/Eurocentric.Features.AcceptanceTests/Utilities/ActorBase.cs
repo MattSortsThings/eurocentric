@@ -33,12 +33,21 @@ public abstract class ActorBase
         Assert.Equal(status, ResponseProblemDetails.Status);
     }
 
-    public void Then_the_problem_details_extensions_should_contain(string key, Guid value)
+    protected void Then_the_problem_details_extensions_should_contain(string key, Guid value)
     {
         Assert.NotNull(ResponseProblemDetails);
 
         Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp.Key == key
                                                                   && kvp.Value is JsonElement e
                                                                   && e.GetGuid() == value);
+    }
+
+    public void Then_the_problem_details_extensions_should_contain(string key, string value)
+    {
+        Assert.NotNull(ResponseProblemDetails);
+
+        Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp.Key == key
+                                                                  && kvp.Value is JsonElement e
+                                                                  && e.GetString() == value);
     }
 }

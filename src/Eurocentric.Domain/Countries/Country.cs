@@ -17,7 +17,7 @@ public sealed class Country : AggregateRoot<CountryId>
     {
     }
 
-    public Country(CountryId id, CountryCode countryCode, CountryName countryName) : base(id)
+    internal Country(CountryId id, CountryCode countryCode, CountryName countryName) : base(id)
     {
         CountryCode = countryCode;
         CountryName = countryName;
@@ -41,4 +41,10 @@ public sealed class Country : AggregateRoot<CountryId>
         .OrderBy(memo => memo.ContestId.Value)
         .ToArray()
         .AsReadOnly();
+
+    /// <summary>
+    ///     Begins the process of creating a new <see cref="Country" /> instance using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="CountryBuilder" /> instance.</returns>
+    public static CountryBuilder Create() => new();
 }

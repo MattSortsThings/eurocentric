@@ -1,6 +1,5 @@
 using System.Net;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -8,7 +7,6 @@ using Eurocentric.Features.AdminApi.V1.Countries;
 using Eurocentric.Infrastructure.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using DomainCountry = Eurocentric.Domain.Countries.Country;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries;
 
@@ -16,6 +14,7 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
 {
     [Theory]
     [InlineData("v1.0")]
+    [Trait("Category", "happy path")]
     public async Task Should_be_able_to_retrieve_country_by_ID(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
@@ -34,6 +33,7 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
 
     [Theory]
     [InlineData("v1.0")]
+    [Trait("Category", "sad path")]
     public async Task Should_be_unable_to_retrieve_non_existent_country_by_ID(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
@@ -65,26 +65,10 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
 
         private IWebAppFixtureBackDoor BackDoor { get; }
 
-        public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "")
-        {
-            DomainCountry country = new(CountryId.Create(DateTimeOffset.Now),
-                CountryCode.FromValue(countryCode).Value,
-                CountryName.FromValue(countryName).Value);
-
-            Func<IServiceProvider, Task> add = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                dbContext.Countries.Add(country);
-                await dbContext.SaveChangesAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(add);
-
-            MyCountry = new Country
-            {
-                Id = country.Id.Value, CountryCode = countryCode, CountryName = countryName, ParticipatingContests = []
-            };
-        }
+        public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "") =>
+            MyCountry = await ApiDriver.Countries.CreateACountryAsync(countryCode: countryCode,
+                countryName: countryName,
+                cancellationToken: TestContext.Current.CancellationToken);
 
         public void Given_I_want_to_retrieve_my_country_by_its_ID()
         {

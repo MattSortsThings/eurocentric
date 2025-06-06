@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
+using Eurocentric.Features.AdminApi.V1.Countries;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.OpenApi.Any;
 
@@ -10,6 +11,8 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
         new Dictionary<Type, IOpenApiAny>
         {
             [typeof(Country)] = Country.CreateExample().ToOpenApiAny(),
-            [typeof(ContestMemo)] = ContestMemo.CreateExample().ToOpenApiAny()
+            [typeof(ContestMemo)] = ContestMemo.CreateExample().ToOpenApiAny(),
+            [typeof(CreateCountryRequest)] = CreateCountryRequest.CreateExample().ToOpenApiAny(),
+            [typeof(CreateCountryResponse)] = CreateCountryResponse.CreateExample().ToOpenApiAny()
         };
 }

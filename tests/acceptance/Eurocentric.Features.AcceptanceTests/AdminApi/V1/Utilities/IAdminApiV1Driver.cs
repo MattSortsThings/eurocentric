@@ -9,6 +9,9 @@ public interface IAdminApiV1Driver
 
     public interface ICountries
     {
+        public Task<ProblemOrResponse<CreateCountryResponse>> CreateCountry(CreateCountryRequest requestBody,
+            CancellationToken cancellationToken = default);
+
         public Task<ProblemOrResponse<GetCountriesResponse>> GetCountries(CancellationToken cancellationToken = default);
 
         public Task<ProblemOrResponse<GetCountryResponse>> GetCountry(Guid countryId,

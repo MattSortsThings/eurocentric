@@ -19,4 +19,6 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver
     public static AdminApiV1Driver Create(IWebAppFixtureRestClient restClient, string apiVersion) => new(restClient, apiVersion);
 
     private static RestRequest Get(string route) => new(route);
+
+    private static RestRequest Post(string route) => new(route, Method.Post);
 }

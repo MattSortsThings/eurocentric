@@ -1,6 +1,8 @@
 using EntityFramework.Exceptions.SqlServer;
 using Eurocentric.Infrastructure.EFCore;
+using Eurocentric.Infrastructure.IdGenerators;
 using Eurocentric.Infrastructure.InMemoryRepositories;
+using Eurocentric.Infrastructure.Timing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +24,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddEfCoreAppDbContext(configuration.GetConnectionString(DbConstants.ConnectionStringKey))
-            .AddInMemoryRepositories();
+            .AddIdGenerators()
+            .AddInMemoryRepositories()
+            .AddTiming();
 
         return services;
     }
