@@ -18,6 +18,17 @@ internal static class AdminApiV1DriverExtensions
         return problemOrResponse.AsResponse.Data!.Country;
     }
 
+    internal static async Task<Country[]> CreateMultipleCountriesAsync(this IAdminApiV1Driver.ICountries driver,
+        IEnumerable<string> countryCodes,
+        CancellationToken cancellationToken = default)
+    {
+        Task<Country>[] tasks = countryCodes.Select(countryCode =>
+                driver.CreateACountryAsync(GetCountryName(countryCode), countryCode, cancellationToken))
+            .ToArray();
+
+        return await Task.WhenAll(tasks);
+    }
+
     internal static async Task<Country> GetACountryAsync(this IAdminApiV1Driver.ICountries driver,
         Guid countryId,
         CancellationToken cancellationToken = default)
@@ -34,4 +45,19 @@ internal static class AdminApiV1DriverExtensions
 
         return problemOrResponse.AsResponse.Data!.Countries;
     }
+
+    private static string GetCountryName(string countryCode) => countryCode switch
+    {
+        "AT" => "Austria",
+        "BE" => "Belgium",
+        "CZ" => "Czechia",
+        "DK" => "Denmark",
+        "EE" => "Estonia",
+        "FI" => "Finland",
+        "GB" => "United Kingdom",
+        "HR" => "Croatia",
+        "IT" => "Italy",
+        "XX" => "Rest of the World",
+        _ => "CountryName"
+    };
 }

@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Contests;
 using Eurocentric.Domain.Countries;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,8 @@ namespace Eurocentric.Infrastructure.EFCore;
 public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Contest> Contests => Set<Contest>();
 
     public DbSet<Country> Countries => Set<Country>();
 

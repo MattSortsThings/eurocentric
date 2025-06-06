@@ -10,7 +10,7 @@ namespace Eurocentric.Domain.Contests;
 /// </summary>
 public abstract class Contest : AggregateRoot<ContestId>
 {
-    private readonly List<BroadcastMemo> _broadcastMemos = [];
+    private readonly List<BroadcastMemo> _childBroadcasts = [];
     private readonly List<Participant> _participants;
 
     private protected Contest()
@@ -51,7 +51,7 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// <summary>
     ///     Gets a list of memos of all the child broadcasts for the contest, ordered by contest stage.
     /// </summary>
-    public IReadOnlyList<BroadcastMemo> ChildBroadcasts => _broadcastMemos
+    public IReadOnlyList<BroadcastMemo> ChildBroadcasts => _childBroadcasts
         .OrderBy(memo => memo.ContestStage)
         .ToArray()
         .AsReadOnly();

@@ -14,13 +14,13 @@ public sealed class BroadcastMemo : ValueObject
     /// </summary>
     /// <param name="broadcastId">Identifies the broadcast aggregate.</param>
     /// <param name="contestStage">The broadcast aggregate's stage in its parent contest.</param>
-    /// <param name="status">The current status of the broadcast aggregate.</param>
+    /// <param name="broadcastStatus">The current status of the broadcast aggregate.</param>
     /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
-    public BroadcastMemo(BroadcastId broadcastId, ContestStage contestStage, BroadcastStatus status)
+    public BroadcastMemo(BroadcastId broadcastId, ContestStage contestStage, BroadcastStatus broadcastStatus)
     {
         BroadcastId = broadcastId ?? throw new ArgumentNullException(nameof(broadcastId));
         ContestStage = contestStage;
-        BroadcastStatus = status;
+        BroadcastStatus = broadcastStatus;
     }
 
     /// <summary>

@@ -98,6 +98,7 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
 
         contestRepo.Reset();
         queryableRepo.Reset();
+        dbContext.Contests.ExecuteDelete();
         dbContext.Countries.ExecuteDelete();
     }
 

@@ -1,16 +1,17 @@
 using ErrorOr;
 using Eurocentric.Domain.Contests;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.DomainMapping;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Infrastructure.EFCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 using ContestDto = Eurocentric.Features.AdminApi.V1.Common.Dtos.Contest;
 
@@ -45,20 +46,22 @@ internal static class GetContest
 
     internal sealed record Query(Guid ContestId) : IQuery<GetContestResponse>;
 
-    internal sealed class Handler : IQueryHandler<Query, GetContestResponse>
+    internal sealed class Handler(AppDbContext dbContext) : IQueryHandler<Query, GetContestResponse>
     {
         public async Task<ErrorOr<GetContestResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            ContestId contestId = ContestId.FromValue(query.ContestId);
 
-            StockholmFormatContest dc = StockholmFormatContest.Create(ContestYear.FromValue(2016).Value,
-                CityName.FromValue("Stockholm").Value,
-                Enumerable.Range(0, 3).Select(_ => CountryId.FromValue(Guid.NewGuid())),
-                Enumerable.Range(0, 3).Select(_ => CountryId.FromValue(Guid.NewGuid())));
+            ContestDto? contest = await dbContext.Contests
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(contest => contest.Id == contestId)
+                .Select(contest => contest.ToContestDto())
+                .FirstOrDefaultAsync(cancellationToken);
 
-            ContestDto dummyContest = dc.ToContestDto() with { Id = query.ContestId };
-
-            return ErrorOrFactory.From(new GetContestResponse(dummyContest));
+            return contest is not null
+                ? new GetContestResponse(contest)
+                : ContestErrors.ContestNotFound(contestId);
         }
     }
 }
