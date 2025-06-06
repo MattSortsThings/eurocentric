@@ -10,7 +10,6 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
 {
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "happy path")]
     public async Task Should_be_able_to_create_country_scenario_1(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
@@ -31,7 +30,6 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
 
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "happy path")]
     public async Task Should_be_able_to_create_country_scenario_2(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
@@ -52,7 +50,6 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
 
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "happy path")]
     public async Task Should_be_able_to_create_country_scenario_3(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
@@ -73,7 +70,6 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
 
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "sad path")]
     public async Task Should_be_unable_to_create_country_with_non_unique_country_code(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
@@ -96,7 +92,6 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
 
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "sad path")]
     public async Task Should_be_unable_to_create_country_with_illegal_country_code_value(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
@@ -118,7 +113,6 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
 
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "sad path")]
     public async Task Should_be_unable_to_create_country_with_illegal_country_name_value(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);

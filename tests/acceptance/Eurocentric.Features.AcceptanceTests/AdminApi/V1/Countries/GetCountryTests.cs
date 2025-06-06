@@ -14,7 +14,6 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
 {
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "happy path")]
     public async Task Should_be_able_to_retrieve_country_by_ID(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
@@ -33,7 +32,6 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
 
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "sad path")]
     public async Task Should_be_unable_to_retrieve_non_existent_country_by_ID(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);

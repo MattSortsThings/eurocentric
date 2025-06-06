@@ -10,7 +10,6 @@ public sealed class GetCountriesTests(WebAppFixture fixture) : AcceptanceTestBas
 {
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "happy path")]
     public async Task Should_be_able_to_retrieve_all_existing_countries_in_country_code_order(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
@@ -33,7 +32,6 @@ public sealed class GetCountriesTests(WebAppFixture fixture) : AcceptanceTestBas
 
     [Theory]
     [InlineData("v1.0")]
-    [Trait("Category", "happy path")]
     public async Task Should_be_able_to_retrieve_all_empty_list_when_no_countries_exist(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
