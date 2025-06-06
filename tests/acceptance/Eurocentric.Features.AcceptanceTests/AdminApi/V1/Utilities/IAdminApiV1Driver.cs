@@ -14,6 +14,8 @@ public interface IAdminApiV1Driver
     {
         public Task<ProblemOrResponse<GetContestResponse>> GetContest(Guid contestId,
             CancellationToken cancellationToken = default);
+
+        public Task<ProblemOrResponse<GetContestsResponse>> GetContests(CancellationToken cancellationToken = default);
     }
 
     public interface ICountries

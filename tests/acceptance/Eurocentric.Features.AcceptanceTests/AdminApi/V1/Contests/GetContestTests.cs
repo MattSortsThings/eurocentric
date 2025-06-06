@@ -68,7 +68,7 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
 
         private IWebAppFixtureBackDoor BackDoor { get; }
 
-        private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(10);
+        private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(6);
 
         private Guid MyContestId { get; set; }
 

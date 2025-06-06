@@ -26,7 +26,8 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
-        apiGroup.MapGetContest();
+        apiGroup.MapGetContest()
+            .MapGetContests();
 
         apiGroup.MapGetCountry()
             .MapGetCountries()

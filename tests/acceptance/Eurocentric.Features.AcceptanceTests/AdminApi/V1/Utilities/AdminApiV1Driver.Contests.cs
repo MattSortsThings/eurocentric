@@ -16,4 +16,13 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver.IContests
 
         return await _restClient.SendRequestAsync<GetContestResponse>(request, cancellationToken);
     }
+
+    public async Task<ProblemOrResponse<GetContestsResponse>> GetContests(CancellationToken cancellationToken = default)
+    {
+        RestRequest request = Get("/admin/api/{apiVersion}/contests")
+            .UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion);
+
+        return await _restClient.SendRequestAsync<GetContestsResponse>(request, cancellationToken);
+    }
 }
