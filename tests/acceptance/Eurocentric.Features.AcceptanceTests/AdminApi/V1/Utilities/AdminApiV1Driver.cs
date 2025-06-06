@@ -14,6 +14,8 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver
         _restClient = restClient;
     }
 
+    public IAdminApiV1Driver.IContests Contests => this;
+
     public IAdminApiV1Driver.ICountries Countries => this;
 
     public static AdminApiV1Driver Create(IWebAppFixtureRestClient restClient, string apiVersion) => new(restClient, apiVersion);

@@ -2,6 +2,11 @@ namespace Eurocentric.Features.AdminApi.V1.Common.Constants;
 
 internal static class EndpointIds
 {
+    internal static class Contests
+    {
+        internal const string GetContest = "AdminApi.V1.Contests.GetContest";
+    }
+
     internal static class Countries
     {
         internal const string CreateCountry = "AdminApi.V1.Countries.CreateCountry";
