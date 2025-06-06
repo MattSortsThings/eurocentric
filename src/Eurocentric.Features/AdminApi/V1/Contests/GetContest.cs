@@ -1,5 +1,9 @@
 using ErrorOr;
+using Eurocentric.Domain.Contests;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
+using Eurocentric.Features.AdminApi.V1.Common.DomainMapping;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
@@ -47,7 +51,12 @@ internal static class GetContest
         {
             await Task.CompletedTask;
 
-            ContestDto dummyContest = ContestDto.CreateExample() with { Id = query.ContestId };
+            StockholmFormatContest dc = StockholmFormatContest.Create(ContestYear.FromValue(2016).Value,
+                CityName.FromValue("Stockholm").Value,
+                Enumerable.Range(0, 3).Select(_ => CountryId.FromValue(Guid.NewGuid())),
+                Enumerable.Range(0, 3).Select(_ => CountryId.FromValue(Guid.NewGuid())));
+
+            ContestDto dummyContest = dc.ToContestDto() with { Id = query.ContestId };
 
             return ErrorOrFactory.From(new GetContestResponse(dummyContest));
         }

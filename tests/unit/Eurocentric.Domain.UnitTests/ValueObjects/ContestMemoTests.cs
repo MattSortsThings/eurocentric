@@ -115,7 +115,7 @@ public sealed class ContestMemoTests : UnitTestBase
     public sealed class CloneAsInProgressMethod : UnitTestBase
     {
         [Fact]
-        public void Should_return_new_instance_with_same_ContestId_value_and_InProgress_ContestStatus_value()
+        public void Should_return_instance_with_same_ContestId_value_and_InProgress_ContestStatus_value()
         {
             // Arrange
             ContestId sutContestId = ContestId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
@@ -133,7 +133,7 @@ public sealed class ContestMemoTests : UnitTestBase
     public sealed class CloneAsCompletedMethod : UnitTestBase
     {
         [Fact]
-        public void Should_return_new_instance_with_same_ContestId_value_and_Completed_ContestStatus_value()
+        public void Should_return_instance_with_same_ContestId_value_and_Completed_ContestStatus_value()
         {
             // Arrange
             ContestId sutContestId = ContestId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));

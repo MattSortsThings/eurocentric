@@ -16,7 +16,7 @@ public sealed record Contest : IExampleProvider<Contest>
 
     public required ContestStatus ContestStatus { get; init; }
 
-    public required BroadcastMemo[] BroadcastMemos { get; init; }
+    public required BroadcastMemo[] ChildBroadcasts { get; init; }
 
     public required Participant[] Participants { get; init; }
 
@@ -27,7 +27,7 @@ public sealed record Contest : IExampleProvider<Contest>
         CityName = "Basel",
         ContestFormat = ContestFormat.Liverpool,
         ContestStatus = ContestStatus.InProgress,
-        BroadcastMemos =
+        ChildBroadcasts =
         [
             BroadcastMemo.CreateExample()
         ],
