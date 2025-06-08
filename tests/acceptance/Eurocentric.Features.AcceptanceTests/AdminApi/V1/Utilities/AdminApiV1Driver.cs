@@ -14,6 +14,8 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver
         _restClient = restClient;
     }
 
+    public IAdminApiV1Driver.IBroadcasts Broadcasts => this;
+
     public IAdminApiV1Driver.IContests Contests => this;
 
     public IAdminApiV1Driver.ICountries Countries => this;

@@ -1108,7 +1108,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Stockholm_format_contest_with_contest_year(int contestYear)
@@ -1116,7 +1116,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             CreateContestRequest requestBody = CreateDefaultStockholmFormatContest() with { ContestYear = contestYear };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Stockholm_format_contest_with_city_name(string cityName)
@@ -1124,7 +1124,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             CreateContestRequest requestBody = CreateDefaultStockholmFormatContest() with { CityName = cityName };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Stockholm_format_contest_with_participant_act_names(string[]? group2ActNames = null,
@@ -1139,7 +1139,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Stockholm_format_contest_with_participant_song_titles(
@@ -1155,7 +1155,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Stockholm_format_contest_with_participating_countries(
@@ -1177,7 +1177,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Liverpool_format_contest_with_contest_year(int contestYear)
@@ -1185,7 +1185,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             CreateContestRequest requestBody = CreateDefaultLiverpoolFormatContest() with { ContestYear = contestYear };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Liverpool_format_contest_with_city_name(string cityName)
@@ -1193,7 +1193,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             CreateContestRequest requestBody = CreateDefaultLiverpoolFormatContest() with { CityName = cityName };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Liverpool_format_contest_with_participating_countries(
@@ -1215,7 +1215,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Liverpool_format_contest_with_participant_act_names(string[]? group2ActNames = null,
@@ -1230,7 +1230,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_Liverpool_format_contest_with_participant_song_titles(
@@ -1246,7 +1246,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
             };
 
             SendMyRequest = apiDriver =>
-                apiDriver.Contests.CreateContestAsync(requestBody, TestContext.Current.CancellationToken);
+                apiDriver.Contests.CreateContest(requestBody, TestContext.Current.CancellationToken);
         }
 
         public async Task Then_the_created_contest_should_be_retrievable_by_its_ID()

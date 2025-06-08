@@ -27,7 +27,7 @@ internal static partial class AdminApiV1DriverExtensions
         };
 
         ProblemOrResponse<CreateContestResponse> problemOrResponse =
-            await driver.CreateContestAsync(requestBody, cancellationToken);
+            await driver.CreateContest(requestBody, cancellationToken);
 
         return problemOrResponse.AsResponse.Data!.Contest;
     }

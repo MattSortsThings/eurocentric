@@ -24,8 +24,8 @@ internal static class OpenApiAnyMapping
                 return new OpenApiDouble(Convert.ToDouble(d));
             case long l:
                 return new OpenApiLong(l);
-            case double d:
-                return new OpenApiDouble(d);
+            case DateOnly d:
+                return new OpenApiDate(d.ToDateTime(TimeOnly.MinValue));
         }
 
         if (obj.GetType().IsEnum)
