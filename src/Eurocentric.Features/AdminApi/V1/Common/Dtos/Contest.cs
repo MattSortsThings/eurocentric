@@ -33,7 +33,21 @@ public sealed record Contest : IExampleProvider<Contest>
         ],
         Participants =
         [
-            Participant.CreateExample()
+            new Participant { ParticipatingCountryId = ExampleIds.Countries.RestOfTheWorld, ParticipantGroup = 0 },
+            new Participant
+            {
+                ParticipatingCountryId = ExampleIds.Countries.Italy,
+                ParticipantGroup = 1,
+                ActName = "Lucio Corsi",
+                SongTitle = "Volevo essere un duro"
+            },
+            new Participant
+            {
+                ParticipatingCountryId = ExampleIds.Countries.RestOfTheWorld,
+                ParticipantGroup = 2,
+                ActName = "JJ",
+                SongTitle = "Wasted Love"
+            }
         ]
     };
 }

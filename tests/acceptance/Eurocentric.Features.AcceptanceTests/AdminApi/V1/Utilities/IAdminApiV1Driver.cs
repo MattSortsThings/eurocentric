@@ -12,6 +12,9 @@ public interface IAdminApiV1Driver
 
     public interface IContests
     {
+        public Task<ProblemOrResponse<CreateContestResponse>> CreateContestAsync(CreateContestRequest requestBody,
+            CancellationToken cancellationToken = default);
+
         public Task<ProblemOrResponse<GetContestResponse>> GetContest(Guid contestId,
             CancellationToken cancellationToken = default);
 

@@ -4,7 +4,7 @@ using Eurocentric.Features.AdminApi.V1.Countries;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 
-internal static class AdminApiV1DriverExtensions
+internal static partial class AdminApiV1DriverExtensions
 {
     internal static async Task<Country> CreateACountryAsync(this IAdminApiV1Driver.ICountries driver,
         string? countryName = null,

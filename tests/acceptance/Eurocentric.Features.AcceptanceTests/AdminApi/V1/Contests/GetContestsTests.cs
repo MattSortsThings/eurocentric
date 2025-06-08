@@ -1,14 +1,9 @@
 using System.Net;
-using Eurocentric.Domain.Contests;
-using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
+using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Features.AdminApi.V1.Contests;
-using Eurocentric.Infrastructure.EFCore;
-using Microsoft.Extensions.DependencyInjection;
-using DomainContest = Eurocentric.Domain.Contests.Contest;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests;
 
@@ -22,14 +17,24 @@ public sealed class GetContestsTests(WebAppFixture fixture) : AcceptanceTestBase
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR");
-        await admin.Given_I_have_created_a_contest(contestYear: 2025,
-            group1Countries: ["AT", "BE", "CZ"], group2Countries: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_a_contest(contestYear: 2016,
-            group1Countries: ["AT", "BE", "CZ"], group2Countries: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_a_contest(contestYear: 2022,
-            group1Countries: ["AT", "BE", "CZ"], group2Countries: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_a_contest(contestYear: 2018,
-            group1Countries: ["AT", "BE", "CZ"], group2Countries: ["DK", "EE", "FI"]);
+        await admin.Given_I_have_created_a_contest(
+            contestFormat: "Stockholm",
+            contestYear: 2022,
+            cityName: "Turin",
+            group1CountryCodes: ["DK", "BE", "CZ"],
+            group2CountryCodes: ["AT", "EE", "FI"]);
+        await admin.Given_I_have_created_a_contest(
+            contestFormat: "Stockholm",
+            contestYear: 2016,
+            cityName: "Lisbon",
+            group1CountryCodes: ["AT", "BE", "CZ"],
+            group2CountryCodes: ["DK", "EE", "FI"]);
+        await admin.Given_I_have_created_a_contest(
+            contestFormat: "Stockholm",
+            contestYear: 2017,
+            cityName: "Kyiv",
+            group1CountryCodes: ["AT", "BE", "CZ", "HR"],
+            group2CountryCodes: ["DK", "EE", "FI"]);
         admin.Given_I_want_to_retrieve_all_existing_contests();
 
         // When
@@ -37,7 +42,7 @@ public sealed class GetContestsTests(WebAppFixture fixture) : AcceptanceTestBase
 
         // Then
         admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
-        admin.Then_the_retrieved_contests_years_should_be(2016, 2018, 2022, 2025);
+        admin.Then_the_retrieved_contests_should_be_my_contests_in_contest_year_order();
     }
 
     [Theory]
@@ -68,6 +73,8 @@ public sealed class GetContestsTests(WebAppFixture fixture) : AcceptanceTestBase
 
         private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(8);
 
+        private List<Contest> MyContests { get; } = new(3);
+
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
             Country[] myCountries = await ApiDriver.Countries.CreateMultipleCountriesAsync(countryCodes,
@@ -79,48 +86,40 @@ public sealed class GetContestsTests(WebAppFixture fixture) : AcceptanceTestBase
             }
         }
 
-        public async Task Given_I_have_created_a_contest(string[]? group2Countries = null,
-            string[]? group1Countries = null,
-            int contestYear = 0)
+        public async Task Given_I_have_created_a_contest(int contestYear = 0,
+            string cityName = "",
+            string contestFormat = "",
+            string? group0CountryCode = null,
+            string[]? group1CountryCodes = null,
+            string[]? group2CountryCodes = null)
         {
-            CountryId[] group1CountryIds = group1Countries?.Select(code => MyCountryCodesAndIds[code])
-                .Select(CountryId.FromValue)
-                .ToArray() ?? [];
+            Contest myContest = await ApiDriver.Contests.CreateAContestAsync(cityName: cityName,
+                contestFormat: Enum.Parse<ContestFormat>(contestFormat),
+                contestYear: contestYear,
+                group0CountryId: group0CountryCode is null ? null : MyCountryCodesAndIds[group0CountryCode],
+                group1CountryIds: group1CountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray(),
+                group2CountryIds: group2CountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray());
 
-            CountryId[] group2CountryIds = group2Countries?.Select(code => MyCountryCodesAndIds[code])
-                .Select(CountryId.FromValue)
-                .ToArray() ?? [];
-
-            DomainContest contest = StockholmFormatContest.Create(ContestYear.FromValue(contestYear).Value,
-                CityName.FromValue("CityName").Value,
-                group1CountryIds,
-                group2CountryIds);
-
-            Func<IServiceProvider, Task> add = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                dbContext.Contests.Add(contest);
-                await dbContext.SaveChangesAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(add);
+            MyContests.Add(myContest);
         }
 
         public void Given_I_want_to_retrieve_all_existing_contests() =>
             SendMyRequest = apiDriver => apiDriver.Contests.GetContests(TestContext.Current.CancellationToken);
-
-        public void Then_the_retrieved_contests_years_should_be(params int[] years)
-        {
-            Assert.NotNull(ResponseObject);
-
-            Assert.Equal(years, ResponseObject.Contests.Select(contest => contest.ContestYear));
-        }
 
         public void Then_the_retrieved_contests_should_be_an_empty_list()
         {
             Assert.NotNull(ResponseObject);
 
             Assert.Empty(ResponseObject.Contests);
+        }
+
+        public void Then_the_retrieved_contests_should_be_my_contests_in_contest_year_order()
+        {
+            Assert.NotNull(ResponseObject);
+
+            IOrderedEnumerable<Contest> expectedContests = MyContests.OrderBy(contest => contest.ContestYear);
+
+            Assert.Equal(expectedContests, ResponseObject.Contests, new ContestEqualityComparer());
         }
     }
 }

@@ -55,32 +55,17 @@ public sealed class Participant : Entity
     /// </remarks>
     public SongTitle? SongTitle { get; private init; }
 
-    internal static Participant CreateInGroup0(CountryId countryId)
-    {
-        ArgumentNullException.ThrowIfNull(countryId);
-
-        return new Participant(countryId);
-    }
+    internal static Participant CreateInGroup0(CountryId countryId) => new(countryId);
 
     internal static ErrorOr<Participant> CreateInGroup1(CountryId countryId,
         ErrorOr<ActName> errorsOrActName,
-        ErrorOr<SongTitle> errorsOrSongTitle)
-    {
-        ArgumentNullException.ThrowIfNull(countryId);
-
-        return Tuple.Create(errorsOrActName, errorsOrSongTitle)
-            .Combine()
-            .Then(tuple => new Participant(countryId, ParticipantGroup.One, tuple.Item1, tuple.Item2));
-    }
+        ErrorOr<SongTitle> errorsOrSongTitle) => Tuple.Create(errorsOrActName, errorsOrSongTitle)
+        .Combine()
+        .Then(tuple => new Participant(countryId, ParticipantGroup.One, tuple.Item1, tuple.Item2));
 
     internal static ErrorOr<Participant> CreateInGroup2(CountryId countryId,
         ErrorOr<ActName> errorsOrActName,
-        ErrorOr<SongTitle> errorsOrSongTitle)
-    {
-        ArgumentNullException.ThrowIfNull(countryId);
-
-        return Tuple.Create(errorsOrActName, errorsOrSongTitle)
-            .Combine()
-            .Then(tuple => new Participant(countryId, ParticipantGroup.Two, tuple.Item1, tuple.Item2));
-    }
+        ErrorOr<SongTitle> errorsOrSongTitle) => Tuple.Create(errorsOrActName, errorsOrSongTitle)
+        .Combine()
+        .Then(tuple => new Participant(countryId, ParticipantGroup.Two, tuple.Item1, tuple.Item2));
 }

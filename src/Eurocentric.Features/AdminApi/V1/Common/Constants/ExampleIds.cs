@@ -15,7 +15,7 @@ internal static class ExampleIds
     internal static class Countries
     {
         internal static readonly Guid Austria = Guid.Parse("d75dad58-ab72-4ff1-9c21-564a8cfab641");
-        internal static readonly Guid UnitedKingdom = Guid.Parse("22b8cb52-8130-439a-a71d-b11a3b17aad6");
+        internal static readonly Guid Italy = Guid.Parse("22b8cb52-8130-439a-a71d-b11a3b17aad6");
         internal static readonly Guid RestOfTheWorld = Guid.Parse("a97310a5-59c0-4342-b712-ab6a2dcb66cc");
     }
 }

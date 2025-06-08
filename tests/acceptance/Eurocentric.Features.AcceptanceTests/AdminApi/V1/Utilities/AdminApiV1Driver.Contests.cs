@@ -6,6 +6,17 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 
 public sealed partial class AdminApiV1Driver : IAdminApiV1Driver.IContests
 {
+    public async Task<ProblemOrResponse<CreateContestResponse>> CreateContestAsync(CreateContestRequest requestBody,
+        CancellationToken cancellationToken = default)
+    {
+        RestRequest request = Post("/admin/api/{apiVersion}/contests")
+            .UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddJsonBody(requestBody);
+
+        return await _restClient.SendRequestAsync<CreateContestResponse>(request, cancellationToken);
+    }
+
     public async Task<ProblemOrResponse<GetContestResponse>> GetContest(Guid contestId,
         CancellationToken cancellationToken = default)
     {

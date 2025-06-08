@@ -1,7 +1,6 @@
 using ErrorOr;
 using Eurocentric.Domain.Countries;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.UnitTests.Countries.Utilities;
 using Eurocentric.Domain.UnitTests.Utilities;
 using Eurocentric.Domain.ValueObjects;
 

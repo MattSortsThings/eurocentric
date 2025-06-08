@@ -1,15 +1,14 @@
 using System.Net;
-using Eurocentric.Domain.Contests;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
+using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Features.AdminApi.V1.Contests;
 using Eurocentric.Infrastructure.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using DomainContest = Eurocentric.Domain.Contests.Contest;
+using Contest = Eurocentric.Features.AdminApi.V1.Common.Dtos.Contest;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests;
 
@@ -23,8 +22,12 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
-        await admin.Given_I_have_created_a_contest(group1Countries: ["AT", "BE", "CZ"],
-            group2Countries: ["DK", "EE", "FI"]);
+        await admin.Given_I_have_created_a_contest(
+            contestFormat: "Stockholm",
+            contestYear: 2016,
+            cityName: "Lisbon",
+            group1CountryCodes: ["AT", "BE", "CZ"],
+            group2CountryCodes: ["DK", "EE", "FI"]);
         admin.Given_I_want_to_retrieve_my_contest_by_its_ID();
 
         // When
@@ -43,8 +46,12 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
-        await admin.Given_I_have_created_a_contest(group1Countries: ["AT", "BE", "CZ"],
-            group2Countries: ["DK", "EE", "FI"]);
+        await admin.Given_I_have_created_a_contest(
+            contestFormat: "Stockholm",
+            contestYear: 2016,
+            cityName: "Lisbon",
+            group1CountryCodes: ["AT", "BE", "CZ"],
+            group2CountryCodes: ["DK", "EE", "FI"]);
         await admin.Given_I_have_deleted_my_contest();
         admin.Given_I_want_to_retrieve_my_contest_by_its_ID();
 
@@ -70,7 +77,7 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
 
         private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(6);
 
-        private Guid MyContestId { get; set; }
+        private Contest? MyContest { get; set; }
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
@@ -83,36 +90,23 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
             }
         }
 
-        public async Task Given_I_have_created_a_contest(string[]? group2Countries = null, string[]? group1Countries = null)
-        {
-            CountryId[] group1CountryIds = group1Countries?.Select(code => MyCountryCodesAndIds[code])
-                .Select(CountryId.FromValue)
-                .ToArray() ?? [];
-
-            CountryId[] group2CountryIds = group2Countries?.Select(code => MyCountryCodesAndIds[code])
-                .Select(CountryId.FromValue)
-                .ToArray() ?? [];
-
-            DomainContest contest = StockholmFormatContest.Create(ContestYear.FromValue(2022).Value,
-                CityName.FromValue("Turin").Value,
-                group1CountryIds,
-                group2CountryIds);
-
-            Func<IServiceProvider, Task> add = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                dbContext.Contests.Add(contest);
-                await dbContext.SaveChangesAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(add);
-
-            MyContestId = contest.Id.Value;
-        }
+        public async Task Given_I_have_created_a_contest(int contestYear = 0,
+            string cityName = "",
+            string contestFormat = "",
+            string? group0CountryCode = null,
+            string[]? group1CountryCodes = null,
+            string[]? group2CountryCodes = null) => MyContest = await ApiDriver.Contests.CreateAContestAsync(cityName: cityName,
+            contestFormat: Enum.Parse<ContestFormat>(contestFormat),
+            contestYear: contestYear,
+            group0CountryId: group0CountryCode is null ? null : MyCountryCodesAndIds[group0CountryCode],
+            group1CountryIds: group1CountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray(),
+            group2CountryIds: group2CountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray());
 
         public async Task Given_I_have_deleted_my_contest()
         {
-            ContestId targetId = ContestId.FromValue(MyContestId);
+            Assert.NotNull(MyContest);
+
+            ContestId targetId = ContestId.FromValue(MyContest.Id);
 
             Func<IServiceProvider, Task> delete = async sp =>
             {
@@ -124,17 +118,28 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
             await BackDoor.ExecuteScopedAsync(delete);
         }
 
-        public void Given_I_want_to_retrieve_my_contest_by_its_ID() =>
-            SendMyRequest = apiDriver => apiDriver.Contests.GetContest(MyContestId, TestContext.Current.CancellationToken);
+        public void Given_I_want_to_retrieve_my_contest_by_its_ID()
+        {
+            Assert.NotNull(MyContest);
+
+            Guid contestId = MyContest.Id;
+
+            SendMyRequest = apiDriver => apiDriver.Contests.GetContest(contestId, TestContext.Current.CancellationToken);
+        }
 
         public void Then_the_retrieved_contest_should_be_my_contest()
         {
             Assert.NotNull(ResponseObject);
+            Assert.NotNull(MyContest);
 
-            Assert.Equal(MyContestId, ResponseObject.Contest.Id);
+            Assert.Equal(MyContest, ResponseObject.Contest, new ContestEqualityComparer());
         }
 
-        public void Then_the_problem_details_extensions_should_contain_my_contest_ID_with_key(string key) =>
-            Then_the_problem_details_extensions_should_contain(key, MyContestId);
+        public void Then_the_problem_details_extensions_should_contain_my_contest_ID_with_key(string key)
+        {
+            Assert.NotNull(MyContest);
+
+            Then_the_problem_details_extensions_should_contain(key, MyContest.Id);
+        }
     }
 }

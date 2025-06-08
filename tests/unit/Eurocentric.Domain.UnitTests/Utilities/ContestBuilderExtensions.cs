@@ -1,0 +1,39 @@
+using ErrorOr;
+using Eurocentric.Domain.Contests;
+using Eurocentric.Domain.Countries;
+using Eurocentric.Domain.ValueObjects;
+
+namespace Eurocentric.Domain.UnitTests.Utilities;
+
+public static class ContestBuilderExtensions
+{
+    public static ContestBuilder WithArbitraryYearAndCity(this ContestBuilder builder) =>
+        builder.WithContestYear(ContestYear.FromValue(2016))
+            .WithCityName(CityName.FromValue("CityName"));
+
+    public static ContestBuilder WithGroup1Countries(this ContestBuilder builder, params Country[] countries)
+    {
+        ErrorOr<ActName> arbitraryActName = ActName.FromValue("ActName");
+        ErrorOr<SongTitle> arbitrarySongTitle = SongTitle.FromValue("SongTitle");
+
+        foreach (Country country in countries)
+        {
+            builder = builder.AddGroup1Participant(country.Id, arbitraryActName, arbitrarySongTitle);
+        }
+
+        return builder;
+    }
+
+    public static ContestBuilder WithGroup2Countries(this ContestBuilder builder, params Country[] countries)
+    {
+        ErrorOr<ActName> arbitraryActName = ActName.FromValue("ActName");
+        ErrorOr<SongTitle> arbitrarySongTitle = SongTitle.FromValue("SongTitle");
+
+        foreach (Country country in countries)
+        {
+            builder = builder.AddGroup2Participant(country.Id, arbitraryActName, arbitrarySongTitle);
+        }
+
+        return builder;
+    }
+}

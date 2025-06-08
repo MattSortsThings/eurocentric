@@ -1,4 +1,6 @@
+using ErrorOr;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.ErrorHandling;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -7,8 +9,16 @@ namespace Eurocentric.Domain.Contests;
 /// <summary>
 ///     Represents a contest aggregate using the <see cref="Enums.ContestFormat.Stockholm" /> contest format.
 /// </summary>
+/// <remarks>
+///     Create an instance of this class using the <see cref="Contest.CreateStockholmFormat" /> static method on the
+///     <see cref="Contest" /> class.
+/// </remarks>
 public sealed class StockholmFormatContest : Contest
 {
+    private const int RequiredParticipantGroupZeroSize = 0;
+    private const int MinParticipantGroupOneSize = 3;
+    private const int MinParticipantGroupTwoSize = 3;
+
     private StockholmFormatContest()
     {
     }
@@ -24,29 +34,32 @@ public sealed class StockholmFormatContest : Contest
     /// <inheritdoc />
     public override ContestFormat ContestFormat { get; private protected init; } = ContestFormat.Stockholm;
 
-    public static StockholmFormatContest Create(ContestYear contestYear,
-        CityName cityName,
-        IEnumerable<CountryId> group1CountryIds,
-        IEnumerable<CountryId> group2CountryIds)
+    internal sealed class Builder : ContestBuilder
     {
-        List<Participant> participants = new();
+        private protected override ErrorOr<List<Participant>> CollectAndCheck(
+            IReadOnlyList<ErrorOr<Participant>> errorsOrParticipants) => errorsOrParticipants.Collect()
+            .FailIf(DuplicateParticipatingCountries, ContestErrors.DuplicateParticipatingCountries())
+            .FailIf(IllegalParticipantGroupSizes, ContestErrors.IllegalStockholmFormatGroupSizes());
 
-        foreach (CountryId id in group1CountryIds)
+        private protected override Contest InitializeContest(ContestId id,
+            ContestYear contestYear,
+            CityName cityName,
+            List<Participant> participants) => new StockholmFormatContest(id, contestYear, cityName, participants);
+
+        private static bool DuplicateParticipatingCountries(IEnumerable<Participant> participants) =>
+            participants.GroupBy(participant => participant.ParticipatingCountryId)
+                .Any(grouping => grouping.Count() > 1);
+
+        private static bool IllegalParticipantGroupSizes(IEnumerable<Participant> participants)
         {
-            participants.Add(Participant.CreateInGroup1(id,
-                ActName.FromValue("Act " + id.Value),
-                SongTitle.FromValue("Song " + id.Value)).Value);
-        }
+            Dictionary<ParticipantGroup, int> groupSizes = Enum.GetValues<ParticipantGroup>()
+                .Concat(participants.Select(participant => participant.ParticipantGroup))
+                .GroupBy(value => value)
+                .ToDictionary(grouping => grouping.Key, grouping => grouping.Count() - 1);
 
-        foreach (CountryId id in group2CountryIds)
-        {
-            participants.Add(Participant.CreateInGroup2(id,
-                ActName.FromValue("Act " + id.Value),
-                SongTitle.FromValue("Song " + id.Value)).Value);
+            return groupSizes[ParticipantGroup.Zero] != RequiredParticipantGroupZeroSize
+                   || groupSizes[ParticipantGroup.One] < MinParticipantGroupOneSize
+                   || groupSizes[ParticipantGroup.Two] < MinParticipantGroupTwoSize;
         }
-
-        return new StockholmFormatContest(ContestId.Create(DateTimeOffset.UtcNow),
-            contestYear,
-            cityName, participants);
     }
 }

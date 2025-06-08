@@ -65,4 +65,18 @@ public abstract class Contest : AggregateRoot<ContestId>
         .ThenBy(participant => participant.ParticipatingCountryId.Value)
         .ToArray()
         .AsReadOnly();
+
+    /// <summary>
+    ///     Begins the process of creating a new <see cref="Contest" /> instance using <see cref="ContestFormat.Stockholm" />
+    ///     contest format using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="ContestBuilder" />A new <see cref="ContestBuilder" /> instance.</returns>
+    public static ContestBuilder CreateStockholmFormat() => new StockholmFormatContest.Builder();
+
+    /// <summary>
+    ///     Begins the process of creating a new <see cref="Contest" /> instance using <see cref="ContestFormat.Liverpool" />
+    ///     contest format using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="ContestBuilder" />A new <see cref="ContestBuilder" /> instance.</returns>
+    public static ContestBuilder CreateLiverpoolFormat() => new LiverpoolFormatContest.Builder();
 }
