@@ -20,11 +20,14 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
     <PackageVersion Include="OneOf" Version="3.0.271"/>
     <PackageVersion Include="RestSharp" Version="112.1.0"/>
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.4.11"/>
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.4.13"/>
     <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.2.0"/>
     <PackageVersion Include="Testcontainers.MsSql" Version="4.5.0"/>
     <PackageVersion Include="TngTech.ArchUnitNET.xUnitV3" Version="0.11.4"/>
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.0"/>
-    <PackageVersion Include="xunit.v3" Version="2.0.2"/>
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageVersion>
+    <PackageVersion Include="xunit.v3" Version="2.0.3"/>
   </ItemGroup>
 </Project>
