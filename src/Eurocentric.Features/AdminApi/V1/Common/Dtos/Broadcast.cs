@@ -14,6 +14,8 @@ public sealed record Broadcast : IExampleProvider<Broadcast>
 
     public required ContestStage ContestStage { get; init; }
 
+    public required BroadcastStatus BroadcastStatus { get; init; }
+
     public required Competitor[] Competitors { get; init; }
 
     public required Voter[] Juries { get; init; }
@@ -26,6 +28,7 @@ public sealed record Broadcast : IExampleProvider<Broadcast>
         BroadcastDate = DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd"),
         ParentContestId = ExampleIds.Contests.Basel2025,
         ContestStage = ContestStage.GrandFinal,
+        BroadcastStatus = BroadcastStatus.InProgress,
         Competitors = [Competitor.CreateExample()],
         Juries = [Voter.CreateExample()],
         Televotes = [Voter.CreateExample()]

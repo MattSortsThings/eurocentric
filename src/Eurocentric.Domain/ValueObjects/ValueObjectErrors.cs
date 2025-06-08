@@ -8,6 +8,10 @@ public static class ValueObjectErrors
         "Act name value must be a non-empty, non-whitespace string of no more than 200 characters.",
         new Dictionary<string, object> { ["actName"] = value });
 
+    public static Error IllegalBroadcastDateValue(DateOnly value) => Error.Failure("Illegal broadcast date value",
+        "Broadcast date value must be between 2016-01-01 and 2050-12-31.",
+        new Dictionary<string, object> { ["broadcastDate"] = value });
+
     public static Error IllegalCityNameValue(string value) => Error.Failure("Illegal city name value",
         "City name value must be a non-empty, non-whitespace string of no more than 200 characters.",
         new Dictionary<string, object> { ["cityName"] = value });

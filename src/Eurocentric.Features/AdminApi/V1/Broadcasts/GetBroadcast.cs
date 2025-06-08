@@ -1,6 +1,9 @@
 using ErrorOr;
+using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
-using Eurocentric.Features.AdminApi.V1.Common.Dtos;
+using Eurocentric.Features.AdminApi.V1.Common.DomainMapping;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
@@ -9,10 +12,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using DomainBroadcast = Eurocentric.Domain.Broadcasts.Broadcast;
+using DomainCompetitor = Eurocentric.Domain.Broadcasts.Competitor;
+using DomainTelevote = Eurocentric.Domain.Broadcasts.Televote;
+using BroadcastDto = Eurocentric.Features.AdminApi.V1.Common.Dtos.Broadcast;
 
 namespace Eurocentric.Features.AdminApi.V1.Broadcasts;
 
-public sealed record GetBroadcastResponse(Broadcast Broadcast);
+public sealed record GetBroadcastResponse(BroadcastDto Broadcast);
 
 internal static class GetBroadcast
 {
@@ -47,9 +54,26 @@ internal static class GetBroadcast
         {
             await Task.CompletedTask;
 
-            Broadcast broadcast = Broadcast.CreateExample() with { Id = query.BroadcastId };
+            DomainBroadcast broadcast = new(
+                BroadcastId.FromValue(ExampleIds.Broadcasts.Basel2025GrandFinal),
+                BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd")).Value,
+                ContestId.FromValue(ExampleIds.Contests.Basel2025),
+                ContestStage.GrandFinal,
+                [
+                    new DomainCompetitor(CountryId.FromValue(ExampleIds.Countries.Austria), 1),
+                    new DomainCompetitor(CountryId.FromValue(ExampleIds.Countries.Italy), 2)
+                ],
+                [],
+                [
+                    new DomainTelevote(CountryId.FromValue(ExampleIds.Countries.Austria)),
+                    new DomainTelevote(CountryId.FromValue(ExampleIds.Countries.Italy)),
+                    new DomainTelevote(CountryId.FromValue(ExampleIds.Countries.RestOfTheWorld))
+                ]
+            );
 
-            return ErrorOrFactory.From(new GetBroadcastResponse(broadcast));
+            BroadcastDto broadcastDto = broadcast.ToBroadcastDto() with { Id = query.BroadcastId };
+
+            return ErrorOrFactory.From(new GetBroadcastResponse(broadcastDto));
         }
     }
 }

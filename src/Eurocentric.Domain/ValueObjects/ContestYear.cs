@@ -37,7 +37,7 @@ public sealed class ContestYear : ValueObject, IComparable<ContestYear>
     /// </summary>
     /// <remarks>
     ///     A <see cref="ContestYear" /> instance created using this method is guaranteed to be a legal contest year in the
-    ///     system. A legal country name value is an integer between 2016 and 2050.
+    ///     system. A legal contest year value is an integer between 2016 and 2050.
     /// </remarks>
     /// <param name="value">
     ///     An integer between 2016 and 2050. The underlying value of the instance to be created.
