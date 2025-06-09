@@ -1,4 +1,3 @@
-using System.Net;
 using Eurocentric.Features.AcceptanceTests.PublicApi.V0.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.PublicApi.V0.Common.Dtos;
@@ -25,7 +24,7 @@ public sealed class GetPointsShareVotingCountryRankingsTests(WebAppFixture fixtu
         await euroFan.When_I_send_my_request();
 
         // Then
-        euroFan.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        euroFan.Then_my_request_should_succeed_with_status_code_200_OK();
         euroFan.Then_the_retrieved_page_of_rankings_should_be(
             """
             | Rank | CountryCode | CountryName | PointsAwards | TotalPoints | AvailablePoints | PointsShare |
@@ -63,7 +62,7 @@ public sealed class GetPointsShareVotingCountryRankingsTests(WebAppFixture fixtu
         await euroFan.When_I_send_my_request();
 
         // Then
-        euroFan.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        euroFan.Then_my_request_should_succeed_with_status_code_200_OK();
         euroFan.Then_the_retrieved_page_of_rankings_should_be_an_empty_list();
         euroFan.Then_the_retrieved_filters_metadata_should_be(competingCountryCode: "AT",
             votingMethod: "Any",

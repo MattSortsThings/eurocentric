@@ -1,4 +1,3 @@
-using System.Net;
 using Eurocentric.Features.AcceptanceTests.PublicApi.V0.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.PublicApi.V0.Common.Enums;
@@ -22,7 +21,7 @@ public sealed class GetAvailableVotingMethodsTests(WebAppFixture fixture) : Acce
         await euroFan.When_I_send_my_request();
 
         // Then
-        euroFan.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        euroFan.Then_my_request_should_succeed_with_status_code_200_OK();
         euroFan.Then_the_retrieved_voting_method_values_should_be("Any", "Jury", "Televote");
     }
 

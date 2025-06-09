@@ -1,4 +1,3 @@
-using System.Net;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
@@ -34,7 +33,7 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_my_request_should_succeed_with_status_code_200_OK();
         admin.Then_the_retrieved_contest_should_be_my_contest();
     }
 
@@ -59,7 +58,7 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.NotFound);
+        admin.Then_my_request_should_fail_with_status_code_404_NotFound();
         admin.Then_the_problem_details_should_match(status: 404,
             title: "Contest not found",
             detail: "No contest exists with the provided contest ID.");

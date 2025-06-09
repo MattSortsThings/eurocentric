@@ -1,4 +1,3 @@
-using System.Net;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts.Utilities;
@@ -50,7 +49,7 @@ public sealed class GetBroadcastsTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_my_request_should_succeed_with_status_code_200_OK();
         admin.Then_the_retrieved_broadcasts_should_be_my_broadcasts_in_broadcast_date_order();
     }
 
@@ -67,7 +66,7 @@ public sealed class GetBroadcastsTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_my_request_should_succeed_with_status_code_200_OK();
         admin.Then_the_retrieved_broadcasts_should_be_an_empty_list();
     }
 

@@ -1,4 +1,3 @@
-using System.Net;
 using CsvHelper.Configuration.Attributes;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
@@ -44,7 +43,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_my_request_should_succeed_with_status_code_201_Created();
         admin.Then_the_created_contest_should_match(
             contestFormat: "Stockholm",
             contestYear: 2016,
@@ -94,7 +93,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_my_request_should_succeed_with_status_code_201_Created();
         admin.Then_the_created_contest_should_match(
             contestFormat: "Stockholm",
             contestYear: 2022,
@@ -145,7 +144,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_my_request_should_succeed_with_status_code_201_Created();
         admin.Then_the_created_contest_should_match(
             contestFormat: "Liverpool",
             contestYear: 2023,
@@ -197,7 +196,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_my_request_should_succeed_with_status_code_201_Created();
         admin.Then_the_created_contest_should_match(
             contestFormat: "Liverpool",
             contestYear: 2025,
@@ -234,7 +233,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.Conflict);
+        admin.Then_my_request_should_fail_with_status_code_409_Conflict();
         admin.Then_the_problem_details_should_match(status: 409,
             title: "Contest year conflict",
             detail: "A contest already exists with the provided contest year.");
@@ -257,7 +256,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal contest year value",
             detail: "Contest year value must be an integer between 2016 and 2050.");
@@ -279,7 +278,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal city name value",
             detail: "City name value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -304,7 +303,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal act name value",
             detail: "Act name value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -329,7 +328,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal act name value",
             detail: "Act name value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -355,7 +354,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal song title value",
             detail: "Song title value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -381,7 +380,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal song title value",
             detail: "Song title value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -406,7 +405,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal Stockholm format group sizes",
             detail: "A Stockholm format contest must have no participants in group 0, " +
@@ -431,7 +430,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal Stockholm format group sizes",
             detail: "A Stockholm format contest must have no participants in group 0, " +
@@ -456,7 +455,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal Stockholm format group sizes",
             detail: "A Stockholm format contest must have no participants in group 0, " +
@@ -481,7 +480,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Duplicate participating countries",
             detail: "Every participant in a contest must reference a different participating country.");
@@ -505,7 +504,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Duplicate participating countries",
             detail: "Every participant in a contest must reference a different participating country.");
@@ -529,7 +528,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Duplicate participating countries",
             detail: "Every participant in a contest must reference a different participating country.");
@@ -554,7 +553,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.Conflict);
+        admin.Then_my_request_should_fail_with_status_code_409_Conflict();
         admin.Then_the_problem_details_should_match(status: 409,
             title: "Orphan participant",
             detail: "No country exists with the provided participating country ID.");
@@ -581,7 +580,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.Conflict);
+        admin.Then_my_request_should_fail_with_status_code_409_Conflict();
         admin.Then_the_problem_details_should_match(status: 409,
             title: "Orphan participant",
             detail: "No country exists with the provided participating country ID.");
@@ -605,7 +604,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.Conflict);
+        admin.Then_my_request_should_fail_with_status_code_409_Conflict();
         admin.Then_the_problem_details_should_match(status: 409,
             title: "Contest year conflict",
             detail: "A contest already exists with the provided contest year.");
@@ -627,7 +626,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal contest year value",
             detail: "Contest year value must be an integer between 2016 and 2050.");
@@ -649,7 +648,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal city name value",
             detail: "City name value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -674,7 +673,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal act name value",
             detail: "Act name value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -699,7 +698,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal act name value",
             detail: "Act name value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -725,7 +724,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal song title value",
             detail: "Song title value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -750,7 +749,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal song title value",
             detail: "Song title value must be a non-empty, non-whitespace string of no more than 200 characters.");
@@ -774,7 +773,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal Liverpool format group sizes",
             detail: "A Liverpool format contest must have a single participant in group 0, " +
@@ -799,7 +798,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal Liverpool format group sizes",
             detail: "A Liverpool format contest must have a single participant in group 0, " +
@@ -824,7 +823,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal Liverpool format group sizes",
             detail: "A Liverpool format contest must have a single participant in group 0, " +
@@ -850,7 +849,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Duplicate participating countries",
             detail: "Every participant in a contest must reference a different participating country.");
@@ -875,7 +874,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Duplicate participating countries",
             detail: "Every participant in a contest must reference a different participating country.");
@@ -900,7 +899,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Duplicate participating countries",
             detail: "Every participant in a contest must reference a different participating country.");
@@ -925,7 +924,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Duplicate participating countries",
             detail: "Every participant in a contest must reference a different participating country.");
@@ -950,7 +949,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Duplicate participating countries",
             detail: "Every participant in a contest must reference a different participating country.");
@@ -976,7 +975,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.Conflict);
+        admin.Then_my_request_should_fail_with_status_code_409_Conflict();
         admin.Then_the_problem_details_should_match(status: 409,
             title: "Orphan participant",
             detail: "No country exists with the provided participating country ID.");
@@ -1004,7 +1003,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.Conflict);
+        admin.Then_my_request_should_fail_with_status_code_409_Conflict();
         admin.Then_the_problem_details_should_match(status: 409,
             title: "Orphan participant",
             detail: "No country exists with the provided participating country ID.");
@@ -1032,7 +1031,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.Conflict);
+        admin.Then_my_request_should_fail_with_status_code_409_Conflict();
         admin.Then_the_problem_details_should_match(status: 409,
             title: "Orphan participant",
             detail: "No country exists with the provided participating country ID.");

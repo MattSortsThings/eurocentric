@@ -1,4 +1,3 @@
-using System.Net;
 using System.Text.Json;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
@@ -44,7 +43,7 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_my_request_should_succeed_with_status_code_200_OK();
         admin.Then_the_retrieved_broadcast_should_be_my_broadcast();
     }
 
@@ -72,7 +71,7 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.NotFound);
+        admin.Then_my_request_should_fail_with_status_code_404_NotFound();
         admin.Then_the_problem_details_should_match(status: 404,
             title: "Broadcast not found",
             detail: "No broadcast exists with the provided broadcast ID.");

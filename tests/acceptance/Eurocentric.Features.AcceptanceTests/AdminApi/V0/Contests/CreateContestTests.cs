@@ -1,4 +1,3 @@
-using System.Net;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V0.Common.Dtos;
@@ -22,7 +21,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_my_request_should_succeed_with_status_code_201_Created();
         admin.Then_the_created_contest_should_match(contestFormat: "Liverpool", contestYear: 2025, cityName: "Basel");
     }
 

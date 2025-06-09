@@ -1,4 +1,3 @@
-using System.Net;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -21,7 +20,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_my_request_should_succeed_with_status_code_201_Created();
         admin.Then_the_created_country_should_match(countryCode: "AT",
             countryName: "Austria",
             participatingContests: 0);
@@ -41,7 +40,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_my_request_should_succeed_with_status_code_201_Created();
         admin.Then_the_created_country_should_match(countryCode: "BA",
             countryName: "Bosnia & Herzegovina",
             participatingContests: 0);
@@ -61,7 +60,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.Created);
+        admin.Then_my_request_should_succeed_with_status_code_201_Created();
         admin.Then_the_created_country_should_match(countryCode: "XX",
             countryName: "Rest of the World",
             participatingContests: 0);
@@ -82,7 +81,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.Conflict);
+        admin.Then_my_request_should_fail_with_status_code_409_Conflict();
         admin.Then_the_problem_details_should_match(status: 409,
             title: "Country code conflict",
             detail: "A country already exists with the provided country code.");
@@ -103,7 +102,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal country code value",
             detail: "Country code value must be a string of 2 upper-case letters.");
@@ -124,7 +123,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.UnprocessableEntity);
+        admin.Then_my_request_should_fail_with_status_code_422_UnprocessableEntity();
         admin.Then_the_problem_details_should_match(status: 422,
             title: "Illegal country name value",
             detail: "Country name value must be a non-empty, non-whitespace string of no more than 200 characters.");

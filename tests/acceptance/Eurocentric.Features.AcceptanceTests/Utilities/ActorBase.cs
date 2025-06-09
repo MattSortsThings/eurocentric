@@ -12,17 +12,20 @@ public abstract class ActorBase
 
     public abstract Task When_I_send_my_request();
 
-    public void Then_my_request_should_succeed_with_status_code(HttpStatusCode statusCode)
-    {
-        Assert.InRange((int)ResponseStatusCode, 200, 299);
-        Assert.Equal(statusCode, ResponseStatusCode);
-    }
+    public void Then_my_request_should_succeed_with_status_code_200_OK() =>
+        Assert.Equal(HttpStatusCode.OK, ResponseStatusCode);
 
-    public void Then_my_request_should_fail_with_status_code(HttpStatusCode statusCode)
-    {
-        Assert.InRange((int)ResponseStatusCode, 400, 499);
-        Assert.Equal(statusCode, ResponseStatusCode);
-    }
+    public void Then_my_request_should_succeed_with_status_code_201_Created() =>
+        Assert.Equal(HttpStatusCode.Created, ResponseStatusCode);
+
+    public void Then_my_request_should_fail_with_status_code_404_NotFound() =>
+        Assert.Equal(HttpStatusCode.NotFound, ResponseStatusCode);
+
+    public void Then_my_request_should_fail_with_status_code_409_Conflict() =>
+        Assert.Equal(HttpStatusCode.Conflict, ResponseStatusCode);
+
+    public void Then_my_request_should_fail_with_status_code_422_UnprocessableEntity() =>
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, ResponseStatusCode);
 
     public void Then_the_problem_details_should_match(string title = "", string detail = "", int status = 0)
     {

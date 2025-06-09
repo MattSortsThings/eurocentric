@@ -1,4 +1,3 @@
-using System.Net;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -26,7 +25,7 @@ public sealed class GetCountriesTests(WebAppFixture fixture) : AcceptanceTestBas
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_my_request_should_succeed_with_status_code_200_OK();
         admin.Then_the_retrieved_countries_should_be_my_countries_in_country_code_order();
     }
 
@@ -43,7 +42,7 @@ public sealed class GetCountriesTests(WebAppFixture fixture) : AcceptanceTestBas
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_my_request_should_succeed_with_status_code_200_OK();
         admin.Then_the_retrieved_countries_should_be_an_empty_list();
     }
 
