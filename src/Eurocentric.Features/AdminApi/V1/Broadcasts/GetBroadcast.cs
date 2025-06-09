@@ -1,20 +1,18 @@
 using ErrorOr;
-using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.DomainMapping;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Infrastructure.EFCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
-using DomainBroadcast = Eurocentric.Domain.Broadcasts.Broadcast;
-using DomainCompetitor = Eurocentric.Domain.Broadcasts.Competitor;
-using DomainTelevote = Eurocentric.Domain.Broadcasts.Televote;
 using BroadcastDto = Eurocentric.Features.AdminApi.V1.Common.Dtos.Broadcast;
 
 namespace Eurocentric.Features.AdminApi.V1.Broadcasts;
@@ -48,32 +46,22 @@ internal static class GetBroadcast
 
     internal sealed record Query(Guid BroadcastId) : IQuery<GetBroadcastResponse>;
 
-    internal sealed class Handler : IQueryHandler<Query, GetBroadcastResponse>
+    internal sealed class Handler(AppDbContext dbContext) : IQueryHandler<Query, GetBroadcastResponse>
     {
         public async Task<ErrorOr<GetBroadcastResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            BroadcastId broadcastId = BroadcastId.FromValue(query.BroadcastId);
 
-            DomainBroadcast broadcast = new(
-                BroadcastId.FromValue(ExampleIds.Broadcasts.Basel2025GrandFinal),
-                BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd")).Value,
-                ContestId.FromValue(ExampleIds.Contests.Basel2025),
-                ContestStage.GrandFinal,
-                [
-                    new DomainCompetitor(CountryId.FromValue(ExampleIds.Countries.Austria), 1),
-                    new DomainCompetitor(CountryId.FromValue(ExampleIds.Countries.Italy), 2)
-                ],
-                [],
-                [
-                    new DomainTelevote(CountryId.FromValue(ExampleIds.Countries.Austria)),
-                    new DomainTelevote(CountryId.FromValue(ExampleIds.Countries.Italy)),
-                    new DomainTelevote(CountryId.FromValue(ExampleIds.Countries.RestOfTheWorld))
-                ]
-            );
+            BroadcastDto? broadcast = await dbContext.Broadcasts
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(broadcast => broadcast.Id == broadcastId)
+                .Select(broadcast => broadcast.ToBroadcastDto())
+                .FirstOrDefaultAsync(cancellationToken);
 
-            BroadcastDto broadcastDto = broadcast.ToBroadcastDto() with { Id = query.BroadcastId };
-
-            return ErrorOrFactory.From(new GetBroadcastResponse(broadcastDto));
+            return broadcast is not null
+                ? new GetBroadcastResponse(broadcast)
+                : BroadcastErrors.BroadcastNotFound(broadcastId);
         }
     }
 }
