@@ -5,6 +5,7 @@ internal static class EndpointIds
     internal static class Broadcasts
     {
         internal const string GetBroadcast = "AdminApi.V1.Broadcasts.GetBroadcast";
+        internal const string GetBroadcasts = "AdminApi.V1.Broadcasts.GetBroadcasts";
     }
 
     internal static class Contests

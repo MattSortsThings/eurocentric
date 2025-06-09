@@ -16,4 +16,13 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver.IBroadcasts
 
         return await _restClient.SendRequestAsync<GetBroadcastResponse>(request, cancellationToken);
     }
+
+    public async Task<ProblemOrResponse<GetBroadcastsResponse>> GetBroadcasts(CancellationToken cancellationToken = default)
+    {
+        RestRequest request = Get("/admin/api/{apiVersion}/broadcasts")
+            .UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion);
+
+        return await _restClient.SendRequestAsync<GetBroadcastsResponse>(request, cancellationToken);
+    }
 }

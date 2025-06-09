@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts.Utilities;
@@ -9,7 +8,6 @@ using Eurocentric.Features.AdminApi.V1.Broadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Infrastructure.EFCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ContestStage = Eurocentric.Domain.Enums.ContestStage;
 using DomainBroadcast = Eurocentric.Domain.Broadcasts.Broadcast;
@@ -19,11 +17,11 @@ using DomainTelevote = Eurocentric.Domain.Broadcasts.Televote;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts;
 
-public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase(fixture)
+public sealed class GetBroadcastsTests(WebAppFixture fixture) : AcceptanceTestBase(fixture)
 {
     [Theory]
     [InlineData("v1.0")]
-    public async Task Should_be_able_to_retrieve_broadcast_by_ID(string apiVersion)
+    public async Task Should_be_able_to_retrieve_all_existing_broadcasts_in_broadcast_date_order(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
 
@@ -37,49 +35,43 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
         await admin.Given_I_have_created_a_child_broadcast_for_my_contest(
             contestStage: "GrandFinal",
             broadcastDate: "2025-05-17",
-            competingCountryCodes: ["AT", "BE", "DK", "EE"]);
-        admin.Given_I_want_to_retrieve_my_broadcast_by_its_ID();
+            competingCountryCodes: ["AT", "BE", "CZ", "DK", "EE", "FI"]);
+        await admin.Given_I_have_created_a_child_broadcast_for_my_contest(
+            contestStage: "SemiFinal1",
+            broadcastDate: "2025-05-13",
+            competingCountryCodes: ["AT", "BE"]);
+        await admin.Given_I_have_created_a_child_broadcast_for_my_contest(
+            contestStage: "SemiFinal2",
+            broadcastDate: "2025-05-15",
+            competingCountryCodes: ["DK", "EE"]);
+        admin.Given_I_want_to_retrieve_all_existing_broadcasts();
 
         // When
         await admin.When_I_send_my_request();
 
         // Then
         admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
-        admin.Then_the_retrieved_broadcast_should_be_my_broadcast();
+        admin.Then_the_retrieved_broadcasts_should_be_my_broadcasts_in_broadcast_date_order();
     }
 
     [Theory]
     [InlineData("v1.0")]
-    public async Task Should_be_unable_to_retrieve_non_existent_broadcast_by_ID(string apiVersion)
+    public async Task Should_be_able_to_retrieve_empty_list_when_no_broadcasts_exist(string apiVersion)
     {
         AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
 
         // Given
-        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-        await admin.Given_I_have_created_a_Liverpool_format_contest(
-            contestYear: 2025,
-            group0CountryCode: "XX",
-            group1CountryCodes: ["AT", "BE", "CZ"],
-            group2CountryCodes: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_a_child_broadcast_for_my_contest(
-            contestStage: "GrandFinal",
-            broadcastDate: "2025-05-17",
-            competingCountryCodes: ["AT", "BE", "DK", "EE"]);
-        await admin.Given_I_have_deleted_my_broadcast();
-        admin.Given_I_want_to_retrieve_my_broadcast_by_its_ID();
+        admin.Given_I_want_to_retrieve_all_existing_broadcasts();
 
         // When
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_fail_with_status_code(HttpStatusCode.NotFound);
-        admin.Then_the_problem_details_should_match(status: 404,
-            title: "Broadcast not found",
-            detail: "No broadcast exists with the provided broadcast ID.");
-        admin.Then_the_problem_details_extensions_should_contain_my_broadcast_ID_with_key("broadcastId");
+        admin.Then_my_request_should_succeed_with_status_code(HttpStatusCode.OK);
+        admin.Then_the_retrieved_broadcasts_should_be_an_empty_list();
     }
 
-    private sealed class AdminActor : ActorWithResponse<GetBroadcastResponse>
+    private sealed class AdminActor : ActorWithResponse<GetBroadcastsResponse>
     {
         public AdminActor(IAdminApiV1Driver apiDriver, IWebAppFixtureBackDoor backDoor) : base(apiDriver)
         {
@@ -92,7 +84,7 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
 
         private Contest? MyContest { get; set; }
 
-        private Broadcast? MyBroadcast { get; set; }
+        private List<Broadcast> MyBroadcasts { get; } = new(3);
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
@@ -155,50 +147,26 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
 
             await BackDoor.ExecuteScopedAsync(add);
 
-            MyBroadcast = broadcast.ToBroadcastDto();
+            MyBroadcasts.Add(broadcast.ToBroadcastDto());
         }
 
-        public void Given_I_want_to_retrieve_my_broadcast_by_its_ID()
+        public void Given_I_want_to_retrieve_all_existing_broadcasts() =>
+            SendMyRequest = apiDriver => apiDriver.Broadcasts.GetBroadcasts(TestContext.Current.CancellationToken);
+
+        public void Then_the_retrieved_broadcasts_should_be_my_broadcasts_in_broadcast_date_order()
         {
-            Assert.NotNull(MyBroadcast);
-
-            Guid broadcastId = MyBroadcast.Id;
-
-            SendMyRequest = apiDriver => apiDriver.Broadcasts.GetBroadcast(broadcastId, TestContext.Current.CancellationToken);
-        }
-
-        public void Then_the_retrieved_broadcast_should_be_my_broadcast()
-        {
-            Assert.NotNull(MyBroadcast);
             Assert.NotNull(ResponseObject);
 
-            Assert.Equal(MyBroadcast, ResponseObject.Broadcast, new BroadcastEqualityComparer());
+            IOrderedEnumerable<Broadcast> expectedBroadcasts = MyBroadcasts.OrderBy(broadcast => broadcast.BroadcastDate);
+
+            Assert.Equal(expectedBroadcasts, ResponseObject.Broadcasts, new BroadcastEqualityComparer());
         }
 
-        public async Task Given_I_have_deleted_my_broadcast()
+        public void Then_the_retrieved_broadcasts_should_be_an_empty_list()
         {
-            Assert.NotNull(MyBroadcast);
+            Assert.NotNull(ResponseObject);
 
-            BroadcastId broadcastId = BroadcastId.FromValue(MyBroadcast.Id);
-
-            Func<IServiceProvider, Task> delete = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                await dbContext.Broadcasts.Where(broadcast => broadcast.Id == broadcastId)
-                    .ExecuteDeleteAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(delete);
-        }
-
-        public void Then_the_problem_details_extensions_should_contain_my_broadcast_ID_with_key(string key)
-        {
-            Assert.NotNull(MyBroadcast);
-            Assert.NotNull(ResponseProblemDetails);
-
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp.Key == key
-                                                                      && kvp.Value is JsonElement e
-                                                                      && e.GetGuid() == MyBroadcast.Id);
+            Assert.Empty(ResponseObject.Broadcasts);
         }
     }
 }

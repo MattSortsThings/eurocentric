@@ -17,6 +17,8 @@ public interface IAdminApiV1Driver
     {
         public Task<ProblemOrResponse<GetBroadcastResponse>> GetBroadcast(Guid broadcastId,
             CancellationToken cancellationToken = default);
+
+        public Task<ProblemOrResponse<GetBroadcastsResponse>> GetBroadcasts(CancellationToken cancellationToken = default);
     }
 
     public interface IContests
