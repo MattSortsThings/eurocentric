@@ -24,8 +24,8 @@ public sealed class InvariantEnforcementTests : UnitTestBase
 
             ErrorOr<Contest> sut = Contest.CreateStockholmFormat()
                 .WithArbitraryYearAndCity()
-                .WithGroup1Countries(at, be, cz)
-                .WithGroup2Countries(dk, ee, fi)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
+                .WithGroup2Countries(dk.Id, ee.Id, fi.Id)
                 .Build(new FixedContestIdGenerator(sutContestId));
 
             IQueryable<Contest> existingContests = Enumerable.Empty<Contest>().AsQueryable();
@@ -57,15 +57,15 @@ public sealed class InvariantEnforcementTests : UnitTestBase
             ErrorOr<Contest> sut = Contest.CreateStockholmFormat()
                 .WithContestYear(ContestYear.FromValue(sutContestYearValue))
                 .WithCityName(ArbitraryCityName)
-                .WithGroup1Countries(at, be, cz)
-                .WithGroup2Countries(dk, ee, fi)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
+                .WithGroup2Countries(dk.Id, ee.Id, fi.Id)
                 .Build(new FixedContestIdGenerator(sutContestId));
 
             Contest other = Contest.CreateStockholmFormat()
                 .WithContestYear(ContestYear.FromValue(otherContestYearValue))
                 .WithCityName(ArbitraryCityName)
-                .WithGroup1Countries(at, be, cz)
-                .WithGroup2Countries(dk, ee, fi)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
+                .WithGroup2Countries(dk.Id, ee.Id, fi.Id)
                 .Build(new FixedContestIdGenerator(otherContestId))
                 .Value;
 
@@ -97,15 +97,15 @@ public sealed class InvariantEnforcementTests : UnitTestBase
             ErrorOr<Contest> sut = Contest.CreateStockholmFormat()
                 .WithContestYear(ContestYear.FromValue(sharedContestYearValue))
                 .WithCityName(ArbitraryCityName)
-                .WithGroup1Countries(at, be, cz)
-                .WithGroup2Countries(dk, ee, fi)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
+                .WithGroup2Countries(dk.Id, ee.Id, fi.Id)
                 .Build(new FixedContestIdGenerator(sutContestId));
 
             Contest other = Contest.CreateStockholmFormat()
                 .WithContestYear(ContestYear.FromValue(sharedContestYearValue))
                 .WithCityName(ArbitraryCityName)
-                .WithGroup1Countries(at, be, cz)
-                .WithGroup2Countries(dk, ee, fi)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
+                .WithGroup2Countries(dk.Id, ee.Id, fi.Id)
                 .Build(new FixedContestIdGenerator(otherContestId))
                 .Value;
 
@@ -132,14 +132,13 @@ public sealed class InvariantEnforcementTests : UnitTestBase
         public void Should_return_self_when_instance_is_errors()
         {
             // Arrange
-            (Country at, Country be, Country cz, Country dk, Country ee, Country fi) =
-                (TestCountries.At, TestCountries.Be, TestCountries.Cz, TestCountries.Dk, TestCountries.Ee, TestCountries.Fi);
+            (Country at, Country be, Country cz) = (TestCountries.At, TestCountries.Be, TestCountries.Cz);
 
             ContestId sutContestId = ContestId.FromValue(Guid.Parse("11ade11e-4b09-42eb-86c3-ad4123ab645f"));
 
             ErrorOr<Contest> sut = Contest.CreateStockholmFormat()
                 .WithArbitraryYearAndCity()
-                .WithGroup1Countries(at, be, cz)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
                 .Build(new FixedContestIdGenerator(sutContestId));
 
             IQueryable<Contest> dummyExistingContests = Enumerable.Empty<Contest>().AsQueryable();
@@ -166,8 +165,8 @@ public sealed class InvariantEnforcementTests : UnitTestBase
 
             ErrorOr<Contest> sut = Contest.CreateStockholmFormat()
                 .WithArbitraryYearAndCity()
-                .WithGroup1Countries(at, be, cz)
-                .WithGroup2Countries(dk, ee, fi)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
+                .WithGroup2Countries(dk.Id, ee.Id, fi.Id)
                 .Build(new FixedContestIdGenerator(FixedContestId));
 
             IQueryable<Country> existingCountries = new List<Country> { at, be, cz, dk, ee, fi }.AsQueryable();
@@ -192,8 +191,8 @@ public sealed class InvariantEnforcementTests : UnitTestBase
 
             ErrorOr<Contest> sut = Contest.CreateStockholmFormat()
                 .WithArbitraryYearAndCity()
-                .WithGroup1Countries(at, be, cz)
-                .WithGroup2Countries(dk, ee, fi)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
+                .WithGroup2Countries(dk.Id, ee.Id, fi.Id)
                 .Build(new FixedContestIdGenerator(FixedContestId));
 
             IQueryable<Country> existingCountries = new List<Country> { at, be, cz, dk, ee }.AsQueryable();
@@ -224,7 +223,7 @@ public sealed class InvariantEnforcementTests : UnitTestBase
 
             ErrorOr<Contest> sut = Contest.CreateStockholmFormat()
                 .WithArbitraryYearAndCity()
-                .WithGroup1Countries(at, be, cz)
+                .WithGroup1Countries(at.Id, be.Id, cz.Id)
                 .Build(new FixedContestIdGenerator(FixedContestId));
 
             IQueryable<Country> dummyExistingCountries = Array.Empty<Country>().AsQueryable();

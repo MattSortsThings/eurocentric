@@ -1,6 +1,5 @@
 using ErrorOr;
 using Eurocentric.Domain.Contests;
-using Eurocentric.Domain.Countries;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -12,19 +11,6 @@ public static class ContestBuilderExtensions
         builder.WithContestYear(ContestYear.FromValue(2016))
             .WithCityName(CityName.FromValue("CityName"));
 
-    public static ContestBuilder WithGroup1Countries(this ContestBuilder builder, params Country[] countries)
-    {
-        ErrorOr<ActName> arbitraryActName = ActName.FromValue("ActName");
-        ErrorOr<SongTitle> arbitrarySongTitle = SongTitle.FromValue("SongTitle");
-
-        foreach (Country country in countries)
-        {
-            builder.AddGroup1Participant(country.Id, arbitraryActName, arbitrarySongTitle);
-        }
-
-        return builder;
-    }
-
     public static ContestBuilder WithGroup1Countries(this ContestBuilder builder, params CountryId[] countryIds)
     {
         ErrorOr<ActName> arbitraryActName = ActName.FromValue("ActName");
@@ -33,19 +19,6 @@ public static class ContestBuilderExtensions
         foreach (CountryId id in countryIds)
         {
             builder.AddGroup1Participant(id, arbitraryActName, arbitrarySongTitle);
-        }
-
-        return builder;
-    }
-
-    public static ContestBuilder WithGroup2Countries(this ContestBuilder builder, params Country[] countries)
-    {
-        ErrorOr<ActName> arbitraryActName = ActName.FromValue("ActName");
-        ErrorOr<SongTitle> arbitrarySongTitle = SongTitle.FromValue("SongTitle");
-
-        foreach (Country country in countries)
-        {
-            builder.AddGroup2Participant(country.Id, arbitraryActName, arbitrarySongTitle);
         }
 
         return builder;
