@@ -14,4 +14,18 @@ public static class BroadcastErrors
 
     public static Error DuplicateCompetingCountries() => Error.Failure("Duplicate competing countries",
         "Every competitor in a broadcast must reference a different competing country.");
+
+    public static Error RankedCompetitorsMismatch() => Error.Conflict("Ranked competitors mismatch",
+        "Ranked competing country IDs must contain every competing country ID in the broadcast " +
+        "(excluding the voting country ID) exactly once.");
+
+    public static Error TelevoteNotFound(BroadcastId broadcastId, CountryId votingCountryId) => Error.Conflict(
+        "Televote not found",
+        "Broadcast has no televote with the provided voting country ID.",
+        new Dictionary<string, object> { ["broadcastId"] = broadcastId.Value, ["votingCountryId"] = votingCountryId.Value });
+
+    public static Error TelevotePointsAlreadyAwarded(BroadcastId broadcastId, CountryId votingCountryId) => Error.Conflict(
+        "Televote points already awarded",
+        "Broadcast has a televote with the provided voting country ID, but it has already awarded its points.",
+        new Dictionary<string, object> { ["broadcastId"] = broadcastId.Value, ["votingCountryId"] = votingCountryId.Value });
 }

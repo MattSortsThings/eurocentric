@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi.V1.Broadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Contests;
 using Eurocentric.Features.AdminApi.V1.Countries;
@@ -11,6 +12,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
     private protected override IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; } =
         new Dictionary<Type, IOpenApiAny>
         {
+            [typeof(AwardTelevotePointsRequest)] = AwardTelevotePointsRequest.CreateExample().ToOpenApiAny(),
             [typeof(Award)] = Award.CreateExample().ToOpenApiAny(),
             [typeof(Broadcast)] = Broadcast.CreateExample().ToOpenApiAny(),
             [typeof(BroadcastMemo)] = BroadcastMemo.CreateExample().ToOpenApiAny(),

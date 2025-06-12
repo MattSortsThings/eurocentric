@@ -6,6 +6,19 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 
 public sealed partial class AdminApiV1Driver : IAdminApiV1Driver.IBroadcasts
 {
+    public async Task<ProblemOrResponse> AwardTelevotePoints(Guid broadcastId,
+        AwardTelevotePointsRequest requestBody,
+        CancellationToken cancellationToken = default)
+    {
+        RestRequest request = Patch("/admin/api/{apiVersion}/broadcasts/{broadcastId}/televote-points")
+            .UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("broadcastId", broadcastId)
+            .AddJsonBody(requestBody);
+
+        return await _restClient.SendRequestAsync(request, cancellationToken);
+    }
+
     public async Task<ProblemOrResponse<GetBroadcastResponse>> GetBroadcast(Guid broadcastId,
         CancellationToken cancellationToken = default)
     {

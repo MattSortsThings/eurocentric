@@ -15,6 +15,10 @@ public interface IAdminApiV1Driver
 
     public interface IBroadcasts
     {
+        public Task<ProblemOrResponse> AwardTelevotePoints(Guid broadcastId,
+            AwardTelevotePointsRequest requestBody,
+            CancellationToken cancellationToken = default);
+
         public Task<ProblemOrResponse<GetBroadcastResponse>> GetBroadcast(Guid broadcastId,
             CancellationToken cancellationToken = default);
 

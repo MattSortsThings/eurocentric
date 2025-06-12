@@ -18,6 +18,9 @@ public abstract class ActorBase
     public void Then_my_request_should_succeed_with_status_code_201_Created() =>
         Assert.Equal(HttpStatusCode.Created, ResponseStatusCode);
 
+    public void Then_my_request_should_succeed_with_status_code_204_NoContent() =>
+        Assert.Equal(HttpStatusCode.NoContent, ResponseStatusCode);
+
     public void Then_my_request_should_fail_with_status_code_404_NotFound() =>
         Assert.Equal(HttpStatusCode.NotFound, ResponseStatusCode);
 

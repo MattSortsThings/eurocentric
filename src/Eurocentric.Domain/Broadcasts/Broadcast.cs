@@ -1,5 +1,7 @@
+using ErrorOr;
 using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.ErrorHandling;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -82,4 +84,102 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
         .ThenBy(televote => televote.VotingCountryId.Value)
         .ToArray()
         .AsReadOnly();
+
+    /// <summary>
+    ///     Awards a set of televote points from a single televote to all the competitors in the broadcast.
+    /// </summary>
+    /// <param name="votingCountryId">
+    ///     The <see cref="Televote.VotingCountryId" /> value of the <see cref="Televote" /> to award its points.
+    /// </param>
+    /// <param name="rankedCompetingCountryIds">
+    ///     The <see cref="Competitor.CompetingCountryId" /> values of all the competitors
+    ///     in the broadcast, excluding the <paramref name="votingCountryId" /> argument, ordered from first place to last
+    ///     place as decided by the televote.
+    /// </param>
+    /// <returns>
+    ///     An <see cref="Updated" /> value if the broadcast was successfully updated; otherwise, a list of
+    ///     <see cref="Error" /> values.
+    /// </returns>
+    public ErrorOr<Updated> AwardTelevotePoints(CountryId votingCountryId, IEnumerable<CountryId> rankedCompetingCountryIds)
+    {
+        ArgumentNullException.ThrowIfNull(votingCountryId);
+        ArgumentNullException.ThrowIfNull(rankedCompetingCountryIds);
+
+        ErrorOr<Televote> errorsOrTelevote = TryGetTelevote(votingCountryId);
+        ErrorOr<List<Competitor>> errorsOrRankedCompetitors =
+            TryGetRankedCompetitors(votingCountryId, rankedCompetingCountryIds);
+
+        return Tuple.Create(errorsOrTelevote, errorsOrRankedCompetitors)
+            .Combine()
+            .ThenDo(tuple => tuple.Item1.AwardPoints(tuple.Item2))
+            .ThenDo(_ => UpdateCompetitorFinishingPositions())
+            .ThenDo(_ => UpdateBroadcastStatus())
+            .Then(_ => Result.Updated);
+    }
+
+    private void UpdateCompetitorFinishingPositions()
+    {
+        _competitors.Sort(Competitor.GetBroadcastCompetitorComparer());
+
+        for (int i = 0; i < _competitors.Count; i++)
+        {
+            _competitors[i].FinishingPosition = i + 1;
+        }
+    }
+
+    private void UpdateBroadcastStatus()
+    {
+        int juriesWithPointsAwarded = _juries.Count(jury => jury.PointsAwarded);
+        int televotesWithPointsAwarded = _televotes.Count(televote => televote.PointsAwarded);
+
+        BroadcastStatus = juriesWithPointsAwarded == _juries.Count && televotesWithPointsAwarded == _televotes.Count
+            ? BroadcastStatus.Completed
+            : juriesWithPointsAwarded == 0 && televotesWithPointsAwarded == 0
+                ? BroadcastStatus.Initialized
+                : BroadcastStatus.InProgress;
+    }
+
+    private ErrorOr<Televote> TryGetTelevote(CountryId votingCountryId)
+    {
+        Televote? televote = _televotes.FirstOrDefault(televote => televote.VotingCountryId == votingCountryId);
+
+        if (televote is null)
+        {
+            return BroadcastErrors.TelevoteNotFound(Id, votingCountryId);
+        }
+
+        if (televote.PointsAwarded)
+        {
+            return BroadcastErrors.TelevotePointsAlreadyAwarded(Id, votingCountryId);
+        }
+
+        return televote;
+    }
+
+    private ErrorOr<List<Competitor>> TryGetRankedCompetitors(CountryId votingCountryId,
+        IEnumerable<CountryId> rankedCompetingCountryIds)
+    {
+        Dictionary<CountryId, Competitor> remainingEligibleCompetitorLookup = _competitors
+            .Where(competitor => competitor.CompetingCountryId != votingCountryId)
+            .ToDictionary(competitor => competitor.CompetingCountryId, competitor => competitor);
+
+        List<ErrorOr<Competitor>> rankedCompetitors = new(remainingEligibleCompetitorLookup.Count);
+
+        foreach (CountryId id in rankedCompetingCountryIds)
+        {
+            if (remainingEligibleCompetitorLookup.TryGetValue(id, out Competitor? competitor))
+            {
+                rankedCompetitors.Add(competitor);
+                remainingEligibleCompetitorLookup.Remove(id);
+            }
+            else
+            {
+                rankedCompetitors.Add(BroadcastErrors.RankedCompetitorsMismatch());
+            }
+        }
+
+        return remainingEligibleCompetitorLookup.Count != 0
+            ? BroadcastErrors.RankedCompetitorsMismatch()
+            : rankedCompetitors.Collect();
+    }
 }
