@@ -1,7 +1,5 @@
 using System.Text.Json;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts.Utilities;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Broadcasts;
@@ -10,11 +8,6 @@ using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Infrastructure.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ContestStage = Eurocentric.Domain.Enums.ContestStage;
-using DomainBroadcast = Eurocentric.Domain.Broadcasts.Broadcast;
-using DomainCompetitor = Eurocentric.Domain.Broadcasts.Competitor;
-using DomainJury = Eurocentric.Domain.Broadcasts.Jury;
-using DomainTelevote = Eurocentric.Domain.Broadcasts.Televote;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts;
 
@@ -105,14 +98,15 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
         }
 
         public async Task Given_I_have_created_a_Liverpool_format_contest(
-            string? group0CountryCode = null,
+            string group0CountryCode = "",
             string[]? group1CountryCodes = null,
-            string[]? group2CountryCodes = null, int contestYear = 0) => MyContest =
+            string[]? group2CountryCodes = null,
+            int contestYear = 0) => MyContest =
             await ApiDriver.Contests.CreateAContestAsync(
                 cityName: "CityName",
                 contestFormat: ContestFormat.Liverpool,
                 contestYear: contestYear,
-                group0CountryId: group0CountryCode is null ? null : MyCountryCodesAndIds[group0CountryCode],
+                group0CountryId: MyCountryCodesAndIds[group0CountryCode],
                 group1CountryIds: group1CountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray(),
                 group2CountryIds: group2CountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray());
 
@@ -122,39 +116,12 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
         {
             Assert.NotNull(MyContest);
 
-            BroadcastId broadcastId = BroadcastId.Create(DateTimeOffset.UtcNow);
-            BroadcastDate date = BroadcastDate.FromValue(DateOnly.ParseExact(broadcastDate, "yyyy-MM-dd")).Value;
-            ContestId parentContestId = ContestId.FromValue(MyContest.Id);
-            ContestStage broadcastContestStage = Enum.Parse<ContestStage>(contestStage);
-            List<DomainCompetitor> competitors = competingCountryCodes?.Select(code => MyCountryCodesAndIds[code])
-                .Select(CountryId.FromValue)
-                .Select((id, index) => new DomainCompetitor(id, index + 1))
-                .ToList() ?? [];
-            List<DomainJury> juries = MyCountryCodesAndIds.Values.Select(CountryId.FromValue)
-                .Select(id => new DomainJury(id))
-                .ToList();
-            List<DomainTelevote> televotes = MyCountryCodesAndIds.Values.Select(CountryId.FromValue)
-                .Select(id => new DomainTelevote(id))
-                .ToList();
-
-            DomainBroadcast broadcast = new(broadcastId,
-                date,
-                parentContestId,
-                broadcastContestStage,
-                competitors,
-                juries,
-                televotes);
-
-            Func<IServiceProvider, Task> add = async sp =>
-            {
-                await using AppDbContext appDbContext = sp.GetRequiredService<AppDbContext>();
-                appDbContext.Broadcasts.Add(broadcast);
-                await appDbContext.SaveChangesAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(add);
-
-            MyBroadcast = broadcast.ToBroadcastDto();
+            MyBroadcast = await ApiDriver.Contests.CreateAChildBroadcastAsync(
+                contestStage: Enum.Parse<ContestStage>(contestStage),
+                broadcastDate: DateOnly.ParseExact(broadcastDate, "yyyy-MM-dd"),
+                contestId: MyContest.Id,
+                competingCountryIds: competingCountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray() ?? [],
+                cancellationToken: TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_retrieve_my_broadcast_by_its_ID()

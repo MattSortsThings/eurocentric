@@ -17,6 +17,19 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver.IContests
         return await _restClient.SendRequestAsync<CreateContestResponse>(request, cancellationToken);
     }
 
+    public async Task<ProblemOrResponse<CreateChildBroadcastResponse>> CreateChildBroadcast(Guid contestId,
+        CreateChildBroadcastRequest requestBody,
+        CancellationToken cancellationToken = default)
+    {
+        RestRequest request = Post("/admin/api/{apiVersion}/contests/{contestId}/broadcasts")
+            .UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("contestId", contestId)
+            .AddJsonBody(requestBody);
+
+        return await _restClient.SendRequestAsync<CreateChildBroadcastResponse>(request, cancellationToken);
+    }
+
     public async Task<ProblemOrResponse<GetContestResponse>> GetContest(Guid contestId,
         CancellationToken cancellationToken = default)
     {

@@ -1,18 +1,8 @@
-using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts.Utilities;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Broadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Common.Enums;
-using Eurocentric.Infrastructure.EFCore;
-using Microsoft.Extensions.DependencyInjection;
-using ContestStage = Eurocentric.Domain.Enums.ContestStage;
-using DomainBroadcast = Eurocentric.Domain.Broadcasts.Broadcast;
-using DomainCompetitor = Eurocentric.Domain.Broadcasts.Competitor;
-using DomainJury = Eurocentric.Domain.Broadcasts.Jury;
-using DomainTelevote = Eurocentric.Domain.Broadcasts.Televote;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts;
 
@@ -22,7 +12,7 @@ public sealed class GetBroadcastsTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_retrieve_all_existing_broadcasts_in_broadcast_date_order(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
@@ -57,7 +47,7 @@ public sealed class GetBroadcastsTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_retrieve_empty_list_when_no_broadcasts_exist(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         admin.Given_I_want_to_retrieve_all_existing_broadcasts();
@@ -72,12 +62,9 @@ public sealed class GetBroadcastsTests(WebAppFixture fixture) : AcceptanceTestBa
 
     private sealed class AdminActor : ActorWithResponse<GetBroadcastsResponse>
     {
-        public AdminActor(IAdminApiV1Driver apiDriver, IWebAppFixtureBackDoor backDoor) : base(apiDriver)
+        public AdminActor(IAdminApiV1Driver apiDriver) : base(apiDriver)
         {
-            BackDoor = backDoor;
         }
-
-        private IWebAppFixtureBackDoor BackDoor { get; }
 
         private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(7);
 
@@ -97,14 +84,15 @@ public sealed class GetBroadcastsTests(WebAppFixture fixture) : AcceptanceTestBa
         }
 
         public async Task Given_I_have_created_a_Liverpool_format_contest(
-            string? group0CountryCode = null,
+            string group0CountryCode = "",
             string[]? group1CountryCodes = null,
-            string[]? group2CountryCodes = null, int contestYear = 0) => MyContest =
+            string[]? group2CountryCodes = null,
+            int contestYear = 0) => MyContest =
             await ApiDriver.Contests.CreateAContestAsync(
                 cityName: "CityName",
                 contestFormat: ContestFormat.Liverpool,
                 contestYear: contestYear,
-                group0CountryId: group0CountryCode is null ? null : MyCountryCodesAndIds[group0CountryCode],
+                group0CountryId: MyCountryCodesAndIds[group0CountryCode],
                 group1CountryIds: group1CountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray(),
                 group2CountryIds: group2CountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray());
 
@@ -114,39 +102,14 @@ public sealed class GetBroadcastsTests(WebAppFixture fixture) : AcceptanceTestBa
         {
             Assert.NotNull(MyContest);
 
-            BroadcastId broadcastId = BroadcastId.Create(DateTimeOffset.UtcNow);
-            BroadcastDate date = BroadcastDate.FromValue(DateOnly.ParseExact(broadcastDate, "yyyy-MM-dd")).Value;
-            ContestId parentContestId = ContestId.FromValue(MyContest.Id);
-            ContestStage broadcastContestStage = Enum.Parse<ContestStage>(contestStage);
-            List<DomainCompetitor> competitors = competingCountryCodes?.Select(code => MyCountryCodesAndIds[code])
-                .Select(CountryId.FromValue)
-                .Select((id, index) => new DomainCompetitor(id, index + 1))
-                .ToList() ?? [];
-            List<DomainJury> juries = MyCountryCodesAndIds.Values.Select(CountryId.FromValue)
-                .Select(id => new DomainJury(id))
-                .ToList();
-            List<DomainTelevote> televotes = MyCountryCodesAndIds.Values.Select(CountryId.FromValue)
-                .Select(id => new DomainTelevote(id))
-                .ToList();
+            Broadcast myBroadcast = await ApiDriver.Contests.CreateAChildBroadcastAsync(
+                contestStage: Enum.Parse<ContestStage>(contestStage),
+                broadcastDate: DateOnly.ParseExact(broadcastDate, "yyyy-MM-dd"),
+                contestId: MyContest.Id,
+                competingCountryIds: competingCountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray() ?? [],
+                cancellationToken: TestContext.Current.CancellationToken);
 
-            DomainBroadcast broadcast = new(broadcastId,
-                date,
-                parentContestId,
-                broadcastContestStage,
-                competitors,
-                juries,
-                televotes);
-
-            Func<IServiceProvider, Task> add = async sp =>
-            {
-                await using AppDbContext appDbContext = sp.GetRequiredService<AppDbContext>();
-                appDbContext.Broadcasts.Add(broadcast);
-                await appDbContext.SaveChangesAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(add);
-
-            MyBroadcasts.Add(broadcast.ToBroadcastDto());
+            MyBroadcasts.Add(myBroadcast);
         }
 
         public void Given_I_want_to_retrieve_all_existing_broadcasts() =>

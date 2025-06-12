@@ -18,5 +18,11 @@ public static class TestCountryIds
 
     public static readonly CountryId Gb = CountryId.FromValue(Guid.Parse("07aabbcc-ab24-45bc-9969-1af3063a71ee"));
 
+    public static readonly CountryId Hr = CountryId.FromValue(Guid.Parse("08aabbcc-ab24-45bc-9969-1af3063a71ee"));
+
+    public static readonly CountryId It = CountryId.FromValue(Guid.Parse("09aabbcc-ab24-45bc-9969-1af3063a71ee"));
+
+    public static readonly CountryId Lu = CountryId.FromValue(Guid.Parse("12aabbcc-ab24-45bc-9969-1af3063a71ee"));
+
     public static readonly CountryId Xx = CountryId.FromValue(Guid.Parse("23aabbcc-ab24-45bc-9969-1af3063a71ee"));
 }

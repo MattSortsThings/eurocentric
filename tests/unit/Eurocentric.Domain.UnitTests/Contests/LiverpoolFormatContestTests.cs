@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Contests;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
@@ -10,6 +11,1706 @@ namespace Eurocentric.Domain.UnitTests.Contests;
 
 public sealed class LiverpoolFormatContestTests : UnitTestBase
 {
+    public sealed class AddMemoMethod : UnitTestBase
+    {
+        private static LiverpoolFormatContest CreateArbitraryLiverpoolFormatContest()
+        {
+            ContestId fixedContestId =
+                ContestId.FromValue(Guid.Parse("e93dea75-06e5-4b66-b7c1-2ce794325db3"));
+
+            return Contest.CreateLiverpoolFormat()
+                    .WithArbitraryYearAndCity()
+                    .AddGroup0Participant(TestCountryIds.Xx)
+                    .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                    .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                    .Build(new FixedContestIdGenerator(fixedContestId)).Value
+                as LiverpoolFormatContest ?? throw new InvalidCastException();
+        }
+
+        [Fact]
+        public void Should_update_ChildBroadcasts_and_set_ContestStatus_to_InProgress_when_Initialized()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            BroadcastId broadcastId = BroadcastId.FromValue(Guid.Parse("5c4f1876-0484-4eee-b41f-e5bbb1604f0d"));
+
+            // Assert
+            Assert.Equal(ContestStatus.Initialized, sut.ContestStatus);
+
+            Assert.Empty(sut.ChildBroadcasts);
+
+            // Act
+            sut.AddMemo(broadcastId, ContestStage.SemiFinal1);
+
+            // Assert
+            Assert.Equal(ContestStatus.InProgress, sut.ContestStatus);
+
+            BroadcastMemo memo = Assert.Single(sut.ChildBroadcasts);
+            Assert.Equal(broadcastId, memo.BroadcastId);
+            Assert.Equal(ContestStage.SemiFinal1, memo.ContestStage);
+            Assert.Equal(BroadcastStatus.Initialized, memo.BroadcastStatus);
+        }
+
+        [Fact]
+        public void Should_update_ChildBroadcasts_when_InProgress()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            BroadcastId broadcastId1Of3 = BroadcastId.FromValue(Guid.Parse("01aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+            BroadcastId broadcastId2Of3 = BroadcastId.FromValue(Guid.Parse("02aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+            BroadcastId broadcastId3Of3 = BroadcastId.FromValue(Guid.Parse("03aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+
+            sut.AddMemo(broadcastId1Of3, ContestStage.SemiFinal1);
+            sut.AddMemo(broadcastId3Of3, ContestStage.GrandFinal);
+
+            // Assert
+            Assert.Equal(ContestStatus.InProgress, sut.ContestStatus);
+
+            Assert.Collection(sut.ChildBroadcasts, ([UsedImplicitly] memo) =>
+            {
+                Assert.Equal(ContestStage.SemiFinal1, memo.ContestStage);
+                Assert.Equal(broadcastId1Of3, memo.BroadcastId);
+                Assert.Equal(BroadcastStatus.Initialized, memo.BroadcastStatus);
+            }, ([UsedImplicitly] memo) =>
+            {
+                Assert.Equal(ContestStage.GrandFinal, memo.ContestStage);
+                Assert.Equal(broadcastId3Of3, memo.BroadcastId);
+                Assert.Equal(BroadcastStatus.Initialized, memo.BroadcastStatus);
+            });
+
+            // Act
+            sut.AddMemo(broadcastId2Of3, ContestStage.SemiFinal2);
+
+            // Assert
+            Assert.Equal(ContestStatus.InProgress, sut.ContestStatus);
+
+            Assert.Collection(sut.ChildBroadcasts, ([UsedImplicitly] memo) =>
+            {
+                Assert.Equal(ContestStage.SemiFinal1, memo.ContestStage);
+                Assert.Equal(broadcastId1Of3, memo.BroadcastId);
+                Assert.Equal(BroadcastStatus.Initialized, memo.BroadcastStatus);
+            }, ([UsedImplicitly] memo) =>
+            {
+                Assert.Equal(ContestStage.SemiFinal2, memo.ContestStage);
+                Assert.Equal(broadcastId2Of3, memo.BroadcastId);
+                Assert.Equal(BroadcastStatus.Initialized, memo.BroadcastStatus);
+            }, ([UsedImplicitly] memo) =>
+            {
+                Assert.Equal(ContestStage.GrandFinal, memo.ContestStage);
+                Assert.Equal(broadcastId3Of3, memo.BroadcastId);
+                Assert.Equal(BroadcastStatus.Initialized, memo.BroadcastStatus);
+            });
+        }
+
+        [Fact]
+        public void Should_throw_given_BroadcastId_of_existing_BroadcastMemo()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            BroadcastId broadcastId1Of2 = BroadcastId.FromValue(Guid.Parse("01aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+            BroadcastId broadcastId2Of2 = BroadcastId.FromValue(Guid.Parse("02aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+
+            sut.AddMemo(broadcastId1Of2, ContestStage.GrandFinal);
+
+            IReadOnlyList<BroadcastMemo> existingMemos = sut.ChildBroadcasts;
+
+            // Act
+            Action act = () => sut.AddMemo(broadcastId2Of2, ContestStage.GrandFinal);
+
+            // Assert
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+            Assert.Equal("BroadcastMemo already exists with the provided ContestStage value.", exception.Message);
+
+            Assert.Equal(existingMemos, sut.ChildBroadcasts);
+        }
+
+        [Fact]
+        public void Should_throw_given_ContestStage_of_existing_BroadcastMemo()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            BroadcastId duplicateBroadcastId = BroadcastId.FromValue(Guid.Parse("01aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+
+            sut.AddMemo(duplicateBroadcastId, ContestStage.SemiFinal1);
+
+            IReadOnlyList<BroadcastMemo> existingMemos = sut.ChildBroadcasts;
+
+            // Act
+            Action act = () => sut.AddMemo(duplicateBroadcastId, ContestStage.SemiFinal1);
+
+            // Assert
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+            Assert.Equal("BroadcastMemo already exists with the provided BroadcastId value.", exception.Message);
+
+            Assert.Equal(existingMemos, sut.ChildBroadcasts);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_broadcastId_arg()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            // Act
+            Action act = () => sut.AddMemo(null!, ContestStage.SemiFinal1);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'broadcastId')", exception.Message);
+
+            Assert.Empty(sut.ChildBroadcasts);
+            Assert.Equal(ContestStatus.Initialized, sut.ContestStatus);
+        }
+    }
+
+    public sealed class CreateSemiFinal1ChildBroadcastMethod : UnitTestBase
+    {
+        private static readonly BroadcastId FixedBroadcastId =
+            BroadcastId.FromValue(Guid.Parse("bf5a7250-3a6b-456f-a3f8-d8280851afff"));
+        private static readonly ContestId FixedContestId =
+            ContestId.FromValue(Guid.Parse("e93dea75-06e5-4b66-b7c1-2ce794325db3"));
+        private static readonly CityName ArbitraryCityName = CityName.FromValue("CityName").Value;
+        private static readonly ContestYear ContestYear2025 = ContestYear.FromValue(2025).Value;
+        private static readonly BroadcastDate BroadcastDate1May2025 =
+            BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-01", "yyyy-mm-dd")).Value;
+
+        [Fact]
+        public void Should_return_Broadcast_with_Initialized_BroadcastStatus_value_and_SemiFinal1_ContestStatus_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(BroadcastStatus.Initialized, broadcast.BroadcastStatus);
+            Assert.Equal(ContestStage.SemiFinal1, broadcast.ContestStage);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_instance_Id_value_as_ParentContestId_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(sut.Id, broadcast.ParentContestId);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_provided_BroadcastDate_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            BroadcastDate broadcastDate = BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-05", "yyyy-mm-dd")).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(broadcastDate)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(broadcastDate, broadcast.BroadcastDate);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_provided_Competitors_all_with_empty_JuryAwards_and_empty_TelevoteAwards()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            List<CountryId> competingCountryIds = [TestCountryIds.Cz, TestCountryIds.At, TestCountryIds.Be];
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(competingCountryIds)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(competingCountryIds, broadcast.Competitors.Select(competitor => competitor.CompetingCountryId));
+            Assert.All(broadcast.Competitors, competitor => Assert.Empty(competitor.JuryAwards));
+            Assert.All(broadcast.Competitors, competitor => Assert.Empty(competitor.TelevoteAwards));
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_no_Juries()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Empty(broadcast.Juries);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_Televote_for_every_group_0_and_group_1_Participant_all_PointsAwarded_false()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId[] expectedTelevotingCountryIds =
+            [
+                TestCountryIds.Xx, TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz
+            ];
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equivalent(expectedTelevotingCountryIds, broadcast.Televotes.Select(voter => voter.VotingCountryId));
+            Assert.All(broadcast.Televotes, televote => Assert.False(televote.PointsAwarded));
+        }
+
+        [Fact]
+        public void Should_return_Errors_when_instance_has_ChildBroadcast_with_SemiFinal1_ContestStage_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            BroadcastId existingBroadcastId = BroadcastId.FromValue(Guid.Parse("1f2036e8-318c-4a98-8806-62c1bf4c3f55"));
+
+            sut.AddMemo(existingBroadcastId, ContestStage.SemiFinal1);
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) =
+                (errorsOrBroadcast.IsError, errorsOrBroadcast.Value, errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Child broadcast contest stage conflict", firstError.Code);
+            Assert.Equal("The contest already has a child broadcast with the provided contest stage.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "contestStage", Value: ContestStage.SemiFinal1 });
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_illegal_BroadcastDate_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            DateOnly illegalBroadcastDateValue = DateOnly.ParseExact("1999-01-01", "yyyy-MM-dd");
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate.FromValue(illegalBroadcastDateValue))
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Illegal broadcast date value", firstError.Code);
+            Assert.Equal("Broadcast date value must be between 2016-01-01 and 2050-12-31.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "broadcastDate", Value: DateOnly d }
+                                                        && d == illegalBroadcastDateValue);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_BroadcastDate_value_outside_ContestYear_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            DateOnly wrongYearBroadcastDateValue = DateOnly.ParseExact("2024-12-31", "yyyy-MM-dd");
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate.FromValue(wrongYearBroadcastDateValue))
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Broadcast date out of range", firstError.Code);
+            Assert.Equal("A broadcast's date must be in the same year as its parent contest.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "broadcastDate", Value: DateOnly d }
+                                                        && d == wrongYearBroadcastDateValue);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_fewer_than_2_competing_country_IDs()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Insufficient competitors", firstError.Code);
+            Assert.Equal("A broadcast must have at least 2 competitors.", firstError.Description);
+            Assert.Null(firstError.Metadata);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_duplicate_competing_country_IDs()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.At)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Duplicate competing countries", firstError.Code);
+            Assert.Equal("Every competitor in a broadcast must reference a different competing country.",
+                firstError.Description);
+            Assert.Null(firstError.Metadata);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_competing_country_ID_matching_no_Participant()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId orphanCountryId = CountryId.FromValue(Guid.Parse("2b2808e6-c305-4c8c-ae2e-2fa7e890dc2f"));
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be, orphanCountryId)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Orphan competitor", firstError.Code);
+            Assert.Equal("Parent contest has no participant with the provided competing country ID.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "competingCountryId", Value: Guid g }
+                                                        && g == orphanCountryId.Value);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_competing_country_ID_matching_group_0_Participant()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId ineligibleCountryId = TestCountryIds.Xx;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be, ineligibleCountryId)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Ineligible competing country", firstError.Code);
+            Assert.Equal("The contest has a participant with the provided competing country ID, " +
+                         "but they are not eligible to compete in the provided contest stage.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "competingCountryId", Value: Guid g }
+                                                        && g == ineligibleCountryId.Value);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "contestStage", Value: ContestStage.SemiFinal1 });
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_competing_country_ID_matching_group_2_Participant()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId ineligibleCountryId = TestCountryIds.Fi;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal1ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate1May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Be, ineligibleCountryId)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Ineligible competing country", firstError.Code);
+            Assert.Equal("The contest has a participant with the provided competing country ID, " +
+                         "but they are not eligible to compete in the provided contest stage.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "competingCountryId", Value: Guid g }
+                                                        && g == ineligibleCountryId.Value);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "contestStage", Value: ContestStage.SemiFinal1 });
+        }
+
+        [Fact]
+        public void Should_throw_given_null_competingCountryIds_arg()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            Action act = () => sut.CreateSemiFinal1ChildBroadcast().WithCompetingCountryIds(null!);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'competingCountryIds')", exception.Message);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_idGenerator_arg()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            Action act = () => sut.CreateSemiFinal1ChildBroadcast().Build(null!);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'idGenerator')", exception.Message);
+        }
+
+        private sealed class DummyBroadcastIdGenerator : IBroadcastIdGenerator
+        {
+            public BroadcastId Generate() => BroadcastId.FromValue(Guid.Empty);
+        }
+    }
+
+    public sealed class CreateSemiFinal2ChildBroadcastMethod : UnitTestBase
+    {
+        private static readonly BroadcastId FixedBroadcastId =
+            BroadcastId.FromValue(Guid.Parse("bf5a7250-3a6b-456f-a3f8-d8280851afff"));
+        private static readonly ContestId FixedContestId =
+            ContestId.FromValue(Guid.Parse("e93dea75-06e5-4b66-b7c1-2ce794325db3"));
+        private static readonly CityName ArbitraryCityName = CityName.FromValue("CityName").Value;
+        private static readonly ContestYear ContestYear2025 = ContestYear.FromValue(2025).Value;
+        private static readonly BroadcastDate BroadcastDate2May2025 =
+            BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-02", "yyyy-mm-dd")).Value;
+
+        [Fact]
+        public void Should_return_Broadcast_with_Initialized_BroadcastStatus_value_and_SemiFinal2_ContestStatus_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(BroadcastStatus.Initialized, broadcast.BroadcastStatus);
+            Assert.Equal(ContestStage.SemiFinal2, broadcast.ContestStage);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_instance_Id_value_as_ParentContestId_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(sut.Id, broadcast.ParentContestId);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_provided_BroadcastDate_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            BroadcastDate broadcastDate = BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-05", "yyyy-mm-dd")).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(broadcastDate)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(broadcastDate, broadcast.BroadcastDate);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_provided_Competitors_all_with_empty_JuryAwards_and_empty_TelevoteAwards()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            List<CountryId> competingCountryIds = [TestCountryIds.Fi, TestCountryIds.Dk, TestCountryIds.Ee];
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(competingCountryIds)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(competingCountryIds, broadcast.Competitors.Select(competitor => competitor.CompetingCountryId));
+            Assert.All(broadcast.Competitors, competitor => Assert.Empty(competitor.JuryAwards));
+            Assert.All(broadcast.Competitors, competitor => Assert.Empty(competitor.TelevoteAwards));
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_no_Juries()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Empty(broadcast.Juries);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_Televote_for_every_group_0_and_group_2_Participant_all_PointsAwarded_false()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId[] expectedTelevotingCountryIds =
+            [
+                TestCountryIds.Xx, TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi
+            ];
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equivalent(expectedTelevotingCountryIds, broadcast.Televotes.Select(voter => voter.VotingCountryId));
+            Assert.All(broadcast.Televotes, televote => Assert.False(televote.PointsAwarded));
+        }
+
+        [Fact]
+        public void Should_return_Errors_when_instance_has_ChildBroadcast_with_SemiFinal2_ContestStage_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            BroadcastId existingBroadcastId = BroadcastId.FromValue(Guid.Parse("1f2036e8-318c-4a98-8806-62c1bf4c3f55"));
+
+            sut.AddMemo(existingBroadcastId, ContestStage.SemiFinal2);
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) =
+                (errorsOrBroadcast.IsError, errorsOrBroadcast.Value, errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Child broadcast contest stage conflict", firstError.Code);
+            Assert.Equal("The contest already has a child broadcast with the provided contest stage.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "contestStage", Value: ContestStage.SemiFinal2 });
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_illegal_BroadcastDate_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            DateOnly illegalBroadcastDateValue = DateOnly.ParseExact("1999-01-01", "yyyy-MM-dd");
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate.FromValue(illegalBroadcastDateValue))
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Illegal broadcast date value", firstError.Code);
+            Assert.Equal("Broadcast date value must be between 2016-01-01 and 2050-12-31.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "broadcastDate", Value: DateOnly d }
+                                                        && d == illegalBroadcastDateValue);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_BroadcastDate_value_outside_ContestYear_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            DateOnly wrongYearBroadcastDateValue = DateOnly.ParseExact("2024-12-31", "yyyy-MM-dd");
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate.FromValue(wrongYearBroadcastDateValue))
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Broadcast date out of range", firstError.Code);
+            Assert.Equal("A broadcast's date must be in the same year as its parent contest.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "broadcastDate", Value: DateOnly d }
+                                                        && d == wrongYearBroadcastDateValue);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_fewer_than_2_competing_country_IDs()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Insufficient competitors", firstError.Code);
+            Assert.Equal("A broadcast must have at least 2 competitors.", firstError.Description);
+            Assert.Null(firstError.Metadata);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_duplicate_competing_country_IDs()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Dk)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) =
+                (errorsOrBroadcast.IsError, errorsOrBroadcast.Value, errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Duplicate competing countries", firstError.Code);
+            Assert.Equal("Every competitor in a broadcast must reference a different competing country.",
+                firstError.Description);
+            Assert.Null(firstError.Metadata);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_competing_country_ID_matching_no_Participant()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId orphanCountryId = CountryId.FromValue(Guid.Parse("2b2808e6-c305-4c8c-ae2e-2fa7e890dc2f"));
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee, orphanCountryId)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Orphan competitor", firstError.Code);
+            Assert.Equal("Parent contest has no participant with the provided competing country ID.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "competingCountryId", Value: Guid g }
+                                                        && g == orphanCountryId.Value);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_competing_country_ID_matching_group_0_Participant()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId ineligibleCountryId = TestCountryIds.Xx;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee, ineligibleCountryId)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Ineligible competing country", firstError.Code);
+            Assert.Equal("The contest has a participant with the provided competing country ID, " +
+                         "but they are not eligible to compete in the provided contest stage.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "competingCountryId", Value: Guid g }
+                                                        && g == ineligibleCountryId.Value);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "contestStage", Value: ContestStage.SemiFinal2 });
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_competing_country_ID_matching_group_1_Participant()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId ineligibleCountryId = TestCountryIds.Cz;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateSemiFinal2ChildBroadcast()
+                .WithBroadcastDate(BroadcastDate2May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee, ineligibleCountryId)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Ineligible competing country", firstError.Code);
+            Assert.Equal("The contest has a participant with the provided competing country ID, " +
+                         "but they are not eligible to compete in the provided contest stage.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "competingCountryId", Value: Guid g }
+                                                        && g == ineligibleCountryId.Value);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "contestStage", Value: ContestStage.SemiFinal2 });
+        }
+
+        [Fact]
+        public void Should_throw_given_null_competingCountryIds_arg()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            Action act = () => sut.CreateSemiFinal2ChildBroadcast().WithCompetingCountryIds(null!);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'competingCountryIds')", exception.Message);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_idGenerator_arg()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            Action act = () => sut.CreateSemiFinal2ChildBroadcast().Build(null!);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'idGenerator')", exception.Message);
+        }
+
+        private sealed class DummyBroadcastIdGenerator : IBroadcastIdGenerator
+        {
+            public BroadcastId Generate() => BroadcastId.FromValue(Guid.Empty);
+        }
+    }
+
+    public sealed class CreateGrandFinalChildBroadcastMethod : UnitTestBase
+    {
+        private static readonly BroadcastId FixedBroadcastId =
+            BroadcastId.FromValue(Guid.Parse("bf5a7250-3a6b-456f-a3f8-d8280851afff"));
+        private static readonly ContestId FixedContestId =
+            ContestId.FromValue(Guid.Parse("e93dea75-06e5-4b66-b7c1-2ce794325db3"));
+        private static readonly CityName ArbitraryCityName = CityName.FromValue("CityName").Value;
+        private static readonly ContestYear ContestYear2025 = ContestYear.FromValue(2025).Value;
+        private static readonly BroadcastDate BroadcastDate3May2025 =
+            BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-03", "yyyy-mm-dd")).Value;
+
+        [Fact]
+        public void Should_return_Broadcast_with_Initialized_BroadcastStatus_value_and_GrandFinal_ContestStatus_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Dk)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(BroadcastStatus.Initialized, broadcast.BroadcastStatus);
+            Assert.Equal(ContestStage.GrandFinal, broadcast.ContestStage);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_instance_Id_value_as_ParentContestId_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Dk)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(sut.Id, broadcast.ParentContestId);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_provided_BroadcastDate_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            BroadcastDate broadcastDate = BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-05", "yyyy-mm-dd")).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(broadcastDate)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Dk)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(broadcastDate, broadcast.BroadcastDate);
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_provided_Competitors_all_with_empty_JuryAwards_and_empty_TelevoteAwards()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            List<CountryId> competingCountryIds =
+            [
+                TestCountryIds.At, TestCountryIds.Fi, TestCountryIds.Cz, TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Be
+            ];
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(competingCountryIds)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equal(competingCountryIds, broadcast.Competitors.Select(competitor => competitor.CompetingCountryId));
+            Assert.All(broadcast.Competitors, competitor => Assert.Empty(competitor.JuryAwards));
+            Assert.All(broadcast.Competitors, competitor => Assert.Empty(competitor.TelevoteAwards));
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_Jury_for_every_group_1_and_group_2_Participant_all_PointsAwarded_false()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId[] expectedJuryVotingCountryIds =
+            [
+                TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz, TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi
+            ];
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Dk)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equivalent(expectedJuryVotingCountryIds, broadcast.Juries.Select(voter => voter.VotingCountryId));
+            Assert.All(broadcast.Juries, jury => Assert.False(jury.PointsAwarded));
+        }
+
+        [Fact]
+        public void Should_return_Broadcast_with_Televote_for_every_Participant_all_PointsAwarded_false()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId[] expectedTelevotingCountryIds =
+            [
+                TestCountryIds.Xx, TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz, TestCountryIds.Dk, TestCountryIds.Ee,
+                TestCountryIds.Fi
+            ];
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Dk)
+                .Build(new FixedBroadcastIdGenerator(FixedBroadcastId));
+
+            (bool isError, Broadcast broadcast) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value);
+
+            // Assert
+            Assert.False(isError);
+
+            Assert.NotNull(broadcast);
+
+            Assert.Equivalent(expectedTelevotingCountryIds, broadcast.Televotes.Select(voter => voter.VotingCountryId));
+            Assert.All(broadcast.Televotes, televote => Assert.False(televote.PointsAwarded));
+        }
+
+        [Fact]
+        public void Should_return_Errors_when_instance_has_ChildBroadcast_with_GrandFinal_ContestStage_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            BroadcastId existingBroadcastId = BroadcastId.FromValue(Guid.Parse("1f2036e8-318c-4a98-8806-62c1bf4c3f55"));
+
+            sut.AddMemo(existingBroadcastId, ContestStage.GrandFinal);
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Dk)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) =
+                (errorsOrBroadcast.IsError, errorsOrBroadcast.Value, errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Child broadcast contest stage conflict", firstError.Code);
+            Assert.Equal("The contest already has a child broadcast with the provided contest stage.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "contestStage", Value: ContestStage.GrandFinal });
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_illegal_BroadcastDate_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            DateOnly illegalBroadcastDateValue = DateOnly.ParseExact("1999-01-01", "yyyy-MM-dd");
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate.FromValue(illegalBroadcastDateValue))
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Dk)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Illegal broadcast date value", firstError.Code);
+            Assert.Equal("Broadcast date value must be between 2016-01-01 and 2050-12-31.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "broadcastDate", Value: DateOnly d }
+                                                        && d == illegalBroadcastDateValue);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_BroadcastDate_value_outside_ContestYear_value()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            DateOnly wrongYearBroadcastDateValue = DateOnly.ParseExact("2024-12-31", "yyyy-MM-dd");
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate.FromValue(wrongYearBroadcastDateValue))
+                .WithCompetingCountryIds(TestCountryIds.At, TestCountryIds.Dk)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Broadcast date out of range", firstError.Code);
+            Assert.Equal("A broadcast's date must be in the same year as its parent contest.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "broadcastDate", Value: DateOnly d }
+                                                        && d == wrongYearBroadcastDateValue);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_fewer_than_2_competing_country_IDs()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Insufficient competitors", firstError.Code);
+            Assert.Equal("A broadcast must have at least 2 competitors.", firstError.Description);
+            Assert.Null(firstError.Metadata);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_duplicate_competing_country_IDs()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Dk)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) =
+                (errorsOrBroadcast.IsError, errorsOrBroadcast.Value, errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Failure, firstError.Type);
+            Assert.Equal("Duplicate competing countries", firstError.Code);
+            Assert.Equal("Every competitor in a broadcast must reference a different competing country.",
+                firstError.Description);
+            Assert.Null(firstError.Metadata);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_competing_country_ID_matching_no_Participant()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId orphanCountryId = CountryId.FromValue(Guid.Parse("2b2808e6-c305-4c8c-ae2e-2fa7e890dc2f"));
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee, orphanCountryId)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Orphan competitor", firstError.Code);
+            Assert.Equal("Parent contest has no participant with the provided competing country ID.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "competingCountryId", Value: Guid g }
+                                                        && g == orphanCountryId.Value);
+        }
+
+        [Fact]
+        public void Should_return_Errors_given_competing_country_ID_matching_group_0_Participant()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            CountryId ineligibleCountryId = TestCountryIds.Xx;
+
+            // Act
+            ErrorOr<Broadcast> errorsOrBroadcast = sut.CreateGrandFinalChildBroadcast()
+                .WithBroadcastDate(BroadcastDate3May2025)
+                .WithCompetingCountryIds(TestCountryIds.Dk, TestCountryIds.Ee, ineligibleCountryId)
+                .Build(new DummyBroadcastIdGenerator());
+
+            (bool isError, Broadcast broadcast, Error firstError) = (errorsOrBroadcast.IsError, errorsOrBroadcast.Value,
+                errorsOrBroadcast.FirstError);
+
+            // Assert
+            Assert.True(isError);
+
+            Assert.Null(broadcast);
+
+            Assert.Equal(ErrorType.Conflict, firstError.Type);
+            Assert.Equal("Ineligible competing country", firstError.Code);
+            Assert.Equal("The contest has a participant with the provided competing country ID, " +
+                         "but they are not eligible to compete in the provided contest stage.", firstError.Description);
+            Assert.NotNull(firstError.Metadata);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "competingCountryId", Value: Guid g }
+                                                        && g == ineligibleCountryId.Value);
+            Assert.Contains(firstError.Metadata, kvp => kvp is { Key: "contestStage", Value: ContestStage.GrandFinal });
+        }
+
+        [Fact]
+        public void Should_throw_given_null_competingCountryIds_arg()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            Action act = () => sut.CreateGrandFinalChildBroadcast().WithCompetingCountryIds(null!);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'competingCountryIds')", exception.Message);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_idGenerator_arg()
+        {
+            // Arrange
+            Contest sut = Contest.CreateLiverpoolFormat()
+                .WithContestYear(ContestYear2025)
+                .WithCityName(ArbitraryCityName)
+                .AddGroup0Participant(TestCountryIds.Xx)
+                .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                .Build(new FixedContestIdGenerator(FixedContestId)).Value;
+
+            // Act
+            Action act = () => sut.CreateGrandFinalChildBroadcast().Build(null!);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'idGenerator')", exception.Message);
+        }
+
+        private sealed class DummyBroadcastIdGenerator : IBroadcastIdGenerator
+        {
+            public BroadcastId Generate() => BroadcastId.FromValue(Guid.Empty);
+        }
+    }
+
     public sealed class FluentBuilder : UnitTestBase
     {
         private static readonly ContestId FixedContestId =

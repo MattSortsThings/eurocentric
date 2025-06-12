@@ -32,7 +32,8 @@ internal static class Middleware
 
         apiGroup.MapGetContest()
             .MapGetContests()
-            .MapCreateContest();
+            .MapCreateContest()
+            .MapCreateChildBroadcast();
 
         apiGroup.MapGetCountry()
             .MapGetCountries()

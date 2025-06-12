@@ -26,6 +26,10 @@ public interface IAdminApiV1Driver
         public Task<ProblemOrResponse<CreateContestResponse>> CreateContest(CreateContestRequest requestBody,
             CancellationToken cancellationToken = default);
 
+        public Task<ProblemOrResponse<CreateChildBroadcastResponse>> CreateChildBroadcast(Guid contestId,
+            CreateChildBroadcastRequest requestBody,
+            CancellationToken cancellationToken = default);
+
         public Task<ProblemOrResponse<GetContestResponse>> GetContest(Guid contestId,
             CancellationToken cancellationToken = default);
 

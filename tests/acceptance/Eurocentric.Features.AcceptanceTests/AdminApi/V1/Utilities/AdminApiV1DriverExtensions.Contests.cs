@@ -32,6 +32,24 @@ internal static partial class AdminApiV1DriverExtensions
         return problemOrResponse.AsResponse.Data!.Contest;
     }
 
+    internal static async Task<Broadcast> CreateAChildBroadcastAsync(this IAdminApiV1Driver.IContests driver,
+        Guid[]? competingCountryIds = null,
+        Guid contestId = default,
+        ContestStage contestStage = default,
+        DateOnly broadcastDate = default,
+        CancellationToken cancellationToken = default)
+    {
+        CreateChildBroadcastRequest requestBody = new()
+        {
+            ContestStage = contestStage, BroadcastDate = broadcastDate, CompetingCountryIds = competingCountryIds ?? []
+        };
+
+        ProblemOrResponse<CreateChildBroadcastResponse> problemOrResponse =
+            await driver.CreateChildBroadcast(contestId, requestBody, cancellationToken);
+
+        return problemOrResponse.AsResponse.Data!.Broadcast;
+    }
+
     internal static async Task<Contest> GetAContestAsync(this IAdminApiV1Driver.IContests driver,
         Guid contestId,
         CancellationToken cancellationToken = default)

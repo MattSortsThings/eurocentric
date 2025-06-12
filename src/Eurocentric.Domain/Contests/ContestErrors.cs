@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -28,4 +29,26 @@ public static class ContestErrors
     public static Error IllegalStockholmFormatGroupSizes() => Error.Failure("Illegal Stockholm format group sizes",
         "A Stockholm format contest must have no participants in group 0, " +
         "at least 3 in group 1, and at least 3 in group 2.");
+
+    public static Error ChildBroadcastContestStageConflict(ContestStage contestStage) =>
+        Error.Conflict("Child broadcast contest stage conflict",
+            "The contest already has a child broadcast with the provided contest stage.",
+            new Dictionary<string, object> { ["contestStage"] = contestStage });
+
+    public static Error BroadcastDateOutOfRange(BroadcastDate broadcastDate) => Error.Conflict("Broadcast date out of range",
+        "A broadcast's date must be in the same year as its parent contest.",
+        new Dictionary<string, object> { ["broadcastDate"] = broadcastDate.Value });
+
+    public static Error OrphanCompetitor(CountryId competingCountryId) => Error.Conflict("Orphan competitor",
+        "Parent contest has no participant with the provided competing country ID.",
+        new Dictionary<string, object> { ["competingCountryId"] = competingCountryId.Value });
+
+    public static Error IneligibleCompetingCountry(CountryId competingCountryId, ContestStage contestStage) =>
+        Error.Conflict("Ineligible competing country",
+            "The contest has a participant with the provided competing country ID, " +
+            "but they are not eligible to compete in the provided contest stage.",
+            new Dictionary<string, object>
+            {
+                ["competingCountryId"] = competingCountryId.Value, ["contestStage"] = contestStage
+            });
 }

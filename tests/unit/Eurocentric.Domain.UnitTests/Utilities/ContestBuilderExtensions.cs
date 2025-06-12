@@ -1,6 +1,7 @@
 using ErrorOr;
 using Eurocentric.Domain.Contests;
 using Eurocentric.Domain.Countries;
+using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
 namespace Eurocentric.Domain.UnitTests.Utilities;
@@ -18,7 +19,20 @@ public static class ContestBuilderExtensions
 
         foreach (Country country in countries)
         {
-            builder = builder.AddGroup1Participant(country.Id, arbitraryActName, arbitrarySongTitle);
+            builder.AddGroup1Participant(country.Id, arbitraryActName, arbitrarySongTitle);
+        }
+
+        return builder;
+    }
+
+    public static ContestBuilder WithGroup1Countries(this ContestBuilder builder, params CountryId[] countryIds)
+    {
+        ErrorOr<ActName> arbitraryActName = ActName.FromValue("ActName");
+        ErrorOr<SongTitle> arbitrarySongTitle = SongTitle.FromValue("SongTitle");
+
+        foreach (CountryId id in countryIds)
+        {
+            builder.AddGroup1Participant(id, arbitraryActName, arbitrarySongTitle);
         }
 
         return builder;
@@ -31,7 +45,20 @@ public static class ContestBuilderExtensions
 
         foreach (Country country in countries)
         {
-            builder = builder.AddGroup2Participant(country.Id, arbitraryActName, arbitrarySongTitle);
+            builder.AddGroup2Participant(country.Id, arbitraryActName, arbitrarySongTitle);
+        }
+
+        return builder;
+    }
+
+    public static ContestBuilder WithGroup2Countries(this ContestBuilder builder, params CountryId[] countries)
+    {
+        ErrorOr<ActName> arbitraryActName = ActName.FromValue("ActName");
+        ErrorOr<SongTitle> arbitrarySongTitle = SongTitle.FromValue("SongTitle");
+
+        foreach (CountryId id in countries)
+        {
+            builder.AddGroup2Participant(id, arbitraryActName, arbitrarySongTitle);
         }
 
         return builder;

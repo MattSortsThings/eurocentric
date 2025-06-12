@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using ErrorOr;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
@@ -33,6 +34,30 @@ public sealed class StockholmFormatContest : Contest
 
     /// <inheritdoc />
     public override ContestFormat ContestFormat { get; private protected init; } = ContestFormat.Stockholm;
+
+    private protected override Func<Participant, bool> GetJuryEligibility(ContestStage contestStage) => contestStage switch
+    {
+        ContestStage.SemiFinal1 => participant => participant.ParticipantGroup is ParticipantGroup.One,
+        ContestStage.SemiFinal2 => participant => participant.ParticipantGroup is ParticipantGroup.Two,
+        ContestStage.GrandFinal => participant => participant.ParticipantGroup is ParticipantGroup.One or ParticipantGroup.Two,
+        _ => throw new InvalidEnumArgumentException(nameof(contestStage), (int)contestStage, typeof(ContestStage))
+    };
+
+    private protected override Func<Participant, bool> GetTelevoteEligibility(ContestStage contestStage) => contestStage switch
+    {
+        ContestStage.SemiFinal1 => participant => participant.ParticipantGroup is ParticipantGroup.One,
+        ContestStage.SemiFinal2 => participant => participant.ParticipantGroup is ParticipantGroup.Two,
+        ContestStage.GrandFinal => participant => participant.ParticipantGroup is ParticipantGroup.One or ParticipantGroup.Two,
+        _ => throw new InvalidEnumArgumentException(nameof(contestStage), (int)contestStage, typeof(ContestStage))
+    };
+
+    private protected override Func<Participant, bool> GetCompetitorEligibility(ContestStage contestStage) => contestStage switch
+    {
+        ContestStage.SemiFinal1 => participant => participant.ParticipantGroup is ParticipantGroup.One,
+        ContestStage.SemiFinal2 => participant => participant.ParticipantGroup is ParticipantGroup.Two,
+        ContestStage.GrandFinal => participant => participant.ParticipantGroup is ParticipantGroup.One or ParticipantGroup.Two,
+        _ => throw new InvalidEnumArgumentException(nameof(contestStage), (int)contestStage, typeof(ContestStage))
+    };
 
     internal sealed class Builder : ContestBuilder
     {

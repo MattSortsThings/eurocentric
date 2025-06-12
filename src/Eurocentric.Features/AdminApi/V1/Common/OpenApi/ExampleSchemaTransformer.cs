@@ -18,6 +18,8 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(Contest)] = Contest.CreateExample().ToOpenApiAny(),
             [typeof(ContestMemo)] = ContestMemo.CreateExample().ToOpenApiAny(),
             [typeof(Country)] = Country.CreateExample().ToOpenApiAny(),
+            [typeof(CreateChildBroadcastRequest)] = CreateChildBroadcastRequest.CreateExample().ToOpenApiAny(),
+            [typeof(CreateChildBroadcastResponse)] = CreateChildBroadcastResponse.CreateExample().ToOpenApiAny(),
             [typeof(CreateContestRequest)] = CreateContestRequest.CreateExample().ToOpenApiAny(),
             [typeof(CreateContestResponse)] = CreateContestResponse.CreateExample().ToOpenApiAny(),
             [typeof(CreateCountryRequest)] = CreateCountryRequest.CreateExample().ToOpenApiAny(),

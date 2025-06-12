@@ -8,18 +8,18 @@ namespace Eurocentric.Domain.ErrorHandling;
 public static class ErrorHandlingExtensions
 {
     /// <summary>
-    ///     Collects a collection of errors or values into either a list of all their values when all are successful or else a
+    ///     Collects a sequence of errors or values into either a list of all their values when all are successful or else a
     ///     list of all their errors.
     /// </summary>
-    /// <param name="errorsOrValues">A collection of <see cref="ErrorOr{T}" /> values.</param>
+    /// <param name="errorsOrValues">A sequence of <see cref="ErrorOr{T}" /> values.</param>
     /// <typeparam name="TValue">The successful value type.</typeparam>
     /// <returns>
     ///     A <see cref="List{T}" /> of type <typeparamref name="TValue" /> when all elements of the
     ///     <paramref name="errorsOrValues" /> argument are successful; otherwise, a list of <see cref="Error" /> values.
     /// </returns>
-    public static ErrorOr<List<TValue>> Collect<TValue>(this IReadOnlyCollection<ErrorOr<TValue>> errorsOrValues)
+    public static ErrorOr<List<TValue>> Collect<TValue>(this IEnumerable<ErrorOr<TValue>> errorsOrValues)
     {
-        List<TValue> values = new(errorsOrValues.Count);
+        List<TValue> values = [];
 
         List<Error> errors = [];
 
