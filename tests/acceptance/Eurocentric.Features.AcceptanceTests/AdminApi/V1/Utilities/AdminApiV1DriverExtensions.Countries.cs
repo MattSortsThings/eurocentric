@@ -29,6 +29,10 @@ internal static partial class AdminApiV1DriverExtensions
         return await Task.WhenAll(tasks);
     }
 
+    internal static async Task DeleteACountryAsync(this IAdminApiV1Driver.ICountries driver,
+        Guid countryId,
+        CancellationToken cancellationToken = default) => _ = await driver.DeleteCountry(countryId, cancellationToken);
+
     internal static async Task<Country> GetACountryAsync(this IAdminApiV1Driver.ICountries driver,
         Guid countryId,
         CancellationToken cancellationToken = default)

@@ -40,6 +40,7 @@ internal static class Middleware
 
         apiGroup.MapGetCountry()
             .MapGetCountries()
-            .MapCreateCountry();
+            .MapCreateCountry()
+            .MapDeleteCountry();
     }
 }

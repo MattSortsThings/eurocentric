@@ -17,6 +17,17 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver.ICountries
         return await _restClient.SendRequestAsync<CreateCountryResponse>(request, cancellationToken);
     }
 
+    public async Task<ProblemOrResponse> DeleteCountry(Guid countryId,
+        CancellationToken cancellationToken = default)
+    {
+        RestRequest request = Delete("/admin/api/{apiVersion}/countries/{countryId}")
+            .UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("countryId", countryId);
+
+        return await _restClient.SendRequestAsync(request, cancellationToken);
+    }
+
     public async Task<ProblemOrResponse<GetCountriesResponse>> GetCountries(CancellationToken cancellationToken = default)
     {
         RestRequest request = Get("/admin/api/{apiVersion}/countries")

@@ -13,4 +13,8 @@ public static class CountryErrors
     public static Error CountryCodeConflict(CountryCode countryCode) => Error.Conflict("Country code conflict",
         "A country already exists with the provided country code.",
         new Dictionary<string, object> { ["countryCode"] = countryCode.Value });
+
+    public static Error CannotDeleteCountry(CountryId countryId) => Error.Conflict("Cannot delete country",
+        "A country may only be deleted if it participates in no contests.",
+        new Dictionary<string, object> { ["countryId"] = countryId.Value });
 }

@@ -24,6 +24,8 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver
 
     private static RestRequest Get(string route) => new(route);
 
+    private static RestRequest Delete(string route) => new(route, Method.Delete);
+
     private static RestRequest Patch(string route) => new(route, Method.Patch);
 
     private static RestRequest Post(string route) => new(route, Method.Post);

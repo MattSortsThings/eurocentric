@@ -201,8 +201,8 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
 
             Country[] existingCountries = await ApiDriver.Countries.GetAllCountriesAsync(TestContext.Current.CancellationToken);
 
-            Assert.Single(existingCountries);
-            Assert.Contains(MyExistingCountry, existingCountries, new CountryEqualityComparer());
+            Country singleCountry = Assert.Single(existingCountries);
+            Assert.Equal(MyExistingCountry, singleCountry, new CountryEqualityComparer());
         }
     }
 }
