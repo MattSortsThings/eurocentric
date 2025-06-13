@@ -9,6 +9,17 @@ public static class BroadcastErrors
         "No broadcast exists with the provided broadcast ID.",
         new Dictionary<string, object> { ["broadcastId"] = broadcastId.Value });
 
+    public static Error CannotDisqualify() => Error.Conflict("Cannot disqualify",
+        "A competitor may only be disqualified when the broadcast status is Initialized.");
+
+    public static Error CompetitorNotFound(BroadcastId broadcastId, CountryId competingCountryId) => Error.Conflict(
+        "Competitor not found",
+        "Broadcast has no competitor with the provided competing country ID.",
+        new Dictionary<string, object>
+        {
+            ["broadcastId"] = broadcastId.Value, ["competingCountryId"] = competingCountryId.Value
+        });
+
     public static Error InsufficientCompetitors() => Error.Failure("Insufficient competitors",
         "A broadcast must have at least 2 competitors.");
 

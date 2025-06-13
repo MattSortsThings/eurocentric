@@ -149,6 +149,41 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .Then(_ => Result.Updated);
     }
 
+    /// <summary>
+    ///     Removes a competitor from the broadcast.
+    /// </summary>
+    /// <param name="competingCountryId">
+    ///     The <see cref="Competitor.CompetingCountryId" /> value of the
+    ///     <see cref="Competitor" /> to be removed.
+    /// </param>
+    /// <returns>
+    ///     An <see cref="Updated" /> value if the broadcast was successfully updated; otherwise, a list of
+    ///     <see cref="Error" /> values.
+    /// </returns>
+    public ErrorOr<Updated> DisqualifyCompetitor(CountryId competingCountryId)
+    {
+        ArgumentNullException.ThrowIfNull(competingCountryId);
+
+        return competingCountryId.ToErrorOr()
+            .FailIf(_ => BroadcastStatus != BroadcastStatus.Initialized, BroadcastErrors.CannotDisqualify())
+            .Then(TryRemoveCompetitor);
+    }
+
+    private ErrorOr<Updated> TryRemoveCompetitor(CountryId competingCountryId)
+    {
+        Competitor? competitor = _competitors.FirstOrDefault(competitor => competitor.CompetingCountryId == competingCountryId);
+
+        if (competitor is null)
+        {
+            return BroadcastErrors.CompetitorNotFound(Id, competingCountryId);
+        }
+
+        _competitors.Remove(competitor);
+        UpdateCompetitorFinishingPositions();
+
+        return Result.Updated;
+    }
+
     private void UpdateCompetitorFinishingPositions()
     {
         _competitors.Sort(Competitor.GetBroadcastCompetitorComparer());

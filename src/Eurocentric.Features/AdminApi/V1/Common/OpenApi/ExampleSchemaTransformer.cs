@@ -27,6 +27,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(CreateContestResponse)] = CreateContestResponse.CreateExample().ToOpenApiAny(),
             [typeof(CreateCountryRequest)] = CreateCountryRequest.CreateExample().ToOpenApiAny(),
             [typeof(CreateCountryResponse)] = CreateCountryResponse.CreateExample().ToOpenApiAny(),
+            [typeof(DisqualifyCompetitorRequest)] = DisqualifyCompetitorRequest.CreateExample().ToOpenApiAny(),
             [typeof(Participant)] = Participant.CreateExample().ToOpenApiAny(),
             [typeof(Voter)] = Voter.CreateExample().ToOpenApiAny()
         };

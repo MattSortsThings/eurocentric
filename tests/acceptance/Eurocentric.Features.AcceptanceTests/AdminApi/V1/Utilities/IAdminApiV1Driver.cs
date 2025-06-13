@@ -23,6 +23,10 @@ public interface IAdminApiV1Driver
             AwardTelevotePointsRequest requestBody,
             CancellationToken cancellationToken = default);
 
+        public Task<ProblemOrResponse> DisqualifyCompetitor(Guid broadcastId,
+            DisqualifyCompetitorRequest requestBody,
+            CancellationToken cancellationToken = default);
+
         public Task<ProblemOrResponse<GetBroadcastResponse>> GetBroadcast(Guid broadcastId,
             CancellationToken cancellationToken = default);
 

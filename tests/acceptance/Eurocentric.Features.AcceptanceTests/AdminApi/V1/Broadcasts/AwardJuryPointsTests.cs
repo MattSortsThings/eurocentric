@@ -476,6 +476,8 @@ public sealed class AwardJuryPointsTests(WebAppFixture fixture) : AcceptanceTest
                 votingCountryId: MyCountryCodesAndIds[votingCountryCode],
                 rankedCompetingCountryIds: rankedCompetingCountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray(),
                 cancellationToken: TestContext.Current.CancellationToken);
+
+            MyBroadcast = await ApiDriver.Broadcasts.GetABroadcastAsync(MyBroadcast.Id);
         }
 
         public async Task Given_I_have_awarded_a_set_of_televote_points_in_my_broadcast(
@@ -488,6 +490,8 @@ public sealed class AwardJuryPointsTests(WebAppFixture fixture) : AcceptanceTest
                 votingCountryId: MyCountryCodesAndIds[votingCountryCode],
                 rankedCompetingCountryIds: rankedCompetingCountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray(),
                 cancellationToken: TestContext.Current.CancellationToken);
+
+            MyBroadcast = await ApiDriver.Broadcasts.GetABroadcastAsync(MyBroadcast.Id);
         }
 
         public async Task Given_I_have_deleted_my_broadcast()

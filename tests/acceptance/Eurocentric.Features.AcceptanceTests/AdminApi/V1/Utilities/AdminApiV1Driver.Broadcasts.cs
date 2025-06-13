@@ -32,6 +32,19 @@ public sealed partial class AdminApiV1Driver : IAdminApiV1Driver.IBroadcasts
         return await _restClient.SendRequestAsync(request, cancellationToken);
     }
 
+    public async Task<ProblemOrResponse> DisqualifyCompetitor(Guid broadcastId,
+        DisqualifyCompetitorRequest requestBody,
+        CancellationToken cancellationToken = default)
+    {
+        RestRequest request = Patch("/admin/api/{apiVersion}/broadcasts/{broadcastId}/disqualifications")
+            .UseSecretApiKey()
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("broadcastId", broadcastId)
+            .AddJsonBody(requestBody);
+
+        return await _restClient.SendRequestAsync(request, cancellationToken);
+    }
+
     public async Task<ProblemOrResponse<GetBroadcastResponse>> GetBroadcast(Guid broadcastId,
         CancellationToken cancellationToken = default)
     {
