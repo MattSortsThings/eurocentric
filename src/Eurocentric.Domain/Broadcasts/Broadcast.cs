@@ -86,6 +86,38 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
         .AsReadOnly();
 
     /// <summary>
+    ///     Awards a set of jury points from a single jury to all the competitors in the broadcast.
+    /// </summary>
+    /// <param name="votingCountryId">
+    ///     The <see cref="Jury.VotingCountryId" /> value of the <see cref="Jury" /> to award its points.
+    /// </param>
+    /// <param name="rankedCompetingCountryIds">
+    ///     The <see cref="Competitor.CompetingCountryId" /> values of all the competitors
+    ///     in the broadcast, excluding the <paramref name="votingCountryId" /> argument, ordered from first place to last
+    ///     place as decided by the televote.
+    /// </param>
+    /// <returns>
+    ///     An <see cref="Updated" /> value if the broadcast was successfully updated; otherwise, a list of
+    ///     <see cref="Error" /> values.
+    /// </returns>
+    public ErrorOr<Updated> AwardJuryPoints(CountryId votingCountryId, IEnumerable<CountryId> rankedCompetingCountryIds)
+    {
+        ArgumentNullException.ThrowIfNull(votingCountryId);
+        ArgumentNullException.ThrowIfNull(rankedCompetingCountryIds);
+
+        ErrorOr<Jury> errorsOrJury = TryGetJury(votingCountryId);
+        ErrorOr<List<Competitor>> errorsOrRankedCompetitors =
+            TryGetRankedCompetitors(votingCountryId, rankedCompetingCountryIds);
+
+        return Tuple.Create(errorsOrJury, errorsOrRankedCompetitors)
+            .Combine()
+            .ThenDo(tuple => tuple.Item1.AwardPoints(tuple.Item2))
+            .ThenDo(_ => UpdateCompetitorFinishingPositions())
+            .ThenDo(_ => UpdateBroadcastStatus())
+            .Then(_ => Result.Updated);
+    }
+
+    /// <summary>
     ///     Awards a set of televote points from a single televote to all the competitors in the broadcast.
     /// </summary>
     /// <param name="votingCountryId">
@@ -137,6 +169,23 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             : juriesWithPointsAwarded == 0 && televotesWithPointsAwarded == 0
                 ? BroadcastStatus.Initialized
                 : BroadcastStatus.InProgress;
+    }
+
+    private ErrorOr<Jury> TryGetJury(CountryId votingCountryId)
+    {
+        Jury? jury = _juries.FirstOrDefault(jury => jury.VotingCountryId == votingCountryId);
+
+        if (jury is null)
+        {
+            return BroadcastErrors.JuryNotFound(Id, votingCountryId);
+        }
+
+        if (jury.PointsAwarded)
+        {
+            return BroadcastErrors.JuryPointsAlreadyAwarded(Id, votingCountryId);
+        }
+
+        return jury;
     }
 
     private ErrorOr<Televote> TryGetTelevote(CountryId votingCountryId)

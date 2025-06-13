@@ -15,6 +15,10 @@ public interface IAdminApiV1Driver
 
     public interface IBroadcasts
     {
+        public Task<ProblemOrResponse> AwardJuryPoints(Guid broadcastId,
+            AwardJuryPointsRequest requestBody,
+            CancellationToken cancellationToken = default);
+
         public Task<ProblemOrResponse> AwardTelevotePoints(Guid broadcastId,
             AwardTelevotePointsRequest requestBody,
             CancellationToken cancellationToken = default);

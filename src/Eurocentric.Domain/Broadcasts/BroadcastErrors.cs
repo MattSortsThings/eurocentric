@@ -19,6 +19,16 @@ public static class BroadcastErrors
         "Ranked competing country IDs must contain every competing country ID in the broadcast " +
         "(excluding the voting country ID) exactly once.");
 
+    public static Error JuryNotFound(BroadcastId broadcastId, CountryId votingCountryId) => Error.Conflict(
+        "Jury not found",
+        "Broadcast has no jury with the provided voting country ID.",
+        new Dictionary<string, object> { ["broadcastId"] = broadcastId.Value, ["votingCountryId"] = votingCountryId.Value });
+
+    public static Error JuryPointsAlreadyAwarded(BroadcastId broadcastId, CountryId votingCountryId) => Error.Conflict(
+        "Jury points already awarded",
+        "Broadcast has a jury with the provided voting country ID, but it has already awarded its points.",
+        new Dictionary<string, object> { ["broadcastId"] = broadcastId.Value, ["votingCountryId"] = votingCountryId.Value });
+
     public static Error TelevoteNotFound(BroadcastId broadcastId, CountryId votingCountryId) => Error.Conflict(
         "Televote not found",
         "Broadcast has no televote with the provided voting country ID.",

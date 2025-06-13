@@ -12,6 +12,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
     private protected override IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; } =
         new Dictionary<Type, IOpenApiAny>
         {
+            [typeof(AwardJuryPointsRequest)] = AwardJuryPointsRequest.CreateExample().ToOpenApiAny(),
             [typeof(AwardTelevotePointsRequest)] = AwardTelevotePointsRequest.CreateExample().ToOpenApiAny(),
             [typeof(Award)] = Award.CreateExample().ToOpenApiAny(),
             [typeof(Broadcast)] = Broadcast.CreateExample().ToOpenApiAny(),
