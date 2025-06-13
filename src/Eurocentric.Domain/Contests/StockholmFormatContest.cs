@@ -2,6 +2,7 @@ using System.ComponentModel;
 using ErrorOr;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -69,7 +70,13 @@ public sealed class StockholmFormatContest : Contest
         private protected override Contest InitializeContest(ContestId id,
             ContestYear contestYear,
             CityName cityName,
-            List<Participant> participants) => new StockholmFormatContest(id, contestYear, cityName, participants);
+            List<Participant> participants)
+        {
+            StockholmFormatContest contest = new(id, contestYear, cityName, participants);
+            contest.AddDomainEvent(new ContestCreatedEvent(contest));
+
+            return contest;
+        }
 
         private static bool DuplicateParticipatingCountries(IEnumerable<Participant> participants) =>
             participants.GroupBy(participant => participant.ParticipatingCountryId)

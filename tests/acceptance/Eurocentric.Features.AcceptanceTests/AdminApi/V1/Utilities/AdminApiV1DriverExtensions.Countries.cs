@@ -57,6 +57,7 @@ internal static partial class AdminApiV1DriverExtensions
         "GB" => "United Kingdom",
         "HR" => "Croatia",
         "IT" => "Italy",
+        "LU" => "Luxembourg",
         "XX" => "Rest of the World",
         _ => "CountryName"
     };

@@ -6,6 +6,7 @@ using Eurocentric.Infrastructure.Timing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Eurocentric.Infrastructure;
 
@@ -32,8 +33,8 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    ///     Adds the application database context class as a scoped service to the application service descriptor collection,
-    ///     using the provided database connection string.
+    ///     Adds the EF Core application database context class and any defined interceptors as scoped services to the
+    ///     application service descriptor collection, using the provided database connection string.
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <param name="connectionString">The database connection string.</param>
@@ -42,6 +43,8 @@ public static class DependencyInjection
     public static IServiceCollection AddEfCoreAppDbContext(this IServiceCollection services, string? connectionString)
     {
         ArgumentNullException.ThrowIfNull(connectionString);
+
+        services.TryAddScoped<PublishDomainEventsInterceptor>();
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseAzureSql(connectionString, azureSqlOptions =>

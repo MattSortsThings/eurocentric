@@ -1,4 +1,5 @@
 using Eurocentric.Domain.Abstractions;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -41,6 +42,29 @@ public sealed class Country : AggregateRoot<CountryId>
         .OrderBy(memo => memo.ContestId.Value)
         .ToArray()
         .AsReadOnly();
+
+    /// <summary>
+    ///     Adds a new <see cref="ContestMemo" /> to this instance's <see cref="ParticipatingContests" /> collection, with the
+    ///     provided <see cref="ContestMemo.ContestId" /> value and a <see cref="ContestMemo.ContestStatus" /> value of
+    ///     <see cref="ContestStatus.Initialized" />.
+    /// </summary>
+    /// <param name="contestId">The ID of the contest aggregate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance's <see cref="ParticipatingContests" /> collection already contains a
+    ///     <see cref="ContestMemo" /> with the <paramref name="contestId" /> argument.
+    /// </exception>
+    public void AddMemo(ContestId contestId)
+    {
+        ArgumentNullException.ThrowIfNull(contestId);
+
+        if (_participatingContests.Any(memo => memo.ContestId == contestId))
+        {
+            throw new ArgumentException("ContestMemo already exists with the provided ContestId value.");
+        }
+
+        _participatingContests.Add(new ContestMemo(contestId, ContestStatus.Initialized));
+    }
 
     /// <summary>
     ///     Begins the process of creating a new <see cref="Country" /> instance using the fluent builder.

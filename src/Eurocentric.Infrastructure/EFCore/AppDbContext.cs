@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Contests;
 using Eurocentric.Domain.Countries;
@@ -10,7 +11,13 @@ namespace Eurocentric.Infrastructure.EFCore;
 /// </summary>
 public sealed class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
+
+    public AppDbContext(DbContextOptions<AppDbContext> options, PublishDomainEventsInterceptor publishDomainEventsInterceptor)
+        : base(options)
+    {
+        _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
+    }
 
     public DbSet<Broadcast> Broadcasts => Set<Broadcast>();
 
@@ -22,5 +29,14 @@ public sealed class AppDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         modelBuilder.HasDefaultSchema(DbConstants.SchemaName);
+        modelBuilder.Ignore<IReadOnlyList<IDomainEvent>>();
+
+        base.OnModelCreating(modelBuilder);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
+        base.OnConfiguring(optionsBuilder);
     }
 }

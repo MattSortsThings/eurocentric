@@ -11,7 +11,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_country_scenario_1(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         admin.Given_I_want_to_create_a_country(countryCode: "AT", countryName: "Austria");
@@ -31,7 +31,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_country_scenario_2(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         admin.Given_I_want_to_create_a_country(countryCode: "BA", countryName: "Bosnia & Herzegovina");
@@ -51,7 +51,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_country_scenario_3(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         admin.Given_I_want_to_create_a_country(countryCode: "XX", countryName: "Rest of the World");
@@ -71,7 +71,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_country_with_non_unique_country_code(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_a_country_with_country_code("GB");
@@ -93,7 +93,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_country_with_illegal_country_code_value(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         admin.Given_I_want_to_create_a_country_with_country_code("0");
@@ -114,7 +114,7 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_country_with_illegal_country_name_value(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         admin.Given_I_want_to_create_a_country_with_country_name(" ");
@@ -133,12 +133,9 @@ public sealed class CreateCountryTests(WebAppFixture fixture) : AcceptanceTestBa
 
     private sealed class AdminActor : ActorWithResponse<CreateCountryResponse>
     {
-        public AdminActor(IAdminApiV1Driver apiDriver, IWebAppFixtureBackDoor backDoor) : base(apiDriver)
+        public AdminActor(IAdminApiV1Driver apiDriver) : base(apiDriver)
         {
-            BackDoor = backDoor;
         }
-
-        private IWebAppFixtureBackDoor BackDoor { get; }
 
         private Country? MyExistingCountry { get; set; }
 
