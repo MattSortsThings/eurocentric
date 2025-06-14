@@ -26,6 +26,7 @@ This document outlines system design decisions taken during development of the *
     - [Architecture tests](#architecture-tests)
   - [Version control](#version-control)
   - [Continuous integration and continuous delivery (CI/CD)](#continuous-integration-and-continuous-delivery-cicd)
+  - [Database concurrency](#database-concurrency)
 
 ## Technical specification
 
@@ -235,3 +236,7 @@ Commit messages are written using the [Conventional Commits](https://www.convent
 ## Continuous integration and continuous delivery (CI/CD)
 
 At an early stage in development, an action is added to the GitHub source code repository that automatically publishes and deploys the application to the Azure App Service. This action is triggered every time source code is pushed to the main branch in the remote repository. The working cadence is generally to push to the repository after each feature is implemented.
+
+## Database concurrency
+
+This project **does not** implement any kind of locking system to avoid database race conditions. This is because there is only a single user who is authorized to create, update and delete records in the database, and transactions will not be concurrent.
