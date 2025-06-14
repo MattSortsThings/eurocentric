@@ -1,11 +1,7 @@
-using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Countries;
-using Eurocentric.Infrastructure.EFCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries;
 
@@ -15,7 +11,7 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
     [InlineData("v1.0")]
     public async Task Should_be_able_to_retrieve_country_by_ID(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_a_country(countryCode: "GB", countryName: "United Kingdom");
@@ -33,7 +29,7 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_retrieve_non_existent_country_by_ID(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_a_country(countryCode: "GB", countryName: "United Kingdom");
@@ -53,19 +49,23 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
 
     private sealed class AdminActor : ActorWithResponse<GetCountryResponse>
     {
-        public AdminActor(IAdminApiV1Driver apiDriver, IWebAppFixtureBackDoor backDoor) : base(apiDriver)
+        public AdminActor(IAdminApiV1Driver apiDriver) : base(apiDriver)
         {
-            BackDoor = backDoor;
         }
 
         private Country? MyCountry { get; set; }
-
-        private IWebAppFixtureBackDoor BackDoor { get; }
 
         public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "") =>
             MyCountry = await ApiDriver.Countries.CreateACountryAsync(countryCode: countryCode,
                 countryName: countryName,
                 cancellationToken: TestContext.Current.CancellationToken);
+
+        public async Task Given_I_have_deleted_my_country()
+        {
+            Assert.NotNull(MyCountry);
+
+            await ApiDriver.Countries.DeleteACountryAsync(MyCountry.Id, TestContext.Current.CancellationToken);
+        }
 
         public void Given_I_want_to_retrieve_my_country_by_its_ID()
         {
@@ -81,21 +81,6 @@ public sealed class GetCountryTests(WebAppFixture fixture) : AcceptanceTestBase(
             Assert.NotNull(ResponseObject);
 
             Assert.Equal(MyCountry, ResponseObject.Country, new CountryEqualityComparer());
-        }
-
-        public async Task Given_I_have_deleted_my_country()
-        {
-            Assert.NotNull(MyCountry);
-
-            CountryId targetId = CountryId.FromValue(MyCountry.Id);
-
-            Func<IServiceProvider, Task> delete = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                await dbContext.Countries.Where(country => country.Id == targetId).ExecuteDeleteAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(delete);
         }
 
         public void Then_the_problem_details_extensions_should_contain_my_country_ID_with_key(string key)

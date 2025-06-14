@@ -1,14 +1,10 @@
 using CsvHelper.Configuration.Attributes;
-using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Features.AdminApi.V1.Contests;
-using Eurocentric.Infrastructure.EFCore;
 using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests;
 
@@ -18,7 +14,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Stockholm_format_contest_scenario_1(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -65,7 +61,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Stockholm_format_contest_scenario_2(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -118,7 +114,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Liverpool_format_contest_scenario_1(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -167,7 +163,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Liverpool_format_contest_scenario_2(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -222,7 +218,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_non_unique_contest_year(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -245,7 +241,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_illegal_contest_year_value(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
         admin.Given_I_want_to_create_a_Stockholm_format_contest_with_contest_year(0);
 
         // Given
@@ -268,7 +264,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_illegal_city_name_value(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -291,7 +287,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_illegal_group_1_participant_act_name_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -316,7 +312,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_illegal_group_2_participant_act_name_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -341,7 +337,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_illegal_group_1_participant_song_title_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -367,7 +363,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_illegal_group_2_participant_song_title_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -392,7 +388,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_group_0_participant(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -418,7 +414,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_fewer_than_3_group_1_participants(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -443,7 +439,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_fewer_than_3_group_2_participants(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -468,7 +464,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_group_1_participants_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -492,7 +488,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_group_2_participants_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -516,7 +512,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_group_1_and_2_participants_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -540,7 +536,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_group_1_participant_from_non_existent_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -567,7 +563,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Stockholm_format_contest_with_group_2_participant_from_non_existent_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -593,7 +589,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_non_unique_contest_year(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -616,7 +612,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_illegal_contest_year_value(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -638,7 +634,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_illegal_city_name_value(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -661,7 +657,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_illegal_group_1_participant_act_name_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -686,7 +682,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_illegal_group_2_participant_act_name_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -711,7 +707,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_illegal_group_1_participant_song_title_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -737,7 +733,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_illegal_group_2_participant_song_title_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -761,7 +757,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_no_group_0_participant(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -786,7 +782,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_fewer_than_3_group_1_participants(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -811,7 +807,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_fewer_than_3_group_2_participants(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -836,7 +832,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_group_1_participants_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -861,7 +857,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_group_2_participants_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -886,7 +882,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_group_0_and_1_participants_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -911,7 +907,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_group_0_and_2_participants_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -936,7 +932,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_group_1_and_2_participants_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -961,7 +957,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_group_0_participant_from_non_existent_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -989,7 +985,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_group_1_participant_from_non_existent_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -1017,7 +1013,7 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
     public async Task Should_be_unable_to_create_Liverpool_format_contest_with_group_2_participant_from_non_existent_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
@@ -1042,12 +1038,9 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
 
     private sealed class AdminActor : ActorWithResponse<CreateContestResponse>
     {
-        public AdminActor(IAdminApiV1Driver apiDriver, IWebAppFixtureBackDoor backDoor) : base(apiDriver)
+        public AdminActor(IAdminApiV1Driver apiDriver) : base(apiDriver)
         {
-            BackDoor = backDoor;
         }
-
-        private IWebAppFixtureBackDoor BackDoor { get; }
 
         private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(10);
 
@@ -1078,15 +1071,9 @@ public sealed class CreateContestTests(WebAppFixture fixture) : AcceptanceTestBa
 
         public async Task Given_I_have_deleted_my_country_with_country_code(string countryCode)
         {
-            CountryId countryId = CountryId.FromValue(MyCountryCodesAndIds[countryCode]);
+            Guid myCountryId = MyCountryCodesAndIds[countryCode];
 
-            Func<IServiceProvider, Task> delete = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                await dbContext.Countries.Where(country => country.Id == countryId).ExecuteDeleteAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(delete);
+            await ApiDriver.Countries.DeleteCountry(myCountryId, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_contest(int contestYear = 0,
