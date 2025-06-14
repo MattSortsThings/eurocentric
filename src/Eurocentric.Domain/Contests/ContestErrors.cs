@@ -51,4 +51,8 @@ public static class ContestErrors
             {
                 ["competingCountryId"] = competingCountryId.Value, ["contestStage"] = contestStage
             });
+
+    public static Error CannotDeleteContest(ContestId contestId) => Error.Conflict("Cannot delete contest",
+        "A contest may only be deleted if it has no child broadcasts.",
+        new Dictionary<string, object> { ["contestId"] = contestId.Value });
 }

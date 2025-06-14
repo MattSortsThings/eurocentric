@@ -44,15 +44,11 @@ internal static class DeleteCountry
 
     internal sealed class Handler(AppDbContext dbContext) : ICommandHandler<Command, Deleted>
     {
-        public async Task<ErrorOr<Deleted>> OnHandle(Command command, CancellationToken cancellationToken)
-        {
-            CountryId countryId = CountryId.FromValue(command.CountryId);
-
-            return await GetTrackedCountryToDeleteAsync(countryId)
+        public async Task<ErrorOr<Deleted>> OnHandle(Command command, CancellationToken cancellationToken) =>
+            await GetTrackedCountryToDeleteAsync(CountryId.FromValue(command.CountryId))
                 .ThenDo(country => dbContext.Countries.Remove(country))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(_ => Result.Deleted);
-        }
 
         private async Task<ErrorOr<Country>> GetTrackedCountryToDeleteAsync(CountryId countryId)
         {

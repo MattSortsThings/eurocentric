@@ -15,6 +15,7 @@ internal static class EndpointIds
     {
         internal const string CreateChildBroadcast = "AdminApi.V1.Contests.CreateChildBroadcast";
         internal const string CreateContest = "AdminApi.V1.Contests.CreateContest";
+        internal const string DeleteContest = "AdminApi.V1.Contests.DeleteContest";
         internal const string GetContest = "AdminApi.V1.Contests.GetContest";
         internal const string GetContests = "AdminApi.V1.Contests.GetContests";
     }

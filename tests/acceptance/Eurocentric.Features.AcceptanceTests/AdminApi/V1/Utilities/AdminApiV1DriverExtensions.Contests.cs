@@ -50,6 +50,10 @@ internal static partial class AdminApiV1DriverExtensions
         return problemOrResponse.AsResponse.Data!.Broadcast;
     }
 
+    internal static async Task DeleteAContestAsync(this IAdminApiV1Driver.IContests driver,
+        Guid contestId,
+        CancellationToken cancellationToken = default) => _ = await driver.DeleteContest(contestId, cancellationToken);
+
     internal static async Task<Contest> GetAContestAsync(this IAdminApiV1Driver.IContests driver,
         Guid contestId,
         CancellationToken cancellationToken = default)
