@@ -1,6 +1,5 @@
 using ErrorOr;
 using Eurocentric.Domain.Contests;
-using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.Shared.ErrorHandling;
@@ -42,11 +41,6 @@ internal static class DeleteContest
     private static ErrorOr<Command> InitializeCommand(Guid contestId) => ErrorOrFactory.From(new Command(contestId));
 
     internal sealed record Command(Guid ContestId) : ICommand<Deleted>;
-
-    internal sealed class DummyContestDeletedEventConsumer : IConsumer<ContestDeletedEvent>
-    {
-        public Task OnHandle(ContestDeletedEvent message, CancellationToken cancellationToken) => Task.CompletedTask;
-    }
 
     internal sealed class Handler(AppDbContext dbContext) : ICommandHandler<Command, Deleted>
     {

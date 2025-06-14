@@ -67,6 +67,26 @@ public sealed class Country : AggregateRoot<CountryId>
     }
 
     /// <summary>
+    ///     Removes the <see cref="ContestMemo" /> with the provided <see cref="ContestMemo.ContestId" /> value from this
+    ///     instance's <see cref="ParticipatingContests" /> collection.
+    /// </summary>
+    /// <param name="contestId">The ID of the contest aggregate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance's <see cref="ParticipatingContests" /> collection contains no
+    ///     <see cref="ContestMemo" /> with the <paramref name="contestId" /> argument.
+    /// </exception>
+    public void RemoveMemo(ContestId contestId)
+    {
+        ArgumentNullException.ThrowIfNull(contestId);
+
+        if (_participatingContests.RemoveAll(memo => memo.ContestId == contestId) < 1)
+        {
+            throw new ArgumentException("No ContestMemo exists with the provided ContestId value.");
+        }
+    }
+
+    /// <summary>
     ///     Begins the process of creating a new <see cref="Country" /> instance using the fluent builder.
     /// </summary>
     /// <returns>A new <see cref="CountryBuilder" /> instance.</returns>
