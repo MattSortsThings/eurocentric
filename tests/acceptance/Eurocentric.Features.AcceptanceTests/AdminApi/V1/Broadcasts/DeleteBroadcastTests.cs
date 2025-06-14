@@ -1,23 +1,18 @@
 using System.Text.Json;
-using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
-using Eurocentric.Features.AdminApi.V1.Broadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Common.Enums;
-using Eurocentric.Infrastructure.EFCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts;
 
-public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase(fixture)
+public sealed class DeleteBroadcastTests(WebAppFixture fixture) : AcceptanceTestBase(fixture)
 {
     [Theory]
     [InlineData("v1.0")]
-    public async Task Should_be_able_to_retrieve_broadcast_by_ID(string apiVersion)
+    public async Task Should_be_able_to_delete_broadcast_by_ID_scenario_1(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
@@ -30,21 +25,51 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
             contestStage: "GrandFinal",
             broadcastDate: "2025-05-17",
             competingCountryCodes: ["AT", "BE", "DK", "EE"]);
-        admin.Given_I_want_to_retrieve_my_broadcast_by_its_ID();
+        admin.Given_I_want_to_delete_my_broadcast_by_its_ID();
 
         // When
         await admin.When_I_send_my_request();
 
         // Then
-        admin.Then_my_request_should_succeed_with_status_code_200_OK();
-        admin.Then_the_retrieved_broadcast_should_be_my_broadcast();
+        admin.Then_my_request_should_succeed_with_status_code_204_NoContent();
+        await admin.Then_no_broadcasts_should_exist();
     }
 
     [Theory]
     [InlineData("v1.0")]
-    public async Task Should_be_unable_to_retrieve_non_existent_broadcast_by_ID(string apiVersion)
+    public async Task Should_be_able_to_delete_broadcast_by_ID_scenario_2(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
+
+        // Given
+        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
+        await admin.Given_I_have_created_a_Liverpool_format_contest(
+            contestYear: 2025,
+            group0CountryCode: "XX",
+            group1CountryCodes: ["AT", "BE", "CZ"],
+            group2CountryCodes: ["DK", "EE", "FI"]);
+        await admin.Given_I_have_created_a_child_broadcast_for_my_contest(
+            contestStage: "GrandFinal",
+            broadcastDate: "2025-05-17",
+            competingCountryCodes: ["AT", "BE", "DK", "EE"]);
+        await admin.Given_I_have_awarded_a_set_of_televote_points_in_my_broadcast(
+            votingCountryCode: "XX",
+            rankedCompetingCountryCodes: ["AT", "BE", "DK", "EE"]);
+        admin.Given_I_want_to_delete_my_broadcast_by_its_ID();
+
+        // When
+        await admin.When_I_send_my_request();
+
+        // Then
+        admin.Then_my_request_should_succeed_with_status_code_204_NoContent();
+        await admin.Then_no_broadcasts_should_exist();
+    }
+
+    [Theory]
+    [InlineData("v1.0")]
+    public async Task Should_be_unable_to_delete_non_existent_broadcast_by_ID(string apiVersion)
+    {
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
@@ -58,7 +83,7 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
             broadcastDate: "2025-05-17",
             competingCountryCodes: ["AT", "BE", "DK", "EE"]);
         await admin.Given_I_have_deleted_my_broadcast();
-        admin.Given_I_want_to_retrieve_my_broadcast_by_its_ID();
+        admin.Given_I_want_to_delete_my_broadcast_by_its_ID();
 
         // When
         await admin.When_I_send_my_request();
@@ -71,14 +96,11 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
         admin.Then_the_problem_details_extensions_should_contain_my_broadcast_ID_with_key("broadcastId");
     }
 
-    private sealed class AdminActor : ActorWithResponse<GetBroadcastResponse>
+    private sealed class AdminActor : ActorWithoutResponse
     {
-        public AdminActor(IAdminApiV1Driver apiDriver, IWebAppFixtureBackDoor backDoor) : base(apiDriver)
+        public AdminActor(IAdminApiV1Driver apiDriver) : base(apiDriver)
         {
-            BackDoor = backDoor;
         }
-
-        private IWebAppFixtureBackDoor BackDoor { get; }
 
         private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(7);
 
@@ -124,37 +146,43 @@ public sealed class GetBroadcastTest(WebAppFixture fixture) : AcceptanceTestBase
                 cancellationToken: TestContext.Current.CancellationToken);
         }
 
-        public void Given_I_want_to_retrieve_my_broadcast_by_its_ID()
-        {
-            Assert.NotNull(MyBroadcast);
-
-            Guid broadcastId = MyBroadcast.Id;
-
-            SendMyRequest = apiDriver => apiDriver.Broadcasts.GetBroadcast(broadcastId, TestContext.Current.CancellationToken);
-        }
-
-        public void Then_the_retrieved_broadcast_should_be_my_broadcast()
-        {
-            Assert.NotNull(MyBroadcast);
-            Assert.NotNull(ResponseObject);
-
-            Assert.Equal(MyBroadcast, ResponseObject.Broadcast, new BroadcastEqualityComparer());
-        }
-
         public async Task Given_I_have_deleted_my_broadcast()
         {
             Assert.NotNull(MyBroadcast);
 
-            BroadcastId broadcastId = BroadcastId.FromValue(MyBroadcast.Id);
+            await ApiDriver.Broadcasts.DeleteABroadcastAsync(MyBroadcast.Id, TestContext.Current.CancellationToken);
+        }
 
-            Func<IServiceProvider, Task> delete = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                await dbContext.Broadcasts.Where(broadcast => broadcast.Id == broadcastId)
-                    .ExecuteDeleteAsync();
-            };
+        public async Task Given_I_have_awarded_a_set_of_televote_points_in_my_broadcast(
+            string[]? rankedCompetingCountryCodes = null,
+            string votingCountryCode = "")
+        {
+            Assert.NotNull(MyBroadcast);
 
-            await BackDoor.ExecuteScopedAsync(delete);
+            await ApiDriver.Broadcasts.AwardASetOfTelevotePointsAsync(broadcastId: MyBroadcast.Id,
+                votingCountryId: MyCountryCodesAndIds[votingCountryCode],
+                rankedCompetingCountryIds: rankedCompetingCountryCodes?.Select(code => MyCountryCodesAndIds[code]).ToArray(),
+                cancellationToken: TestContext.Current.CancellationToken);
+
+            MyBroadcast = await ApiDriver.Broadcasts.GetABroadcastAsync(MyBroadcast.Id);
+        }
+
+        public void Given_I_want_to_delete_my_broadcast_by_its_ID()
+        {
+            Assert.NotNull(MyBroadcast);
+
+            Guid myBroadcastId = MyBroadcast.Id;
+
+            SendMyRequest = apiDriver =>
+                apiDriver.Broadcasts.DeleteBroadcast(myBroadcastId, TestContext.Current.CancellationToken);
+        }
+
+        public async Task Then_no_broadcasts_should_exist()
+        {
+            Broadcast[] existingBroadcasts =
+                await ApiDriver.Broadcasts.GetAllBroadcastsAsync(TestContext.Current.CancellationToken);
+
+            Assert.Empty(existingBroadcasts);
         }
 
         public void Then_the_problem_details_extensions_should_contain_my_broadcast_ID_with_key(string key)

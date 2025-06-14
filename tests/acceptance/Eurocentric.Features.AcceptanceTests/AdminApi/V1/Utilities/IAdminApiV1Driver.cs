@@ -27,6 +27,8 @@ public interface IAdminApiV1Driver
             DisqualifyCompetitorRequest requestBody,
             CancellationToken cancellationToken = default);
 
+        public Task<ProblemOrResponse> DeleteBroadcast(Guid broadcastId, CancellationToken cancellationToken = default);
+
         public Task<ProblemOrResponse<GetBroadcastResponse>> GetBroadcast(Guid broadcastId,
             CancellationToken cancellationToken = default);
 

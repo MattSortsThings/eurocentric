@@ -32,6 +32,10 @@ internal static partial class AdminApiV1DriverExtensions
         _ = await driver.AwardTelevotePoints(broadcastId, requestBody, cancellationToken);
     }
 
+    internal static async Task DeleteABroadcastAsync(this IAdminApiV1Driver.IBroadcasts driver,
+        Guid broadcastId,
+        CancellationToken cancellationToken = default) => _ = await driver.DeleteBroadcast(broadcastId, cancellationToken);
+
     internal static async Task<Broadcast> GetABroadcastAsync(this IAdminApiV1Driver.IBroadcasts driver,
         Guid broadcastId,
         CancellationToken cancellationToken = default)

@@ -31,7 +31,8 @@ internal static class Middleware
             .MapGetBroadcasts()
             .MapAwardJuryPoints()
             .MapAwardTelevotePoints()
-            .MapDisqualifyCompetitor();
+            .MapDisqualifyCompetitor()
+            .MapDeleteBroadcast();
 
         apiGroup.MapGetContest()
             .MapGetContests()
