@@ -167,6 +167,125 @@ public sealed class LiverpoolFormatContestTests : UnitTestBase
         }
     }
 
+    public sealed class RemoveMemoMethod : UnitTestBase
+    {
+        private static LiverpoolFormatContest CreateArbitraryLiverpoolFormatContest()
+        {
+            ContestId fixedContestId =
+                ContestId.FromValue(Guid.Parse("e93dea75-06e5-4b66-b7c1-2ce794325db3"));
+
+            return Contest.CreateLiverpoolFormat()
+                    .WithArbitraryYearAndCity()
+                    .AddGroup0Participant(TestCountryIds.Xx)
+                    .WithGroup1Countries(TestCountryIds.At, TestCountryIds.Be, TestCountryIds.Cz)
+                    .WithGroup2Countries(TestCountryIds.Dk, TestCountryIds.Ee, TestCountryIds.Fi)
+                    .Build(new FixedContestIdGenerator(fixedContestId)).Value
+                as LiverpoolFormatContest ?? throw new InvalidCastException();
+        }
+
+        [Fact]
+        public void Should_update_ChildBroadcasts_and_set_ContestStatus_to_Initialized_if_no_memos_remain_after_update()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            BroadcastId broadcastId = BroadcastId.FromValue(Guid.Parse("5c4f1876-0484-4eee-b41f-e5bbb1604f0d"));
+
+            sut.AddMemo(broadcastId, ContestStage.SemiFinal1);
+
+            // Assert
+            Assert.Equal(ContestStatus.InProgress, sut.ContestStatus);
+
+            Assert.Single(sut.ChildBroadcasts);
+
+            // Act
+            sut.RemoveMemo(broadcastId);
+
+            // Assert
+            Assert.Empty(sut.ChildBroadcasts);
+            Assert.Equal(ContestStatus.Initialized, sut.ContestStatus);
+        }
+
+        [Fact]
+        public void Should_update_ChildBroadcasts_and_set_ContestStatus_to_InProgress_if_memos_remain_after_update()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            BroadcastId broadcastId1Of2 = BroadcastId.FromValue(Guid.Parse("01aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+            BroadcastId broadcastId2Of2 = BroadcastId.FromValue(Guid.Parse("02aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+
+            sut.AddMemo(broadcastId1Of2, ContestStage.SemiFinal1);
+            sut.AddMemo(broadcastId2Of2, ContestStage.SemiFinal2);
+
+            // Assert
+            Assert.Equal(ContestStatus.InProgress, sut.ContestStatus);
+
+            Assert.Collection(sut.ChildBroadcasts, ([UsedImplicitly] memo) =>
+            {
+                Assert.Equal(ContestStage.SemiFinal1, memo.ContestStage);
+                Assert.Equal(broadcastId1Of2, memo.BroadcastId);
+                Assert.Equal(BroadcastStatus.Initialized, memo.BroadcastStatus);
+            }, ([UsedImplicitly] memo) =>
+            {
+                Assert.Equal(ContestStage.SemiFinal2, memo.ContestStage);
+                Assert.Equal(broadcastId2Of2, memo.BroadcastId);
+                Assert.Equal(BroadcastStatus.Initialized, memo.BroadcastStatus);
+            });
+
+            // Act
+            sut.RemoveMemo(broadcastId1Of2);
+
+            // Assert
+            BroadcastMemo remainingMemo = Assert.Single(sut.ChildBroadcasts);
+
+            Assert.Equal(broadcastId2Of2, remainingMemo.BroadcastId);
+            Assert.Equal(ContestStage.SemiFinal2, remainingMemo.ContestStage);
+            Assert.Equal(BroadcastStatus.Initialized, remainingMemo.BroadcastStatus);
+
+            Assert.Equal(ContestStatus.InProgress, sut.ContestStatus);
+        }
+
+        [Fact]
+        public void Should_throw_given_BroadcastId_of_non_existent_BroadcastMemo()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            BroadcastId broadcastId1Of2 = BroadcastId.FromValue(Guid.Parse("01aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+            BroadcastId broadcastId2Of2 = BroadcastId.FromValue(Guid.Parse("02aabbcc-0484-4eee-b41f-e5bbb1604f0d"));
+
+            sut.AddMemo(broadcastId1Of2, ContestStage.GrandFinal);
+
+            // Act
+            Action act = () => sut.RemoveMemo(broadcastId2Of2);
+
+            // Assert
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+            Assert.Equal("No BroadcastMemo exists with the provided BroadcastId value.", exception.Message);
+
+            Assert.Single(sut.ChildBroadcasts);
+            Assert.Equal(ContestStatus.InProgress, sut.ContestStatus);
+        }
+
+        [Fact]
+        public void Should_throw_given_null_broadcastId_arg()
+        {
+            // Arrange
+            LiverpoolFormatContest sut = CreateArbitraryLiverpoolFormatContest();
+
+            // Act
+            Action act = () => sut.RemoveMemo(null!);
+
+            // Assert
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'broadcastId')", exception.Message);
+
+            Assert.Empty(sut.ChildBroadcasts);
+            Assert.Equal(ContestStatus.Initialized, sut.ContestStatus);
+        }
+    }
+
     public sealed class CreateSemiFinal1ChildBroadcastMethod : UnitTestBase
     {
         private static readonly BroadcastId FixedBroadcastId =

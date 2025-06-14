@@ -101,6 +101,28 @@ public abstract class Contest : AggregateRoot<ContestId>
     }
 
     /// <summary>
+    ///     Removes the <see cref="BroadcastMemo" /> with the provided <see cref="BroadcastMemo.BroadcastId" /> value from this
+    ///     instance's <see cref="ChildBroadcasts" /> collection.
+    /// </summary>
+    /// <param name="broadcastId">The ID of the broadcast aggregate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance's <see cref="ChildBroadcasts" /> collection contains no <see cref="BroadcastMemo" /> with the
+    ///     <paramref name="broadcastId" /> argument.
+    /// </exception>
+    public void RemoveMemo(BroadcastId broadcastId)
+    {
+        ArgumentNullException.ThrowIfNull(broadcastId);
+
+        if (_childBroadcasts.RemoveAll(memo => memo.BroadcastId == broadcastId) < 1)
+        {
+            throw new ArgumentException("No BroadcastMemo exists with the provided BroadcastId value.");
+        }
+
+        UpdateContestStatus();
+    }
+
+    /// <summary>
     ///     Begins the process of creating a new <see cref="Broadcast" /> instance representing the
     ///     <see cref="ContestStage.SemiFinal1" /> child broadcast of this contest.
     /// </summary>

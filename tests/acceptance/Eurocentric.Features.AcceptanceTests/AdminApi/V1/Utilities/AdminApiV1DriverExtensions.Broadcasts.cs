@@ -6,6 +6,33 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 
 internal static partial class AdminApiV1DriverExtensions
 {
+    internal static async Task AwardAllPointsInABroadcastAsync(this IAdminApiV1Driver.IBroadcasts driver,
+        Broadcast broadcast,
+        CancellationToken cancellationToken = default)
+    {
+        Guid broadcastId = broadcast.Id;
+
+        Guid[] competingCountryIds = broadcast.Competitors.Select(competitor => competitor.CompetingCountryId).ToArray();
+
+        foreach (Guid votingCountryId in broadcast.Juries.Where(voter => !voter.PointsAwarded)
+                     .Select(voter => voter.VotingCountryId))
+        {
+            await driver.AwardASetOfJuryPointsAsync(broadcastId: broadcastId,
+                votingCountryId: votingCountryId,
+                rankedCompetingCountryIds: competingCountryIds.Where(id => id != votingCountryId).ToArray(),
+                cancellationToken: cancellationToken);
+        }
+
+        foreach (Guid votingCountryId in broadcast.Televotes.Where(voter => !voter.PointsAwarded)
+                     .Select(voter => voter.VotingCountryId))
+        {
+            await driver.AwardASetOfTelevotePointsAsync(broadcastId: broadcastId,
+                votingCountryId: votingCountryId,
+                rankedCompetingCountryIds: competingCountryIds.Where(id => id != votingCountryId).ToArray(),
+                cancellationToken: cancellationToken);
+        }
+    }
+
     internal static async Task AwardASetOfJuryPointsAsync(this IAdminApiV1Driver.IBroadcasts driver,
         Guid[]? rankedCompetingCountryIds = null,
         Guid broadcastId = default,
