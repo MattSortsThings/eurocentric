@@ -28,7 +28,7 @@ public sealed class HandleContestCreatedTests(WebAppFixture fixture) : Acceptanc
         // Then
         admin.Then_my_request_should_succeed_with_status_code_201_Created();
         await admin.Then_the_following_countries_should_have_no_participating_contests("GB", "HR", "IT");
-        await admin.Then_the_following_countries_should_have_my_contest_as_their_only_participating_contest(
+        await admin.Then_the_following_countries_should_have_my_Initialized_contest_as_their_only_participating_contest(
             "AT", "BE", "CZ", "DK", "EE", "FI");
     }
 
@@ -53,7 +53,7 @@ public sealed class HandleContestCreatedTests(WebAppFixture fixture) : Acceptanc
         // Then
         admin.Then_my_request_should_succeed_with_status_code_201_Created();
         await admin.Then_the_following_countries_should_have_no_participating_contests("AT", "CZ", "EE", "LU");
-        await admin.Then_the_following_countries_should_have_my_contest_as_their_only_participating_contest(
+        await admin.Then_the_following_countries_should_have_my_Initialized_contest_as_their_only_participating_contest(
             "BE", "DK", "FI", "GB", "HR", "IT", "XX");
     }
 
@@ -132,7 +132,7 @@ public sealed class HandleContestCreatedTests(WebAppFixture fixture) : Acceptanc
             Assert.All(countriesToVerify, country => Assert.Empty(country.ParticipatingContests));
         }
 
-        public async Task Then_the_following_countries_should_have_my_contest_as_their_only_participating_contest(
+        public async Task Then_the_following_countries_should_have_my_Initialized_contest_as_their_only_participating_contest(
             params string[] countryCodes)
         {
             Assert.NotNull(ResponseObject);

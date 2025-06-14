@@ -52,7 +52,7 @@ public sealed class HandleContestDeletedTests(WebAppFixture fixture) : Acceptanc
 
         // Then
         admin.Then_my_request_should_fail_with_status_code_409_Conflict();
-        await admin.Then_the_following_countries_should_have_my_contest_as_their_only_participating_contest(
+        await admin.Then_the_following_countries_should_have_my_InProgress_contest_as_their_only_participating_contest(
             "AT", "BE", "CZ", "DK", "EE", "FI");
         await admin.Then_the_following_countries_should_have_no_participating_contests("GB", "HR", "IT");
     }
@@ -124,10 +124,10 @@ public sealed class HandleContestDeletedTests(WebAppFixture fixture) : Acceptanc
             Assert.All(countriesToVerify, country => Assert.Empty(country.ParticipatingContests));
         }
 
-        public async Task Then_the_following_countries_should_have_my_contest_as_their_only_participating_contest(
+        public async Task Then_the_following_countries_should_have_my_InProgress_contest_as_their_only_participating_contest(
             params string[] countryCodes)
         {
-            ContestMemo expectedMemo = new(MyContestId, ContestStatus.Initialized);
+            ContestMemo expectedMemo = new(MyContestId, ContestStatus.InProgress);
 
             Country[] allExistingCountries =
                 await ApiDriver.Countries.GetAllCountriesAsync(TestContext.Current.CancellationToken);

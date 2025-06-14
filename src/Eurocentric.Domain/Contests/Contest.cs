@@ -3,6 +3,7 @@ using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -175,11 +176,21 @@ public abstract class Contest : AggregateRoot<ContestId>
 
     private protected abstract Func<Participant, bool> GetCompetitorEligibility(ContestStage contestStage);
 
-    private void UpdateContestStatus() => ContestStatus = _childBroadcasts.Count == 0
-        ? ContestStatus.Initialized
-        : _childBroadcasts.Count(memo => memo.BroadcastStatus == BroadcastStatus.Completed) == 3
-            ? ContestStatus.Completed
-            : ContestStatus.InProgress;
+    private void UpdateContestStatus()
+    {
+        ContestStatus priorStatus = ContestStatus;
+
+        ContestStatus = _childBroadcasts.Count == 0
+            ? ContestStatus.Initialized
+            : _childBroadcasts.Count(memo => memo.BroadcastStatus == BroadcastStatus.Completed) == 3
+                ? ContestStatus.Completed
+                : ContestStatus.InProgress;
+
+        if (priorStatus != ContestStatus)
+        {
+            AddDomainEvent(new ContestStatusUpdatedEvent(this));
+        }
+    }
 
     private sealed class ChildBroadcastBuilder : BroadcastBuilder
     {
