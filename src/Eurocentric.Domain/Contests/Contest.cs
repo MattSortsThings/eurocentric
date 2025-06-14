@@ -103,6 +103,36 @@ public abstract class Contest : AggregateRoot<ContestId>
 
     /// <summary>
     ///     Removes the <see cref="BroadcastMemo" /> with the provided <see cref="BroadcastMemo.BroadcastId" /> value from this
+    ///     instance's <see cref="ChildBroadcasts" /> collection and replaces it with a new memo with the provided
+    ///     <see cref="BroadcastMemo.BroadcastId" /> and <see cref="BroadcastMemo.BroadcastStatus" /> values and the existing
+    ///     memo's <see cref="BroadcastMemo.ContestStage" /> value.
+    /// </summary>
+    /// <param name="broadcastId">The ID of the broadcast aggregate.</param>
+    /// <param name="broadcastStatus">The current status of the broadcast aggregate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance's <see cref="ChildBroadcasts" /> collection contains no
+    ///     <see cref="BroadcastMemo" /> with the <paramref name="broadcastId" /> argument.
+    /// </exception>
+    public void ReplaceMemo(BroadcastId broadcastId, BroadcastStatus broadcastStatus)
+    {
+        ArgumentNullException.ThrowIfNull(broadcastId);
+
+        if (_childBroadcasts.FirstOrDefault(memo => memo.BroadcastId == broadcastId) is { } memoToRemove)
+        {
+            _childBroadcasts.Remove(memoToRemove);
+            _childBroadcasts.Add(new BroadcastMemo(broadcastId, memoToRemove.ContestStage, broadcastStatus));
+        }
+        else
+        {
+            throw new ArgumentException("No BroadcastMemo exists with the provided BroadcastId value.");
+        }
+
+        UpdateContestStatus();
+    }
+
+    /// <summary>
+    ///     Removes the <see cref="BroadcastMemo" /> with the provided <see cref="BroadcastMemo.BroadcastId" /> value from this
     ///     instance's <see cref="ChildBroadcasts" /> collection.
     /// </summary>
     /// <param name="broadcastId">The ID of the broadcast aggregate.</param>
@@ -115,7 +145,11 @@ public abstract class Contest : AggregateRoot<ContestId>
     {
         ArgumentNullException.ThrowIfNull(broadcastId);
 
-        if (_childBroadcasts.RemoveAll(memo => memo.BroadcastId == broadcastId) < 1)
+        if (_childBroadcasts.FirstOrDefault(memo => memo.BroadcastId == broadcastId) is { } memoToRemove)
+        {
+            _childBroadcasts.Remove(memoToRemove);
+        }
+        else
         {
             throw new ArgumentException("No BroadcastMemo exists with the provided BroadcastId value.");
         }

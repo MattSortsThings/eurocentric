@@ -2,6 +2,7 @@ using ErrorOr;
 using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -196,6 +197,7 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
 
     private void UpdateBroadcastStatus()
     {
+        BroadcastStatus priorStatus = BroadcastStatus;
         int juriesWithPointsAwarded = _juries.Count(jury => jury.PointsAwarded);
         int televotesWithPointsAwarded = _televotes.Count(televote => televote.PointsAwarded);
 
@@ -204,6 +206,11 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             : juriesWithPointsAwarded == 0 && televotesWithPointsAwarded == 0
                 ? BroadcastStatus.Initialized
                 : BroadcastStatus.InProgress;
+
+        if (priorStatus != BroadcastStatus)
+        {
+            AddDomainEvent(new BroadcastStatusUpdatedEvent(this));
+        }
     }
 
     private ErrorOr<Jury> TryGetJury(CountryId votingCountryId)
