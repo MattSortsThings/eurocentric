@@ -41,11 +41,6 @@ internal static class DeleteBroadcast
 
     private static ErrorOr<Command> InitializeCommand(Guid broadcastId) => ErrorOrFactory.From(new Command(broadcastId));
 
-    internal sealed class DummyBroadcastDeletedEventConsumer : IConsumer<BroadcastDeletedEvent>
-    {
-        public Task OnHandle(BroadcastDeletedEvent message, CancellationToken cancellationToken) => Task.CompletedTask;
-    }
-
     internal sealed record Command(Guid BroadcastId) : ICommand<Deleted>;
 
     internal sealed class Handler(AppDbContext dbContext) : ICommandHandler<Command, Deleted>

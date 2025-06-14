@@ -1,15 +1,15 @@
 using Eurocentric.Domain.Countries;
 using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
+using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.EFCore;
 using Microsoft.EntityFrameworkCore;
-using SlimMessageBus;
 
 namespace Eurocentric.Features.AdminApi.V1.Countries;
 
 internal static class HandleContestDeleted
 {
-    internal sealed class ContestDeletedEventConsumer(AppDbContext dbContext) : IConsumer<ContestDeletedEvent>
+    internal sealed class Handler(AppDbContext dbContext) : IDomainEventHandler<ContestDeletedEvent>
     {
         public async Task OnHandle(ContestDeletedEvent message, CancellationToken cancellationToken)
         {

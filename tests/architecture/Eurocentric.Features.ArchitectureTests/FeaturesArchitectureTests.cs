@@ -100,6 +100,27 @@ public sealed class FeaturesArchitectureTests
         .Check(Architecture);
 
     [Fact]
+    public void Classes_that_implement_IConsumer_should_implement_IDomainEventHandler() => Classes()
+        .That().ImplementInterface(typeof(IConsumer<>))
+        .Should().ImplementInterface(typeof(IDomainEventHandler<>))
+        .Check(Architecture);
+
+    [Fact]
+    public void Classes_that_implement_IConsumer_should_not_be_records() => Classes()
+        .That().ImplementInterface(typeof(IConsumer<>))
+        .Should().NotBeRecord()
+        .Check(Architecture);
+
+    [Fact]
+    public void Classes_that_implement_IDomainEventHandler_should_be_internal_sealed_nested_and_named_Handler() => Classes()
+        .That().ImplementInterface(typeof(IDomainEventHandler<>))
+        .Should().BeInternal()
+        .AndShould().BeSealed()
+        .AndShould().BeNested()
+        .AndShould().HaveName("Handler")
+        .Check(Architecture);
+
+    [Fact]
     public void Admin_API_V0_types_should_depend_on_no_other_API_major_version_types() => Types()
         .That().Are(AdminApiV0Types)
         .Should().NotDependOnAny(AdminApiV1Types)
