@@ -2,17 +2,13 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using CsvHelper.TypeConversion;
-using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts.Utilities;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Features.AdminApi.V1.Contests;
-using Eurocentric.Infrastructure.EFCore;
 using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests;
 
@@ -22,7 +18,7 @@ public sealed partial class CreateChildBroadcastTests(WebAppFixture fixture) : A
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_child_broadcast_for_non_existent_contest(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -50,12 +46,9 @@ public sealed partial class CreateChildBroadcastTests(WebAppFixture fixture) : A
 
     private sealed class AdminActor : ActorWithResponse<CreateChildBroadcastResponse>
     {
-        public AdminActor(IAdminApiV1Driver apiDriver, IWebAppFixtureBackDoor backDoor) : base(apiDriver)
+        public AdminActor(IAdminApiV1Driver apiDriver) : base(apiDriver)
         {
-            BackDoor = backDoor;
         }
-
-        private IWebAppFixtureBackDoor BackDoor { get; }
 
         private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(8);
 
@@ -162,16 +155,7 @@ public sealed partial class CreateChildBroadcastTests(WebAppFixture fixture) : A
         {
             Assert.NotNull(MyContest);
 
-            ContestId myContestId = ContestId.FromValue(MyContest.Id);
-
-            Func<IServiceProvider, Task> delete = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                await dbContext.Contests.Where(contest => contest.Id == myContestId)
-                    .ExecuteDeleteAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(delete);
+            await ApiDriver.Contests.DeleteAContestAsync(MyContest.Id, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_create_a_child_broadcast_for_my_contest(string broadcastDate = "",

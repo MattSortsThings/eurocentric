@@ -1,12 +1,8 @@
-using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Features.AdminApi.V1.Contests;
-using Eurocentric.Infrastructure.EFCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Contest = Eurocentric.Features.AdminApi.V1.Common.Dtos.Contest;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests;
@@ -17,7 +13,7 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
     [InlineData("v1.0")]
     public async Task Should_be_able_to_retrieve_contest_by_ID(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -41,7 +37,7 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_retrieve_non_existent_contest_by_ID(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -67,12 +63,9 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
 
     private sealed class AdminActor : ActorWithResponse<GetContestResponse>
     {
-        public AdminActor(IAdminApiV1Driver apiDriver, IWebAppFixtureBackDoor backDoor) : base(apiDriver)
+        public AdminActor(IAdminApiV1Driver apiDriver) : base(apiDriver)
         {
-            BackDoor = backDoor;
         }
-
-        private IWebAppFixtureBackDoor BackDoor { get; }
 
         private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(6);
 
@@ -105,16 +98,7 @@ public sealed class GetContestTests(WebAppFixture fixture) : AcceptanceTestBase(
         {
             Assert.NotNull(MyContest);
 
-            ContestId targetId = ContestId.FromValue(MyContest.Id);
-
-            Func<IServiceProvider, Task> delete = async sp =>
-            {
-                await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-                await dbContext.Contests.Where(contest => contest.Id == targetId)
-                    .ExecuteDeleteAsync();
-            };
-
-            await BackDoor.ExecuteScopedAsync(delete);
+            await ApiDriver.Contests.DeleteAContestAsync(MyContest.Id, TestContext.Current.CancellationToken);
         }
 
         public void Given_I_want_to_retrieve_my_contest_by_its_ID()

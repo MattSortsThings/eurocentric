@@ -8,7 +8,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Stockholm_format_SemiFinal1_broadcast_scenario_1(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -56,7 +56,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Stockholm_format_SemiFinal1_broadcast_scenario_2(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -107,7 +107,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Stockholm_format_SemiFinal2_broadcast_scenario_1(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -155,7 +155,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Stockholm_format_SemiFinal2_broadcast_scenario_2(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -206,7 +206,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Stockholm_format_GrandFinal_broadcast_scenario_1(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -260,7 +260,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_able_to_create_Stockholm_format_GrandFinal_broadcast_scenario_2(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -321,7 +321,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal1_broadcast_with_illegal_broadcast_date_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -352,7 +352,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal2_broadcast_with_illegal_broadcast_date_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -383,7 +383,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_GrandFinal_broadcast_with_illegal_broadcast_date_value(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -414,7 +414,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal1_broadcast_with_broadcast_date_not_in_contest_year(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -445,7 +445,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal2_broadcast_with_broadcast_date_not_in_contest_year(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -476,7 +476,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_GrandFinal_broadcast_with_broadcast_date_not_in_contest_year(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -507,7 +507,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal1_broadcast_with_fewer_than_2_competitors(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -537,7 +537,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal2_broadcast_with_fewer_than_2_competitors(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -567,7 +567,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_GrandFinal_broadcast_with_fewer_than_2_competitors(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -597,7 +597,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal1_broadcast_with_competitors_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -627,7 +627,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal2_broadcast_with_competitors_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -657,7 +657,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_GrandFinal_broadcast_with_competitors_from_same_country(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -686,7 +686,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal1_broadcast_with_orphan_competitor(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB");
@@ -716,7 +716,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal2_broadcast_with_orphan_competitor(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB");
@@ -746,7 +746,7 @@ public sealed partial class CreateChildBroadcastTests
     [InlineData("v1.0")]
     public async Task Should_be_unable_to_create_Stockholm_format_GrandFinal_broadcast_with_orphan_competitor(string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB");
@@ -777,7 +777,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal1_broadcast_when_SemiFinal1_already_exists(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -809,7 +809,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal2_broadcast_when_SemiFinal2_already_exists(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -841,7 +841,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_GrandFinal_broadcast_when_GrandFinal_already_exists(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -873,7 +873,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal1_broadcast_with_competitor_from_participant_group_2(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
@@ -906,7 +906,7 @@ public sealed partial class CreateChildBroadcastTests
     public async Task Should_be_unable_to_create_Stockholm_format_SemiFinal2_broadcast_with_competitor_from_participant_group_1(
         string apiVersion)
     {
-        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion), SutBackDoor);
+        AdminActor admin = new(AdminApiV1Driver.Create(SutRestClient, apiVersion));
 
         // Given
         await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
