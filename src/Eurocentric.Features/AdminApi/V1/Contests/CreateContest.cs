@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using ErrorOr;
 using Eurocentric.Domain.Contests;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
@@ -169,6 +170,7 @@ internal static class CreateContest
                 .Build(idGenerator)
                 .FailOnContestYearConflict(dbContext.Contests.AsNoTracking().AsSplitQuery())
                 .FailOnOrphanParticipant(dbContext.Countries.AsNoTracking().AsSplitQuery())
+                .ThenDo(contest => contest.AddDomainEvent(new ContestCreatedEvent(contest)))
                 .ThenDo(contest => dbContext.Contests.Add(contest))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(contest => new CreateContestResponse(contest.ToContestDto()));

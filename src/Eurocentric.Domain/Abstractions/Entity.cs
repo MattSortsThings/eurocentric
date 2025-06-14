@@ -26,5 +26,5 @@ public abstract class Entity
     ///     Adds the provided domain event to the entity's <see cref="DomainEvents" /> list.
     /// </summary>
     /// <param name="domainEvent">The domain event to be added.</param>
-    private protected void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+    public void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 }

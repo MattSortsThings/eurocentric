@@ -3,7 +3,6 @@ using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Broadcasts;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
-using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -100,11 +99,6 @@ public abstract class Contest : AggregateRoot<ContestId>
         _childBroadcasts.Add(new BroadcastMemo(broadcastId, contestStage, BroadcastStatus.Initialized));
         UpdateContestStatus();
     }
-
-    /// <summary>
-    ///     Adds a new <see cref="ContestDeletedEvent" /> to the contest's <see cref="Entity.DomainEvents" /> collection.
-    /// </summary>
-    public void RaiseContestDeletedEvent() => AddDomainEvent(new ContestDeletedEvent(this));
 
     /// <summary>
     ///     Begins the process of creating a new <see cref="Broadcast" /> instance representing the

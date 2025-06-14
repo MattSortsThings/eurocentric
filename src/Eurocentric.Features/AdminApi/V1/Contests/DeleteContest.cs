@@ -1,5 +1,6 @@
 using ErrorOr;
 using Eurocentric.Domain.Contests;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.Shared.ErrorHandling;
@@ -46,7 +47,7 @@ internal static class DeleteContest
     {
         public async Task<ErrorOr<Deleted>> OnHandle(Command command, CancellationToken cancellationToken) =>
             await GetTrackedContestToDeleteAsync(ContestId.FromValue(command.ContestId))
-                .ThenDo(contest => contest.RaiseContestDeletedEvent())
+                .ThenDo(contest => contest.AddDomainEvent(new ContestDeletedEvent(contest)))
                 .ThenDo(contest => dbContext.Contests.Remove(contest))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(_ => Result.Deleted);
