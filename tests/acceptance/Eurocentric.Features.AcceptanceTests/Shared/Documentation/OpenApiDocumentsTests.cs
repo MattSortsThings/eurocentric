@@ -39,8 +39,10 @@ public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTes
 
     [Theory]
     [InlineData("admin-api-v0")]
+    [InlineData("admin-api-v0.1")]
+    [InlineData("admin-api-v0.2")]
     [InlineData("admin-api-v1")]
-    [InlineData("admin-api-v0.3")]
+    [InlineData("admin-api-v1.1")]
     [InlineData("public-api-v0")]
     [InlineData("public-api-v0.3")]
     [InlineData("public-api-v1.0")]

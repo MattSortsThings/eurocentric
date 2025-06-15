@@ -1,7 +1,6 @@
 using ArchUnitNET.Domain;
 using ArchUnitNET.Loader;
 using ArchUnitNET.xUnitV3;
-using Eurocentric.Features.AdminApi.V0.Common.Dtos;
 using Eurocentric.Features.Shared.Messaging;
 using SlimMessageBus;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
@@ -12,7 +11,7 @@ namespace Eurocentric.Features.ArchitectureTests;
 public sealed class FeaturesArchitectureTests
 {
     private static readonly Architecture Architecture = new ArchLoader()
-        .LoadAssembly(typeof(Contest).Assembly)
+        .LoadAssembly(typeof(IDomainEventHandler<>).Assembly)
         .Build();
 
     private static readonly IObjectProvider<IType> AdminApiV1Types = Types()

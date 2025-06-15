@@ -14,7 +14,7 @@ public sealed class ProblemDetailsResponsesTests(WebAppFixture fixture) : Accept
     public async Task Should_receive_unsuccessful_response_with_problem_details_when_request_is_unsuccessful()
     {
         // Arrange
-        RestRequest request = Get("/admin/api/v0.2/contests/b32cae3d-2aff-4adc-808e-5e6293c3dd8e")
+        RestRequest request = Get("/admin/api/v1.0/contests/b32cae3d-2aff-4adc-808e-5e6293c3dd8e")
             .UseSecretApiKey();
 
         // Act
@@ -33,7 +33,7 @@ public sealed class ProblemDetailsResponsesTests(WebAppFixture fixture) : Accept
         Assert.Equal("Contest not found", problemDetails.Title);
         Assert.Equal("No contest exists with the provided contest ID.", problemDetails.Detail);
         Assert.Equal("https://tools.ietf.org/html/rfc9110#section-15.5.5", problemDetails.Type);
-        Assert.Equal("GET /admin/api/v0.2/contests/b32cae3d-2aff-4adc-808e-5e6293c3dd8e", problemDetails.Instance);
+        Assert.Equal("GET /admin/api/v1.0/contests/b32cae3d-2aff-4adc-808e-5e6293c3dd8e", problemDetails.Instance);
         Assert.Contains(problemDetails.Extensions, kvp => kvp is { Key: "contestId", Value: JsonElement e }
                                                           && e.GetString() == "b32cae3d-2aff-4adc-808e-5e6293c3dd8e");
     }
