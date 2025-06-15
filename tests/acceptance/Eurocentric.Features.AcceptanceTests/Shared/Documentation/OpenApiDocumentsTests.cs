@@ -9,8 +9,6 @@ namespace Eurocentric.Features.AcceptanceTests.Shared.Documentation;
 public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTestBase(fixture)
 {
     [Theory]
-    [InlineData("admin-api-v0.1", "/admin/api/v0.1/")]
-    [InlineData("admin-api-v0.2", "/admin/api/v0.2/")]
     [InlineData("admin-api-v1.0", "/admin/api/v1.0/")]
     [InlineData("public-api-v0.1", "/public/api/v0.1/")]
     [InlineData("public-api-v0.2", "/public/api/v0.2/")]
@@ -19,13 +17,11 @@ public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTes
         string pathPrefix)
     {
         // Arrange
-        RestRequest openApiRequest = new("openapi/{docName}.json");
-
-        openApiRequest.AddUrlSegment("docName", docName);
+        RestRequest request = Get("openapi/{docName}.json").AddUrlSegment("docName", docName);
 
         // Act
         ProblemOrResponse problemOrResponse =
-            await SutRestClient.SendRequestAsync(openApiRequest, TestContext.Current.CancellationToken);
+            await SutRestClient.SendRequestAsync(request, TestContext.Current.CancellationToken);
 
         (HttpStatusCode statusCode, string? json) =
             (problemOrResponse.AsResponse.StatusCode, problemOrResponse.AsResponse.Content);
@@ -43,6 +39,7 @@ public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTes
 
     [Theory]
     [InlineData("admin-api-v0")]
+    [InlineData("admin-api-v1")]
     [InlineData("admin-api-v0.3")]
     [InlineData("public-api-v0")]
     [InlineData("public-api-v0.3")]
@@ -50,13 +47,12 @@ public sealed class OpenApiDocumentsTests(WebAppFixture fixture) : AcceptanceTes
     public async Task Should_be_unable_to_retrieve_non_existent_OpenAPI_JSON_document_using_no_API_key(string docName)
     {
         // Arrange
-        RestRequest openApiRequest = new("openapi/{docName}.json");
-
-        openApiRequest.AddUrlSegment("docName", docName);
+        RestRequest request = Get("openapi/{docName}.json")
+            .AddUrlSegment("docName", docName);
 
         // Act
         ProblemOrResponse problemOrResponse =
-            await SutRestClient.SendRequestAsync(openApiRequest, TestContext.Current.CancellationToken);
+            await SutRestClient.SendRequestAsync(request, TestContext.Current.CancellationToken);
 
         HttpStatusCode statusCode = problemOrResponse.AsProblem.StatusCode;
 

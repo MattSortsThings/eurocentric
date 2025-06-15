@@ -15,10 +15,6 @@ public sealed class FeaturesArchitectureTests
         .LoadAssembly(typeof(Contest).Assembly)
         .Build();
 
-    private static readonly IObjectProvider<IType> AdminApiV0Types = Types()
-        .That()
-        .ResideInNamespace(@"Eurocentric\.Features\.AdminApi\.V0.*", true);
-
     private static readonly IObjectProvider<IType> AdminApiV1Types = Types()
         .That()
         .ResideInNamespace(@"Eurocentric\.Features\.AdminApi\.V1.*", true);
@@ -121,24 +117,15 @@ public sealed class FeaturesArchitectureTests
         .Check(Architecture);
 
     [Fact]
-    public void Admin_API_V0_types_should_depend_on_no_other_API_major_version_types() => Types()
-        .That().Are(AdminApiV0Types)
-        .Should().NotDependOnAny(AdminApiV1Types)
-        .AndShould().NotDependOnAny(PublicApiV0Types)
-        .Check(Architecture);
-
-    [Fact]
     public void Admin_API_V1_types_should_depend_on_no_other_API_major_version_types() => Types()
         .That().Are(AdminApiV1Types)
-        .Should().NotDependOnAny(AdminApiV0Types)
-        .AndShould().NotDependOnAny(PublicApiV0Types)
+        .Should().NotDependOnAny(PublicApiV0Types)
         .Check(Architecture);
 
     [Fact]
     public void Public_API_V0_types_should_depend_on_no_other_API_major_version_types() => Types()
         .That().Are(PublicApiV0Types)
-        .Should().NotDependOnAny(AdminApiV0Types)
-        .AndShould().NotDependOnAny(AdminApiV1Types)
+        .Should().NotDependOnAny(AdminApiV1Types)
         .Check(Architecture);
 
     [Fact]

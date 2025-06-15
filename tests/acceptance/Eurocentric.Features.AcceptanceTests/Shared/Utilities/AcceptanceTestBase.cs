@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utilities;
+using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.Utilities;
 
@@ -18,4 +19,20 @@ public abstract class AcceptanceTestBase(WebAppFixture fixture) : IDisposable
         fixture.Reset();
         GC.SuppressFinalize(this);
     }
+
+    /// <summary>
+    ///     Initializes a new <see cref="RestRequest" /> object representing an HTTP POST request to the provided route, using
+    ///     the web app fixture.
+    /// </summary>
+    /// <param name="route">The route for the request.</param>
+    /// <returns>A new <see cref="RestRequest" /> instance.</returns>
+    private protected static RestRequest Post(string route) => new(route, Method.Post);
+
+    /// <summary>
+    ///     Initializes a new <see cref="RestRequest" /> object representing an HTTP GET request to the provided route, using
+    ///     the web app fixture.
+    /// </summary>
+    /// <param name="route">The route for the request.</param>
+    /// <returns>A new <see cref="RestRequest" /> instance.</returns>
+    private protected static RestRequest Get(string route) => new(route);
 }

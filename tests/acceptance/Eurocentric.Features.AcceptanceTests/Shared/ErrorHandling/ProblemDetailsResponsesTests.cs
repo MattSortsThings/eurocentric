@@ -3,6 +3,7 @@ using System.Text.Json;
 using Eurocentric.Features.AcceptanceTests.Shared.Utilities;
 using Eurocentric.Features.AcceptanceTests.Utilities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.ErrorHandling;
@@ -13,17 +14,15 @@ public sealed class ProblemDetailsResponsesTests(WebAppFixture fixture) : Accept
     public async Task Should_receive_unsuccessful_response_with_problem_details_when_request_is_unsuccessful()
     {
         // Arrange
-        const string getContestRoute = "/admin/api/v0.2/contests/b32cae3d-2aff-4adc-808e-5e6293c3dd8e";
-
-        RestRequest getContestRequest = new(getContestRoute);
-
-        getContestRequest.UseSecretApiKey();
+        RestRequest request = Get("/admin/api/v0.2/contests/b32cae3d-2aff-4adc-808e-5e6293c3dd8e")
+            .UseSecretApiKey();
 
         // Act
         ProblemOrResponse problemOrResponse =
-            await SutRestClient.SendRequestAsync(getContestRequest, TestContext.Current.CancellationToken);
+            await SutRestClient.SendRequestAsync(request, TestContext.Current.CancellationToken);
 
-        var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+        (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+            (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, statusCode);

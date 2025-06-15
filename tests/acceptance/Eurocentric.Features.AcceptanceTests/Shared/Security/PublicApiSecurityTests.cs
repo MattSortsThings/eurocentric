@@ -13,13 +13,12 @@ public sealed class PublicApiSecurityTests(WebAppFixture fixture) : AcceptanceTe
     public async Task Should_be_authenticated_and_authorized_given_API_key_request_header_containing_secret_API_key()
     {
         // Arrange
-        RestRequest publicApiRequest = new(GetAvailableVotingMethodsRoute);
-
-        publicApiRequest.AddHeader("X-Api-Key", TestApiKeys.Secret);
+        RestRequest request = Get("/public/api/v0.2/filters/voting-methods")
+            .AddHeader("X-Api-Key", TestApiKeys.Secret);
 
         // Act
         ProblemOrResponse problemOrResponse =
-            await SutRestClient.SendRequestAsync(publicApiRequest, TestContext.Current.CancellationToken);
+            await SutRestClient.SendRequestAsync(request, TestContext.Current.CancellationToken);
 
         HttpStatusCode statusCode = problemOrResponse.AsResponse.StatusCode;
 
@@ -31,13 +30,12 @@ public sealed class PublicApiSecurityTests(WebAppFixture fixture) : AcceptanceTe
     public async Task Should_be_authenticated_and_authorized_given_API_key_request_header_containing_demo_API_key()
     {
         // Arrange
-        RestRequest publicApiRequest = new(GetAvailableVotingMethodsRoute);
-
-        publicApiRequest.AddHeader("X-Api-Key", TestApiKeys.Demo);
+        RestRequest request = Get("/public/api/v0.2/filters/voting-methods")
+            .AddHeader("X-Api-Key", TestApiKeys.Demo);
 
         // Act
         ProblemOrResponse problemOrResponse =
-            await SutRestClient.SendRequestAsync(publicApiRequest, TestContext.Current.CancellationToken);
+            await SutRestClient.SendRequestAsync(request, TestContext.Current.CancellationToken);
 
         HttpStatusCode statusCode = problemOrResponse.AsResponse.StatusCode;
 
@@ -49,13 +47,12 @@ public sealed class PublicApiSecurityTests(WebAppFixture fixture) : AcceptanceTe
     public async Task Should_not_be_authenticated_given_API_key_request_header_containing_unrecognized_API_key()
     {
         // Arrange
-        RestRequest publicApiRequest = new(GetAvailableVotingMethodsRoute);
-
-        publicApiRequest.AddHeader("X-Api-Key", "THIS_IS_NOT_A_KEY");
+        RestRequest request = Get("/public/api/v0.2/filters/voting-methods")
+            .AddHeader("X-Api-Key", "THIS_IS_NOT_A_KEY");
 
         // Act
         ProblemOrResponse problemOrResponse =
-            await SutRestClient.SendRequestAsync(publicApiRequest, TestContext.Current.CancellationToken);
+            await SutRestClient.SendRequestAsync(request, TestContext.Current.CancellationToken);
 
         HttpStatusCode statusCode = problemOrResponse.AsProblem.StatusCode;
 
@@ -67,11 +64,11 @@ public sealed class PublicApiSecurityTests(WebAppFixture fixture) : AcceptanceTe
     public async Task Should_not_be_authenticated_given_no_API_key_request_header()
     {
         // Arrange
-        RestRequest publicApiRequest = new(GetAvailableVotingMethodsRoute);
+        RestRequest request = Get("/public/api/v0.2/filters/voting-methods");
 
         // Act
         ProblemOrResponse problemOrResponse =
-            await SutRestClient.SendRequestAsync(publicApiRequest, TestContext.Current.CancellationToken);
+            await SutRestClient.SendRequestAsync(request, TestContext.Current.CancellationToken);
 
         HttpStatusCode statusCode = problemOrResponse.AsProblem.StatusCode;
 
