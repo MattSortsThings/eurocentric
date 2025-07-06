@@ -1,3 +1,4 @@
+using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,10 @@ public static class DependencyInjection
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <param name="configuration">Contains configuration properties for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration) =>
-        services;
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddEfCoreDataAccess(configuration);
+
+        return services;
+    }
 }

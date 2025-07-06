@@ -29,8 +29,7 @@ internal static class Startup
     {
         app.UseHttpsRedirection();
 
-        app.MapGet("/placeholder", () => TypedResults.Ok("You don't have to tell me twice! But during the Stone Age..."))
-            .AllowAnonymous();
+        app.UseVersionedApiEndpoints();
 
         return app;
     }
