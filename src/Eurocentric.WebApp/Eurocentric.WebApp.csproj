@@ -5,4 +5,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets"/>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.Features\Eurocentric.Features.csproj"/>
+  </ItemGroup>
 </Project>
