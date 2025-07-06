@@ -4,6 +4,7 @@ using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250706103147_AddPlaceholderQueryableJuryAwardTable")]
+    partial class AddPlaceholderQueryableJuryAwardTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,75 +143,6 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
                     b.ToTable("placeholder_queryable_jury_award", null, t =>
                         {
                             t.HasCheckConstraint("ck_placeholder_queryable_jury_award_contest_stage_enum", "[contest_stage] IN (0,1,2)");
-                        });
-                });
-
-            modelBuilder.Entity("Eurocentric.Domain.PlaceholderEntities.QueryableTelevoteAward", b =>
-                {
-                    b.Property<string>("CompetingCountryCode")
-                        .HasMaxLength(2)
-                        .HasColumnType("nchar(2)")
-                        .HasColumnName("competing_country_code")
-                        .IsFixedLength();
-
-                    b.Property<string>("VotingCountryCode")
-                        .HasMaxLength(2)
-                        .HasColumnType("nchar(2)")
-                        .HasColumnName("voting_country_code")
-                        .IsFixedLength();
-
-                    b.Property<int>("ContestYear")
-                        .HasColumnType("int")
-                        .HasColumnName("contest_year");
-
-                    b.Property<int>("ContestStage")
-                        .HasColumnType("int")
-                        .HasColumnName("contest_stage");
-
-                    b.Property<string>("BroadcastTag")
-                        .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)")
-                        .HasColumnName("broadcast_tag");
-
-                    b.Property<int>("MaxPointsValue")
-                        .HasColumnType("int")
-                        .HasColumnName("max_points_value");
-
-                    b.Property<double>("NormalizedPointsValue")
-                        .HasColumnType("float")
-                        .HasColumnName("normalized_points_value");
-
-                    b.Property<int>("PointsValue")
-                        .HasColumnType("int")
-                        .HasColumnName("points_value");
-
-                    b.Property<double>("RealPointsValue")
-                        .HasColumnType("float")
-                        .HasColumnName("real_points_value");
-
-                    b.Property<int>("RunningOrderPosition")
-                        .HasColumnType("int")
-                        .HasColumnName("running_order_position");
-
-                    b.HasKey("CompetingCountryCode", "VotingCountryCode", "ContestYear", "ContestStage")
-                        .HasName("pk_placeholder_queryable_televote_award");
-
-                    b.HasIndex("CompetingCountryCode")
-                        .HasDatabaseName("ix_placeholder_queryable_televote_award_competing_country_code");
-
-                    b.HasIndex("ContestStage")
-                        .HasDatabaseName("ix_placeholder_queryable_televote_award_contest_stage");
-
-                    b.HasIndex("ContestYear")
-                        .HasDatabaseName("ix_placeholder_queryable_televote_award_contest_year");
-
-                    b.HasIndex("VotingCountryCode")
-                        .HasDatabaseName("ix_placeholder_queryable_televote_award_voting_country_code");
-
-                    b.ToTable("placeholder_queryable_televote_award", null, t =>
-                        {
-                            t.HasCheckConstraint("ck_placeholder_queryable_televote_award_contest_stage_enum", "[contest_stage] IN (0,1,2)");
                         });
                 });
 #pragma warning restore 612, 618

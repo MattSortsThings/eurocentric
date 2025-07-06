@@ -1,3 +1,4 @@
+using Eurocentric.Infrastructure.DataAccess.Dapper;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,8 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddEfCoreDataAccess(configuration);
+        services.AddDapperDataAccess(configuration)
+            .AddEfCoreDataAccess(configuration);
 
         return services;
     }

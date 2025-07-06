@@ -1,0 +1,51 @@
+using ErrorOr;
+using Eurocentric.Features.PublicApi.V0.Common.Constants;
+using Eurocentric.Features.PublicApi.V0.Common.Contracts;
+using Eurocentric.Features.Shared.Messaging;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Routing;
+using SlimMessageBus;
+
+namespace Eurocentric.Features.PublicApi.V0.Filters;
+
+public sealed record GetVotingMethodsResponse(VotingMethodFilter[] VotingMethods);
+
+internal static class GetVotingMethods
+{
+    internal static IEndpointRouteBuilder MapGetVotingMethods(this IEndpointRouteBuilder apiGroup)
+    {
+        apiGroup.MapGet("filters/voting-methods", ExecuteAsync)
+            .WithName(EndpointNames.Filters.GetVotingMethods)
+            .WithSummary("Get contest stages")
+            .WithDescription("Retrieves a list of all the VotingMethodFilter enum values.")
+            .WithTags(EndpointTags.Filters)
+            .HasApiVersion(0, 1)
+            .HasApiVersion(0, 2)
+            .Produces<GetVotingMethodsResponse>();
+
+        return apiGroup;
+    }
+
+    private static async Task<Results<ProblemHttpResult, Ok<GetVotingMethodsResponse>>> ExecuteAsync(
+        IRequestResponseBus bus,
+        CancellationToken cancellationToken = default)
+    {
+        ErrorOr<GetVotingMethodsResponse> errorsOrResponse = await bus.Send(new Query(), cancellationToken: cancellationToken);
+
+        return TypedResults.Ok(errorsOrResponse.Value);
+    }
+
+    internal sealed record Query : IQuery<GetVotingMethodsResponse>;
+
+    internal sealed class Handler : IQueryHandler<Query, GetVotingMethodsResponse>
+    {
+        public Task<ErrorOr<GetVotingMethodsResponse>> OnHandle(Query _, CancellationToken cancellationToken)
+        {
+            VotingMethodFilter[] values = Enum.GetValues<VotingMethodFilter>();
+
+            return Task.FromResult(ErrorOrFactory.From(new GetVotingMethodsResponse(values)));
+        }
+    }
+}
