@@ -7,7 +7,7 @@ using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
 using Eurocentric.Features.PublicApi.V0.Common.Extensions;
 using Eurocentric.Features.Shared.Messaging;
-using Eurocentric.Infrastructure.DataAccess.Common;
+using Eurocentric.Infrastructure.DataAccess.Constants;
 using Eurocentric.Infrastructure.DataAccess.Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -192,7 +192,7 @@ internal static class GetCompetingCountryPointsInRangeRankings
         public async Task<ErrorOr<GetCompetingCountryPointsInRangeRankingsResponse>> OnHandle(Query query,
             CancellationToken cancellationToken)
         {
-            const string storedProcedureName = DbConstants.StoredProcedures.GetCompetingCountryPointsInRangeRankings;
+            const string storedProcedureName = StoredProcedures.GetCompetingCountryPointsInRangeRankings;
             DynamicParameters dynamicParameters = query.ToDynamicParameters();
 
             using IDbConnection dbConnection = await dbConnectionFactory.CreateConnectionAsync(cancellationToken);

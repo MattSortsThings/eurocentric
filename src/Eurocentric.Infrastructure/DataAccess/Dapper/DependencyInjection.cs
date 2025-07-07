@@ -1,5 +1,5 @@
 using Dapper;
-using Eurocentric.Infrastructure.DataAccess.Common;
+using Eurocentric.Infrastructure.DataAccess.Constants;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

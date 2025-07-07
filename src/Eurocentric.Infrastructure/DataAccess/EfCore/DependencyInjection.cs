@@ -1,5 +1,5 @@
 using EntityFramework.Exceptions.SqlServer;
-using Eurocentric.Infrastructure.DataAccess.Common;
+using Eurocentric.Infrastructure.DataAccess.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
