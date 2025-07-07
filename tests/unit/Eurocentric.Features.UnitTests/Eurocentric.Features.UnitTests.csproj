@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Eurocentric.Features.Tests.Unit</RootNamespace>
+    <RootNamespace>Eurocentric.Features.UnitTests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
@@ -15,6 +15,6 @@
     <PackageReference Include="xunit.runner.visualstudio"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Eurocentric.Features\Eurocentric.Features.csproj"/>
+    <ProjectReference Include="..\..\..\src\Eurocentric.Features\Eurocentric.Features.csproj"/>
   </ItemGroup>
 </Project>

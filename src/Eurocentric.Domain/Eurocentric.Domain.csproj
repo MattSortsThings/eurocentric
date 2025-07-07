@@ -3,6 +3,9 @@
     <RootNamespace>Eurocentric.Domain</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="ErrorOr"/>
   </ItemGroup>
 </Project>

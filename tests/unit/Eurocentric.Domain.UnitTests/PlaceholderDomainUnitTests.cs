@@ -1,10 +1,10 @@
-using Eurocentric.Domain.Tests.Unit.Utils;
+using Eurocentric.Domain.UnitTests.Utils;
 
-namespace Eurocentric.Domain.Tests.Unit;
+namespace Eurocentric.Domain.UnitTests;
 
 public static class PlaceholderDomainUnitTests
 {
-    public sealed class Placeholder : UnitTests
+    public sealed class Placeholder : UnitTest
     {
         [Fact]
         public void Should_always_pass() => Assert.True(true);

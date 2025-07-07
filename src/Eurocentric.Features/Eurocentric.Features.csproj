@@ -6,6 +6,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App"/>
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
   </ItemGroup>
   <ItemGroup>
