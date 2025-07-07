@@ -41,6 +41,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Features.Archit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Infrastructure.ArchitectureTests", "tests\architecture\Eurocentric.Infrastructure.ArchitectureTests\Eurocentric.Infrastructure.ArchitectureTests.csproj", "{3A7D5D0A-5AB9-42E3-92C3-6EA98B668145}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "acceptance", "acceptance", "{25852D48-217B-4318-BECB-5007AD5B3D90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eurocentric.Features.AcceptanceTests", "tests\acceptance\Eurocentric.Features.AcceptanceTests\Eurocentric.Features.AcceptanceTests.csproj", "{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +163,18 @@ Global
 		{3A7D5D0A-5AB9-42E3-92C3-6EA98B668145}.Release|x64.Build.0 = Release|Any CPU
 		{3A7D5D0A-5AB9-42E3-92C3-6EA98B668145}.Release|x86.ActiveCfg = Release|Any CPU
 		{3A7D5D0A-5AB9-42E3-92C3-6EA98B668145}.Release|x86.Build.0 = Release|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Debug|x64.Build.0 = Debug|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Debug|x86.Build.0 = Debug|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Release|x64.ActiveCfg = Release|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Release|x64.Build.0 = Release|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Release|x86.ActiveCfg = Release|Any CPU
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,5 +191,7 @@ Global
 		{3C669EC9-2B16-4A50-8E55-705E068FC15E} = {875CD587-DE2F-08EE-74FB-D6BE4E474EF3}
 		{494BBAE0-DCB5-4191-9E33-C22BF8959A85} = {875CD587-DE2F-08EE-74FB-D6BE4E474EF3}
 		{3A7D5D0A-5AB9-42E3-92C3-6EA98B668145} = {875CD587-DE2F-08EE-74FB-D6BE4E474EF3}
+		{25852D48-217B-4318-BECB-5007AD5B3D90} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{D52B5C48-5D7F-41A3-96D2-70F39BBE9C9D} = {25852D48-217B-4318-BECB-5007AD5B3D90}
 	EndGlobalSection
 EndGlobal

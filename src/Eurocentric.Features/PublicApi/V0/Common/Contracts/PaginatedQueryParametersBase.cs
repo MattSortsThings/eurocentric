@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eurocentric.Features.PublicApi.V0.Common.Contracts;
 
-public abstract record PaginatedQueryParameters
+public abstract record PaginatedQueryParametersBase
 {
     [FromQuery(Name = "pageIndex")]
     [DefaultValue(QueryParameterDefaults.PageIndex)]

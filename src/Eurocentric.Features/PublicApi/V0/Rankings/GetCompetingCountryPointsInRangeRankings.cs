@@ -18,7 +18,7 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.PublicApi.V0.Rankings;
 
-public sealed record GetCompetingCountryPointsInRangeRankingsRequest : PaginatedQueryParameters
+public sealed record GetCompetingCountryPointsInRangeRankingsRequest : PaginatedQueryParametersBase
 {
     [FromQuery(Name = "minPoints")]
     [Description("Inclusive minimum points award value")]
@@ -52,13 +52,11 @@ public sealed record GetCompetingCountryPointsInRangeRankingsRequest : Paginated
     public string? VotingCountryCode { get; init; }
 }
 
-public sealed record GetCompetingCountryPointsInRangeRankingsResponse
+public sealed record GetCompetingCountryPointsInRangeRankingsResponse : PaginatedResponseBase
 {
     public required CompetingCountryPointsInRangeRanking[] Rankings { get; init; }
 
     public required CompetingCountryPointsInRangeFilters Filters { get; init; }
-
-    public required PaginationInfo Pagination { get; init; }
 }
 
 public sealed record CompetingCountryPointsInRangeRanking
