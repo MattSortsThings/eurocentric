@@ -1,3 +1,5 @@
+using Eurocentric.Features.AdminApi.V0;
+using Eurocentric.Features.PublicApi.V0;
 using Eurocentric.Features.Shared.HttpJson;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Features.Shared.Versioning;
@@ -20,6 +22,9 @@ public static class DependencyInjection
         services.AddHttpJsonConfiguration()
             .AddMessaging()
             .AddVersioning();
+
+        services.AddAdminApiV0OpenApiDocuments()
+            .AddPublicApiV0OpenApiDocuments();
 
         return services;
     }
