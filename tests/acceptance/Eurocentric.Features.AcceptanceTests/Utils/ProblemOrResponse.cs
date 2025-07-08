@@ -5,7 +5,7 @@ using RestSharp;
 namespace Eurocentric.Features.AcceptanceTests.Utils;
 
 /// <summary>
-///     Contains <i>EITHER</i> an unsuccessful rest response with a <see cref="ProblemDetails" /> response object <i>OR</i>
+///     Contains <i>EITHER</i> an unsuccessful REST response with a <see cref="ProblemDetails" /> response object <i>OR</i>
 ///     a successful REST response with no response object.
 /// </summary>
 public sealed class ProblemOrResponse : OneOfBase<RestResponse<ProblemDetails>, RestResponse>
@@ -28,10 +28,11 @@ public sealed class ProblemOrResponse : OneOfBase<RestResponse<ProblemDetails>, 
 }
 
 /// <summary>
-///     Contains <i>EITHER</i> an unsuccessful rest response with a <see cref="ProblemDetails" /> response object <i>OR</i>
+///     Contains <i>EITHER</i> an unsuccessful REST response with a <see cref="ProblemDetails" /> response object <i>OR</i>
 ///     a successful REST response with a response object of type <typeparamref name="TResponse" />.
 /// </summary>
 public sealed class ProblemOrResponse<TResponse> : OneOfBase<RestResponse<ProblemDetails>, RestResponse<TResponse>>
+    where TResponse : class
 {
     internal ProblemOrResponse(OneOf<RestResponse<ProblemDetails>, RestResponse<TResponse>> input) : base(input)
     {

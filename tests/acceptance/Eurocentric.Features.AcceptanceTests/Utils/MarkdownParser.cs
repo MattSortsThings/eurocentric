@@ -2,9 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace Eurocentric.Features.AcceptanceTests.Utils;
 
-internal static partial class MarkdownParsing
+public static partial class MarkdownParser
 {
-    internal static T[] ParseAll<T>(this string markdownTable, Func<Dictionary<string, string>, T> rowMapper)
+    public static T[] ParseTable<T>(string markdownTable, Func<Dictionary<string, string>, T> rowMapper)
     {
         string[] lines = NewLineRegex().Split(markdownTable)
             .Where(line => !string.IsNullOrWhiteSpace(line))

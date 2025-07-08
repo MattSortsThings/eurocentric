@@ -7,7 +7,7 @@ using Eurocentric.Features.PublicApi.V0.Rankings;
 
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Rankings;
 
-public static class GetCompetingCountryPointsAverageRankingsTests
+public static class GetCompetingCountryPointsInRangeRankings
 {
     public sealed class Endpoint(WebAppFixture fixture) : AcceptanceTest(fixture)
     {
@@ -21,7 +21,7 @@ public static class GetCompetingCountryPointsAverageRankingsTests
             await euroFan.Given_the_system_is_populated_with_the_sample_countries();
             await euroFan.Given_the_system_is_populated_with_the_2021_sample_contest();
             await euroFan.Given_the_system_is_populated_with_the_2022_sample_contest();
-            euroFan.Given_I_want_to_rank_competing_countries_by_points_average();
+            euroFan.Given_I_want_to_rank_competing_countries_by_points_in_range(minPoints: 10, maxPoints: 12);
 
             // When
             await euroFan.When_I_send_my_request();
@@ -30,14 +30,18 @@ public static class GetCompetingCountryPointsAverageRankingsTests
             euroFan.Then_my_request_should_succeed_with_status_code(200);
             euroFan.Then_the_response_rankings_should_be(
                 """
-                | Rank | CountryCode | CountryName | PointsAverage | PointsAwards | Broadcasts | Contests | VotingCountries |
+                | Rank | CountryCode | CountryName | PointsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
                 |:-----|:------------|:------------|:--------------|:-------------|:-----------|:---------|:----------------|
-                | 1    | BE          | Belgium     | 10.444444     | 18           | 2          | 2        | 5               |
-                | 2    | CZ          | Czechia     | 9.0           | 18           | 2          | 2        | 5               |
-                | 3    | AT          | Austria     | 8.666667      | 18           | 2          | 2        | 5               |
-                | 4    | DK          | Denmark     | 8.555556      | 18           | 2          | 2        | 5               |
+                | 1    | BE          | Belgium     | 0.833333      | 18           | 2          | 2        | 5               |
+                | 2    | AT          | Austria     | 0.555555      | 18           | 2          | 2        | 5               |
+                | 2    | CZ          | Czechia     | 0.555555      | 18           | 2          | 2        | 5               |
+                | 3    | DK          | Denmark     | 0.5           | 18           | 2          | 2        | 5               |
                 """);
-            euroFan.Then_the_response_filters_should_be(contestStage: "Any", votingMethod: "Any");
+            euroFan.Then_the_response_filters_should_be(
+                minPoints: 10,
+                maxPoints: 12,
+                contestStage: "Any",
+                votingMethod: "Any");
             euroFan.Then_the_response_pagination_should_be(
                 pageIndex: 0,
                 pageSize: 10,
@@ -56,7 +60,9 @@ public static class GetCompetingCountryPointsAverageRankingsTests
             await euroFan.Given_the_system_is_populated_with_the_sample_countries();
             await euroFan.Given_the_system_is_populated_with_the_2021_sample_contest();
             await euroFan.Given_the_system_is_populated_with_the_2022_sample_contest();
-            euroFan.Given_I_want_to_rank_competing_countries_by_points_average(
+            euroFan.Given_I_want_to_rank_competing_countries_by_points_in_range(
+                minPoints: 10,
+                maxPoints: 12,
                 contestStage: "SemiFinals",
                 votingMethod: "Jury");
 
@@ -67,14 +73,18 @@ public static class GetCompetingCountryPointsAverageRankingsTests
             euroFan.Then_my_request_should_succeed_with_status_code(200);
             euroFan.Then_the_response_rankings_should_be(
                 """
-                | Rank | CountryCode | CountryName | PointsAverage | PointsAwards | Broadcasts | Contests | VotingCountries |
+                | Rank | CountryCode | CountryName | PointsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
                 |:-----|:------------|:------------|:--------------|:-------------|:-----------|:---------|:----------------|
-                | 1    | BE          | Belgium     | 10.888889     | 9            | 2          | 2        | 5               |
-                | 2    | AT          | Austria     | 8.888889      | 9            | 2          | 2        | 5               |
-                | 3    | DK          | Denmark     | 8.666667      | 9            | 2          | 2        | 5               |
-                | 4    | CZ          | Czechia     | 8.222222      | 9            | 2          | 2        | 5               |
+                | 1    | BE          | Belgium     | 0.888888      | 9            | 2          | 2        | 5               |
+                | 2    | AT          | Austria     | 0.555555      | 9            | 2          | 2        | 5               |
+                | 2    | DK          | Denmark     | 0.555555      | 9            | 2          | 2        | 5               |
+                | 3    | CZ          | Czechia     | 0.444444      | 9            | 2          | 2        | 5               |
                 """);
-            euroFan.Then_the_response_filters_should_be(contestStage: "SemiFinals", votingMethod: "Jury");
+            euroFan.Then_the_response_filters_should_be(
+                minPoints: 10,
+                maxPoints: 12,
+                contestStage: "SemiFinals",
+                votingMethod: "Jury");
             euroFan.Then_the_response_pagination_should_be(
                 pageIndex: 0,
                 pageSize: 10,
@@ -84,23 +94,25 @@ public static class GetCompetingCountryPointsAverageRankingsTests
         }
     }
 
-    private sealed class EuroFan : EuroFanActor<GetCompetingCountryPointsAverageRankingsResponse>
+    private sealed class EuroFan : EuroFanActor<GetCompetingCountryPointsInRangeRankingsResponse>
     {
         public EuroFan(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, string apiVersion = "v1.0") :
             base(restClient, backDoor, apiVersion)
         {
         }
 
-        public void Given_I_want_to_rank_competing_countries_by_points_average(bool? descending = null,
+        public void Given_I_want_to_rank_competing_countries_by_points_in_range(bool? descending = null,
             int? pageIndex = null,
             int? pageSize = null,
             int? minYear = null,
             int? maxYear = null,
             string? contestStage = null,
             string? votingMethod = null,
-            string? votingCountryCode = null)
+            string? votingCountryCode = null,
+            int minPoints = 0,
+            int maxPoints = 0)
         {
-            GetCompetingCountryPointsAverageRankingsRequest query = new()
+            GetCompetingCountryPointsInRangeRankingsRequest query = new()
             {
                 Descending = descending,
                 PageIndex = pageIndex,
@@ -109,18 +121,20 @@ public static class GetCompetingCountryPointsAverageRankingsTests
                 MaxYear = maxYear,
                 ContestStage = contestStage is null ? null : Enum.Parse<ContestStageFilter>(contestStage),
                 VotingMethod = votingMethod is null ? null : Enum.Parse<VotingMethodFilter>(votingMethod),
-                VotingCountryCode = votingCountryCode
+                VotingCountryCode = votingCountryCode,
+                MinPoints = minPoints,
+                MaxPoints = maxPoints
             };
 
-            Request = RequestFactory.Rankings.GetCompetingCountryPointsAverageRankings(query);
+            Request = RequestFactory.Rankings.GetCompetingCountryPointsInRangeRankings(query);
         }
 
         public void Then_the_response_rankings_should_be(string markdownTable)
         {
             Assert.NotNull(ResponseObject);
 
-            CompetingCountryPointsAverageRanking[] expectedRankings = MarkdownParser.ParseTable(markdownTable, RowMapper);
-            CompetingCountryPointsAverageRanking[] actualRankings = ResponseObject.Rankings;
+            CompetingCountryPointsInRangeRanking[] expectedRankings = MarkdownParser.ParseTable(markdownTable, RowMapper);
+            CompetingCountryPointsInRangeRanking[] actualRankings = ResponseObject.Rankings;
 
             Assert.Equal(expectedRankings, actualRankings, EqualityComparer);
         }
@@ -129,39 +143,43 @@ public static class GetCompetingCountryPointsAverageRankingsTests
             int? maxYear = null,
             string contestStage = "",
             string votingMethod = "",
-            string? votingCountryCode = null)
+            string? votingCountryCode = null,
+            int minPoints = 0,
+            int maxPoints = 0)
         {
             Assert.NotNull(ResponseObject);
 
-            CompetingCountryPointsAverageFilters expectedFilters = new()
+            CompetingCountryPointsInRangeFilters expectedFilters = new()
             {
                 MinYear = minYear,
                 MaxYear = maxYear,
                 ContestStage = Enum.Parse<ContestStageFilter>(contestStage),
                 VotingMethod = Enum.Parse<VotingMethodFilter>(votingMethod),
-                VotingCountryCode = votingCountryCode
+                VotingCountryCode = votingCountryCode,
+                MinPoints = minPoints,
+                MaxPoints = maxPoints
             };
 
             Assert.Equal(expectedFilters, ResponseObject.Filters);
         }
 
-        private static CompetingCountryPointsAverageRanking RowMapper(Dictionary<string, string> row) => new()
+        private static CompetingCountryPointsInRangeRanking RowMapper(Dictionary<string, string> row) => new()
         {
             Rank = int.Parse(row["Rank"]),
             CountryCode = row["CountryCode"],
             CountryName = row["CountryName"],
-            PointsAverage = double.Parse(row["PointsAverage"]),
+            PointsInRange = double.Parse(row["PointsInRange"]),
             PointsAwards = int.Parse(row["PointsAwards"]),
             Broadcasts = int.Parse(row["Broadcasts"]),
             Contests = int.Parse(row["Contests"]),
             VotingCountries = int.Parse(row["VotingCountries"])
         };
 
-        private static bool EqualityComparer(CompetingCountryPointsAverageRanking a, CompetingCountryPointsAverageRanking b) =>
+        private static bool EqualityComparer(CompetingCountryPointsInRangeRanking a, CompetingCountryPointsInRangeRanking b) =>
             a.Rank == b.Rank
             && a.CountryCode.Equals(b.CountryCode, StringComparison.Ordinal)
             && a.CountryName.Equals(b.CountryName, StringComparison.Ordinal)
-            && a.PointsAverage.EqualsTo6DecimalPlaces(b.PointsAverage)
+            && a.PointsInRange.EqualsTo6DecimalPlaces(b.PointsInRange)
             && a.PointsAwards == b.PointsAwards
             && a.Broadcasts == b.Broadcasts
             && a.Contests == b.Contests

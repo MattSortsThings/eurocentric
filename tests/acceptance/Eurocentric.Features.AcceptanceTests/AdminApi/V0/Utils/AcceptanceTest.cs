@@ -4,18 +4,17 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utils;
 
 [Trait("Category", "container")]
 [Trait("Category", "acceptance")]
-[Collection(nameof(AdminApiV0TestCollection))]
+[Collection(TestCollection.Name)]
 public abstract class AcceptanceTest(WebAppFixture fixture) : IAsyncLifetime
 {
     private protected IWebAppFixtureBackDoor BackDoor { get; } = fixture;
 
     private protected IWebAppFixtureRestClient RestClient { get; } = fixture;
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
+        await Task.CompletedTask;
         GC.SuppressFinalize(this);
-
-        return ValueTask.CompletedTask;
     }
 
     public async ValueTask InitializeAsync() => await fixture.ResetAsync();

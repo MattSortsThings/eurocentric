@@ -1,71 +1,59 @@
-using Eurocentric.Features.AcceptanceTests.AdminApi.Contests.Utils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utils;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utils.Comparers;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V0.Common.Contracts;
 using Eurocentric.Features.AdminApi.V0.Contests;
 using RestSharp;
 
-namespace Eurocentric.Features.AcceptanceTests.AdminApi.Contests;
+namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Contests;
 
 public static class CreateContestTests
 {
-    public sealed class Feature(WebAppFixture fixture) : AcceptanceTest(fixture)
+    public sealed class Endpoint(WebAppFixture fixture) : AcceptanceTest(fixture)
     {
         [Theory]
         [InlineData("v0.1")]
         [InlineData("v0.2")]
-        public async Task Should_create_and_return_contest_scenario_1(string apiVersion)
+        public async Task Should_create_and_retrieve_contest_scenario_1(string apiVersion)
         {
-            Admin admin = new(BackDoor, RestClient, apiVersion);
+            Admin admin = new(RestClient, BackDoor, apiVersion);
 
             // Given
-            admin.Given_I_want_to_create_a_contest(
-                contestFormat: "Stockholm",
-                contestYear: 2018,
-                cityName: "Lisbon");
+            admin.Given_I_want_to_create_a_contest(contestFormat: "Stockholm", contestYear: 2022, cityName: "Turin");
 
             // When
             await admin.When_I_send_my_request();
 
             // Then
             admin.Then_my_request_should_succeed_with_status_code(201);
-            admin.Then_the_created_contest_should_match(
-                contestFormat: "Stockholm",
-                contestYear: 2018,
-                cityName: "Lisbon");
+            admin.Then_the_created_contest_should_match(contestFormat: "Stockholm", contestYear: 2022, cityName: "Turin");
             await admin.Then_the_created_contest_should_be_retrievable_by_its_ID();
         }
 
         [Theory]
         [InlineData("v0.1")]
         [InlineData("v0.2")]
-        public async Task Should_create_and_return_contest_scenario_2(string apiVersion)
+        public async Task Should_create_and_retrieve_contest_scenario_2(string apiVersion)
         {
-            Admin admin = new(BackDoor, RestClient, apiVersion);
+            Admin admin = new(RestClient, BackDoor, apiVersion);
 
             // Given
-            admin.Given_I_want_to_create_a_contest(
-                contestFormat: "Liverpool",
-                contestYear: 2024,
-                cityName: "Malmö");
+            admin.Given_I_want_to_create_a_contest(contestFormat: "Liverpool", contestYear: 2025, cityName: "Basel");
 
             // When
             await admin.When_I_send_my_request();
 
             // Then
             admin.Then_my_request_should_succeed_with_status_code(201);
-            admin.Then_the_created_contest_should_match(
-                contestFormat: "Liverpool",
-                contestYear: 2024,
-                cityName: "Malmö");
+            admin.Then_the_created_contest_should_match(contestFormat: "Liverpool", contestYear: 2025, cityName: "Basel");
             await admin.Then_the_created_contest_should_be_retrievable_by_its_ID();
         }
     }
 
-    private sealed class Admin : ActorWithResponse<CreateContestResponse>
+    private sealed class Admin : AdminActor<CreateContestResponse>
     {
-        public Admin(IWebAppFixtureBackDoor backDoor, IWebAppFixtureRestClient restClient, string apiVersion = "v1.0") :
-            base(backDoor, restClient, apiVersion)
+        public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, string apiVersion = "v1.0") :
+            base(restClient, backDoor, apiVersion)
         {
         }
 
@@ -76,10 +64,7 @@ public static class CreateContestTests
                 ContestYear = contestYear, CityName = cityName, ContestFormat = Enum.Parse<ContestFormat>(contestFormat)
             };
 
-            Request = new RestRequest("/admin/api/{apiVersion}/contests", Method.Post);
-
-            Request.AddUrlSegment("apiVersion", ApiVersion)
-                .AddJsonBody(requestBody);
+            Request = RequestFactory.Contests.CreateContest(requestBody);
         }
 
         public void Then_the_created_contest_should_match(string cityName = "", int contestYear = 0, string contestFormat = "")
@@ -98,10 +83,19 @@ public static class CreateContestTests
             Assert.NotNull(ResponseObject);
 
             Contest createdContest = ResponseObject.Contest;
-
-            Contest retrievedContest = await this.GetContestAsync(createdContest.Id, TestContext.Current.CancellationToken);
+            Contest retrievedContest = await GetContestAsync(createdContest.Id);
 
             Assert.Equal(createdContest, retrievedContest, ContestEquality.Compare);
+        }
+
+        private async Task<Contest> GetContestAsync(Guid contestId)
+        {
+            RestRequest restRequest = RequestFactory.Contests.GetContest(contestId);
+
+            ProblemOrResponse<GetContestResponse> problemOrResponse =
+                await RestClient.SendAsync<GetContestResponse>(restRequest, TestContext.Current.CancellationToken);
+
+            return problemOrResponse.AsResponse.Data!.Contest;
         }
     }
 }

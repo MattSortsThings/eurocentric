@@ -1,26 +1,27 @@
-using Eurocentric.Features.AcceptanceTests.AdminApi.Contests.Utils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utils;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utils.Comparers;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utils.Mixins.Contests;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V0.Common.Contracts;
 using Eurocentric.Features.AdminApi.V0.Contests;
-using RestSharp;
 
-namespace Eurocentric.Features.AcceptanceTests.AdminApi.Contests;
+namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Contests;
 
 public static class GetContestsTests
 {
-    public sealed class Feature(WebAppFixture fixture) : AcceptanceTest(fixture)
+    public sealed class Endpoint(WebAppFixture fixture) : AcceptanceTest(fixture)
     {
         [Theory]
         [InlineData("v0.2")]
         public async Task Should_retrieve_all_contests_in_contest_year_order(string apiVersion)
         {
-            Admin admin = new(BackDoor, RestClient, apiVersion);
+            Admin admin = new(RestClient, BackDoor, apiVersion);
 
             // Given
             await admin.Given_I_have_created_a_Stockholm_format_contest(contestYear: 2022, cityName: "Turin");
             await admin.Given_I_have_created_a_Stockholm_format_contest(contestYear: 2016, cityName: "Stockholm");
-            await admin.Given_I_have_created_a_Stockholm_format_contest(contestYear: 2017, cityName: "Kyiv");
+            await admin.Given_I_have_created_a_Stockholm_format_contest(contestYear: 2018, cityName: "Lisbon");
+            await admin.Given_I_have_created_a_Liverpool_format_contest(contestYear: 2024, cityName: "Malmö");
             admin.Given_I_want_to_retrieve_all_contests();
 
             // When
@@ -35,7 +36,7 @@ public static class GetContestsTests
         [InlineData("v0.2")]
         public async Task Should_retrieve_empty_list_when_no_contests_exist(string apiVersion)
         {
-            Admin admin = new(BackDoor, RestClient, apiVersion);
+            Admin admin = new(RestClient, BackDoor, apiVersion);
 
             // Given
             admin.Given_I_want_to_retrieve_all_contests();
@@ -49,18 +50,14 @@ public static class GetContestsTests
         }
     }
 
-    private sealed class Admin : ActorWithResponse<GetContestsResponse>
+    private sealed class Admin : AdminActor<GetContestsResponse>
     {
-        public Admin(IWebAppFixtureBackDoor backDoor, IWebAppFixtureRestClient restClient, string apiVersion = "v1.0") :
-            base(backDoor, restClient, apiVersion)
+        public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, string apiVersion = "v1.0") :
+            base(restClient, backDoor, apiVersion)
         {
         }
 
-        public void Given_I_want_to_retrieve_all_contests()
-        {
-            Request = new RestRequest("/admin/api/{apiVersion}/contests");
-            Request.AddUrlSegment("apiVersion", ApiVersion);
-        }
+        public void Given_I_want_to_retrieve_all_contests() => Request = RequestFactory.Contests.GetContests();
 
         public void Then_the_retrieved_contests_should_be_my_contests_in_contest_year_order()
         {
