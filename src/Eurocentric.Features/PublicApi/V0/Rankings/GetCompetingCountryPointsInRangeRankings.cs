@@ -6,6 +6,7 @@ using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
 using Eurocentric.Features.PublicApi.V0.Common.Extensions;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.Constants;
 using Eurocentric.Infrastructure.DataAccess.Dapper;
@@ -114,27 +115,28 @@ internal static class GetCompetingCountryPointsInRangeRankings
     private static async Task<Results<ProblemHttpResult, Ok<GetCompetingCountryPointsInRangeRankingsResponse>>> ExecuteAsync(
         [AsParameters] GetCompetingCountryPointsInRangeRankingsRequest queryParameters,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetCompetingCountryPointsInRangeRankingsResponse> errorsOrResponse =
-            await bus.Send(queryParameters.ToQuery(), cancellationToken: cancellationToken);
+        CancellationToken cancellationToken = default) => await InitializeQuery(queryParameters)
+        .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+        .ToProblemOrResponseAsync(TypedResults.Ok);
 
-        return TypedResults.Ok(errorsOrResponse.Value);
+    private static ErrorOr<Query> InitializeQuery(GetCompetingCountryPointsInRangeRankingsRequest request)
+    {
+        Query query = new()
+        {
+            MinPoints = request.MinPoints,
+            MaxPoints = request.MaxPoints,
+            MinYear = request.MinYear,
+            MaxYear = request.MaxYear,
+            ContestStage = request.ContestStage.GetValueOrDefault(QueryParameterDefaults.ContestStage),
+            VotingMethod = request.VotingMethod.GetValueOrDefault(QueryParameterDefaults.VotingMethod),
+            VotingCountryCode = request.VotingCountryCode?.ToUpperInvariant(),
+            PageIndex = request.PageIndex.GetValueOrDefault(QueryParameterDefaults.PageIndex),
+            PageSize = request.PageSize.GetValueOrDefault(QueryParameterDefaults.PageSize),
+            Descending = request.Descending.GetValueOrDefault(QueryParameterDefaults.Descending)
+        };
+
+        return ErrorOrFactory.From(query);
     }
-
-    private static Query ToQuery(this GetCompetingCountryPointsInRangeRankingsRequest request) => new()
-    {
-        MinPoints = request.MinPoints,
-        MaxPoints = request.MaxPoints,
-        MinYear = request.MinYear,
-        MaxYear = request.MaxYear,
-        ContestStage = request.ContestStage.GetValueOrDefault(QueryParameterDefaults.ContestStage),
-        VotingMethod = request.VotingMethod.GetValueOrDefault(QueryParameterDefaults.VotingMethod),
-        VotingCountryCode = request.VotingCountryCode?.ToUpperInvariant(),
-        PageIndex = request.PageIndex.GetValueOrDefault(QueryParameterDefaults.PageIndex),
-        PageSize = request.PageSize.GetValueOrDefault(QueryParameterDefaults.PageSize),
-        Descending = request.Descending.GetValueOrDefault(QueryParameterDefaults.Descending)
-    };
 
     private static DynamicParameters ToDynamicParameters(this Query query)
     {

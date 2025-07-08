@@ -3,6 +3,7 @@ using ErrorOr;
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Common.Contracts;
 using Eurocentric.Features.AdminApi.V0.Common.Extensions;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.AspNetCore.Builder;
@@ -47,16 +48,12 @@ internal static class CreateContest
     private static async Task<Results<ProblemHttpResult, CreatedAtRoute<CreateContestResponse>>> ExecuteAsync(
         [FromBody] CreateContestRequest requestBody,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<CreateContestResponse> errorsOrResponse =
-            await bus.Send(requestBody.ToCommand(), cancellationToken: cancellationToken);
+        CancellationToken cancellationToken = default) => await InitializeCommand(requestBody)
+        .ThenAsync(command => bus.Send(command, cancellationToken: cancellationToken))
+        .ToProblemOrResponseAsync(MapToCreatedAtRoute);
 
-        return MapToCreatedAtRoute(errorsOrResponse.Value);
-    }
-
-    private static Command ToCommand(this CreateContestRequest request) =>
-        new(request.ContestYear, request.CityName, request.ContestFormat);
+    private static ErrorOr<Command> InitializeCommand(CreateContestRequest requestBody) =>
+        ErrorOrFactory.From(new Command(requestBody.ContestYear, requestBody.CityName, requestBody.ContestFormat));
 
     private static CreatedAtRoute<CreateContestResponse> MapToCreatedAtRoute(CreateContestResponse response) =>
         TypedResults.CreatedAtRoute(response,

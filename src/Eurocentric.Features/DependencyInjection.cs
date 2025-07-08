@@ -1,5 +1,6 @@
 using Eurocentric.Features.AdminApi.V0;
 using Eurocentric.Features.PublicApi.V0;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.HttpJson;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Features.Shared.Versioning;
@@ -19,7 +20,8 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddFeaturesServices(this IServiceCollection services)
     {
-        services.AddHttpJsonConfiguration()
+        services.AddErrorHandling()
+            .AddHttpJsonConfiguration()
             .AddMessaging()
             .AddVersioning();
 

@@ -1,6 +1,7 @@
 using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -30,12 +31,11 @@ internal static class GetVotingMethods
 
     private static async Task<Results<ProblemHttpResult, Ok<GetVotingMethodsResponse>>> ExecuteAsync(
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetVotingMethodsResponse> errorsOrResponse = await bus.Send(new Query(), cancellationToken: cancellationToken);
+        CancellationToken cancellationToken = default) => await InitializeQuery()
+        .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+        .ToProblemOrResponseAsync(TypedResults.Ok);
 
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+    private static ErrorOr<Query> InitializeQuery() => ErrorOrFactory.From(new Query());
 
     internal sealed record Query : IQuery<GetVotingMethodsResponse>;
 

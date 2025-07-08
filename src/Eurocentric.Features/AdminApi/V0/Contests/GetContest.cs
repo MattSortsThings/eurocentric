@@ -2,6 +2,7 @@ using ErrorOr;
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Common.Contracts;
 using Eurocentric.Features.AdminApi.V0.Common.Extensions;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.AspNetCore.Builder;
@@ -36,13 +37,11 @@ internal static class GetContest
     private static async Task<Results<ProblemHttpResult, Ok<GetContestResponse>>> ExecuteAsync(
         [FromRoute(Name = "contestId")] Guid contestId,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetContestResponse> errorsOrResponse =
-            await bus.Send(new Query(contestId), cancellationToken: cancellationToken);
+        CancellationToken cancellationToken = default) => await InitializeQuery(contestId)
+        .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+        .ToProblemOrResponseAsync(TypedResults.Ok);
 
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+    private static ErrorOr<Query> InitializeQuery(Guid contestId) => ErrorOrFactory.From(new Query(contestId));
 
     internal sealed record Query(Guid ContestId) : IQuery<GetContestResponse>;
 

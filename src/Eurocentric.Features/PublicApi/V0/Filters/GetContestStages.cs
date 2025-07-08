@@ -1,5 +1,6 @@
 using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
+using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -31,12 +32,11 @@ internal static class GetContestStages
 
     private static async Task<Results<ProblemHttpResult, Ok<GetContestStagesResponse>>> ExecuteAsync(
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetContestStagesResponse> errorsOrResponse = await bus.Send(new Query(), cancellationToken: cancellationToken);
+        CancellationToken cancellationToken = default) => await InitializeQuery()
+        .ThenAsync(query => bus.Send(query, cancellationToken: cancellationToken))
+        .ToProblemOrResponseAsync(TypedResults.Ok);
 
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+    private static ErrorOr<Query> InitializeQuery() => ErrorOrFactory.From(new Query());
 
     internal sealed record Query : IQuery<GetContestStagesResponse>;
 
