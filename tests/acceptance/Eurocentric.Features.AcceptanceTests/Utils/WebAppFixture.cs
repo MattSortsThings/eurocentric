@@ -23,9 +23,7 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
     IWebAppFixtureBackDoor,
     IWebAppFixtureRestClient
 {
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
-        .WithCleanUp(true)
-        .Build();
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
 
 
     /// <inheritdoc />
@@ -117,11 +115,13 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting($"ConnectionStrings:{DbConstants.ConnectionStringKey}",
-            _dbContainer.GetConnectionString() + ";Connect Timeout=1;");
+            $"{_dbContainer.GetConnectionString()};Connect Timeout=2;");
+
         builder.ConfigureServices(services =>
         {
             InitializeDatabase(services);
             ConfigureRestClient(services);
+            ConfigureDbContainerToggler(services);
         });
     }
 
@@ -135,6 +135,13 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
             configureRestClient: options => options.Timeout = TimeSpan.FromSeconds(10),
             configureSerialization: config => config.UseSystemTextJson(jsonOptions.Value.SerializerOptions));
     });
+
+    private void ConfigureDbContainerToggler(IServiceCollection services)
+    {
+        DbContainerToggler toggler = new(_dbContainer);
+
+        services.AddSingleton(toggler);
+    }
 
     private static void InitializeDatabase(IServiceCollection services)
     {

@@ -14,7 +14,8 @@ internal static class DbConnectionExtension
         await using SqlMapper.GridReader multi = await dbConnection.QueryMultipleAsync(
             storedProcedureName,
             commandType: CommandType.StoredProcedure,
-            param: parameters);
+            param: parameters,
+            commandTimeout: 2);
 
         PaginationInfo pagination = await multi.ReadSingleAsync<PaginationInfo>();
         TItem[] items = (await multi.ReadAsync<TItem>()).ToArray();

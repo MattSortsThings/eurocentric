@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 
 namespace Eurocentric.Features.AdminApi.V0.Contests;
@@ -76,10 +77,31 @@ internal static class CreateContest
                 _ => throw new InvalidEnumArgumentException(nameof(contestFormat), (int)contestFormat, typeof(ContestFormat))
             };
 
+            if (IllegalContestYearValue(createdContest))
+            {
+                return Error.Failure("Illegal contest year value",
+                    "Contest year value must be an integer between 2016 and 2050.",
+                    new Dictionary<string, object> { { "contestYear", createdContest.ContestYear } });
+            }
+
+            if (ContestYearConflict(createdContest))
+            {
+                return Error.Conflict("Contest year conflict",
+                    "A contest already exists with the provided contest year.",
+                    new Dictionary<string, object> { { "contestYear", createdContest.ContestYear } });
+            }
+
             await dbContext.PlaceholderContests.AddAsync(createdContest, cancellationToken);
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return new CreateContestResponse(createdContest.ToContestDto());
         }
+
+        private bool ContestYearConflict(Domain.PlaceholderEntities.Contest createdContest) => dbContext.PlaceholderContests
+            .AsNoTracking()
+            .Any(contest => contest.ContestYear == createdContest.ContestYear);
+
+        private static bool IllegalContestYearValue(Domain.PlaceholderEntities.Contest createdContest) =>
+            createdContest.ContestYear is < 2016 or > 2050;
     }
 }

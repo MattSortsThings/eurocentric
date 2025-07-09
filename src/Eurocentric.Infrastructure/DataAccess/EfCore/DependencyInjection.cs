@@ -22,7 +22,12 @@ internal static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
         {
             options.UseAzureSql(configuration.GetConnectionString(DbConstants.ConnectionStringKey),
-                    azureSqlOptions => azureSqlOptions.MigrationsHistoryTable("ef_migrations_history"))
+                    azureSqlOptions =>
+                    {
+                        azureSqlOptions.MigrationsHistoryTable("ef_migrations_history");
+                        azureSqlOptions.EnableRetryOnFailure(0);
+                        azureSqlOptions.CommandTimeout(2);
+                    })
                 .UseSnakeCaseNamingConvention()
                 .UseExceptionProcessor();
         });
