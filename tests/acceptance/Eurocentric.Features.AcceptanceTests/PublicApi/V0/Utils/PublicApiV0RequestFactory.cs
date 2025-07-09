@@ -1,9 +1,11 @@
+using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.PublicApi.V0.Rankings;
 using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Utils;
 
-public sealed class PublicApiV0RequestFactory : IPublicApiV0RequestFactory, IPublicApiV0RequestFactory.IFiltersEndpoints,
+public sealed class PublicApiV0RequestFactory : IPublicApiV0RequestFactory,
+    IPublicApiV0RequestFactory.IFiltersEndpoints,
     IPublicApiV0RequestFactory.IRankingsEndpoints
 {
     private readonly string _apiVersion;
@@ -13,42 +15,20 @@ public sealed class PublicApiV0RequestFactory : IPublicApiV0RequestFactory, IPub
         _apiVersion = apiVersion;
     }
 
-    public RestRequest GetContestStages()
-    {
-        RestRequest request = new("/public/api/{apiVersion}/filters/contest-stages");
+    public RestRequest GetContestStages() => Get("/public/api/{apiVersion}/filters/contest-stages");
 
-        request.AddUrlSegment("apiVersion", _apiVersion);
+    public RestRequest GetCountries() => Get("/public/api/{apiVersion}/filters/countries");
 
-        return request;
-    }
-
-    public RestRequest GetCountries()
-    {
-        RestRequest request = new("/public/api/{apiVersion}/filters/countries");
-
-        request.AddUrlSegment("apiVersion", _apiVersion);
-
-        return request;
-    }
-
-    public RestRequest GetVotingMethods()
-    {
-        RestRequest request = new("/public/api/{apiVersion}/filters/voting-methods");
-
-        request.AddUrlSegment("apiVersion", _apiVersion);
-
-        return request;
-    }
+    public RestRequest GetVotingMethods() => Get("/public/api/{apiVersion}/filters/voting-methods");
 
     public IPublicApiV0RequestFactory.IFiltersEndpoints Filters => this;
 
     public IPublicApiV0RequestFactory.IRankingsEndpoints Rankings => this;
 
+
     public RestRequest GetCompetingCountryPointsAverageRankings(GetCompetingCountryPointsAverageRankingsRequest query)
     {
-        RestRequest request = new("/public/api/{apiVersion}/rankings/competing-countries/points-average");
-
-        request.AddUrlSegment("apiVersion", _apiVersion);
+        RestRequest request = Get("/public/api/{apiVersion}/rankings/competing-countries/points-average");
 
         if (query.ContestStage is { } contestStage)
         {
@@ -95,9 +75,7 @@ public sealed class PublicApiV0RequestFactory : IPublicApiV0RequestFactory, IPub
 
     public RestRequest GetCompetingCountryPointsInRangeRankings(GetCompetingCountryPointsInRangeRankingsRequest query)
     {
-        RestRequest request = new("/public/api/{apiVersion}/rankings/competing-countries/points-in-range");
-
-        request.AddUrlSegment("apiVersion", _apiVersion)
+        RestRequest request = Get("/public/api/{apiVersion}/rankings/competing-countries/points-in-range")
             .AddQueryParameter("minPoints", query.MinPoints)
             .AddQueryParameter("maxPoints", query.MaxPoints);
 
@@ -143,4 +121,8 @@ public sealed class PublicApiV0RequestFactory : IPublicApiV0RequestFactory, IPub
 
         return request;
     }
+
+    private RestRequest Get(string route) => new RestRequest(route)
+        .UseDemoApiKey()
+        .AddUrlSegment("apiVersion", _apiVersion);
 }

@@ -1,5 +1,6 @@
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Contests;
+using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -18,7 +19,7 @@ public static class Middleware
     {
         RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiNames.Id)
             .MapGroup("admin/api/v{apiVersion:apiVersion}")
-            .AllowAnonymous()
+            .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClient))
             .WithGroupName(ApiNames.EndpointGroup);
 
         apiGroup.MapCreateContest()

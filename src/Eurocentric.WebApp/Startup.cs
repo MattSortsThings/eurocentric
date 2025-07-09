@@ -33,6 +33,10 @@ internal static class Startup
 
         app.UseExceptionHandler();
 
+        app.UseAuthentication();
+
+        app.UseAuthorization();
+
         app.UseVersionedApiEndpoints();
 
         app.UseDocumentationEndpoints();

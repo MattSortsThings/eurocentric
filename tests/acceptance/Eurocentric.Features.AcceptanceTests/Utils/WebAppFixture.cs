@@ -25,7 +25,6 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
 
-
     /// <inheritdoc />
     public async ValueTask InitializeAsync() => await _dbContainer.StartAsync();
 
@@ -114,8 +113,8 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting($"ConnectionStrings:{DbConstants.ConnectionStringKey}",
-            $"{_dbContainer.GetConnectionString()};Connect Timeout=2;");
+        ConfigureDbContainerConnectionString(builder);
+        ConfigureTestApiKeys(builder);
 
         builder.ConfigureServices(services =>
         {
@@ -123,6 +122,13 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
             ConfigureRestClient(services);
             ConfigureDbContainerToggler(services);
         });
+    }
+
+    private void ConfigureDbContainerConnectionString(IWebHostBuilder builder)
+    {
+        string connectionString = _dbContainer.GetConnectionString().TrimEnd(';') + ";Connect Timeout=2;";
+
+        builder.UseSetting($"ConnectionStrings:{DbConstants.ConnectionStringKey}", connectionString);
     }
 
     private void ConfigureRestClient(IServiceCollection services) => services.AddSingleton<IRestClient>(serviceProvider =>
@@ -141,6 +147,12 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
         DbContainerToggler toggler = new(_dbContainer);
 
         services.AddSingleton(toggler);
+    }
+
+    private static void ConfigureTestApiKeys(IWebHostBuilder builder)
+    {
+        builder.UseSetting("ApiKeySecurity:DemoApiKey", TestApiKeys.DemoApiKey);
+        builder.UseSetting("ApiKeySecurity:SecretApiKey", TestApiKeys.SecretApiKey);
     }
 
     private static void InitializeDatabase(IServiceCollection services)

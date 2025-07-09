@@ -1,6 +1,7 @@
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Filters;
 using Eurocentric.Features.PublicApi.V0.Rankings;
+using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -19,7 +20,7 @@ public static class Middleware
     {
         RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiNames.Id)
             .MapGroup("public/api/v{apiVersion:apiVersion}")
-            .AllowAnonymous()
+            .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClient))
             .WithGroupName(ApiNames.EndpointGroup);
 
         apiGroup.MapGetContestStages()

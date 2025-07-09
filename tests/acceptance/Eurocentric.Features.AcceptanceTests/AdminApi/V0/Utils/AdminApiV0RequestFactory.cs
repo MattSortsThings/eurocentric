@@ -1,3 +1,4 @@
+using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V0.Contests;
 using RestSharp;
 
@@ -14,32 +15,19 @@ public class AdminApiV0RequestFactory : IAdminApiV0RequestFactory, IAdminApiV0Re
 
     public IAdminApiV0RequestFactory.IContestsEndpoints Contests => this;
 
-    public RestRequest CreateContest(CreateContestRequest requestBody)
-    {
-        RestRequest restRequest = new("/admin/api/{apiVersion}/contests", Method.Post);
+    public RestRequest CreateContest(CreateContestRequest requestBody) => Post("/admin/api/{apiVersion}/contests")
+        .AddJsonBody(requestBody);
 
-        restRequest.AddUrlSegment("apiVersion", _apiVersion)
-            .AddJsonBody(requestBody);
+    public RestRequest GetContest(Guid contestId) => Get("/admin/api/{apiVersion}/contests/{contestId}")
+        .AddUrlSegment("contestId", contestId);
 
-        return restRequest;
-    }
+    public RestRequest GetContests() => Get("/admin/api/{apiVersion}/contests");
 
-    public RestRequest GetContest(Guid contestId)
-    {
-        RestRequest restRequest = new("/admin/api/{apiVersion}/contests/{contestId}");
+    private RestRequest Get(string route) => new RestRequest(route)
+        .UseSecretApiKey()
+        .AddUrlSegment("apiVersion", _apiVersion);
 
-        restRequest.AddUrlSegment("apiVersion", _apiVersion)
-            .AddUrlSegment("contestId", contestId);
-
-        return restRequest;
-    }
-
-    public RestRequest GetContests()
-    {
-        RestRequest restRequest = new("/admin/api/{apiVersion}/contests");
-
-        restRequest.AddUrlSegment("apiVersion", _apiVersion);
-
-        return restRequest;
-    }
+    private RestRequest Post(string route) => new RestRequest(route, Method.Post)
+        .UseSecretApiKey()
+        .AddUrlSegment("apiVersion", _apiVersion);
 }

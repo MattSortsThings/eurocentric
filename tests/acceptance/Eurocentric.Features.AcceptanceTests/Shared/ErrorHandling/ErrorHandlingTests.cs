@@ -24,6 +24,7 @@ public static class ErrorHandlingTests
         {
             // Arrange
             RestRequest request = Post("/admin/api/v0.2/contests")
+                .UseSecretApiKey()
                 .AddJsonBody("""
                              {
                                 "cityName": "CityName",
@@ -37,7 +38,8 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -58,6 +60,7 @@ public static class ErrorHandlingTests
         {
             // Arrange
             RestRequest request = Post("/admin/api/v0.2/contests")
+                .UseSecretApiKey()
                 .AddJsonBody("""
                              {
                                 "contestYear": 2025,
@@ -72,7 +75,8 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -93,6 +97,7 @@ public static class ErrorHandlingTests
         {
             // Arrange
             RestRequest request = Post("/admin/api/v0.2/contests")
+                .UseSecretApiKey()
                 .AddJsonBody("""
                              {
                                 "contestYear": 2025,
@@ -108,7 +113,8 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -129,6 +135,7 @@ public static class ErrorHandlingTests
         {
             // Arrange
             RestRequest request = Get("/public/api/v0.2/rankings/competing-countries/points-in-range")
+                .UseSecretApiKey()
                 .AddQueryParameter("maxPoints", 12);
 
             const string expectedExceptionMessage = "Required parameter \"int MinPoints\" was not provided from query string.";
@@ -136,7 +143,8 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -158,6 +166,7 @@ public static class ErrorHandlingTests
         {
             // Arrange
             RestRequest request = Get("/public/api/v0.2/rankings/competing-countries/points-average")
+                .UseSecretApiKey()
                 .AddQueryParameter("votingMethod", "INVALID");
 
             const string expectedExceptionMessage =
@@ -166,7 +175,8 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -188,6 +198,7 @@ public static class ErrorHandlingTests
         {
             // Arrange
             RestRequest request = Get("/public/api/v0.2/rankings/competing-countries/points-average")
+                .UseSecretApiKey()
                 .AddQueryParameter("votingMethod", 999999);
 
             const string expectedExceptionMessage =
@@ -197,7 +208,8 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -221,12 +233,14 @@ public static class ErrorHandlingTests
             Guid contestId = Guid.Parse("a4cbdf80-cdfb-4906-b758-b22969eb6c7d");
 
             RestRequest request = Get($"/admin/api/v0.1/contests/{contestId}")
+                .UseSecretApiKey()
                 .AddUrlSegment("contestId", contestId);
 
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // When
             Assert.Equal(HttpStatusCode.NotFound, statusCode);
@@ -250,12 +264,14 @@ public static class ErrorHandlingTests
             await CreateContestWithYearAsync(duplicateYear);
 
             RestRequest request = Post("/admin/api/v0.2/contests")
+                .UseSecretApiKey()
                 .AddJsonBody(new { ContestYear = duplicateYear, CityName = "CityName", ContestFormat = "Liverpool" });
 
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // When
             Assert.Equal(HttpStatusCode.Conflict, statusCode);
@@ -278,12 +294,14 @@ public static class ErrorHandlingTests
             const int illegalYear = 0;
 
             RestRequest request = Post("/admin/api/v0.2/contests")
+                .UseSecretApiKey()
                 .AddJsonBody(new { ContestYear = illegalYear, CityName = "CityName", ContestFormat = "Liverpool" });
 
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) =
+                (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // When
             Assert.Equal(HttpStatusCode.UnprocessableEntity, statusCode);
@@ -307,7 +325,8 @@ public static class ErrorHandlingTests
             // Arrange
             await BackDoor.ExecuteScopedAsync(BackDoorOperations.EnsureDatabasePausedAsync);
 
-            RestRequest request = Get("/public/api/v0.2/rankings/competing-countries/points-average");
+            RestRequest request = Get("/public/api/v0.2/rankings/competing-countries/points-average")
+                .UseSecretApiKey();
 
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
@@ -339,7 +358,8 @@ public static class ErrorHandlingTests
             // Arrange
             await BackDoor.ExecuteScopedAsync(BackDoorOperations.EnsureDatabasePausedAsync);
 
-            RestRequest request = Get("/public/api/v0.2/filters/countries");
+            RestRequest request = Get("/public/api/v0.2/filters/countries")
+                .UseSecretApiKey();
 
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
@@ -365,7 +385,7 @@ public static class ErrorHandlingTests
 
         private async Task CreateContestWithYearAsync(int contestYear)
         {
-            RestRequest request = Post("/admin/api/v0.2/contests");
+            RestRequest request = Post("/admin/api/v0.2/contests").UseSecretApiKey();
 
             request.AddJsonBody(new { ContestYear = contestYear, CityName = "CityName", ContestFormat = "Liverpool" });
 
