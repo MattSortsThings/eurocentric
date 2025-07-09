@@ -77,7 +77,7 @@ public static class SecurityTests
         private const string Route = "/public/api/v0.2/filters/contest-stages";
 
         [Fact]
-        public async Task Should_authenticate_request_using_secret_API_key()
+        public async Task Should_authenticate_and_authorize_request_using_secret_API_key()
         {
             // Arrange
             RestRequest request = Get(Route).AddHeader("X-Api-Key", TestApiKeys.SecretApiKey);
@@ -92,7 +92,7 @@ public static class SecurityTests
         }
 
         [Fact]
-        public async Task Should_authenticate_request_using_demo_API_key()
+        public async Task Should_authenticate_and_authorize_request_using_demo_API_key()
         {
             // Arrange
             RestRequest request = Get(Route).AddHeader("X-Api-Key", TestApiKeys.DemoApiKey);

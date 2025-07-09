@@ -20,7 +20,7 @@ public static class Middleware
     {
         RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiNames.Id)
             .MapGroup("public/api/v{apiVersion:apiVersion}")
-            .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClient))
+            .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole))
             .WithGroupName(ApiNames.EndpointGroup);
 
         apiGroup.MapGetContestStages()
