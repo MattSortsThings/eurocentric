@@ -3,6 +3,7 @@ using Eurocentric.Features.PublicApi.V0.Filters;
 using Eurocentric.Features.PublicApi.V0.Rankings;
 using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Features.PublicApi.V0;
@@ -21,7 +22,8 @@ public static class Middleware
         RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiNames.Id)
             .MapGroup("public/api/v{apiVersion:apiVersion}")
             .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole))
-            .WithGroupName(ApiNames.EndpointGroup);
+            .WithGroupName(ApiNames.EndpointGroup)
+            .ProducesProblem(StatusCodes.Status401Unauthorized);
 
         apiGroup.MapGetContestStages()
             .MapGetCountries()

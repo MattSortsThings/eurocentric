@@ -25,6 +25,8 @@ internal static class DependencyInjection
             options.AddDocumentTransformer(new InfoDocumentTransformer("Eurocentric Public API",
                 "A web API for (over)analysing the Eurovision Song Contest, 2016-2025.",
                 "v0.1"));
+
+            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>();
         });
 
         services.AddOpenApi("public-api-v0.2", options =>
@@ -35,6 +37,8 @@ internal static class DependencyInjection
             options.AddDocumentTransformer(new InfoDocumentTransformer("Eurocentric Public API",
                 "A web API for (over)analysing the Eurovision Song Contest, 2016-2025.",
                 "v0.2"));
+
+            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>();
         });
 
         return services;

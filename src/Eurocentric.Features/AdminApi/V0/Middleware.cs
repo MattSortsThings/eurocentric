@@ -2,6 +2,7 @@ using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Contests;
 using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Features.AdminApi.V0;
@@ -20,7 +21,9 @@ public static class Middleware
         RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiNames.Id)
             .MapGroup("admin/api/v{apiVersion:apiVersion}")
             .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole))
-            .WithGroupName(ApiNames.EndpointGroup);
+            .WithGroupName(ApiNames.EndpointGroup)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status403Forbidden);
 
         apiGroup.MapCreateContest()
             .MapGetContest()
