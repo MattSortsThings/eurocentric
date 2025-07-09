@@ -12,7 +12,7 @@ public static class SecurityTests
         private const string Route = "/admin/api/v0.2/contests";
 
         [Fact]
-        public async Task Should_authenticate_request_using_secret_API_key()
+        public async Task Should_authenticate_and_authorize_request_using_secret_API_key()
         {
             // Arrange
             RestRequest request = Get(Route).AddHeader("X-Api-Key", TestApiKeys.SecretApiKey);
@@ -27,7 +27,7 @@ public static class SecurityTests
         }
 
         [Fact]
-        public async Task Should_authenticate_request_using_demo_API_key()
+        public async Task Should_authenticate_but_not_authorize_request_using_demo_API_key()
         {
             // Arrange
             RestRequest request = Get(Route).AddHeader("X-Api-Key", TestApiKeys.DemoApiKey);
@@ -35,10 +35,10 @@ public static class SecurityTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            HttpStatusCode statusCode = problemOrResponse.AsResponse.StatusCode;
+            HttpStatusCode statusCode = problemOrResponse.AsProblem.StatusCode;
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, statusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, statusCode);
         }
 
         [Fact]
