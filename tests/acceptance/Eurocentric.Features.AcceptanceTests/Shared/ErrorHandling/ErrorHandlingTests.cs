@@ -37,7 +37,7 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -72,7 +72,7 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -108,7 +108,7 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -136,7 +136,7 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -166,7 +166,7 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -197,7 +197,7 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, statusCode);
@@ -218,12 +218,15 @@ public static class ErrorHandlingTests
         public async Task Should_return_404_with_ProblemDetails_on_non_existent_resource_requested()
         {
             // Arrange
-            RestRequest request = Get("/admin/api/v0.1/contests/a4cbdf80-cdfb-4906-b758-b22969eb6c7d");
+            Guid contestId = Guid.Parse("a4cbdf80-cdfb-4906-b758-b22969eb6c7d");
+
+            RestRequest request = Get($"/admin/api/v0.1/contests/{contestId}")
+                .AddUrlSegment("contestId", contestId);
 
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // When
             Assert.Equal(HttpStatusCode.NotFound, statusCode);
@@ -236,7 +239,7 @@ public static class ErrorHandlingTests
             Assert.Equal("https://tools.ietf.org/html/rfc9110#section-15.5.5", problemDetails.Type);
             Assert.Equal("GET /admin/api/v0.1/contests/a4cbdf80-cdfb-4906-b758-b22969eb6c7d", problemDetails.Instance);
             Assert.Contains(problemDetails.Extensions, kvp => kvp is { Key: "contestId", Value: JsonElement je }
-                                                              && je.GetString() == "a4cbdf80-cdfb-4906-b758-b22969eb6c7d");
+                                                              && je.GetGuid() == contestId);
         }
 
         [Fact]
@@ -252,7 +255,7 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // When
             Assert.Equal(HttpStatusCode.Conflict, statusCode);
@@ -280,7 +283,7 @@ public static class ErrorHandlingTests
             // Act
             ProblemOrResponse problemOrResponse = await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-            var (statusCode, problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
+            (HttpStatusCode statusCode, ProblemDetails? problemDetails) = (problemOrResponse.AsProblem.StatusCode, problemOrResponse.AsProblem.Data);
 
             // When
             Assert.Equal(HttpStatusCode.UnprocessableEntity, statusCode);
