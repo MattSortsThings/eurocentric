@@ -1,3 +1,5 @@
+using Eurocentric.Features.AcceptanceTests.Utils;
+
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Utils;
 
 [CollectionDefinition(Name, DisableParallelization = false)]

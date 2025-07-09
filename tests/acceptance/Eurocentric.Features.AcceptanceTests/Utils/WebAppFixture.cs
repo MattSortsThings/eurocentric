@@ -18,40 +18,24 @@ namespace Eurocentric.Features.AcceptanceTests.Utils;
 ///     In-memory web app fixture.
 /// </summary>
 /// <remarks>Define a subclass of this type for every test collection.</remarks>
-public abstract class InMemoryWebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator>,
+public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator>,
     IAsyncLifetime,
     IWebAppFixtureBackDoor,
     IWebAppFixtureRestClient
 {
-    private MsSqlContainer? _dbContainer;
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
+        .WithCleanUp(true)
+        .Build();
 
-    /// <summary>
-    ///     The database container name for the test collection.
-    /// </summary>
-    /// <example>
-    ///     <c>"acceptance-tests-admin-api-v0"</c>
-    /// </example>
-    private protected abstract string DbContainerName { get; }
-
-    private string DbConnectionString => _dbContainer?.GetConnectionString()
-                                         ?? throw new InvalidOperationException("DbContainer is null");
 
     /// <inheritdoc />
-    public async ValueTask InitializeAsync()
-    {
-        MsSqlContainer? dbContainer = new MsSqlBuilder().WithName(DbContainerName).WithCleanUp(true).Build();
-        await dbContainer.StartAsync();
-        _dbContainer = dbContainer;
-    }
+    public async ValueTask InitializeAsync() => await _dbContainer.StartAsync();
 
     /// <inheritdoc />
     public override async ValueTask DisposeAsync()
     {
-        if (_dbContainer != null)
-        {
-            await _dbContainer.StopAsync();
-            await _dbContainer.DisposeAsync();
-        }
+        await _dbContainer.StopAsync();
+        await _dbContainer.DisposeAsync();
 
         GC.SuppressFinalize(this);
     }
@@ -132,7 +116,8 @@ public abstract class InMemoryWebAppFixture : WebApplicationFactory<IWebAppAssem
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting($"ConnectionStrings:{DbConstants.ConnectionStringKey}", DbConnectionString);
+        builder.UseSetting($"ConnectionStrings:{DbConstants.ConnectionStringKey}",
+            _dbContainer.GetConnectionString() + ";Connect Timeout=1;");
         builder.ConfigureServices(services =>
         {
             InitializeDatabase(services);
