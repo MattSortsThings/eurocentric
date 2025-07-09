@@ -6,30 +6,56 @@ using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.Documentation;
 
-public static class OpenApiDocumentsTests
+public static class DocumentationTests
 {
-    private static string[] ExtractAllPaths(string? json)
+    public sealed class DocumentationEndpoint(WebAppFixture fixture) : AcceptanceTest(fixture)
     {
-        Assert.NotNull(json);
+        [Theory]
+        [InlineData("admin-api-v0.1")]
+        [InlineData("admin-api-v0.2")]
+        [InlineData("public-api-v0.1")]
+        [InlineData("public-api-v0.2")]
+        public async Task Should_serve_requested_OpenAPI_document_to_anonymous_client(string docName)
+        {
+            // Arrange
+            RestRequest request = Get("docs/{docName}")
+                .AddUrlSegment("docName", docName)
+                .AddHeader("Accept", "text/html");
 
-        using JsonDocument doc = JsonDocument.Parse(json);
+            // Act
+            ProblemOrResponse problemOrResponse =
+                await RestClient.SendAsync(request, TestContext.Current.CancellationToken);
 
-        return doc.RootElement.GetProperty("paths")
-            .EnumerateObject()
-            .Select(property => property.Name)
-            .ToArray();
+            (HttpStatusCode statusCode, string? html) =
+                (problemOrResponse.AsResponse.StatusCode, problemOrResponse.AsResponse.Content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, statusCode);
+
+            Assert.NotNull(html);
+        }
     }
 
-    public sealed class Endpoint(WebAppFixture fixture) : AcceptanceTest(fixture)
+    public sealed class OpenApiEndpoint(WebAppFixture fixture) : AcceptanceTest(fixture)
     {
+        private static string[] ExtractAllPaths(string? json)
+        {
+            Assert.NotNull(json);
+
+            using JsonDocument doc = JsonDocument.Parse(json);
+
+            return doc.RootElement.GetProperty("paths")
+                .EnumerateObject()
+                .Select(property => property.Name)
+                .ToArray();
+        }
+
         [Theory]
         [InlineData("admin-api-v0.1", "/admin/api/v0.1/")]
         [InlineData("admin-api-v0.2", "/admin/api/v0.2/")]
         [InlineData("public-api-v0.1", "/public/api/v0.1/")]
         [InlineData("public-api-v0.2", "/public/api/v0.2/")]
-        public async Task Should_serve_requested_OpenAPI_document_to_anonymous_client(
-            string docName,
-            string pathPrefix)
+        public async Task Should_serve_requested_OpenAPI_document_to_anonymous_client(string docName, string pathPrefix)
         {
             // Arrange
             RestRequest request = Get("openapi/{docName}.json").AddUrlSegment("docName", docName);
