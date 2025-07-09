@@ -6,6 +6,7 @@ using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
 using Eurocentric.Features.PublicApi.V0.Common.Extensions;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.Constants;
@@ -52,7 +53,7 @@ public sealed record GetCompetingCountryPointsAverageRankingsResponse : Paginate
     public required CompetingCountryPointsAverageFilters Filters { get; init; }
 }
 
-public sealed record CompetingCountryPointsAverageRanking
+public sealed record CompetingCountryPointsAverageRanking : IExampleProvider<CompetingCountryPointsAverageRanking>
 {
     public required int Rank { get; init; }
 
@@ -69,9 +70,21 @@ public sealed record CompetingCountryPointsAverageRanking
     public required int Contests { get; init; }
 
     public required int VotingCountries { get; init; }
+
+    public static CompetingCountryPointsAverageRanking CreateExample() => new()
+    {
+        Rank = 1,
+        CountryCode = "AT",
+        CountryName = "Austria",
+        PointsAverage = 6.75,
+        PointsAwards = 100,
+        Broadcasts = 4,
+        Contests = 2,
+        VotingCountries = 40
+    };
 }
 
-public sealed record CompetingCountryPointsAverageFilters
+public sealed record CompetingCountryPointsAverageFilters : IExampleProvider<CompetingCountryPointsAverageFilters>
 {
     public int? MinYear { get; init; }
 
@@ -82,6 +95,15 @@ public sealed record CompetingCountryPointsAverageFilters
     public required VotingMethodFilter VotingMethod { get; init; }
 
     public string? VotingCountryCode { get; init; }
+
+    public static CompetingCountryPointsAverageFilters CreateExample() => new()
+    {
+        MinYear = null,
+        MaxYear = null,
+        ContestStage = QueryParameterDefaults.ContestStage,
+        VotingMethod = QueryParameterDefaults.VotingMethod,
+        VotingCountryCode = null
+    };
 }
 
 internal static class GetCompetingCountryPointsAverageRankings

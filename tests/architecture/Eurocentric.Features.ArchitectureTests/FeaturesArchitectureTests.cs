@@ -2,6 +2,7 @@ using ArchUnitNET.Domain;
 using ArchUnitNET.Loader;
 using ArchUnitNET.xUnitV3;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.Messaging;
 using SlimMessageBus;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
@@ -116,6 +117,14 @@ public sealed class FeaturesArchitectureTests
         .AndShould().NotBeNested()
         .AndShould().BeImmutable()
         .AndShould().BeRecord()
+        .Check(Architecture);
+
+    [Fact]
+    public void Non_abstract_contracts_classes_should_implement_IExampleProvider() => Classes()
+        .That().ResideInNamespace(@".*\.Contracts$", true)
+        .And().AreNotAbstract()
+        .And().AreNotEnums()
+        .Should().ImplementInterface(typeof(IExampleProvider<>))
         .Check(Architecture);
 
     [Fact]

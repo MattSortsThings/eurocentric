@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
+using Eurocentric.Features.AdminApi.V0.Common.OpenApi;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,10 @@ internal static class DependencyInjection
                 "A web API for modelling the Eurovision Song Contest, 2016-2025.",
                 "v0.1"));
 
-            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>();
+            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()
+                .AddSchemaTransformer<ExampleSchemaTransformer>()
+                .AddOperationTransformer<ParameterExampleOperationTransformer>()
+                .AddOperationTransformer<ProblemDetailsResponseExampleOperationTransformer>();
         });
 
         services.AddOpenApi("admin-api-v0.2", options =>
@@ -38,7 +42,10 @@ internal static class DependencyInjection
                 "A web API for modelling the Eurovision Song Contest, 2016-2025.",
                 "v0.2"));
 
-            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>();
+            options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()
+                .AddSchemaTransformer<ExampleSchemaTransformer>()
+                .AddOperationTransformer<ParameterExampleOperationTransformer>()
+                .AddOperationTransformer<ProblemDetailsResponseExampleOperationTransformer>();
         });
 
         return services;

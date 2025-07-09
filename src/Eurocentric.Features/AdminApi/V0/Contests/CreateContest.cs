@@ -3,6 +3,7 @@ using ErrorOr;
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Common.Contracts;
 using Eurocentric.Features.AdminApi.V0.Common.Extensions;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
@@ -16,13 +17,18 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.AdminApi.V0.Contests;
 
-public sealed record CreateContestRequest
+public sealed record CreateContestRequest : IExampleProvider<CreateContestRequest>
 {
     public required int ContestYear { get; init; }
 
     public required string CityName { get; init; }
 
     public required ContestFormat ContestFormat { get; init; }
+
+    public static CreateContestRequest CreateExample() => new()
+    {
+        ContestYear = 2025, CityName = "Basel", ContestFormat = ContestFormat.Liverpool
+    };
 }
 
 public sealed record CreateContestResponse(Contest Contest);

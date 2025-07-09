@@ -6,6 +6,7 @@ using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
 using Eurocentric.Features.PublicApi.V0.Common.Extensions;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.Constants;
@@ -60,7 +61,7 @@ public sealed record GetCompetingCountryPointsInRangeRankingsResponse : Paginate
     public required CompetingCountryPointsInRangeFilters Filters { get; init; }
 }
 
-public sealed record CompetingCountryPointsInRangeRanking
+public sealed record CompetingCountryPointsInRangeRanking : IExampleProvider<CompetingCountryPointsInRangeRanking>
 {
     public required int Rank { get; init; }
 
@@ -77,13 +78,25 @@ public sealed record CompetingCountryPointsInRangeRanking
     public required int Contests { get; init; }
 
     public required int VotingCountries { get; init; }
+
+    public static CompetingCountryPointsInRangeRanking CreateExample() => new()
+    {
+        Rank = 1,
+        CountryCode = "AT",
+        CountryName = "Austria",
+        PointsInRange = 0.25,
+        PointsAwards = 100,
+        Broadcasts = 4,
+        Contests = 2,
+        VotingCountries = 40
+    };
 }
 
-public sealed record CompetingCountryPointsInRangeFilters
+public sealed record CompetingCountryPointsInRangeFilters : IExampleProvider<CompetingCountryPointsInRangeFilters>
 {
-    public int MinPoints { get; init; }
+    public required int MinPoints { get; init; }
 
-    public int MaxPoints { get; init; }
+    public required int MaxPoints { get; init; }
 
     public int? MinYear { get; init; }
 
@@ -94,6 +107,17 @@ public sealed record CompetingCountryPointsInRangeFilters
     public required VotingMethodFilter VotingMethod { get; init; }
 
     public string? VotingCountryCode { get; init; }
+
+    public static CompetingCountryPointsInRangeFilters CreateExample() => new()
+    {
+        MinPoints = QueryParameterExamples.MinPoints,
+        MaxPoints = QueryParameterExamples.MaxPoints,
+        MinYear = null,
+        MaxYear = null,
+        ContestStage = QueryParameterDefaults.ContestStage,
+        VotingMethod = QueryParameterDefaults.VotingMethod,
+        VotingCountryCode = null
+    };
 }
 
 internal static class GetCompetingCountryPointsInRangeRankings

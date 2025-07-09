@@ -1,5 +1,6 @@
 using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
@@ -12,7 +13,10 @@ using EndpointTags = Eurocentric.Features.PublicApi.V0.Common.Constants.Endpoint
 
 namespace Eurocentric.Features.PublicApi.V0.Filters;
 
-public sealed record GetContestStagesResponse(ContestStageFilter[] ContestStages);
+public sealed record GetContestStagesResponse(ContestStageFilter[] ContestStages) : IExampleProvider<GetContestStagesResponse>
+{
+    public static GetContestStagesResponse CreateExample() => new(Enum.GetValues<ContestStageFilter>());
+}
 
 internal static class GetContestStages
 {

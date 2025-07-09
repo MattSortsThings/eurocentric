@@ -1,6 +1,7 @@
 using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
+using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +12,10 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.PublicApi.V0.Filters;
 
-public sealed record GetVotingMethodsResponse(VotingMethodFilter[] VotingMethods);
+public sealed record GetVotingMethodsResponse(VotingMethodFilter[] VotingMethods) : IExampleProvider<GetVotingMethodsResponse>
+{
+    public static GetVotingMethodsResponse CreateExample() => new(Enum.GetValues<VotingMethodFilter>());
+}
 
 internal static class GetVotingMethods
 {
