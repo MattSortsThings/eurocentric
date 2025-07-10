@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using Dapper;
 using ErrorOr;
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
@@ -210,8 +209,8 @@ internal static class GetCompetingCountryPointsInRangeRankings
         public bool Descending { get; init; }
     }
 
-    internal sealed class Handler(IDbConnectionFactory dbConnectionFactory)
-        : IQueryHandler<Query, GetCompetingCountryPointsInRangeRankingsResponse>
+    internal sealed class Handler(IDbStoredProcedureRunner dbProcRunner) :
+        IQueryHandler<Query, GetCompetingCountryPointsInRangeRankingsResponse>
     {
         public async Task<ErrorOr<GetCompetingCountryPointsInRangeRankingsResponse>> OnHandle(Query query,
             CancellationToken cancellationToken)
@@ -219,10 +218,9 @@ internal static class GetCompetingCountryPointsInRangeRankings
             const string storedProcedureName = StoredProcedures.GetCompetingCountryPointsInRangeRankings;
             DynamicParameters dynamicParameters = query.ToDynamicParameters();
 
-            using IDbConnection dbConnection = await dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-
             (PaginationInfo pagination, CompetingCountryPointsInRangeRanking[] rankings) =
-                await dbConnection.QueryPagedAsync<CompetingCountryPointsInRangeRanking>(storedProcedureName, dynamicParameters);
+                await dbProcRunner.ExecuteAsync<PaginationInfo, CompetingCountryPointsInRangeRanking>(
+                    storedProcedureName, dynamicParameters, cancellationToken);
 
             return ErrorOrFactory.From(new GetCompetingCountryPointsInRangeRankingsResponse
             {

@@ -1,5 +1,4 @@
 using Dapper;
-using Eurocentric.Infrastructure.DataAccess.Constants;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,8 +19,9 @@ internal static class DependencyInjection
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-        services.AddScoped<IDbConnectionFactory>(_ =>
-            new AzureSqlDbConnectionFactory(configuration.GetConnectionString(DbConstants.ConnectionStringKey)!));
+        services.AddScoped<IDbStoredProcedureRunner, DbStoredProcedureRunner>(_ =>
+            new DbStoredProcedureRunner(configuration.GetConnectionString("AzureSql")!,
+                configuration.GetValue<int>("DbConnection:CommandTimeoutInSeconds")));
 
         return services;
     }

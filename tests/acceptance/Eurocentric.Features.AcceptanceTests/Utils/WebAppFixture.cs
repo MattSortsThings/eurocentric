@@ -129,6 +129,8 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
         string connectionString = _dbContainer.GetConnectionString().TrimEnd(';') + ";Connect Timeout=2;";
 
         builder.UseSetting($"ConnectionStrings:{DbConstants.ConnectionStringKey}", connectionString);
+        builder.UseSetting("DbConnection:CommandTimeoutInSeconds", "1");
+        builder.UseSetting("DbConnection:MaxRetryCount", "0");
     }
 
     private void ConfigureRestClient(IServiceCollection services) => services.AddSingleton<IRestClient>(serviceProvider =>

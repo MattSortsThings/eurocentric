@@ -25,8 +25,8 @@ internal static class DependencyInjection
                     azureSqlOptions =>
                     {
                         azureSqlOptions.MigrationsHistoryTable("ef_migrations_history");
-                        azureSqlOptions.EnableRetryOnFailure(0);
-                        azureSqlOptions.CommandTimeout(2);
+                        azureSqlOptions.EnableRetryOnFailure(configuration.GetValue<int>("DbConnection:MaxRetryCount"));
+                        azureSqlOptions.CommandTimeout(configuration.GetValue<int>("DbConnection:CommandTimeoutInSeconds"));
                     })
                 .UseSnakeCaseNamingConvention()
                 .UseExceptionProcessor();

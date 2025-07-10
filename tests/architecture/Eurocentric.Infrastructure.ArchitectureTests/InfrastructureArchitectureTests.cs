@@ -15,8 +15,9 @@ public sealed class InfrastructureArchitectureTests
     private static readonly IObjectProvider<IType> ExpectedPublicTypes = Types()
         .That()
         .HaveName("AppDbContext")
-        .Or().HaveName("IDbConnectionFactory")
-        .Or().ResideInNamespace("Eurocentric.Infrastructure.DataAccess.Constants");
+        .Or().HaveName("IDbStoredProcedureRunner")
+        .Or().ResideInNamespace("Eurocentric.Infrastructure.DataAccess.Constants")
+        .Or().ResideInNamespace("Eurocentric.Infrastructure.DataAccess.EfCore.Migrations");
 
     private static readonly IObjectProvider<IType> GeneratedMigrationTypes = Types()
         .That().ResideInNamespace(MigrationsNamespace);
