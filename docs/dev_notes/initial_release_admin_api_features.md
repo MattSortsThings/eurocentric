@@ -25,7 +25,7 @@ This document lists the features with *admin-api* scope for the initial release 
     - [A17: Get Countries](#a17-get-countries)
     - [A18: Handle Contest Created](#a18-handle-contest-created)
     - [A19: Handle Contest Deleted](#a19-handle-contest-deleted)
-    - [A20: Handle Contest Status Updated](#a20-handle-contest-status-updated)
+    - [A20: Handle Contest Status Updated \[REMOVED 10/07/2025\]](#a20-handle-contest-status-updated-removed-10072025)
   - [Queryable Data](#queryable-data)
     - [A21: Refresh Queryable Data](#a21-refresh-queryable-data)
 
@@ -333,7 +333,9 @@ GET /admin/api/v1.0/countries
   - to remove the corresponding contest memo
 - **SO THAT** countries with no contest memos can be deleted from the system.
 
-### A20: Handle Contest Status Updated
+### A20: Handle Contest Status Updated [REMOVED 10/07/2025]
+
+**This feature was removed from the specification as it contributed nothing. It is sufficient for a COUNTRY aggregate to maintain a list of the IDs of all the existing CONTEST aggregates in which it has a Participant. Memoized contests are unnecessary.**
 
 **User Story:**
 
