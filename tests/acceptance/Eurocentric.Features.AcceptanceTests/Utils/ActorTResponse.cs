@@ -56,4 +56,13 @@ public abstract class Actor<TResponse> where TResponse : class
         Assert.InRange(actualStatusCode, 400, 499);
         Assert.Equal(statusCode, actualStatusCode);
     }
+
+    public void Then_the_response_problem_details_should_match(string detail = "", string title = "", int status = 0)
+    {
+        Assert.NotNull(ResponseProblemDetails);
+
+        Assert.Equal(detail, ResponseProblemDetails.Detail);
+        Assert.Equal(title, ResponseProblemDetails.Title);
+        Assert.Equal(status, ResponseProblemDetails.Status);
+    }
 }

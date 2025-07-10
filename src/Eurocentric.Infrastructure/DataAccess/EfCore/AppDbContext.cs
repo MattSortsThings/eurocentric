@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Aggregates.Countries;
 using Eurocentric.Domain.PlaceholderEntities;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,8 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore;
 public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Country> Countries => Set<Country>();
 
     public DbSet<Contest> PlaceholderContests => Set<Contest>();
 

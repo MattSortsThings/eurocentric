@@ -1,5 +1,9 @@
+using System.Text.Json;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Comparers;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Countries;
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 using Eurocentric.Features.AdminApi.V1.Countries;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries;
@@ -10,19 +14,42 @@ public static class GetCountryTests
     {
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_retrieve_dummy_country(string apiVersion)
+        public async Task Should_retrieve_requested_country(string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, apiVersion);
 
             // Given
-            admin.Given_I_want_to_retrieve_the_country_with_ID("5b31ad46-e8dc-42d0-aac5-d7f6955e2d6d");
+            await admin.Given_I_have_created_a_country(countryCode: "GB", countryName: "United Kingdom");
+            admin.Given_I_want_to_retrieve_my_country_by_its_ID();
 
             // When
             await admin.When_I_send_my_request();
 
             // Then
             admin.Then_my_request_should_succeed_with_status_code(200);
-            admin.Then_the_retrieved_country_ID_should_be("5b31ad46-e8dc-42d0-aac5-d7f6955e2d6d");
+            admin.Then_the_retrieved_country_should_be_my_country();
+        }
+
+        [Theory]
+        [InlineData("v1.0")]
+        public async Task Should_fail_on_non_existent_country_requested(string apiVersion)
+        {
+            Admin admin = new(RestClient, BackDoor, apiVersion);
+
+            // Given
+            await admin.Given_I_have_created_a_country(countryCode: "GB", countryName: "United Kingdom");
+            await admin.Given_I_have_deleted_every_country_I_have_created();
+            admin.Given_I_want_to_retrieve_my_country_by_its_ID();
+
+            // When
+            await admin.When_I_send_my_request();
+
+            // Then
+            admin.Then_my_request_should_fail_with_status_code(404);
+            admin.Then_the_response_problem_details_should_match(status: 404,
+                title: "Country not found",
+                detail: "No country exists with the provided country ID.");
+            admin.Then_the_response_problem_details_extensions_should_contain_my_country_ID();
         }
     }
 
@@ -33,16 +60,30 @@ public static class GetCountryTests
         {
         }
 
-        public void Given_I_want_to_retrieve_the_country_with_ID(string countryId) =>
-            Request = RequestFactory.Countries.GetCountryAsync(Guid.Parse(countryId));
+        public void Given_I_want_to_retrieve_my_country_by_its_ID()
+        {
+            Country myCountry = Assert.Single(GivenCountries);
 
-        public void Then_the_retrieved_country_ID_should_be(string countryId)
+            Request = RequestFactory.Countries.GetCountryAsync(myCountry.Id);
+        }
+
+        public void Then_the_retrieved_country_should_be_my_country()
         {
             Assert.NotNull(ResponseObject);
 
-            Guid expectedId = Guid.Parse(countryId);
+            Country myCountry = Assert.Single(GivenCountries);
 
-            Assert.Equal(expectedId, ResponseObject.Country.Id);
+            Assert.Equal(myCountry, ResponseObject.Country, CountryEquality.Compare);
+        }
+
+        public void Then_the_response_problem_details_extensions_should_contain_my_country_ID()
+        {
+            Assert.NotNull(ResponseProblemDetails);
+
+            Country myCountry = Assert.Single(GivenCountries);
+
+            Assert.Contains(ResponseProblemDetails.Extensions,
+                kvp => kvp is { Key: "countryId", Value: JsonElement je } && je.GetGuid() == myCountry.Id);
         }
     }
 }
