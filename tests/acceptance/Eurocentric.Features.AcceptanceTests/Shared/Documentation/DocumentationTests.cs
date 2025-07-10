@@ -13,6 +13,7 @@ public static class DocumentationTests
         [Theory]
         [InlineData("admin-api-v0.1")]
         [InlineData("admin-api-v0.2")]
+        [InlineData("admin-api-v1.0")]
         [InlineData("public-api-v0.1")]
         [InlineData("public-api-v0.2")]
         public async Task Should_serve_requested_OpenAPI_document_to_anonymous_client(string docName)
@@ -53,6 +54,7 @@ public static class DocumentationTests
         [Theory]
         [InlineData("admin-api-v0.1", "/admin/api/v0.1/")]
         [InlineData("admin-api-v0.2", "/admin/api/v0.2/")]
+        [InlineData("admin-api-v1.0", "/admin/api/v1.0/")]
         [InlineData("public-api-v0.1", "/public/api/v0.1/")]
         [InlineData("public-api-v0.2", "/public/api/v0.2/")]
         public async Task Should_serve_requested_OpenAPI_document_to_anonymous_client(string docName, string pathPrefix)
@@ -78,7 +80,7 @@ public static class DocumentationTests
 
         [Theory]
         [InlineData("admin-api-v0.3")]
-        [InlineData("admin-api-v1.0")]
+        [InlineData("admin-api-v1")]
         [InlineData("public-api-v0.3")]
         [InlineData("public-api-v1.0")]
         public async Task Should_fail_on_non_existent_OpenAPI_document_requested(string docName)

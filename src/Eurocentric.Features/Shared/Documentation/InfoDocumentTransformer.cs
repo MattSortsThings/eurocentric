@@ -7,7 +7,7 @@ internal sealed class InfoDocumentTransformer : IOpenApiDocumentTransformer
 {
     public InfoDocumentTransformer(string title = "OpenAPI Document Title",
         string description = "OpenAPI document description.",
-        string version = "v1.0")
+        string version = "v0.0")
     {
         Title = title;
         Description = description;
