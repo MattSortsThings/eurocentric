@@ -1,4 +1,6 @@
 using ErrorOr;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 using Eurocentric.Features.Shared.ErrorHandling;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using DomainCountry = Eurocentric.Domain.Aggregates.Countries.Country;
 
 namespace Eurocentric.Features.AdminApi.V1.Countries;
 
@@ -45,9 +48,13 @@ internal static class GetCountry
         {
             await Task.CompletedTask;
 
-            Country dummyCountry = Country.CreateExample() with { Id = request.CountryId };
+            DomainCountry dummyCountry = new(CountryId.FromValue(request.CountryId),
+                CountryCode.FromValue("AT").Value,
+                CountryName.FromValue("Austria").Value);
 
-            return ErrorOrFactory.From(new GetCountryResponse(dummyCountry));
+            Func<DomainCountry, Country> mapper = Projections.ProjectToCountryDto.Compile();
+
+            return ErrorOrFactory.From(new GetCountryResponse(mapper(dummyCountry)));
         }
     }
 }

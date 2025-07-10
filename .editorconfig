@@ -257,3 +257,4 @@ csharp_preserve_single_line_statements = true
 resharper_convert_to_local_function_highlighting = none
 resharper_unused_type_global_highlighting = none
 resharper_unused_auto_property_accessor_global_highlighting = none
+resharper_unused_member_local_highlighting = none
