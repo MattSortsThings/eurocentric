@@ -4,13 +4,13 @@ using Eurocentric.Domain.Abstractions;
 namespace Eurocentric.Domain.ValueObjects;
 
 /// <summary>
-///     Represents a country's short UK English name.
+///     Represents a song's title.
 /// </summary>
-public sealed class CountryName : ValueObject, IComparable<CountryName>
+public sealed class SongTitle : ValueObject, IComparable<SongTitle>
 {
     private const int MaxPermittedLengthInChars = 200;
 
-    private CountryName(string value)
+    private SongTitle(string value)
     {
         Value = value;
     }
@@ -21,7 +21,7 @@ public sealed class CountryName : ValueObject, IComparable<CountryName>
     public string Value { get; }
 
     /// <inheritdoc />
-    public int CompareTo(CountryName? other)
+    public int CompareTo(SongTitle? other)
     {
         if (ReferenceEquals(this, other))
         {
@@ -32,26 +32,26 @@ public sealed class CountryName : ValueObject, IComparable<CountryName>
     }
 
     /// <summary>
-    ///     Creates and returns a new <see cref="CountryName" /> instance with the provided <see cref="Value" />.
+    ///     Creates and returns a new <see cref="SongTitle" /> instance with the provided <see cref="Value" />.
     /// </summary>
     /// <remarks>
-    ///     A <see cref="CountryName" /> instance created using this method is guaranteed to be a legal country name in the
-    ///     domain. A legal country name value is a non-empty, non-whitespace string of no more than 200 characters.
+    ///     A <see cref="SongTitle" /> instance created using this method is guaranteed to be a legal song title in the
+    ///     domain. A legal song title value is a non-empty, non-whitespace string of no more than 200 characters.
     /// </remarks>
     /// <param name="value">
     ///     A non-empty, non-whitespace string of no more than 200 characters. The underlying value of the instance to be
     ///     created.
     /// </param>
     /// <returns>
-    ///     A new <see cref="CountryName" /> instance if the <paramref name="value" /> parameter is a legal country name
+    ///     A new <see cref="SongTitle" /> instance if the <paramref name="value" /> parameter is a legal song title
     ///     value; otherwise, a list of <see cref="Error" /> values.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="value" /> is <see langword="null" />.</exception>
-    public static ErrorOr<CountryName> FromValue(string value)
+    public static ErrorOr<SongTitle> FromValue(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
 
-        return LegalCountryNameValue(value) ? new CountryName(value) : ValueObjectErrors.IllegalCountryNameValue(value);
+        return LegalSongTitleValue(value) ? new SongTitle(value) : ValueObjectErrors.IllegalSongTitleValue(value);
     }
 
     protected override IEnumerable<object> GetAtomicValues()
@@ -59,6 +59,6 @@ public sealed class CountryName : ValueObject, IComparable<CountryName>
         yield return Value;
     }
 
-    private static bool LegalCountryNameValue(string value) =>
+    private static bool LegalSongTitleValue(string value) =>
         !string.IsNullOrWhiteSpace(value) && value.Length <= MaxPermittedLengthInChars;
 }

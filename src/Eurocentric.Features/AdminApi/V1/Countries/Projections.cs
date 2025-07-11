@@ -6,7 +6,7 @@ namespace Eurocentric.Features.AdminApi.V1.Countries;
 
 internal static class Projections
 {
-    internal static readonly Expression<Func<DomainCountry, CountryDto>> ProjectToCountryDto = country => new CountryDto
+    internal static readonly Expression<Func<DomainCountry, CountryDto>> CountryToCountryDto = country => new CountryDto
     {
         Id = country.Id.Value,
         CountryCode = country.CountryCode.Value,

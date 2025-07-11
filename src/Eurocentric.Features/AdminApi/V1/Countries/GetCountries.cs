@@ -45,7 +45,7 @@ internal static class GetCountries
         {
             Country[] countries = await dbContext.Countries.AsNoTracking()
                 .OrderBy(country => country.CountryCode)
-                .Select(Projections.ProjectToCountryDto)
+                .Select(Projections.CountryToCountryDto)
                 .ToArrayAsync(cancellationToken);
 
             return new GetCountriesResponse(countries);

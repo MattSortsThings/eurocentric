@@ -51,7 +51,7 @@ internal static class GetCountry
 
             Country? country = await dbContext.Countries.AsNoTracking()
                 .Where(country => country.Id == countryId)
-                .Select(Projections.ProjectToCountryDto)
+                .Select(Projections.CountryToCountryDto)
                 .FirstOrDefaultAsync(cancellationToken);
 
             return country is null

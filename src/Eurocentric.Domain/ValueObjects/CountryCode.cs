@@ -4,7 +4,7 @@ using Eurocentric.Domain.Abstractions;
 namespace Eurocentric.Domain.ValueObjects;
 
 /// <summary>
-///     Contains a country's ISO 3166-1 alpha-2 code.
+///     Represents a country's ISO 3166-1 alpha-2 code.
 /// </summary>
 public sealed class CountryCode : ValueObject, IComparable<CountryCode>
 {
@@ -36,7 +36,7 @@ public sealed class CountryCode : ValueObject, IComparable<CountryCode>
     /// </summary>
     /// <remarks>
     ///     A <see cref="CountryCode" /> instance created using this method is guaranteed to be a legal country code in the
-    ///     system. A legal country code value is a string of 2 upper-case letters.
+    ///     domain. A legal country code value is a string of 2 upper-case letters.
     /// </remarks>
     /// <param name="value">A string of 2 upper-case letters. The underlying value of the instance to be created.</param>
     /// <returns>

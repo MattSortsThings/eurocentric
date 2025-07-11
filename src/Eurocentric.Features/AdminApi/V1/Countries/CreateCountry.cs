@@ -82,7 +82,7 @@ internal static class CreateCountry
     {
         public async Task<ErrorOr<CreateCountryResponse>> OnHandle(Command command, CancellationToken cancellationToken)
         {
-            Func<Country, CountryDto> mapper = Projections.ProjectToCountryDto.Compile();
+            Func<Country, CountryDto> mapper = Projections.CountryToCountryDto.Compile();
 
             return await Country.Create()
                 .Apply(command)

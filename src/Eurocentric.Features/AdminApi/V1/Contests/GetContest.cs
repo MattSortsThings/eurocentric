@@ -1,6 +1,8 @@
 using ErrorOr;
+using Eurocentric.Domain.Aggregates.Contests;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
-using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +11,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using Contest = Eurocentric.Features.AdminApi.V1.Common.Contracts.Contest;
+using DomainContest = Eurocentric.Domain.Aggregates.Contests.Contest;
 
 namespace Eurocentric.Features.AdminApi.V1.Contests;
 
@@ -47,9 +51,14 @@ internal static class GetContest
         {
             await Task.CompletedTask;
 
-            Contest dummyContest = Contest.CreateExample() with { Id = query.ContestId };
+            Func<DomainContest, Contest> mapper = Projections.ContestToContestDto.Compile();
 
-            return ErrorOrFactory.From(new GetContestResponse(dummyContest));
+            DomainContest dummyContest = new LiverpoolFormatContest(ContestId.FromValue(query.ContestId),
+                [Participant.CreateInGroup0(CountryId.FromValue(ExampleIds.Country))],
+                ContestYear.FromValue(2025).Value,
+                CityName.FromValue("Basel").Value);
+
+            return ErrorOrFactory.From(new GetContestResponse(mapper(dummyContest)));
         }
     }
 }

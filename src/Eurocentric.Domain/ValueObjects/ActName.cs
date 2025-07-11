@@ -4,13 +4,13 @@ using Eurocentric.Domain.Abstractions;
 namespace Eurocentric.Domain.ValueObjects;
 
 /// <summary>
-///     Represents a country's short UK English name.
+///     Represents an act's performing name.
 /// </summary>
-public sealed class CountryName : ValueObject, IComparable<CountryName>
+public sealed class ActName : ValueObject, IComparable<ActName>
 {
     private const int MaxPermittedLengthInChars = 200;
 
-    private CountryName(string value)
+    private ActName(string value)
     {
         Value = value;
     }
@@ -21,7 +21,7 @@ public sealed class CountryName : ValueObject, IComparable<CountryName>
     public string Value { get; }
 
     /// <inheritdoc />
-    public int CompareTo(CountryName? other)
+    public int CompareTo(ActName? other)
     {
         if (ReferenceEquals(this, other))
         {
@@ -32,26 +32,26 @@ public sealed class CountryName : ValueObject, IComparable<CountryName>
     }
 
     /// <summary>
-    ///     Creates and returns a new <see cref="CountryName" /> instance with the provided <see cref="Value" />.
+    ///     Creates and returns a new <see cref="ActName" /> instance with the provided <see cref="Value" />.
     /// </summary>
     /// <remarks>
-    ///     A <see cref="CountryName" /> instance created using this method is guaranteed to be a legal country name in the
-    ///     domain. A legal country name value is a non-empty, non-whitespace string of no more than 200 characters.
+    ///     A <see cref="ActName" /> instance created using this method is guaranteed to be a legal act name in the
+    ///     domain. A legal act name value is a non-empty, non-whitespace string of no more than 200 characters.
     /// </remarks>
     /// <param name="value">
     ///     A non-empty, non-whitespace string of no more than 200 characters. The underlying value of the instance to be
     ///     created.
     /// </param>
     /// <returns>
-    ///     A new <see cref="CountryName" /> instance if the <paramref name="value" /> parameter is a legal country name
+    ///     A new <see cref="ActName" /> instance if the <paramref name="value" /> parameter is a legal act name
     ///     value; otherwise, a list of <see cref="Error" /> values.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="value" /> is <see langword="null" />.</exception>
-    public static ErrorOr<CountryName> FromValue(string value)
+    public static ErrorOr<ActName> FromValue(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
 
-        return LegalCountryNameValue(value) ? new CountryName(value) : ValueObjectErrors.IllegalCountryNameValue(value);
+        return LegalActNameValue(value) ? new ActName(value) : ValueObjectErrors.IllegalActNameValue(value);
     }
 
     protected override IEnumerable<object> GetAtomicValues()
@@ -59,6 +59,6 @@ public sealed class CountryName : ValueObject, IComparable<CountryName>
         yield return Value;
     }
 
-    private static bool LegalCountryNameValue(string value) =>
+    private static bool LegalActNameValue(string value) =>
         !string.IsNullOrWhiteSpace(value) && value.Length <= MaxPermittedLengthInChars;
 }
