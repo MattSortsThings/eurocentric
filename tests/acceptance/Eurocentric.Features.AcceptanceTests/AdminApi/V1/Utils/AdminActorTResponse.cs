@@ -14,5 +14,7 @@ public abstract class AdminActor<TResponse> : Actor<TResponse>, IAdminActor
 
     public IAdminApiV1RequestFactory RequestFactory { get; }
 
+    public List<Contest> GivenContests { get; } = [];
+
     public List<Country> GivenCountries { get; } = [];
 }

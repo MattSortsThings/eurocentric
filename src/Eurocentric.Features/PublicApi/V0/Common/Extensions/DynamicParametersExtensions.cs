@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using System.Data;
 using Dapper;
-using Eurocentric.Domain.Enums;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
+using ContestStage = Eurocentric.Features.AdminApi.V1.Common.Contracts.ContestStage;
 
 namespace Eurocentric.Features.PublicApi.V0.Common.Extensions;
 

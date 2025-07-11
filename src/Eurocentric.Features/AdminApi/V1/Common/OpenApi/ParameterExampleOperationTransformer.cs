@@ -9,6 +9,8 @@ internal sealed class ParameterExampleOperationTransformer : BaseParameterExampl
     private protected override IReadOnlyDictionary<string, IOpenApiAny> ParameterExamples { get; } =
         new Dictionary<string, IOpenApiAny>
         {
-            ["contestId"] = ExampleIds.Contest.ToOpenApiAny(), ["countryId"] = ExampleIds.Country.ToOpenApiAny()
+            ["broadcastId"] = ExampleIds.Broadcast.ToOpenApiAny(),
+            ["contestId"] = ExampleIds.Contest.ToOpenApiAny(),
+            ["countryId"] = ExampleIds.Country.ToOpenApiAny()
         };
 }

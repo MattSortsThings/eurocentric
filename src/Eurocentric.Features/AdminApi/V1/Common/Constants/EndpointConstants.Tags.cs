@@ -4,6 +4,7 @@ internal static partial class EndpointConstants
 {
     internal static class Tags
     {
+        internal const string Contests = "Contests";
         internal const string Countries = "Countries";
     }
 }
