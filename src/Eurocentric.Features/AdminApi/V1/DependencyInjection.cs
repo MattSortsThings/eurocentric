@@ -20,7 +20,7 @@ internal static class DependencyInjection
     {
         services.AddOpenApi("admin-api-v1.0", options =>
         {
-            options.ShouldInclude = apiDescription => apiDescription.GroupName == ApiNames.EndpointGroup &&
+            options.ShouldInclude = apiDescription => apiDescription.GroupName == EndpointConstants.GroupName &&
                                                       apiDescription.GetApiVersion() is { MajorVersion: 1, MinorVersion: 0 };
 
             options.AddDocumentTransformer(new InfoDocumentTransformer("Eurocentric Admin API",

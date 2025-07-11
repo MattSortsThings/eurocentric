@@ -20,7 +20,7 @@ internal static class Middleware
     {
         RouteGroupBuilder v1Group = apiGroup.MapGroup("v{apiVersion:apiVersion}")
             .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole))
-            .WithGroupName(ApiNames.EndpointGroup)
+            .WithGroupName(EndpointConstants.GroupName)
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 

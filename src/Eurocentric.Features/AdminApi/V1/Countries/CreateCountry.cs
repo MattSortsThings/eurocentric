@@ -43,10 +43,10 @@ internal static class CreateCountry
     internal static IEndpointRouteBuilder MapCreateCountry(this IEndpointRouteBuilder v1Group)
     {
         v1Group.MapPost("countries", ExecuteAsync)
-            .WithName(EndpointNames.Countries.CreateCountry)
+            .WithName(EndpointConstants.Names.Countries.CreateCountry)
             .WithSummary("Create a country")
             .WithDescription("Creates a new country.")
-            .WithTags(EndpointTags.Countries)
+            .WithTags(EndpointConstants.Tags.Countries)
             .HasApiVersion(1, 0)
             .Produces<CreateCountryResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -68,7 +68,7 @@ internal static class CreateCountry
 
     private static CreatedAtRoute<CreateCountryResponse> MapToCreatedAtRoute(CreateCountryResponse response) =>
         TypedResults.CreatedAtRoute(response,
-            EndpointNames.Countries.GetCountry,
+            EndpointConstants.Names.Countries.GetCountry,
             new RouteValueDictionary { { "countryId", response.Country.Id } });
 
     private static CountryBuilder Apply(this CountryBuilder builder, Command command) =>

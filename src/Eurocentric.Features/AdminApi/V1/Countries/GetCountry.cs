@@ -22,10 +22,10 @@ internal static class GetCountry
     internal static IEndpointRouteBuilder MapGetCountry(this IEndpointRouteBuilder v1Group)
     {
         v1Group.MapGet("countries/{countryId:guid}", ExecuteAsync)
-            .WithName(EndpointNames.Countries.GetCountry)
+            .WithName(EndpointConstants.Names.Countries.GetCountry)
             .WithSummary("Get a country")
             .WithDescription("Retrieves a single country.")
-            .WithTags(EndpointTags.Countries)
+            .WithTags(EndpointConstants.Tags.Countries)
             .HasApiVersion(1, 0)
             .Produces<GetCountryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);

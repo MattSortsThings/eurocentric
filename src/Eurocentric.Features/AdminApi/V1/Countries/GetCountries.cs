@@ -20,10 +20,10 @@ internal static class GetCountries
     internal static IEndpointRouteBuilder MapGetCountries(this IEndpointRouteBuilder v1Group)
     {
         v1Group.MapGet("countries", ExecuteAsync)
-            .WithName(EndpointNames.Countries.GetCountries)
+            .WithName(EndpointConstants.Names.Countries.GetCountries)
             .WithSummary("Get all countries")
             .WithDescription("Retrieves all existing countries in country code order.")
-            .WithTags(EndpointTags.Countries)
+            .WithTags(EndpointConstants.Tags.Countries)
             .HasApiVersion(1, 0)
             .Produces<GetCountriesResponse>();
 
