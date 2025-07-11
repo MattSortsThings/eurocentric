@@ -12,7 +12,7 @@ namespace Eurocentric.Features.AdminApi.V1;
 internal static class DependencyInjection
 {
     /// <summary>
-    ///     Adds the Admin API version 1 documents to the application service descriptor collection.
+    ///     Adds the Admin API version 1 OpenAPI documents to the application service descriptor collection.
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>

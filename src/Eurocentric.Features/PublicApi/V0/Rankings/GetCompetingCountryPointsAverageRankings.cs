@@ -107,9 +107,9 @@ public sealed record CompetingCountryPointsAverageFilters : IExampleProvider<Com
 
 internal static class GetCompetingCountryPointsAverageRankings
 {
-    internal static IEndpointRouteBuilder MapGetCompetingCountryPointsAverageRankings(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapGetCompetingCountryPointsAverageRankings(this IEndpointRouteBuilder v0Group)
     {
-        apiGroup.MapGet("rankings/competing-countries/points-average", ExecuteAsync)
+        v0Group.MapGet("rankings/competing-countries/points-average", ExecuteAsync)
             .WithName(EndpointNames.Rankings.GetCompetingCountryPointsAverageRankings)
             .WithSummary("Get competing country points average rankings")
             .WithDescription("Ranks every competing country by the average value of all the individual points awards " +
@@ -118,7 +118,7 @@ internal static class GetCompetingCountryPointsAverageRankings
             .HasApiVersion(0, 2)
             .Produces<GetCompetingCountryPointsAverageRankingsResponse>();
 
-        return apiGroup;
+        return v0Group;
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<GetCompetingCountryPointsAverageRankingsResponse>>> ExecuteAsync(

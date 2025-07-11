@@ -18,9 +18,9 @@ public sealed record GetContestsResponse(Contest[] Contests);
 
 internal static class GetContests
 {
-    internal static IEndpointRouteBuilder MapGetContests(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapGetContests(this IEndpointRouteBuilder v0Group)
     {
-        apiGroup.MapGet("contests", ExecuteAsync)
+        v0Group.MapGet("contests", ExecuteAsync)
             .WithName(EndpointNames.Contests.GetContests)
             .WithSummary("Get all contests")
             .WithDescription("Retrieves all contests in contest year order.")
@@ -28,7 +28,7 @@ internal static class GetContests
             .HasApiVersion(0, 2)
             .Produces<GetContestsResponse>();
 
-        return apiGroup;
+        return v0Group;
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<GetContestsResponse>>> ExecuteAsync(

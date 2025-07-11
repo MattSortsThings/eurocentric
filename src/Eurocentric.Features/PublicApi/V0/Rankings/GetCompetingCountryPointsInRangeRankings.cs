@@ -121,9 +121,9 @@ public sealed record CompetingCountryPointsInRangeFilters : IExampleProvider<Com
 
 internal static class GetCompetingCountryPointsInRangeRankings
 {
-    internal static IEndpointRouteBuilder MapGetCompetingCountryPointsInRangeRankings(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapGetCompetingCountryPointsInRangeRankings(this IEndpointRouteBuilder v0Group)
     {
-        apiGroup.MapGet("rankings/competing-countries/points-in-range", ExecuteAsync)
+        v0Group.MapGet("rankings/competing-countries/points-in-range", ExecuteAsync)
             .WithName(EndpointNames.Rankings.GetCompetingCountryPointsInRangeRankings)
             .WithSummary("Get competing country points in range rankings")
             .WithDescription("Ranks every competing country by the relative frequency of all the individual points awards " +
@@ -132,7 +132,7 @@ internal static class GetCompetingCountryPointsInRangeRankings
             .HasApiVersion(0, 2)
             .Produces<GetCompetingCountryPointsInRangeRankingsResponse>();
 
-        return apiGroup;
+        return v0Group;
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<GetCompetingCountryPointsInRangeRankingsResponse>>> ExecuteAsync(

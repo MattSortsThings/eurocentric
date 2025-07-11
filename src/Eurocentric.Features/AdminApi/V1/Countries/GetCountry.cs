@@ -19,9 +19,9 @@ public sealed record GetCountryResponse(Country Country);
 
 internal static class GetCountry
 {
-    internal static IEndpointRouteBuilder MapGetCountry(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapGetCountry(this IEndpointRouteBuilder v1Group)
     {
-        apiGroup.MapGet("countries/{countryId:guid}", ExecuteAsync)
+        v1Group.MapGet("countries/{countryId:guid}", ExecuteAsync)
             .WithName(EndpointNames.Countries.GetCountry)
             .WithSummary("Get a country")
             .WithDescription("Retrieves a single country.")
@@ -30,7 +30,7 @@ internal static class GetCountry
             .Produces<GetCountryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);
 
-        return apiGroup;
+        return v1Group;
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<GetCountryResponse>>> ExecuteAsync(Guid countryId,

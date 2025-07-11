@@ -14,22 +14,21 @@ namespace Eurocentric.Features.PublicApi.V0;
 internal static class Middleware
 {
     /// <summary>
-    ///     Maps the Public API version 0 endpoints to the web application.
+    ///     Maps the Public API version 0 endpoints to the Public API endpoint group.
     /// </summary>
-    /// <param name="app">The web application.</param>
-    internal static void MapPublicApiV0Endpoints(this IEndpointRouteBuilder app)
+    /// <param name="apiGroup">The Public API endpoint group.</param>
+    internal static void MapPublicApiV0Endpoints(this IEndpointRouteBuilder apiGroup)
     {
-        RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiNames.Id)
-            .MapGroup("public/api/v{apiVersion:apiVersion}")
+        RouteGroupBuilder v0Group = apiGroup.MapGroup("v{apiVersion:apiVersion}")
             .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole))
             .WithGroupName(ApiNames.EndpointGroup)
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        apiGroup.MapGetContestStages()
+        v0Group.MapGetContestStages()
             .MapGetCountries()
             .MapGetVotingMethods();
 
-        apiGroup.MapGetCompetingCountryPointsAverageRankings()
+        v0Group.MapGetCompetingCountryPointsAverageRankings()
             .MapGetCompetingCountryPointsInRangeRankings();
     }
 }

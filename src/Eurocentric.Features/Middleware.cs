@@ -1,6 +1,5 @@
-using Eurocentric.Features.AdminApi.V0;
-using Eurocentric.Features.AdminApi.V1;
-using Eurocentric.Features.PublicApi.V0;
+using Eurocentric.Features.AdminApi;
+using Eurocentric.Features.PublicApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Scalar.AspNetCore;
@@ -19,9 +18,8 @@ public static class Middleware
     /// <param name="app">The web application.</param>
     public static void UseVersionedApiEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapAdminApiV0Endpoints();
-        app.MapAdminApiV1Endpoints();
-        app.MapPublicApiV0Endpoints();
+        app.MapAdminApiEndpoints();
+        app.MapPublicApiEndpoints();
     }
 
     /// <summary>

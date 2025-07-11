@@ -17,9 +17,9 @@ public sealed record GetCountriesResponse(Country[] Countries);
 
 internal static class GetCountries
 {
-    internal static IEndpointRouteBuilder MapGetCountries(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapGetCountries(this IEndpointRouteBuilder v1Group)
     {
-        apiGroup.MapGet("countries", ExecuteAsync)
+        v1Group.MapGet("countries", ExecuteAsync)
             .WithName(EndpointNames.Countries.GetCountries)
             .WithSummary("Get all countries")
             .WithDescription("Retrieves all existing countries in country code order.")
@@ -27,7 +27,7 @@ internal static class GetCountries
             .HasApiVersion(1, 0)
             .Produces<GetCountriesResponse>();
 
-        return apiGroup;
+        return v1Group;
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<GetCountriesResponse>>> ExecuteAsync(IRequestResponseBus bus,

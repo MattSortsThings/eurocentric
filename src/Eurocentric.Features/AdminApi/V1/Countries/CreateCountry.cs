@@ -40,9 +40,9 @@ public sealed record CreateCountryResponse(CountryDto Country) : IExampleProvide
 
 internal static class CreateCountry
 {
-    internal static IEndpointRouteBuilder MapCreateCountry(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapCreateCountry(this IEndpointRouteBuilder v1Group)
     {
-        apiGroup.MapPost("countries", ExecuteAsync)
+        v1Group.MapPost("countries", ExecuteAsync)
             .WithName(EndpointNames.Countries.CreateCountry)
             .WithSummary("Create a country")
             .WithDescription("Creates a new country.")
@@ -53,7 +53,7 @@ internal static class CreateCountry
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
 
-        return apiGroup;
+        return v1Group;
     }
 
     private static async Task<Results<ProblemHttpResult, CreatedAtRoute<CreateCountryResponse>>> ExecuteAsync(

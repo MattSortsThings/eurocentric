@@ -19,9 +19,9 @@ public sealed record GetVotingMethodsResponse(VotingMethodFilter[] VotingMethods
 
 internal static class GetVotingMethods
 {
-    internal static IEndpointRouteBuilder MapGetVotingMethods(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapGetVotingMethods(this IEndpointRouteBuilder v0Group)
     {
-        apiGroup.MapGet("filters/voting-methods", ExecuteAsync)
+        v0Group.MapGet("filters/voting-methods", ExecuteAsync)
             .WithName(EndpointNames.Filters.GetVotingMethods)
             .WithSummary("Get contest stages")
             .WithDescription("Retrieves a list of all the VotingMethodFilter enum values.")
@@ -30,7 +30,7 @@ internal static class GetVotingMethods
             .HasApiVersion(0, 2)
             .Produces<GetVotingMethodsResponse>();
 
-        return apiGroup;
+        return v0Group;
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<GetVotingMethodsResponse>>> ExecuteAsync(

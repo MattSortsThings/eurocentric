@@ -1,6 +1,5 @@
-using Eurocentric.Features.AdminApi.V0;
-using Eurocentric.Features.AdminApi.V1;
-using Eurocentric.Features.PublicApi.V0;
+using Eurocentric.Features.AdminApi;
+using Eurocentric.Features.PublicApi;
 using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.HttpJson;
@@ -30,9 +29,8 @@ public static class DependencyInjection
             .AddSecurity()
             .AddVersioning();
 
-        services.AddAdminApiV0OpenApiDocuments()
-            .AddAdminApiV1OpenApiDocuments()
-            .AddPublicApiV0OpenApiDocuments();
+        services.AddAllOpenApiDocumentsForAdminApi()
+            .AddAllOpenApiDocumentsForPublicApi();
 
         return services;
     }

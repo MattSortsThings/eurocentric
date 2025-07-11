@@ -20,9 +20,9 @@ public sealed record GetContestStagesResponse(ContestStageFilter[] ContestStages
 
 internal static class GetContestStages
 {
-    internal static IEndpointRouteBuilder MapGetContestStages(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapGetContestStages(this IEndpointRouteBuilder v0Group)
     {
-        apiGroup.MapGet("filters/contest-stages", ExecuteAsync)
+        v0Group.MapGet("filters/contest-stages", ExecuteAsync)
             .WithName(EndpointNames.Filters.GetContestStages)
             .WithSummary("Get contest stages")
             .WithDescription("Retrieves a list of all the ContestStageFilter enum values.")
@@ -31,7 +31,7 @@ internal static class GetContestStages
             .HasApiVersion(0, 2)
             .Produces<GetContestStagesResponse>();
 
-        return apiGroup;
+        return v0Group;
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<GetContestStagesResponse>>> ExecuteAsync(

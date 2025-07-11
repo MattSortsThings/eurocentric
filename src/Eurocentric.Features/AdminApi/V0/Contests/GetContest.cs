@@ -19,9 +19,9 @@ public sealed record GetContestResponse(Contest Contest);
 
 internal static class GetContest
 {
-    internal static IEndpointRouteBuilder MapGetContest(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapGetContest(this IEndpointRouteBuilder v0Group)
     {
-        apiGroup.MapGet("contests/{contestId:guid}", ExecuteAsync)
+        v0Group.MapGet("contests/{contestId:guid}", ExecuteAsync)
             .WithName(EndpointNames.Contests.GetContest)
             .WithSummary("Get a contest")
             .WithDescription("Retrieves a single contest.")
@@ -31,7 +31,7 @@ internal static class GetContest
             .Produces<GetContestResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);
 
-        return apiGroup;
+        return v0Group;
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<GetContestResponse>>> ExecuteAsync(

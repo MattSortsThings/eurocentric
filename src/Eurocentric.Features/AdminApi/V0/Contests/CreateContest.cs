@@ -35,9 +35,9 @@ public sealed record CreateContestResponse(Contest Contest);
 
 internal static class CreateContest
 {
-    internal static IEndpointRouteBuilder MapCreateContest(this IEndpointRouteBuilder apiGroup)
+    internal static IEndpointRouteBuilder MapCreateContest(this IEndpointRouteBuilder v0Group)
     {
-        apiGroup.MapPost("contests", ExecuteAsync)
+        v0Group.MapPost("contests", ExecuteAsync)
             .WithName(EndpointNames.Contests.CreateContest)
             .WithSummary("Create a contest")
             .WithDescription("Creates a new contest.")
@@ -49,7 +49,7 @@ internal static class CreateContest
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
 
-        return apiGroup;
+        return v0Group;
     }
 
     private static async Task<Results<ProblemHttpResult, CreatedAtRoute<CreateContestResponse>>> ExecuteAsync(

@@ -13,19 +13,18 @@ namespace Eurocentric.Features.AdminApi.V0;
 internal static class Middleware
 {
     /// <summary>
-    ///     Maps the Admin API version 0 endpoints to the web application.
+    ///     Maps the Admin API version 0 endpoints to the Admin API endpoint group.
     /// </summary>
-    /// <param name="app">The web application.</param>
-    internal static void MapAdminApiV0Endpoints(this IEndpointRouteBuilder app)
+    /// <param name="apiGroup">The Admin API endpoint group.</param>
+    internal static void MapAdminApiV0Endpoints(this IEndpointRouteBuilder apiGroup)
     {
-        RouteGroupBuilder apiGroup = app.NewVersionedApi(ApiNames.Id)
-            .MapGroup("admin/api/v{apiVersion:apiVersion}")
+        RouteGroupBuilder v0Group = apiGroup.MapGroup("v{apiVersion:apiVersion}")
             .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole))
             .WithGroupName(ApiNames.EndpointGroup)
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
-        apiGroup.MapCreateContest()
+        v0Group.MapCreateContest()
             .MapGetContest()
             .MapGetContests();
     }
