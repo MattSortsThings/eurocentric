@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
@@ -64,5 +65,13 @@ public abstract class Actor<TResponse> where TResponse : class
         Assert.Equal(detail, ResponseProblemDetails.Detail);
         Assert.Equal(title, ResponseProblemDetails.Title);
         Assert.Equal(status, ResponseProblemDetails.Status);
+    }
+
+    public void Then_the_response_problem_details_extensions_should_contain(string value = "", string key = "")
+    {
+        Assert.NotNull(ResponseProblemDetails);
+
+        Assert.Contains(ResponseProblemDetails.Extensions,
+            kvp => kvp.Key == key && kvp.Value is JsonElement je && je.GetString() == value);
     }
 }

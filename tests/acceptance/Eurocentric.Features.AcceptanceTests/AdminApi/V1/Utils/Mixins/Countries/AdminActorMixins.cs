@@ -1,7 +1,8 @@
-using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
+using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Countries;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.Extensions.DependencyInjection;
+using RestSharp;
 using DomainCountry = Eurocentric.Domain.Aggregates.Countries.Country;
 using CountryDto = Eurocentric.Features.AdminApi.V1.Common.Contracts.Country;
 
@@ -13,21 +14,14 @@ internal static class AdminActorMixins
         string countryName = "",
         string countryCode = "")
     {
-        DomainCountry country = new(CountryId.Create(DateTimeOffset.Now),
-            CountryCode.FromValue(countryCode).Value,
-            CountryName.FromValue(countryName).Value);
+        CreateCountryRequest requestBody = new() { CountryCode = countryCode, CountryName = countryName };
 
-        Func<IServiceProvider, Task> persistCountryAsync = async sp =>
-        {
-            await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
+        RestRequest request = admin.RequestFactory.Countries.CreateCountry(requestBody);
 
-            await dbContext.Countries.AddAsync(country);
-            await dbContext.SaveChangesAsync();
-        };
+        ProblemOrResponse<CreateCountryResponse> problemOrResponse =
+            await admin.RestClient.SendAsync<CreateCountryResponse>(request, TestContext.Current.CancellationToken);
 
-        await admin.BackDoor.ExecuteScopedAsync(persistCountryAsync);
-
-        admin.GivenCountries.Add(MapToCountryDto(country));
+        admin.GivenCountries.Add(problemOrResponse.AsResponse.Data!.Country);
     }
 
     internal static async Task Given_I_have_deleted_every_country_I_have_created(this IAdminActor admin)

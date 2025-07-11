@@ -38,4 +38,10 @@ public sealed class Country : AggregateRoot<CountryId>
         .OrderBy(id => id.Value)
         .ToArray()
         .AsReadOnly();
+
+    /// <summary>
+    ///     Starts the process of building a new <see cref="Country" /> instance using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="CountryBuilder" /> instance.</returns>
+    public static CountryBuilder Create() => new();
 }
