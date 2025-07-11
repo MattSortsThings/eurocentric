@@ -24,7 +24,7 @@ internal static class GetCountry
         apiGroup.MapGet("countries/{countryId:guid}", ExecuteAsync)
             .WithName(EndpointNames.Countries.GetCountry)
             .WithSummary("Get a country")
-            .WithDescription("Retrieves a single country")
+            .WithDescription("Retrieves a single country.")
             .WithTags(EndpointTags.Countries)
             .HasApiVersion(1, 0)
             .Produces<GetCountryResponse>()

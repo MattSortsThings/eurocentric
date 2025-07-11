@@ -14,7 +14,9 @@ public sealed class AdminApiV1RequestFactory : IAdminApiV1RequestFactory, IAdmin
 
     public IAdminApiV1RequestFactory.ICountriesEndpoints Countries => this;
 
-    public RestRequest GetCountryAsync(Guid countryId) => Get("/admin/api/{apiVersion}/countries/{countryId}")
+    public RestRequest GetCountries() => Get("/admin/api/{apiVersion}/countries");
+
+    public RestRequest GetCountry(Guid countryId) => Get("/admin/api/{apiVersion}/countries/{countryId}")
         .AddUrlSegment("countryId", countryId);
 
     private RestRequest Get(string route) => new RestRequest(route)

@@ -8,6 +8,8 @@ public interface IAdminApiV1RequestFactory
 
     public interface ICountriesEndpoints
     {
-        public RestRequest GetCountryAsync(Guid countryId);
+        public RestRequest GetCountries();
+
+        public RestRequest GetCountry(Guid countryId);
     }
 }

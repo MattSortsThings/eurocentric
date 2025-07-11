@@ -64,7 +64,7 @@ public static class GetCountryTests
         {
             Country myCountry = Assert.Single(GivenCountries);
 
-            Request = RequestFactory.Countries.GetCountryAsync(myCountry.Id);
+            Request = RequestFactory.Countries.GetCountry(myCountry.Id);
         }
 
         public void Then_the_retrieved_country_should_be_my_country()
