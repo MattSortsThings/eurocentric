@@ -22,6 +22,8 @@ public sealed class AdminApiV1RequestFactory : IAdminApiV1RequestFactory,
     public RestRequest GetContest(Guid contestId) => Get("admin/api/{apiVersion}/contests/{contestId}")
         .AddUrlSegment("contestId", contestId);
 
+    public RestRequest GetContests() => Get("admin/api/{apiVersion}/contests");
+
     public RestRequest CreateCountry(CreateCountryRequest requestBody) => Post("/admin/api/{apiVersion}/countries")
         .AddJsonBody(requestBody);
 

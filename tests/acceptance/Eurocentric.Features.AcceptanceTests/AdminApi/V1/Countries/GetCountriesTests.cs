@@ -23,7 +23,7 @@ public static class GetCountriesTests
             await admin.Given_I_have_created_a_country(countryCode: "CZ", countryName: "Czechia");
             await admin.Given_I_have_created_a_country(countryCode: "AT", countryName: "Austria");
             await admin.Given_I_have_created_a_country(countryCode: "CH", countryName: "Switzerland");
-            admin.Given_that_I_want_to_retrieve_all_existing_countries();
+            admin.Given_I_want_to_retrieve_all_existing_countries();
 
             // When
             await admin.When_I_send_my_request();
@@ -40,7 +40,7 @@ public static class GetCountriesTests
             Admin admin = new(RestClient, BackDoor, apiVersion);
 
             // Given
-            admin.Given_that_I_want_to_retrieve_all_existing_countries();
+            admin.Given_I_want_to_retrieve_all_existing_countries();
 
             // When
             await admin.When_I_send_my_request();
@@ -58,7 +58,7 @@ public static class GetCountriesTests
         {
         }
 
-        public void Given_that_I_want_to_retrieve_all_existing_countries() => Request = RequestFactory.Countries.GetCountries();
+        public void Given_I_want_to_retrieve_all_existing_countries() => Request = RequestFactory.Countries.GetCountries();
 
         public void Then_the_retrieved_countries_should_be_my_countries_in_country_code_order()
         {
