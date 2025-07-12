@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCountryTables : Migration
+    public partial class AddCountryAggregateTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

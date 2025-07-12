@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250710132100_AddCountryTables")]
-    partial class AddCountryTables
+    [Migration("20250712052734_AddCountryAggregateTables")]
+    partial class AddCountryAggregateTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

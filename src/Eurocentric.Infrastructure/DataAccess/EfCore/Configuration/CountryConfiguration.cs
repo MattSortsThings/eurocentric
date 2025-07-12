@@ -39,6 +39,8 @@ internal sealed class CountryConfiguration : IEntityTypeConfiguration<Country>
     {
         builder.ToTable("country_participating_contest");
 
+        builder.UsePropertyAccessMode(PropertyAccessMode.Field);
+
         builder.Property<int>("Id")
             .IsRequired()
             .UseIdentityColumn()
