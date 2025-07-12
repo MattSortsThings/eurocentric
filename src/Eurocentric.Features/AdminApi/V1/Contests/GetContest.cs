@@ -1,22 +1,22 @@
 using ErrorOr;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Identifiers;
-using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.Shared.ErrorHandling;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
-using Contest = Eurocentric.Features.AdminApi.V1.Common.Contracts.Contest;
-using DomainContest = Eurocentric.Domain.Aggregates.Contests.Contest;
+using ContestDto = Eurocentric.Features.AdminApi.V1.Common.Contracts.Contest;
 
 namespace Eurocentric.Features.AdminApi.V1.Contests;
 
-public sealed record GetContestResponse(Contest Contest);
+public sealed record GetContestResponse(ContestDto Contest);
 
 internal static class GetContest
 {
@@ -45,20 +45,21 @@ internal static class GetContest
 
     internal sealed record Query(Guid ContestId) : IQuery<GetContestResponse>;
 
-    internal sealed class Handler : IQueryHandler<Query, GetContestResponse>
+    internal sealed class Handler(AppDbContext dbContext) : IQueryHandler<Query, GetContestResponse>
     {
         public async Task<ErrorOr<GetContestResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            ContestId contestId = ContestId.FromValue(query.ContestId);
 
-            Func<DomainContest, Contest> mapper = Projections.ContestToContestDto.Compile();
+            ContestDto? contest = await dbContext.Contests.AsNoTracking()
+                .AsSplitQuery()
+                .Where(contest => contest.Id == contestId)
+                .Select(contest => contest.ToContestDto())
+                .FirstOrDefaultAsync(cancellationToken);
 
-            DomainContest dummyContest = new LiverpoolFormatContest(ContestId.FromValue(query.ContestId),
-                [Participant.CreateInGroup0(CountryId.FromValue(ExampleIds.Country))],
-                ContestYear.FromValue(2025).Value,
-                CityName.FromValue("Basel").Value);
-
-            return ErrorOrFactory.From(new GetContestResponse(mapper(dummyContest)));
+            return contest is null
+                ? ContestErrors.ContestNotFound(contestId)
+                : new GetContestResponse(contest);
         }
     }
 }

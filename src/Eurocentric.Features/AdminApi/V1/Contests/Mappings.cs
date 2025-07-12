@@ -1,19 +1,18 @@
-using System.Linq.Expressions;
 using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 using DomainContest = Eurocentric.Domain.Aggregates.Contests.Contest;
 using ContestDto = Eurocentric.Features.AdminApi.V1.Common.Contracts.Contest;
 
 namespace Eurocentric.Features.AdminApi.V1.Contests;
 
-internal static class Projections
+public static class Mappings
 {
-    internal static readonly Expression<Func<DomainContest, ContestDto>> ContestToContestDto = contest => new ContestDto
+    public static ContestDto ToContestDto(this DomainContest contest) => new()
     {
         Id = contest.Id.Value,
         ContestYear = contest.ContestYear.Value,
         CityName = contest.CityName.Value,
-        ContestFormat = (ContestFormat)(int)contest.ContestFormat,
         Completed = contest.Completed,
+        ContestFormat = (ContestFormat)(int)contest.ContestFormat,
         ChildBroadcasts =
             contest.ChildBroadcasts.Select(memo => new BroadcastMemo
             {
@@ -25,8 +24,8 @@ internal static class Projections
         {
             ParticipatingCountryId = participant.ParticipatingCountryId.Value,
             ParticipantGroup = (int)participant.ParticipantGroup,
-            ActName = participant.ActName != null ? participant.ActName.Value : null,
-            SongTitle = participant.SongTitle != null ? participant.SongTitle.Value : null
+            ActName = participant.ActName == null ? null : participant.ActName.Value,
+            SongTitle = participant.SongTitle == null ? null : participant.SongTitle.Value
         }).ToArray()
     };
 }

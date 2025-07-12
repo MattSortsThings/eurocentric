@@ -1,6 +1,8 @@
 using Eurocentric.Domain.Aggregates.Countries;
 using Eurocentric.Domain.PlaceholderEntities;
 using Microsoft.EntityFrameworkCore;
+using PlaceholderContest = Eurocentric.Domain.PlaceholderEntities.Contest;
+using DomainContest = Eurocentric.Domain.Aggregates.Contests.Contest;
 
 namespace Eurocentric.Infrastructure.DataAccess.EfCore;
 
@@ -11,9 +13,11 @@ public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+    public DbSet<DomainContest> Contests => Set<DomainContest>();
+
     public DbSet<Country> Countries => Set<Country>();
 
-    public DbSet<Contest> PlaceholderContests => Set<Contest>();
+    public DbSet<PlaceholderContest> PlaceholderContests => Set<PlaceholderContest>();
 
     public DbSet<QueryableCountry> PlaceholderQueryableCountries => Set<QueryableCountry>();
 

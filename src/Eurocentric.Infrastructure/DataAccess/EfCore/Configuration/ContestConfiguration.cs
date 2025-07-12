@@ -1,0 +1,142 @@
+using Eurocentric.Domain.Aggregates.Contests;
+using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Eurocentric.Infrastructure.DataAccess.EfCore.Configuration;
+
+internal sealed class ContestConfiguration : IEntityTypeConfiguration<Contest>
+{
+    public void Configure(EntityTypeBuilder<Contest> builder)
+    {
+        builder.ToTable("contest");
+
+        builder.Property(contest => contest.Id)
+            .HasConversion(src => src.Value, value => ContestId.FromValue(value))
+            .IsRequired()
+            .ValueGeneratedNever();
+
+        builder.Property(contest => contest.ContestYear)
+            .HasConversion(src => src.Value, value => ContestYear.FromValue(value).Value)
+            .IsRequired();
+
+        builder.Property(contest => contest.CityName)
+            .HasConversion(src => src.Value, value => CityName.FromValue(value).Value)
+            .HasMaxLength(200)
+            .IsRequired();
+
+        builder.Property(contest => contest.Completed)
+            .IsRequired();
+
+        builder.Property(contest => contest.ContestFormat)
+            .HasConversion<int>()
+            .IsRequired();
+
+        builder.OwnsMany(contest => contest.ChildBroadcasts, ConfigureAsTable);
+
+        builder.OwnsMany(contest => contest.Participants, ConfigureAsTable);
+
+        builder.HasKey(contest => contest.Id).IsClustered();
+
+        builder.HasAlternateKey(contest => contest.ContestYear);
+
+        builder.ToTable(AddContestFormatEnumCheckConstraint);
+
+        builder.HasDiscriminator(contest => contest.ContestFormat)
+            .HasValue<StockholmFormatContest>(ContestFormat.Stockholm)
+            .HasValue<LiverpoolFormatContest>(ContestFormat.Liverpool)
+            .IsComplete();
+    }
+
+    private static void ConfigureAsTable(OwnedNavigationBuilder<Contest, BroadcastMemo> builder)
+    {
+        builder.ToTable("contest_child_broadcast");
+
+        builder.UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Property<int>("Id")
+            .IsRequired()
+            .UseIdentityColumn()
+            .ValueGeneratedOnAdd();
+
+        builder.WithOwner()
+            .HasForeignKey("ContestId")
+            .HasPrincipalKey(contest => contest.Id);
+
+        builder.Property(memo => memo.BroadcastId)
+            .HasConversion(src => src.Value, value => BroadcastId.FromValue(value))
+            .IsRequired()
+            .ValueGeneratedNever();
+
+        builder.Property(memo => memo.ContestStage)
+            .HasConversion<int>()
+            .IsRequired();
+
+        builder.Property(memo => memo.BroadcastStatus)
+            .HasConversion<int>()
+            .IsRequired();
+
+        builder.HasKey("Id").IsClustered();
+
+        builder.HasIndex("ContestId", "ContestStage").IsUnique();
+
+        builder.ToTable(AddContestStageEnumCheckConstraint);
+
+        builder.ToTable(AddBroadcastStatusEnumCheckConstraint);
+    }
+
+    private static void ConfigureAsTable(OwnedNavigationBuilder<Contest, Participant> builder)
+    {
+        builder.ToTable("contest_participant");
+
+        builder.UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.WithOwner()
+            .HasForeignKey("ContestId")
+            .HasPrincipalKey(contest => contest.Id);
+
+        builder.Property(participant => participant.ParticipatingCountryId)
+            .HasConversion(src => src.Value, value => CountryId.FromValue(value))
+            .IsRequired()
+            .ValueGeneratedNever();
+
+        builder.Property(participant => participant.ActName)
+            .HasConversion(src => src!.Value, value => ActName.FromValue(value).Value)
+            .HasMaxLength(200);
+
+        builder.Property(participant => participant.SongTitle)
+            .HasConversion(src => src!.Value, value => SongTitle.FromValue(value).Value)
+            .HasMaxLength(200);
+
+        builder.Property(participant => participant.ParticipantGroup)
+            .HasConversion<int>()
+            .IsRequired();
+
+        builder.HasKey("ContestId", "ParticipatingCountryId").IsClustered();
+
+        builder.ToTable(AddParticipantGroupEnumCheckConstraint);
+        builder.ToTable(AddNullabilityPermutationsCheckConstraint);
+    }
+
+    private static void AddContestFormatEnumCheckConstraint(TableBuilder<Contest> builder) =>
+        builder.HasCheckConstraint("ck_contest_contest_format_enum",
+            SqlHelpers.CreateEnumIntValueCheckConstraint<ContestFormat>("contest_format"));
+
+    private static void AddContestStageEnumCheckConstraint(OwnedNavigationTableBuilder<Contest, BroadcastMemo> builder) =>
+        builder.HasCheckConstraint("ck_contest_child_broadcast_contest_stage_enum",
+            SqlHelpers.CreateEnumIntValueCheckConstraint<ContestStage>("contest_stage"));
+
+    private static void AddBroadcastStatusEnumCheckConstraint(OwnedNavigationTableBuilder<Contest, BroadcastMemo> builder) =>
+        builder.HasCheckConstraint("ck_contest_child_broadcast_broadcast_status_enum",
+            SqlHelpers.CreateEnumIntValueCheckConstraint<BroadcastStatus>("broadcast_status"));
+
+    private static void AddParticipantGroupEnumCheckConstraint(OwnedNavigationTableBuilder<Contest, Participant> builder) =>
+        builder.HasCheckConstraint("ck_contest_participant_participant_group_enum",
+            SqlHelpers.CreateEnumIntValueCheckConstraint<ParticipantGroup>("participant_group"));
+
+    private static void AddNullabilityPermutationsCheckConstraint(OwnedNavigationTableBuilder<Contest, Participant> builder) =>
+        builder.HasCheckConstraint("ck_contest_participant_nullability_permutations",
+            "([participant_group] = 0 AND [act_name] IS NULL AND [song_title] IS NULL) OR ([participant_group] <> 0 AND [act_name] IS NOT NULL AND [song_title] IS NOT NULL)");
+}
