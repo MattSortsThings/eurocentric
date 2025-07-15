@@ -64,7 +64,8 @@ public static class GetCountriesTests
         {
             Assert.NotNull(ResponseObject);
 
-            IOrderedEnumerable<Country> expectedCountries = GivenCountries.OrderBy(country => country.CountryCode);
+            IOrderedEnumerable<Country> expectedCountries =
+                GivenCountries.GetAllCountries().OrderBy(country => country.CountryCode);
 
             Assert.Equal(expectedCountries, ResponseObject.Countries, CountryEquality.Compare);
         }

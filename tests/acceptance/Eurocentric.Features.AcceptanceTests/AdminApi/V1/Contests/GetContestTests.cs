@@ -24,8 +24,8 @@ public static class GetContestTests
             await admin.Given_I_have_created_a_Stockholm_format_contest(
                 contestYear: 2016,
                 cityName: "Stockholm",
-                group1Countries: ["AT", "BE", "CZ"],
-                group2Countries: ["DK", "EE", "FI"]);
+                group1CountryCodes: ["AT", "BE", "CZ"],
+                group2CountryCodes: ["DK", "EE", "FI"]);
             admin.Given_I_want_to_retrieve_my_contest_by_its_ID();
 
             // When
@@ -47,8 +47,8 @@ public static class GetContestTests
             await admin.Given_I_have_created_a_Stockholm_format_contest(
                 contestYear: 2016,
                 cityName: "Stockholm",
-                group1Countries: ["AT", "BE", "CZ"],
-                group2Countries: ["DK", "EE", "FI"]);
+                group1CountryCodes: ["AT", "BE", "CZ"],
+                group2CountryCodes: ["DK", "EE", "FI"]);
             await admin.Given_I_have_deleted_every_contest_I_have_created();
             admin.Given_I_want_to_retrieve_my_contest_by_its_ID();
 

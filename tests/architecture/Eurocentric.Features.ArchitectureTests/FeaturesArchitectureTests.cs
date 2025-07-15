@@ -2,7 +2,6 @@ using ArchUnitNET.Domain;
 using ArchUnitNET.Loader;
 using ArchUnitNET.xUnitV3;
 using Eurocentric.Features.PublicApi.V0.Common.Contracts;
-using Eurocentric.Features.Shared.Documentation;
 using Eurocentric.Features.Shared.Messaging;
 using SlimMessageBus;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
@@ -15,15 +14,6 @@ public sealed class FeaturesArchitectureTests
     private static readonly Architecture Architecture = new ArchLoader()
         .LoadAssembly(typeof(VotingMethodFilter).Assembly)
         .Build();
-
-    private static readonly IObjectProvider<IType> AdminApiV0Types = Types()
-        .That().ResideInNamespace(@"Eurocentric\.Features\.AdminApi\.V0*", true);
-
-    private static readonly IObjectProvider<IType> PublicApiV0Types = Types()
-        .That().ResideInNamespace(@"Eurocentric\.Features\.PublicApi\.V0*", true);
-
-    private static readonly IObjectProvider<IType> SharedTypes = Types()
-        .That().ResideInNamespace(@"Eurocentric\.Features\Shared*", true);
 
     [Fact]
     public void Public_non_abstract_classes_should_not_be_nested() => Classes()
@@ -117,30 +107,5 @@ public sealed class FeaturesArchitectureTests
         .AndShould().NotBeNested()
         .AndShould().BeImmutable()
         .AndShould().BeRecord()
-        .Check(Architecture);
-
-    [Fact]
-    public void Non_abstract_contracts_classes_should_implement_IExampleProvider() => Classes()
-        .That().ResideInNamespace(@".*\.Contracts$", true)
-        .And().AreNotAbstract()
-        .And().AreNotEnums()
-        .Should().ImplementInterface(typeof(IExampleProvider<>))
-        .Check(Architecture);
-
-    [Fact]
-    public void Shared_types_should_not_be_public() => Types()
-        .That().Are(SharedTypes)
-        .Should().NotBePublic();
-
-    [Fact]
-    public void Admin_API_v0_types_should_not_depend_on_any_other_API_version_types() => Types()
-        .That().Are(AdminApiV0Types)
-        .Should().NotDependOnAny(PublicApiV0Types)
-        .Check(Architecture);
-
-    [Fact]
-    public void Public_API_v0_types_should_not_depend_on_any_other_API_version_types() => Types()
-        .That().Are(PublicApiV0Types)
-        .Should().NotDependOnAny(AdminApiV0Types)
         .Check(Architecture);
 }

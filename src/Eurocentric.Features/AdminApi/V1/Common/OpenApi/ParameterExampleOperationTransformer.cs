@@ -11,6 +11,6 @@ internal sealed class ParameterExampleOperationTransformer : BaseParameterExampl
         {
             ["broadcastId"] = ExampleIds.Broadcast.ToOpenApiAny(),
             ["contestId"] = ExampleIds.Contest.ToOpenApiAny(),
-            ["countryId"] = ExampleIds.Country.ToOpenApiAny()
+            ["countryId"] = ExampleIds.CountryAt.ToOpenApiAny()
         };
 }

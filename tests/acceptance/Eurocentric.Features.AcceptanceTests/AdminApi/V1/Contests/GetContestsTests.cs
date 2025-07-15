@@ -23,25 +23,25 @@ public static class GetContestsTests
             await admin.Given_I_have_created_a_Stockholm_format_contest(
                 contestYear: 2022,
                 cityName: "Turin",
-                group1Countries: ["AT", "BE", "CZ"],
-                group2Countries: ["DK", "EE", "FI"]);
+                group1CountryCodes: ["AT", "BE", "CZ"],
+                group2CountryCodes: ["DK", "EE", "FI"]);
             await admin.Given_I_have_created_a_Stockholm_format_contest(
                 contestYear: 2016,
                 cityName: "Stockholm",
-                group1Countries: ["FI", "BE", "GE"],
-                group2Countries: ["DK", "EE", "AT"]);
+                group1CountryCodes: ["FI", "BE", "GE"],
+                group2CountryCodes: ["DK", "EE", "AT"]);
             await admin.Given_I_have_created_a_Liverpool_format_contest(
                 contestYear: 2024,
                 cityName: "Malmö",
-                group0Country: "XX",
-                group1Countries: ["AT", "BE", "CZ"],
-                group2Countries: ["DK", "EE", "FI"]);
+                group0CountryCode: "XX",
+                group1CountryCodes: ["AT", "BE", "CZ"],
+                group2CountryCodes: ["DK", "EE", "FI"]);
             await admin.Given_I_have_created_a_Liverpool_format_contest(
                 contestYear: 2023,
                 cityName: "Liverpool",
-                group0Country: "XX",
-                group1Countries: ["DK", "EE", "AT", "BE"],
-                group2Countries: ["FI", "GE", "CZ"]);
+                group0CountryCode: "XX",
+                group1CountryCodes: ["DK", "EE", "AT", "BE"],
+                group2CountryCodes: ["FI", "GE", "CZ"]);
             admin.Given_I_want_to_retrieve_all_existing_contests();
 
             // When

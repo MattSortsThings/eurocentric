@@ -4,7 +4,7 @@ using Eurocentric.Domain.ValueObjects;
 namespace Eurocentric.Domain.Aggregates.Countries;
 
 /// <summary>
-///     Extension methods to enforce invariants across all existing country aggregates.
+///     Extension methods to enforce invariants across all existing <see cref="Country" /> aggregates.
 /// </summary>
 public static class InvariantEnforcement
 {
@@ -14,7 +14,7 @@ public static class InvariantEnforcement
     /// </summary>
     /// <param name="errorsOrCountry">
     ///     The discriminated union of <i>EITHER</i> a list of <see cref="Error" /> objects <i>OR</i>
-    ///     a <see cref="Country" />.
+    ///     a <see cref="Country" /> object.
     /// </param>
     /// <param name="existingCountries">All the existing <see cref="Country" /> aggregates in the system.</param>
     /// <returns>

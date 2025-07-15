@@ -30,6 +30,9 @@ public sealed record Country : IExampleProvider<Country>
 
     public static Country CreateExample() => new()
     {
-        Id = ExampleIds.Country, CountryCode = "AT", CountryName = "Austria", ParticipatingContestIds = [ExampleIds.Contest]
+        Id = ExampleIds.CountryAt,
+        CountryCode = "AT",
+        CountryName = "Austria",
+        ParticipatingContestIds = [ExampleIds.Contest]
     };
 }

@@ -62,7 +62,7 @@ public static class GetCountryTests
 
         public void Given_I_want_to_retrieve_my_country_by_its_ID()
         {
-            Country myCountry = Assert.Single(GivenCountries);
+            Country myCountry = Assert.Single(GivenCountries.GetAllCountries());
 
             Request = RequestFactory.Countries.GetCountry(myCountry.Id);
         }
@@ -71,7 +71,7 @@ public static class GetCountryTests
         {
             Assert.NotNull(ResponseObject);
 
-            Country myCountry = Assert.Single(GivenCountries);
+            Country myCountry = Assert.Single(GivenCountries.GetAllCountries());
 
             Assert.Equal(myCountry, ResponseObject.Country, CountryEquality.Compare);
         }
@@ -80,7 +80,7 @@ public static class GetCountryTests
         {
             Assert.NotNull(ResponseProblemDetails);
 
-            Country myCountry = Assert.Single(GivenCountries);
+            Country myCountry = Assert.Single(GivenCountries.GetAllCountries());
 
             Assert.Contains(ResponseProblemDetails.Extensions,
                 kvp => kvp is { Key: "countryId", Value: JsonElement je } && je.GetGuid() == myCountry.Id);

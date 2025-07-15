@@ -68,7 +68,7 @@ public static class CreateCountryTests
 
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_fail_on_country_code_conflict(string apiVersion)
+        public async Task Should_fail_on_country_with_non_unique_country_code(string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, apiVersion);
 
@@ -90,7 +90,7 @@ public static class CreateCountryTests
 
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_fail_on_illegal_country_code_value(string apiVersion)
+        public async Task Should_fail_on_country_with_illegal_country_code_value(string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, apiVersion);
 
@@ -110,7 +110,7 @@ public static class CreateCountryTests
 
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_fail_on_illegal_country_name_value(string apiVersion)
+        public async Task Should_fail_on_country_with_illegal_country_name_value(string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, apiVersion);
 
@@ -182,9 +182,12 @@ public static class CreateCountryTests
 
         public async Task Then_my_given_country_should_be_the_only_existing_country()
         {
+            IOrderedEnumerable<Country> expectedCountries = GivenCountries.GetAllCountries()
+                .OrderBy(country => country.CountryCode);
+
             Country[] existingCountries = await GetAllCountriesAsync();
 
-            Assert.Equal(GivenCountries, existingCountries, CountryEquality.Compare);
+            Assert.Equal(expectedCountries, existingCountries, CountryEquality.Compare);
         }
 
         public async Task Then_no_countries_should_exist()

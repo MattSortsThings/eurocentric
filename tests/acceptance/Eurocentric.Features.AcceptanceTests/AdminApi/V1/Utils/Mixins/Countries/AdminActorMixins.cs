@@ -14,6 +14,8 @@ internal static class AdminActorMixins
 {
     internal static async Task Given_I_have_created_some_countries(this IAdminActor admin, params string[] countryCodes)
     {
+        admin.GivenCountries.EnsureCapacity(countryCodes.Length);
+
         foreach (string countryCode in countryCodes)
         {
             await admin.Given_I_have_created_a_country(countryCode: countryCode, countryName: GetCountryName(countryCode));
@@ -31,12 +33,29 @@ internal static class AdminActorMixins
         ProblemOrResponse<CreateCountryResponse> problemOrResponse =
             await admin.RestClient.SendAsync<CreateCountryResponse>(request, TestContext.Current.CancellationToken);
 
-        admin.GivenCountries.Add(problemOrResponse.AsResponse.Data!.Country);
+        CountryDto createdCountry = problemOrResponse.AsResponse.Data!.Country;
+
+        admin.GivenCountries.Add(createdCountry.CountryCode, createdCountry);
+    }
+
+    internal static async Task Given_I_have_deleted_the_country(this IAdminActor admin, string countryCode)
+    {
+        CountryId countryId = CountryId.FromValue(admin.GivenCountries.GetId(countryCode));
+
+        Func<IServiceProvider, Task> deleteCountryAsync = async sp =>
+        {
+            await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
+
+            await dbContext.Countries.Where(country => country.Id.Equals(countryId)).ExecuteDeleteAsync();
+        };
+
+        await admin.BackDoor.ExecuteScopedAsync(deleteCountryAsync);
     }
 
     internal static async Task Given_I_have_deleted_every_country_I_have_created(this IAdminActor admin)
     {
-        HashSet<CountryId> countryIds = admin.GivenCountries.Select(x => x.Id)
+        HashSet<CountryId> countryIds = admin.GivenCountries.GetAllCountries()
+            .Select(x => x.Id)
             .Select(CountryId.FromValue)
             .ToHashSet();
 
@@ -76,6 +95,9 @@ internal static class AdminActorMixins
         "EE" => "Estonia",
         "FI" => "Finland",
         "GE" => "Georgia",
+        "GB" => "United Kingdom",
+        "IT" => "Italy",
+        "NO" => "Norway",
         "XX" => "Rest of the World",
         _ => "CountryName"
     };

@@ -51,12 +51,11 @@ public sealed class CountryBuilder
     ///     invocations.
     /// </summary>
     /// <param name="idProvider">
-    ///     Provides the <see cref="Country.Id" /> of the new <see cref="Country" /> if it is successfully
-    ///     instantiated.
+    ///     Provides the <see cref="Country.Id" /> of the new <see cref="Country" /> if it is successfully instantiated.
     /// </param>
     /// <returns>
     ///     The discriminated union of <i>EITHER</i> a list of <see cref="Error" /> objects <i>OR</i> a new
-    ///     <see cref="Country" /> object.
+    ///     <see cref="Country" /> instance.
     /// </returns>
     public ErrorOr<Country> Build(Func<CountryId> idProvider) => Tuple.Create(ErrorsOrCountryCode, ErrorsOrCountryName)
         .Combine()

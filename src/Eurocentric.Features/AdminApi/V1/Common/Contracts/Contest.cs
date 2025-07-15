@@ -49,11 +49,30 @@ public sealed record Contest : IExampleProvider<Contest>
         ContestFormat = ContestFormat.Liverpool,
         ChildBroadcasts =
         [
-            BroadcastMemo.CreateExample()
+            new BroadcastMemo
+            {
+                BroadcastId = ExampleIds.Broadcast,
+                ContestStage = ContestStage.GrandFinal,
+                BroadcastStatus = BroadcastStatus.InProgress
+            }
         ],
         Participants =
         [
-            Participant.CreateExample()
+            new Participant { ParticipantGroup = 0, ParticipatingCountryId = ExampleIds.CountryXx },
+            new Participant
+            {
+                ParticipantGroup = 1,
+                ParticipatingCountryId = ExampleIds.CountryIt,
+                ActName = "Lucio Corsi",
+                SongTitle = "Volevo Essere Un Duro"
+            },
+            new Participant
+            {
+                ParticipantGroup = 2,
+                ParticipatingCountryId = ExampleIds.CountryAt,
+                ActName = "JJ",
+                SongTitle = "Wasted Love"
+            }
         ]
     };
 }

@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Contests;
 using Eurocentric.Features.AdminApi.V1.Countries;
 using RestSharp;
 
@@ -18,6 +19,9 @@ public sealed class AdminApiV1RequestFactory : IAdminApiV1RequestFactory,
     public IAdminApiV1RequestFactory.IContestsEndpoints Contests => this;
 
     public IAdminApiV1RequestFactory.ICountriesEndpoints Countries => this;
+
+    public RestRequest CreateContest(CreateContestRequest requestBody) => Post("admin/api/{apiVersion}/contests")
+        .AddJsonBody(requestBody);
 
     public RestRequest GetContest(Guid contestId) => Get("admin/api/{apiVersion}/contests/{contestId}")
         .AddUrlSegment("contestId", contestId);

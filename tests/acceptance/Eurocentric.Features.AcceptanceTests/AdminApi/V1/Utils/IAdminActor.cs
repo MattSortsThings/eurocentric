@@ -13,5 +13,5 @@ public interface IAdminActor
 
     public List<Contest> GivenContests { get; }
 
-    public List<Country> GivenCountries { get; }
+    public CountryLookup GivenCountries { get; }
 }

@@ -87,7 +87,7 @@ internal static class CreateCountry
             return await Country.Create()
                 .Apply(command)
                 .Build(idGenerator.CreateSingle)
-                .FailOnCountryCodeConflict(dbContext.Countries.AsNoTracking())
+                .FailOnCountryCodeConflict(dbContext.Countries.AsNoTracking().AsSplitQuery())
                 .ThenDo(country => dbContext.Countries.Add(country))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(country => new CreateCountryResponse(mapper(country)));

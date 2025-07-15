@@ -74,4 +74,12 @@ public abstract class Actor<TResponse> where TResponse : class
         Assert.Contains(ResponseProblemDetails.Extensions,
             kvp => kvp.Key == key && kvp.Value is JsonElement je && je.GetString() == value);
     }
+
+    public void Then_the_response_problem_details_extensions_should_contain(int value = 0, string key = "")
+    {
+        Assert.NotNull(ResponseProblemDetails);
+
+        Assert.Contains(ResponseProblemDetails.Extensions,
+            kvp => kvp.Key == key && kvp.Value is JsonElement je && je.GetInt32() == value);
+    }
 }

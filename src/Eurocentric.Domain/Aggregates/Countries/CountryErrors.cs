@@ -10,8 +10,8 @@ namespace Eurocentric.Domain.Aggregates.Countries;
 public static class CountryErrors
 {
     /// <summary>
-    ///     Creates and returns an <see cref="Error" /> indicating that a country aggregate already exists with the provided
-    ///     country code.
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to create a country aggregate
+    ///     with a non-unique country code.
     /// </summary>
     /// <param name="countryCode">The country code.</param>
     /// <returns>A new <see cref="Error" /> instance.</returns>

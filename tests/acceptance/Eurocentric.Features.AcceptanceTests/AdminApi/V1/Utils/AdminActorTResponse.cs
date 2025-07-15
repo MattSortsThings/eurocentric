@@ -16,5 +16,5 @@ public abstract class AdminActor<TResponse> : Actor<TResponse>, IAdminActor
 
     public List<Contest> GivenContests { get; } = [];
 
-    public List<Country> GivenCountries { get; } = [];
+    public CountryLookup GivenCountries { get; } = [];
 }

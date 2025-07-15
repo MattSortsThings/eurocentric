@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Aggregates.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +17,9 @@ internal static class DependencyInjection
     internal static IServiceCollection AddIdGenerators(this IServiceCollection services)
     {
         services.AddSingleton(TimeProvider.System);
-        services.AddScoped<ICountryIdGenerator, CountryIdGenerator>();
+
+        services.AddScoped<IContestIdGenerator, ContestIdGenerator>()
+            .AddScoped<ICountryIdGenerator, CountryIdGenerator>();
 
         return services;
     }
