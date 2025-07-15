@@ -11,6 +11,8 @@ public interface IAdminActor
 
     public IAdminApiV1RequestFactory RequestFactory { get; }
 
+    public List<Broadcast> GivenBroadcasts { get; }
+
     public List<Contest> GivenContests { get; }
 
     public CountryLookup GivenCountries { get; }

@@ -4,9 +4,9 @@ using BroadcastDto = Eurocentric.Features.AdminApi.V1.Common.Contracts.Broadcast
 
 namespace Eurocentric.Features.AdminApi.V1.Broadcasts;
 
-internal static class Mapping
+public static class Mapping
 {
-    internal static BroadcastDto ToBroadcastDto(this DomainBroadcast broadcast) => new()
+    public static BroadcastDto ToBroadcastDto(this DomainBroadcast broadcast) => new()
     {
         Id = broadcast.Id.Value,
         BroadcastDate = broadcast.BroadcastDate,

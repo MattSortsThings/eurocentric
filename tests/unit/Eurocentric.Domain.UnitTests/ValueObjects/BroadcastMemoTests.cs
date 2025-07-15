@@ -113,7 +113,7 @@ public static class BroadcastMemoTests
             const ContestStage sharedStage = ContestStage.SemiFinal2;
 
             BroadcastMemo sut = new(sharedBroadcastId, sharedStage, sutCompleted);
-            BroadcastMemo other = new(sharedBroadcastId, sharedStage, otherCompleted);
+            BroadcastMemo other = new(sharedBroadcastId, sharedStage);
 
             // Act
             bool result = sut.Equals(other);
