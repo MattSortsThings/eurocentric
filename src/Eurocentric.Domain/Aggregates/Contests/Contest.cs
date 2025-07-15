@@ -28,7 +28,7 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// <summary>
     ///     Gets the year in which the contest is held.
     /// </summary>
-    public ContestYear ContestYear { get; } = null!;
+    public ContestYear ContestYear { get; private init; } = null!;
 
     /// <summary>
     ///     Gets the name of the city in which the contest is held.

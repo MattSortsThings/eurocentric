@@ -47,7 +47,7 @@ internal static class GetBroadcast
         {
             await Task.CompletedTask;
 
-            Broadcast dummyBroadcast = Broadcast.CreateExample() with { Id = query.BroadcastId };
+            Broadcast dummyBroadcast = DummyBroadcastGenerator.Create().ToBroadcastDto() with { Id = query.BroadcastId };
 
             return ErrorOrFactory.From(new GetBroadcastResponse(dummyBroadcast));
         }
