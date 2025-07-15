@@ -169,6 +169,7 @@ public sealed class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocator
     {
         await using AppDbContext dbContext = provider.GetRequiredService<AppDbContext>();
 
+        await dbContext.Broadcasts.ExecuteDeleteAsync();
         await dbContext.Contests.ExecuteDeleteAsync();
         await dbContext.Countries.ExecuteDeleteAsync();
         await dbContext.PlaceholderContests.ExecuteDeleteAsync();

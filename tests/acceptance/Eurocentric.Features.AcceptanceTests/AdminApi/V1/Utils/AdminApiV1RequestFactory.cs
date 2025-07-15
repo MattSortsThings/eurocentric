@@ -26,6 +26,8 @@ public sealed class AdminApiV1RequestFactory : IAdminApiV1RequestFactory,
     public RestRequest GetBroadcast(Guid broadcastId) => Get("/admin/api/{apiVersion}/broadcasts/{broadcastId}")
         .AddUrlSegment("broadcastId", broadcastId);
 
+    public RestRequest GetBroadcasts() => Get("/admin/api/{apiVersion}/broadcasts");
+
     public RestRequest CreateContest(CreateContestRequest requestBody) => Post("/admin/api/{apiVersion}/contests")
         .AddJsonBody(requestBody);
 
