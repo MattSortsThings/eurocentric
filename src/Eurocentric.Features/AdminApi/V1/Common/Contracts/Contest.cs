@@ -49,12 +49,7 @@ public sealed record Contest : IExampleProvider<Contest>
         ContestFormat = ContestFormat.Liverpool,
         ChildBroadcasts =
         [
-            new BroadcastMemo
-            {
-                BroadcastId = ExampleIds.Broadcast,
-                ContestStage = ContestStage.GrandFinal,
-                BroadcastStatus = BroadcastStatus.InProgress
-            }
+            new BroadcastMemo { BroadcastId = ExampleIds.Broadcast, ContestStage = ContestStage.GrandFinal, Completed = false }
         ],
         Participants =
         [

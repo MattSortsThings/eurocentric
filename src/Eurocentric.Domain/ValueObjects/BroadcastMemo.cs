@@ -14,13 +14,13 @@ public sealed class BroadcastMemo : ValueObject
     /// </summary>
     /// <param name="broadcastId">Identifies the broadcast aggregate.</param>
     /// <param name="contestStage">The broadcast aggregate's stage in its parent contest.</param>
-    /// <param name="broadcastStatus">The current status of the broadcast aggregate.</param>
+    /// <param name="completed">Indicates whether the broadcast has been completed.</param>
     /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
-    public BroadcastMemo(BroadcastId broadcastId, ContestStage contestStage, BroadcastStatus broadcastStatus)
+    public BroadcastMemo(BroadcastId broadcastId, ContestStage contestStage, bool completed = false)
     {
         BroadcastId = broadcastId ?? throw new ArgumentNullException(nameof(broadcastId));
         ContestStage = contestStage;
-        BroadcastStatus = broadcastStatus;
+        Completed = completed;
     }
 
     /// <summary>
@@ -34,30 +34,14 @@ public sealed class BroadcastMemo : ValueObject
     public ContestStage ContestStage { get; }
 
     /// <summary>
-    ///     Gets the current status of the broadcast aggregate.
+    ///     Gets a boolean value indicating whether the broadcast has been completed.
     /// </summary>
-    public BroadcastStatus BroadcastStatus { get; }
-
-    /// <summary>
-    ///     Creates and returns a new <see cref="BroadcastMemo" /> instance with the same
-    ///     <see cref="BroadcastMemo.BroadcastId" /> and <see cref="BroadcastMemo.ContestStage" /> values and a
-    ///     <see cref="BroadcastMemo.BroadcastStatus" /> value of <see cref="BroadcastStatus.InProgress" />.
-    /// </summary>
-    /// <returns>A new <see cref="BroadcastMemo" /> instance.</returns>
-    public BroadcastMemo CloneAsInProgress() => new(BroadcastId, ContestStage, BroadcastStatus.InProgress);
-
-    /// <summary>
-    ///     Creates and returns a new <see cref="BroadcastMemo" /> instance with the same
-    ///     <see cref="BroadcastMemo.BroadcastId" /> and <see cref="BroadcastMemo.ContestStage" /> values and a
-    ///     <see cref="BroadcastMemo.BroadcastStatus" /> value of <see cref="BroadcastStatus.Completed" />.
-    /// </summary>
-    /// <returns>A new <see cref="BroadcastMemo" /> instance.</returns>
-    public BroadcastMemo CloneAsCompleted() => new(BroadcastId, ContestStage, BroadcastStatus.Completed);
+    public bool Completed { get; }
 
     protected override IEnumerable<object> GetAtomicValues()
     {
         yield return BroadcastId;
         yield return ContestStage;
-        yield return BroadcastStatus;
+        yield return Completed;
     }
 }

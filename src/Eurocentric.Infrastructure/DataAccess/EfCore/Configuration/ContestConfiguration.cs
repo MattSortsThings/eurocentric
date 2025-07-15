@@ -74,8 +74,7 @@ internal sealed class ContestConfiguration : IEntityTypeConfiguration<Contest>
             .HasConversion<int>()
             .IsRequired();
 
-        builder.Property(memo => memo.BroadcastStatus)
-            .HasConversion<int>()
+        builder.Property(memo => memo.Completed)
             .IsRequired();
 
         builder.HasKey("Id").IsClustered();
@@ -83,8 +82,6 @@ internal sealed class ContestConfiguration : IEntityTypeConfiguration<Contest>
         builder.HasIndex("ContestId", "ContestStage").IsUnique();
 
         builder.ToTable(AddContestStageEnumCheckConstraint);
-
-        builder.ToTable(AddBroadcastStatusEnumCheckConstraint);
     }
 
     private static void ConfigureAsTable(OwnedNavigationBuilder<Contest, Participant> builder)
@@ -127,10 +124,6 @@ internal sealed class ContestConfiguration : IEntityTypeConfiguration<Contest>
     private static void AddContestStageEnumCheckConstraint(OwnedNavigationTableBuilder<Contest, BroadcastMemo> builder) =>
         builder.HasCheckConstraint("ck_contest_child_broadcast_contest_stage_enum",
             SqlHelpers.CreateEnumIntValueCheckConstraint<ContestStage>("contest_stage"));
-
-    private static void AddBroadcastStatusEnumCheckConstraint(OwnedNavigationTableBuilder<Contest, BroadcastMemo> builder) =>
-        builder.HasCheckConstraint("ck_contest_child_broadcast_broadcast_status_enum",
-            SqlHelpers.CreateEnumIntValueCheckConstraint<BroadcastStatus>("broadcast_status"));
 
     private static void AddParticipantGroupEnumCheckConstraint(OwnedNavigationTableBuilder<Contest, Participant> builder) =>
         builder.HasCheckConstraint("ck_contest_participant_participant_group_enum",

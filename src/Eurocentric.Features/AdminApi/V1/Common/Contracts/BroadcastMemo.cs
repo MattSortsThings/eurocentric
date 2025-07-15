@@ -13,7 +13,7 @@ public sealed record BroadcastMemo
     public required ContestStage ContestStage { get; init; }
 
     /// <summary>
-    ///     The broadcast's status.
+    ///     Indicates whether the broadcast has been completed.
     /// </summary>
-    public required BroadcastStatus BroadcastStatus { get; init; }
+    public required bool Completed { get; init; }
 }

@@ -14,10 +14,10 @@ public static class BroadcastMemoTests
         {
             // Arrange
             const ContestStage arbitraryStage = ContestStage.SemiFinal2;
-            const BroadcastStatus arbitraryStatus = BroadcastStatus.Initialized;
+            const bool arbitraryCompleted = true;
 
             // Act
-            Action act = () => _ = new BroadcastMemo(null!, arbitraryStage, arbitraryStatus);
+            Action act = () => _ = new BroadcastMemo(null!, arbitraryStage, arbitraryCompleted);
 
             // Assert
             ArgumentNullException exception = Assert.Throws<ArgumentNullException>(act);
@@ -33,9 +33,9 @@ public static class BroadcastMemoTests
             // Arrange
             BroadcastId sutBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
             const ContestStage sutStage = ContestStage.SemiFinal2;
-            const BroadcastStatus sutStatus = BroadcastStatus.InProgress;
+            const bool sutCompleted = true;
 
-            BroadcastMemo sut = new(sutBroadcastId, sutStage, sutStatus);
+            BroadcastMemo sut = new(sutBroadcastId, sutStage, sutCompleted);
 
             // Act
             bool result = sut.Equals(sut);
@@ -50,10 +50,10 @@ public static class BroadcastMemoTests
             // Arrange
             BroadcastId sharedBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
             const ContestStage sharedStage = ContestStage.SemiFinal2;
-            const BroadcastStatus sharedStatus = BroadcastStatus.InProgress;
+            const bool sharedCompleted = true;
 
-            BroadcastMemo sut = new(sharedBroadcastId, sharedStage, sharedStatus);
-            BroadcastMemo other = new(sharedBroadcastId, sharedStage, sharedStatus);
+            BroadcastMemo sut = new(sharedBroadcastId, sharedStage, sharedCompleted);
+            BroadcastMemo other = new(sharedBroadcastId, sharedStage, sharedCompleted);
 
             // Act
             bool result = sut.Equals(other);
@@ -70,10 +70,10 @@ public static class BroadcastMemoTests
             BroadcastId otherBroadcastId = BroadcastId.FromValue(Guid.Parse("acee013d-5d26-4cf8-87ac-d21cbe6eb5d7"));
 
             const ContestStage sharedStage = ContestStage.SemiFinal2;
-            const BroadcastStatus sharedStatus = BroadcastStatus.InProgress;
+            const bool sharedCompleted = true;
 
-            BroadcastMemo sut = new(sutBroadcastId, sharedStage, sharedStatus);
-            BroadcastMemo other = new(otherBroadcastId, sharedStage, sharedStatus);
+            BroadcastMemo sut = new(sutBroadcastId, sharedStage, sharedCompleted);
+            BroadcastMemo other = new(otherBroadcastId, sharedStage, sharedCompleted);
 
             // Act
             bool result = sut.Equals(other);
@@ -90,10 +90,10 @@ public static class BroadcastMemoTests
             const ContestStage otherStage = ContestStage.GrandFinal;
 
             BroadcastId sharedBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
-            const BroadcastStatus sharedStatus = BroadcastStatus.InProgress;
+            const bool sharedCompleted = true;
 
-            BroadcastMemo sut = new(sharedBroadcastId, sutStage, sharedStatus);
-            BroadcastMemo other = new(sharedBroadcastId, otherStage, sharedStatus);
+            BroadcastMemo sut = new(sharedBroadcastId, sutStage, sharedCompleted);
+            BroadcastMemo other = new(sharedBroadcastId, otherStage, sharedCompleted);
 
             // Act
             bool result = sut.Equals(other);
@@ -103,17 +103,17 @@ public static class BroadcastMemoTests
         }
 
         [Fact]
-        public void Should_return_false_when_instance_and_other_have_unequal_status_values()
+        public void Should_return_false_when_instance_and_other_have_unequal_completed_values()
         {
             // Arrange
-            const BroadcastStatus sutStatus = BroadcastStatus.InProgress;
-            const BroadcastStatus otherStatus = BroadcastStatus.Completed;
+            const bool sutCompleted = true;
+            const bool otherCompleted = false;
 
             BroadcastId sharedBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
             const ContestStage sharedStage = ContestStage.SemiFinal2;
 
-            BroadcastMemo sut = new(sharedBroadcastId, sharedStage, sutStatus);
-            BroadcastMemo other = new(sharedBroadcastId, sharedStage, otherStatus);
+            BroadcastMemo sut = new(sharedBroadcastId, sharedStage, sutCompleted);
+            BroadcastMemo other = new(sharedBroadcastId, sharedStage);
 
             // Act
             bool result = sut.Equals(other);
@@ -128,55 +128,15 @@ public static class BroadcastMemoTests
             // Arrange
             BroadcastId sutBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
             const ContestStage sharedStage = ContestStage.SemiFinal2;
-            const BroadcastStatus sutStatus = BroadcastStatus.InProgress;
+            const bool sutCompleted = true;
 
-            BroadcastMemo sut = new(sutBroadcastId, sharedStage, sutStatus);
+            BroadcastMemo sut = new(sutBroadcastId, sharedStage, sutCompleted);
 
             // Act
             bool result = sut.Equals(null);
 
             // Assert
             Assert.False(result);
-        }
-    }
-
-    public sealed class CloneAsInProgressMethod : UnitTest
-    {
-        [Fact]
-        public void Should_return_instance_with_same_BroadcastId_and_ContestStage_values_and_InProgress_BroadcastStatus_value()
-        {
-            // Arrange
-            BroadcastId sutBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
-
-            BroadcastMemo sut = new(sutBroadcastId, ContestStage.GrandFinal, BroadcastStatus.InProgress);
-
-            // Act
-            BroadcastMemo result = sut.CloneAsInProgress();
-
-            // Assert
-            Assert.Equal(sut.BroadcastId, result.BroadcastId);
-            Assert.Equal(sut.ContestStage, result.ContestStage);
-            Assert.Equal(BroadcastStatus.InProgress, result.BroadcastStatus);
-        }
-    }
-
-    public sealed class CloneAsCompletedMethod : UnitTest
-    {
-        [Fact]
-        public void Should_return_instance_with_same_BroadcastId_and_ContestStage_values_and_Completed_BroadcastStatus_value()
-        {
-            // Arrange
-            BroadcastId sutBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
-
-            BroadcastMemo sut = new(sutBroadcastId, ContestStage.GrandFinal, BroadcastStatus.InProgress);
-
-            // Act
-            BroadcastMemo result = sut.CloneAsCompleted();
-
-            // Assert
-            Assert.Equal(sut.BroadcastId, result.BroadcastId);
-            Assert.Equal(sut.ContestStage, result.ContestStage);
-            Assert.Equal(BroadcastStatus.Completed, result.BroadcastStatus);
         }
     }
 }

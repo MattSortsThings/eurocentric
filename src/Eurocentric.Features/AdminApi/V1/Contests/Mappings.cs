@@ -4,9 +4,9 @@ using ContestDto = Eurocentric.Features.AdminApi.V1.Common.Contracts.Contest;
 
 namespace Eurocentric.Features.AdminApi.V1.Contests;
 
-public static class Mappings
+internal static class Mappings
 {
-    public static ContestDto ToContestDto(this DomainContest contest) => new()
+    internal static ContestDto ToContestDto(this DomainContest contest) => new()
     {
         Id = contest.Id.Value,
         ContestYear = contest.ContestYear.Value,
@@ -18,7 +18,7 @@ public static class Mappings
             {
                 BroadcastId = memo.BroadcastId.Value,
                 ContestStage = (ContestStage)(int)memo.ContestStage,
-                BroadcastStatus = (BroadcastStatus)(int)memo.BroadcastStatus
+                Completed = memo.Completed
             }).ToArray(),
         Participants = contest.Participants.Select(participant => new Participant
         {

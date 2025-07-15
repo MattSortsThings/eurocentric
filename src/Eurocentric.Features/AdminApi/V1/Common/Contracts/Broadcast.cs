@@ -26,9 +26,9 @@ public sealed record Broadcast : IExampleProvider<Broadcast>
     public required ContestStage ContestStage { get; init; }
 
     /// <summary>
-    ///     The broadcast's status.
+    ///     Indicates whether the broadcast has been completed.
     /// </summary>
-    public required BroadcastStatus BroadcastStatus { get; init; }
+    public required bool Completed { get; init; }
 
     /// <summary>
     ///     The broadcast's competitors.
@@ -51,7 +51,7 @@ public sealed record Broadcast : IExampleProvider<Broadcast>
         ParentContestId = ExampleIds.Contest,
         ContestStage = ContestStage.GrandFinal,
         BroadcastDate = DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd"),
-        BroadcastStatus = BroadcastStatus.InProgress,
+        Completed = false,
         Competitors =
         [
             new Competitor
