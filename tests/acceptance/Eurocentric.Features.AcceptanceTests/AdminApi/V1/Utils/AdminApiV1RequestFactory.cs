@@ -6,6 +6,7 @@ using RestSharp;
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 
 public sealed class AdminApiV1RequestFactory : IAdminApiV1RequestFactory,
+    IAdminApiV1RequestFactory.IBroadcastsEndpoints,
     IAdminApiV1RequestFactory.IContestsEndpoints,
     IAdminApiV1RequestFactory.ICountriesEndpoints
 {
@@ -16,17 +17,22 @@ public sealed class AdminApiV1RequestFactory : IAdminApiV1RequestFactory,
         _apiVersion = apiVersion;
     }
 
+    public IAdminApiV1RequestFactory.IBroadcastsEndpoints Broadcasts => this;
+
     public IAdminApiV1RequestFactory.IContestsEndpoints Contests => this;
 
     public IAdminApiV1RequestFactory.ICountriesEndpoints Countries => this;
 
-    public RestRequest CreateContest(CreateContestRequest requestBody) => Post("admin/api/{apiVersion}/contests")
+    public RestRequest GetBroadcast(Guid broadcastId) => Get("/admin/api/{apiVersion}/broadcasts/{broadcastId}")
+        .AddUrlSegment("broadcastId", broadcastId);
+
+    public RestRequest CreateContest(CreateContestRequest requestBody) => Post("/admin/api/{apiVersion}/contests")
         .AddJsonBody(requestBody);
 
-    public RestRequest GetContest(Guid contestId) => Get("admin/api/{apiVersion}/contests/{contestId}")
+    public RestRequest GetContest(Guid contestId) => Get("/admin/api/{apiVersion}/contests/{contestId}")
         .AddUrlSegment("contestId", contestId);
 
-    public RestRequest GetContests() => Get("admin/api/{apiVersion}/contests");
+    public RestRequest GetContests() => Get("/admin/api/{apiVersion}/contests");
 
     public RestRequest CreateCountry(CreateCountryRequest requestBody) => Post("/admin/api/{apiVersion}/countries")
         .AddJsonBody(requestBody);

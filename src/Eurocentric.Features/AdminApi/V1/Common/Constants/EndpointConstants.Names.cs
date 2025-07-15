@@ -4,6 +4,11 @@ internal static partial class EndpointConstants
 {
     internal static class Names
     {
+        internal static class Broadcasts
+        {
+            internal const string GetBroadcast = "AdminApi.V1.Broadcasts.GetBroadcast";
+        }
+
         internal static class Contests
         {
             internal const string CreateContest = "AdminApi.V1.Contests.CreateContest";
