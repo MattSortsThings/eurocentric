@@ -94,7 +94,7 @@ public static class GetBroadcastTests
             Broadcast myBroadcast = Assert.Single(GivenBroadcasts);
             Broadcast retrievedBroadcast = ResponseObject.Broadcast;
 
-            Assert.Equal(myBroadcast, retrievedBroadcast, BroadcastEquality.Compare);
+            Assert.Equal(myBroadcast, retrievedBroadcast, new BroadcastEqualityComparer());
         }
 
         public void Then_the_response_problem_details_extensions_should_contain_my_broadcast_ID()

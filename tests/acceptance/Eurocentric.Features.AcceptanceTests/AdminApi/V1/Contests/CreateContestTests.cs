@@ -84,7 +84,7 @@ public static partial class CreateContestTests
             Contest createdContest = ResponseObject.Contest;
             Contest retrievedContest = await GetAllContestByIdAsync(createdContest.Id);
 
-            Assert.Equal(createdContest, retrievedContest, ContestEquality.Compare);
+            Assert.Equal(createdContest, retrievedContest, new ContestEqualityComparer());
         }
 
         public async Task Then_my_given_contest_should_be_the_only_existing_contest()
@@ -93,7 +93,7 @@ public static partial class CreateContestTests
 
             Contest[] existingContests = await GetAllContestsAsync();
 
-            Assert.Equal(GivenContests, existingContests, ContestEquality.Compare);
+            Assert.Equal(GivenContests, existingContests, new ContestEqualityComparer());
         }
 
         public async Task Then_no_contests_should_exist()

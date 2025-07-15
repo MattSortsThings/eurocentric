@@ -85,7 +85,7 @@ public static class GetContestsTests
 
             IOrderedEnumerable<Contest> expectedContests = GivenContests.OrderBy(contest => contest.ContestYear);
 
-            Assert.Equal(expectedContests, ResponseObject.Contests, ContestEquality.Compare);
+            Assert.Equal(expectedContests, ResponseObject.Contests, new ContestEqualityComparer());
         }
 
         public void Then_the_retrieved_contests_should_be_an_empty_list()

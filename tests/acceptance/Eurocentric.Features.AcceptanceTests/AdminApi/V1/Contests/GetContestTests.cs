@@ -85,7 +85,7 @@ public static class GetContestTests
             Contest myContest = Assert.Single(GivenContests);
             Contest retrievedContest = ResponseObject.Contest;
 
-            Assert.Equal(myContest, retrievedContest, ContestEquality.Compare);
+            Assert.Equal(myContest, retrievedContest, new ContestEqualityComparer());
         }
 
         public void Then_the_response_problem_details_extensions_should_contain_my_contest_ID()

@@ -177,7 +177,7 @@ public static class CreateCountryTests
             Country createdCountry = ResponseObject.Country;
             Country retrievedCountry = await GetCountryByIdAsync(createdCountry.Id);
 
-            Assert.Equal(createdCountry, retrievedCountry, CountryEquality.Compare);
+            Assert.Equal(createdCountry, retrievedCountry, new CountryEqualityComparer());
         }
 
         public async Task Then_my_given_country_should_be_the_only_existing_country()
@@ -187,7 +187,7 @@ public static class CreateCountryTests
 
             Country[] existingCountries = await GetAllCountriesAsync();
 
-            Assert.Equal(expectedCountries, existingCountries, CountryEquality.Compare);
+            Assert.Equal(expectedCountries, existingCountries, new CountryEqualityComparer());
         }
 
         public async Task Then_no_countries_should_exist()

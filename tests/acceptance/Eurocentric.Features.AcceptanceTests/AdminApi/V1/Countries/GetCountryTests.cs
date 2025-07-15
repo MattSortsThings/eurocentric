@@ -73,7 +73,7 @@ public static class GetCountryTests
 
             Country myCountry = Assert.Single(GivenCountries.GetAllCountries());
 
-            Assert.Equal(myCountry, ResponseObject.Country, CountryEquality.Compare);
+            Assert.Equal(myCountry, ResponseObject.Country, new CountryEqualityComparer());
         }
 
         public void Then_the_response_problem_details_extensions_should_contain_my_country_ID()

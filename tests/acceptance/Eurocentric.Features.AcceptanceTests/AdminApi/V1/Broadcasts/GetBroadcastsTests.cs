@@ -82,7 +82,7 @@ public static class GetBroadcastsTests
             IOrderedEnumerable<Broadcast> expectedBroadcasts = GivenBroadcasts.OrderBy(broadcast => broadcast.BroadcastDate);
             Broadcast[] actualBroadcasts = ResponseObject.Broadcasts;
 
-            Assert.Equal(expectedBroadcasts, actualBroadcasts, BroadcastEquality.Compare);
+            Assert.Equal(expectedBroadcasts, actualBroadcasts, new BroadcastEqualityComparer());
         }
 
         public void Then_the_retrieved_broadcasts_should_be_an_empty_list()

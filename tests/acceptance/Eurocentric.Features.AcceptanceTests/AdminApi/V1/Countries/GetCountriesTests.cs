@@ -67,7 +67,7 @@ public static class GetCountriesTests
             IOrderedEnumerable<Country> expectedCountries =
                 GivenCountries.GetAllCountries().OrderBy(country => country.CountryCode);
 
-            Assert.Equal(expectedCountries, ResponseObject.Countries, CountryEquality.Compare);
+            Assert.Equal(expectedCountries, ResponseObject.Countries, new CountryEqualityComparer());
         }
 
         public void Then_the_retrieved_countries_should_be_an_empty_list()
