@@ -106,13 +106,10 @@ public static class BroadcastMemoTests
         public void Should_return_false_when_instance_and_other_have_unequal_completed_values()
         {
             // Arrange
-            const bool sutCompleted = true;
-            const bool otherCompleted = false;
-
             BroadcastId sharedBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
             const ContestStage sharedStage = ContestStage.SemiFinal2;
 
-            BroadcastMemo sut = new(sharedBroadcastId, sharedStage, sutCompleted);
+            BroadcastMemo sut = new(sharedBroadcastId, sharedStage, completed:true);
             BroadcastMemo other = new(sharedBroadcastId, sharedStage);
 
             // Act
