@@ -5,67 +5,65 @@ using Eurocentric.Features.AdminApi.V1.Broadcasts;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Broadcast = Eurocentric.Domain.Aggregates.Broadcasts.Broadcast;
+using Competitor = Eurocentric.Domain.Aggregates.Broadcasts.Competitor;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Broadcasts;
 
-internal static class AdminActorMixins
+public static class AdminActorMixins
 {
-    internal static async Task Given_I_have_created_a_child_broadcast_for_my_contest(this IAdminActor admin,
+    public static async Task Given_I_have_created_a_child_broadcast_for_my_contest(this IAdminActor admin,
         string[] competingCountryCodes = null!,
-        string contestStage = "",
-        string broadcastDate = "")
+        string broadcastDate = "",
+        string contestStage = "")
     {
-        ContestId myContestId = ContestId.FromValue(admin.GivenContests.Single().Id);
-        CountryId[] countryIds = competingCountryCodes.Select(admin.GivenCountries.GetId)
-            .Select(CountryId.FromValue)
-            .ToArray();
+        ContestId contestId = ContestId.FromValue(admin.GivenContests.GetSingle().Id);
         DateOnly date = DateOnly.ParseExact(broadcastDate, "yyyy-MM-dd");
         ContestStage stage = Enum.Parse<ContestStage>(contestStage);
 
-        List<Competitor> competitors = countryIds.Select((id, index) =>
-                new Competitor(id, index + 1))
+        List<Competitor> competitors = competingCountryCodes.Select(admin.GivenCountries.LookupId)
+            .Select(CountryId.FromValue)
+            .Select((countryId, index) => new Competitor(countryId, index + 1))
             .ToList();
 
-        List<Jury> juries = countryIds.Select(id => new Jury(id)).ToList();
+        List<Jury> juries = competitors.Select(competitor => competitor.CompetingCountryId)
+            .Select(countryId => new Jury(countryId))
+            .ToList();
 
-        List<Televote> televotes = countryIds.Select(id => new Televote(id)).ToList();
+        List<Televote> televotes = competitors.Select(competitor => competitor.CompetingCountryId)
+            .Select(countryId => new Televote(countryId))
+            .ToList();
 
         Broadcast broadcast = new(BroadcastId.Create(DateTimeOffset.UtcNow),
             date,
-            myContestId,
+            contestId,
             stage,
-            competitors,
-            juries,
-            televotes);
+            competitors, juries, televotes);
 
-        Func<IServiceProvider, Task> persistBroadcastAsync = async sp =>
+        Func<IServiceProvider, Task> persistAsync = async sp =>
         {
             await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
 
             dbContext.Broadcasts.Add(broadcast);
-
             await dbContext.SaveChangesAsync();
         };
 
-        await admin.BackDoor.ExecuteScopedAsync(persistBroadcastAsync);
+        await admin.BackDoor.ExecuteScopedAsync(persistAsync);
 
         admin.GivenBroadcasts.Add(broadcast.ToBroadcastDto());
     }
 
-    internal static async Task Given_I_have_deleted_every_broadcast_I_have_created(this IAdminActor admin)
+    public static async Task Given_I_have_deleted_my_broadcast(this IAdminActor admin)
     {
-        HashSet<BroadcastId> broadcastIds = admin.GivenBroadcasts.Select(x => x.Id)
-            .Select(BroadcastId.FromValue)
-            .ToHashSet();
+        BroadcastId broadcastId = BroadcastId.FromValue(admin.GivenBroadcasts.GetSingle().Id);
 
-        Func<IServiceProvider, Task> deleteCountriesAsync = async sp =>
+        Func<IServiceProvider, Task> deleteAsync = async sp =>
         {
             await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
 
-            await dbContext.Broadcasts.Where(broadcast => broadcastIds.Contains(broadcast.Id))
-                .ExecuteDeleteAsync();
+            await dbContext.Broadcasts.Where(broadcast => broadcast.Id == broadcastId).ExecuteDeleteAsync();
         };
 
-        await admin.BackDoor.ExecuteScopedAsync(deleteCountriesAsync);
+        await admin.BackDoor.ExecuteScopedAsync(deleteAsync);
     }
 }

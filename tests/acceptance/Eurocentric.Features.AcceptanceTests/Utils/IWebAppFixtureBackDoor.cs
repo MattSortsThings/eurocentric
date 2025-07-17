@@ -1,7 +1,7 @@
 namespace Eurocentric.Features.AcceptanceTests.Utils;
 
 /// <summary>
-///     Allows the user to modify the state of the in-memory web app fixture at runtime using scoped operations on the
+///     Allows the client to modify the state of the in-memory web app fixture at runtime using scoped operations on the
 ///     fixture's service provider.
 /// </summary>
 public interface IWebAppFixtureBackDoor

@@ -1,8 +1,8 @@
 using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 
-namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Comparers;
+namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 
-internal sealed class CountryEqualityComparer : IEqualityComparer<Country>
+public sealed class CountryEqualityComparer : IEqualityComparer<Country>
 {
     public bool Equals(Country? x, Country? y)
     {
@@ -29,7 +29,8 @@ internal sealed class CountryEqualityComparer : IEqualityComparer<Country>
         return x.Id.Equals(y.Id)
                && x.CountryCode == y.CountryCode
                && x.CountryName == y.CountryName
-               && x.ParticipatingContestIds.SequenceEqual(y.ParticipatingContestIds);
+               && x.ParticipatingContestIds.OrderBy(id => id)
+                   .SequenceEqual(y.ParticipatingContestIds.OrderBy(id => id));
     }
 
     public int GetHashCode(Country obj) => HashCode.Combine(obj.Id,

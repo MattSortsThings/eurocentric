@@ -109,7 +109,7 @@ public static class BroadcastMemoTests
             BroadcastId sharedBroadcastId = BroadcastId.FromValue(Guid.Parse("7dd8f418-30ec-46e4-9145-dfe9e648ea57"));
             const ContestStage sharedStage = ContestStage.SemiFinal2;
 
-            BroadcastMemo sut = new(sharedBroadcastId, sharedStage, completed:true);
+            BroadcastMemo sut = new(sharedBroadcastId, sharedStage, true);
             BroadcastMemo other = new(sharedBroadcastId, sharedStage);
 
             // Act

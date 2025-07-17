@@ -1,7 +1,7 @@
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Comparers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Contests;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Countries;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Responses;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 using Eurocentric.Features.AdminApi.V1.Contests;
@@ -16,32 +16,28 @@ public static class GetContestsTests
         [InlineData("v1.0")]
         public async Task Should_retrieve_all_existing_contests_in_contest_year_order(string apiVersion)
         {
-            Admin admin = new(RestClient, BackDoor, apiVersion);
+            Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
 
             // Given
-            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GE", "XX");
-            await admin.Given_I_have_created_a_Stockholm_format_contest(
-                contestYear: 2022,
-                cityName: "Turin",
-                group1CountryCodes: ["AT", "BE", "CZ"],
-                group2CountryCodes: ["DK", "EE", "FI"]);
-            await admin.Given_I_have_created_a_Stockholm_format_contest(
-                contestYear: 2016,
-                cityName: "Stockholm",
-                group1CountryCodes: ["FI", "BE", "GE"],
-                group2CountryCodes: ["DK", "EE", "AT"]);
-            await admin.Given_I_have_created_a_Liverpool_format_contest(
-                contestYear: 2024,
+            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
+            await admin.Given_I_have_created_a_Liverpool_format_contest(contestYear: 2024,
                 cityName: "Malmö",
                 group0CountryCode: "XX",
                 group1CountryCodes: ["AT", "BE", "CZ"],
                 group2CountryCodes: ["DK", "EE", "FI"]);
-            await admin.Given_I_have_created_a_Liverpool_format_contest(
-                contestYear: 2023,
+            await admin.Given_I_have_created_a_Stockholm_format_contest(contestYear: 2016,
+                cityName: "Stockholm",
+                group1CountryCodes: ["AT", "BE", "CZ"],
+                group2CountryCodes: ["DK", "EE", "FI"]);
+            await admin.Given_I_have_created_a_Liverpool_format_contest(contestYear: 2023,
                 cityName: "Liverpool",
                 group0CountryCode: "XX",
-                group1CountryCodes: ["DK", "EE", "AT", "BE"],
-                group2CountryCodes: ["FI", "GE", "CZ"]);
+                group1CountryCodes: ["DK", "EE", "FI"],
+                group2CountryCodes: ["AT", "BE", "CZ"]);
+            await admin.Given_I_have_created_a_Stockholm_format_contest(contestYear: 2022,
+                cityName: "Turin",
+                group1CountryCodes: ["AT", "BE", "CZ"],
+                group2CountryCodes: ["DK", "EE", "FI"]);
             admin.Given_I_want_to_retrieve_all_existing_contests();
 
             // When
@@ -56,7 +52,7 @@ public static class GetContestsTests
         [InlineData("v1.0")]
         public async Task Should_retrieve_empty_list_when_no_contests_exist(string apiVersion)
         {
-            Admin admin = new(RestClient, BackDoor, apiVersion);
+            Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
 
             // Given
             admin.Given_I_want_to_retrieve_all_existing_contests();
@@ -70,10 +66,10 @@ public static class GetContestsTests
         }
     }
 
-    private sealed class Admin : AdminActor<GetContestsResponse>
+    private sealed class Admin : AdminActorWithResponse<GetContestsResponse>
     {
-        public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, string apiVersion = "v1.0") :
-            base(restClient, backDoor, apiVersion)
+        public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, IRequestFactory requestFactory) :
+            base(restClient, backDoor, requestFactory)
         {
         }
 
@@ -83,9 +79,12 @@ public static class GetContestsTests
         {
             Assert.NotNull(ResponseObject);
 
-            IOrderedEnumerable<Contest> expectedContests = GivenContests.OrderBy(contest => contest.ContestYear);
+            IOrderedEnumerable<Contest> expectedContests = GivenContests.GetAll()
+                .OrderBy(contest => contest.ContestYear);
 
-            Assert.Equal(expectedContests, ResponseObject.Contests, new ContestEqualityComparer());
+            Contest[] actualContests = ResponseObject.Contests;
+
+            Assert.Equal(expectedContests, actualContests, new ContestEqualityComparer());
         }
 
         public void Then_the_retrieved_contests_should_be_an_empty_list()

@@ -3,9 +3,9 @@ using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.Utils;
 
+[Collection(TestCollection.Name)]
 [Trait("Category", "container")]
 [Trait("Category", "acceptance")]
-[Collection(TestCollection.Name)]
 public abstract class AcceptanceTest(WebAppFixture fixture) : IAsyncLifetime
 {
     private protected IWebAppFixtureBackDoor BackDoor { get; } = fixture;

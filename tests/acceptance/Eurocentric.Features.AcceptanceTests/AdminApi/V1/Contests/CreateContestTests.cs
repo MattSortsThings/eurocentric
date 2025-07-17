@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Comparers;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 using Eurocentric.Features.AdminApi.V1.Contests;
@@ -12,13 +11,10 @@ public static partial class CreateContestTests
 {
     public sealed partial class Endpoint(WebAppFixture fixture) : AcceptanceTest(fixture);
 
-    private sealed partial class Admin : AdminActor<CreateContestResponse>
+    private sealed partial class Admin : AdminActorWithResponse<CreateContestResponse>
     {
-        private const string DefaultCityName = "CityName";
-        private const int DefaultContestYear = 2025;
-
-        public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, string apiVersion = "v1.0") :
-            base(restClient, backDoor, apiVersion)
+        public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, IRequestFactory requestFactory) :
+            base(restClient, backDoor, requestFactory)
         {
         }
 
@@ -38,7 +34,7 @@ public static partial class CreateContestTests
                 Group2Participants = MarkdownParser.ParseTable(group2Participants, MapRowToContestParticipantSpecification),
                 Group0ParticipatingCountryId = group0ParticipatingCountryCode is null
                     ? null
-                    : GivenCountries.GetId(group0ParticipatingCountryCode)
+                    : GivenCountries.LookupId(group0ParticipatingCountryCode)
             };
 
             Request = RequestFactory.Contests.CreateContest(requestBody);
@@ -68,13 +64,48 @@ public static partial class CreateContestTests
             Assert.Equal(expectedParticipants, createdContest.Participants);
         }
 
-        public void Then_the_problem_details_extensions_should_contain_the_country_ID_for_the_country(string countryCode)
+        public void Then_the_response_problem_details_should_have_a_countryId_extension_with_the_ID_of_the_country(
+            string countryCode)
         {
             Assert.NotNull(ResponseProblemDetails);
-            Guid expectedId = GivenCountries.GetId(countryCode);
+
+            Guid expectedCountryId = GivenCountries.LookupId(countryCode);
 
             Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "countryId", Value: JsonElement je }
-                                                                      && je.GetGuid() == expectedId);
+                                                                      && je.GetGuid() == expectedCountryId);
+        }
+
+        public void Then_the_response_problem_details_should_have_a_contestYear_extension_with(int contestYear)
+        {
+            Assert.NotNull(ResponseProblemDetails);
+
+            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "contestYear", Value: JsonElement je }
+                                                                      && je.GetInt32() == contestYear);
+        }
+
+        public void Then_the_response_problem_details_should_have_a_cityName_extension_with(string cityName)
+        {
+            Assert.NotNull(ResponseProblemDetails);
+
+            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "cityName", Value: JsonElement je }
+                                                                      && je.GetString() == cityName);
+        }
+
+        public void Then_the_response_problem_details_should_have_an_actName_extension_with(string actName)
+        {
+            Assert.NotNull(ResponseProblemDetails);
+
+            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "actName", Value: JsonElement je }
+                                                                      && je.GetString() == actName);
+        }
+
+
+        public void Then_the_response_problem_details_should_have_a_songTitle_extension_with(string songTitle)
+        {
+            Assert.NotNull(ResponseProblemDetails);
+
+            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "songTitle", Value: JsonElement je }
+                                                                      && je.GetString() == songTitle);
         }
 
         public async Task Then_the_created_contest_should_be_retrievable_by_its_ID()
@@ -82,28 +113,30 @@ public static partial class CreateContestTests
             Assert.NotNull(ResponseObject);
 
             Contest createdContest = ResponseObject.Contest;
-            Contest retrievedContest = await GetAllContestByIdAsync(createdContest.Id);
+            Contest retrievedContest = await GetExistingContestByIdAsync(createdContest.Id);
 
             Assert.Equal(createdContest, retrievedContest, new ContestEqualityComparer());
         }
 
-        public async Task Then_my_given_contest_should_be_the_only_existing_contest()
-        {
-            Assert.Single(GivenContests);
-
-            Contest[] existingContests = await GetAllContestsAsync();
-
-            Assert.Equal(GivenContests, existingContests, new ContestEqualityComparer());
-        }
-
         public async Task Then_no_contests_should_exist()
         {
-            Contest[] existingContests = await GetAllContestsAsync();
+            Contest[] existingContests = await GetAllExistingContestsAsync();
 
             Assert.Empty(existingContests);
         }
 
-        private async Task<Contest> GetAllContestByIdAsync(Guid contestId)
+        public async Task Then_my_given_contest_should_be_the_only_existing_contest()
+        {
+            Contest expectedContest = GivenContests.GetSingle();
+
+            Contest[] existingContests = await GetAllExistingContestsAsync();
+
+            Contest existingContest = Assert.Single(existingContests);
+
+            Assert.Equal(expectedContest, existingContest, new ContestEqualityComparer());
+        }
+
+        private async Task<Contest> GetExistingContestByIdAsync(Guid contestId)
         {
             RestRequest request = RequestFactory.Contests.GetContest(contestId);
 
@@ -113,7 +146,7 @@ public static partial class CreateContestTests
             return problemOrResponse.AsResponse.Data!.Contest;
         }
 
-        private async Task<Contest[]> GetAllContestsAsync()
+        private async Task<Contest[]> GetAllExistingContestsAsync()
         {
             RestRequest request = RequestFactory.Contests.GetContests();
 
@@ -124,19 +157,14 @@ public static partial class CreateContestTests
         }
 
         private ContestParticipantSpecification MapRowToContestParticipantSpecification(Dictionary<string, string> row) =>
-            new(GivenCountries.GetId(row["CountryCode"]), row["ActName"], row["SongTitle"]);
+            new(GivenCountries.LookupId(row["CountryCode"]), row["ActName"], row["SongTitle"]);
 
-        private Participant MapRowToParticipant(Dictionary<string, string> row)
+        private Participant MapRowToParticipant(Dictionary<string, string> row) => new()
         {
-            Dictionary<string, string> r = row;
-
-            return new Participant
-            {
-                ParticipatingCountryId = GivenCountries.GetId(row["CountryCode"]),
-                ParticipantGroup = int.Parse(row["Group"]),
-                ActName = string.IsNullOrWhiteSpace(row["ActName"]) ? null : row["ActName"],
-                SongTitle = string.IsNullOrWhiteSpace(row["SongTitle"]) ? null : row["SongTitle"]
-            };
-        }
+            ParticipatingCountryId = GivenCountries.LookupId(row["CountryCode"]),
+            ParticipantGroup = int.Parse(row["Group"]),
+            ActName = string.IsNullOrWhiteSpace(row["ActName"]) ? null : row["ActName"],
+            SongTitle = string.IsNullOrWhiteSpace(row["SongTitle"]) ? null : row["SongTitle"]
+        };
     }
 }

@@ -1,8 +1,8 @@
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Comparers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Broadcasts;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Contests;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Countries;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Responses;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V1.Broadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Contracts;
@@ -15,29 +15,26 @@ public static class GetBroadcastsTests
     {
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_retrieve_all_existing_broadcasts_in_broadcast_date_order(string apiVersion)
+        public async Task Should_return_all_existing_broadcasts_in_broadcast_date_order(string apiVersion)
         {
-            Admin admin = new(RestClient, BackDoor, apiVersion);
+            Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
 
             // Given
-            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
-            await admin.Given_I_have_created_a_Stockholm_format_contest(
-                contestYear: 2022,
-                cityName: "Turin",
+            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
+            await admin.Given_I_have_created_a_Liverpool_format_contest(contestYear: 2025,
+                cityName: "Basel",
+                group0CountryCode: "XX",
                 group1CountryCodes: ["AT", "BE", "CZ"],
                 group2CountryCodes: ["DK", "EE", "FI"]);
-            await admin.Given_I_have_created_a_child_broadcast_for_my_contest(
-                contestStage: "GrandFinal",
-                broadcastDate: "2022-05-14",
-                competingCountryCodes: ["AT", "BE", "DK", "FI"]);
-            await admin.Given_I_have_created_a_child_broadcast_for_my_contest(
-                contestStage: "SemiFinal1",
-                broadcastDate: "2022-05-10",
-                competingCountryCodes: ["AT", "BE", "CZ"]);
-            await admin.Given_I_have_created_a_child_broadcast_for_my_contest(
-                contestStage: "SemiFinal2",
-                broadcastDate: "2022-05-12",
-                competingCountryCodes: ["DK", "EE", "FI"]);
+            await admin.Given_I_have_created_a_child_broadcast_for_my_contest(contestStage: "GrandFinal",
+                broadcastDate: "2025-05-03",
+                competingCountryCodes: ["AT", "DK"]);
+            await admin.Given_I_have_created_a_child_broadcast_for_my_contest(contestStage: "SemiFinal1",
+                broadcastDate: "2025-05-01",
+                competingCountryCodes: ["AT", "BE"]);
+            await admin.Given_I_have_created_a_child_broadcast_for_my_contest(contestStage: "SemiFinal2",
+                broadcastDate: "2025-05-02",
+                competingCountryCodes: ["DK", "EE"]);
             admin.Given_I_want_to_retrieve_all_existing_broadcasts();
 
             // When
@@ -50,9 +47,9 @@ public static class GetBroadcastsTests
 
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_retrieve_empty_list_when_no_broadcasts_exist(string apiVersion)
+        public async Task Should_return_empty_list_when_no_broadcasts_exist(string apiVersion)
         {
-            Admin admin = new(RestClient, BackDoor, apiVersion);
+            Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
 
             // Given
             admin.Given_I_want_to_retrieve_all_existing_broadcasts();
@@ -66,12 +63,13 @@ public static class GetBroadcastsTests
         }
     }
 
-    private sealed class Admin : AdminActor<GetBroadcastsResponse>
+    private sealed class Admin : AdminActorWithResponse<GetBroadcastsResponse>
     {
-        public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, string apiVersion = "v1.0") :
-            base(restClient, backDoor, apiVersion)
+        public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, IRequestFactory requestFactory) :
+            base(restClient, backDoor, requestFactory)
         {
         }
+
 
         public void Given_I_want_to_retrieve_all_existing_broadcasts() => Request = RequestFactory.Broadcasts.GetBroadcasts();
 
@@ -79,7 +77,9 @@ public static class GetBroadcastsTests
         {
             Assert.NotNull(ResponseObject);
 
-            IOrderedEnumerable<Broadcast> expectedBroadcasts = GivenBroadcasts.OrderBy(broadcast => broadcast.BroadcastDate);
+            IOrderedEnumerable<Broadcast> expectedBroadcasts = GivenBroadcasts.GetAll()
+                .OrderBy(broadcast => broadcast.BroadcastDate);
+
             Broadcast[] actualBroadcasts = ResponseObject.Broadcasts;
 
             Assert.Equal(expectedBroadcasts, actualBroadcasts, new BroadcastEqualityComparer());
