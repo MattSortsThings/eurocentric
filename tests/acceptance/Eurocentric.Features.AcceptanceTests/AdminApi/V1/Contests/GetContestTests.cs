@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Contests;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Countries;
@@ -60,7 +59,7 @@ public static class GetContestTests
             admin.Then_the_response_problem_details_should_match(status: 404,
                 title: "Contest not found",
                 detail: "No contest exists with the provided contest ID.");
-            admin.Then_the_response_problem_details_should_have_a_contestId_extension_with_my_contest_ID();
+            admin.Then_the_response_problem_details_extensions_should_include_the_ID_of_my_contest();
         }
     }
 
@@ -88,14 +87,12 @@ public static class GetContestTests
             Assert.Equal(expectedContest, retrievedContest, new ContestEqualityComparer());
         }
 
-        public void Then_the_response_problem_details_should_have_a_contestId_extension_with_my_contest_ID()
+        public void Then_the_response_problem_details_extensions_should_include_the_ID_of_my_contest()
         {
-            Assert.NotNull(ResponseProblemDetails);
-
             Guid expectedContestId = GivenContests.GetSingle().Id;
 
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "contestId", Value: JsonElement je }
-                                                                      && je.GetGuid() == expectedContestId);
+            this.Then_the_response_problem_details_extensions_should_contain(key: "contestId",
+                value: expectedContestId.ToString());
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Countries;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Responses;
@@ -85,7 +84,7 @@ public static class CreateCountryTests
             admin.Then_the_response_problem_details_should_match(status: 409,
                 title: "Country code conflict",
                 detail: "A country already exists with the provided country code.");
-            admin.Then_the_response_problem_details_should_have_a_countryCode_extension_with("GB");
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "countryCode", value: "GB");
             await admin.Then_my_given_country_should_be_the_only_existing_country();
         }
 
@@ -106,7 +105,7 @@ public static class CreateCountryTests
             admin.Then_the_response_problem_details_should_match(status: 422,
                 title: "Illegal country code value",
                 detail: "Country code value must be a string of 2 upper-case letters.");
-            admin.Then_the_response_problem_details_should_have_a_countryCode_extension_with("999999");
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "countryCode", value: "999999");
             await admin.Then_there_should_be_no_existing_countries();
         }
 
@@ -127,7 +126,7 @@ public static class CreateCountryTests
             admin.Then_the_response_problem_details_should_match(status: 422,
                 title: "Illegal country name value",
                 detail: "Country name value must be a non-empty, non-whitespace string of no more than 200 characters.");
-            admin.Then_the_response_problem_details_should_have_a_countryName_extension_with(" ");
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "countryName", value: " ");
             await admin.Then_there_should_be_no_existing_countries();
         }
     }
@@ -168,22 +167,6 @@ public static class CreateCountryTests
 
             Assert.Equal(countryCode, createdCountry.CountryCode);
             Assert.Equal(countryName, createdCountry.CountryName);
-        }
-
-        public void Then_the_response_problem_details_should_have_a_countryCode_extension_with(string countryCode)
-        {
-            Assert.NotNull(ResponseProblemDetails);
-
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "countryCode", Value: JsonElement je }
-                                                                      && je.GetString() == countryCode);
-        }
-
-        public void Then_the_response_problem_details_should_have_a_countryName_extension_with(string countryName)
-        {
-            Assert.NotNull(ResponseProblemDetails);
-
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "countryName", Value: JsonElement je }
-                                                                      && je.GetString() == countryName);
         }
 
         public async Task Then_the_created_country_should_be_retrievable_by_its_ID()

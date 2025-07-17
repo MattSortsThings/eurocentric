@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Countries;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Responses;
@@ -49,7 +48,7 @@ public static class GetCountryTests
             admin.Then_the_response_problem_details_should_match(status: 404,
                 title: "Country not found",
                 detail: "No country exists with the provided country ID.");
-            admin.Then_the_response_problem_details_should_have_a_countryId_extension_with_my_country_ID();
+            admin.Then_the_response_problem_details_extensions_should_include_the_ID_of_my_country();
         }
     }
 
@@ -77,14 +76,12 @@ public static class GetCountryTests
             Assert.Equal(expectedCountry, retrievedCountry, new CountryEqualityComparer());
         }
 
-        public void Then_the_response_problem_details_should_have_a_countryId_extension_with_my_country_ID()
+        public void Then_the_response_problem_details_extensions_should_include_the_ID_of_my_country()
         {
-            Assert.NotNull(ResponseProblemDetails);
-
             Guid expectedCountryId = GivenCountries.GetSingle().Id;
 
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "countryId", Value: JsonElement je }
-                                                                      && je.GetGuid() == expectedCountryId);
+            this.Then_the_response_problem_details_extensions_should_contain(key: "countryId",
+                value: expectedCountryId.ToString());
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Eurocentric.Features.AcceptanceTests.Utils;
 
 public static partial class MarkdownParser
 {
-    public static T[] ParseTable<T>(string markdownTable, Func<Dictionary<string, string>, T> rowMapper)
+    public static IEnumerable<T> ParseTable<T>(string markdownTable, Func<Dictionary<string, string>, T> rowMapper)
     {
         string[] lines = NewLineRegex().Split(markdownTable)
             .Where(line => !string.IsNullOrWhiteSpace(line))
@@ -30,7 +30,7 @@ public static partial class MarkdownParser
                     .ToDictionary(kvp => kvp.key, kvp => kvp.value);
             });
 
-        return rows.Select(rowMapper).ToArray();
+        return rows.Select(rowMapper);
     }
 
     [GeneratedRegex(@"\r\n|\n|\r")]

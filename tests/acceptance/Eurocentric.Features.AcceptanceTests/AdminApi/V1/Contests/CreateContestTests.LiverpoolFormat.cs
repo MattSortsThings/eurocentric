@@ -19,8 +19,7 @@ public static partial class CreateContestTests
 
             // Given
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            admin.Given_I_want_to_create_a_contest(
-                contestFormat: "Liverpool",
+            admin.Given_I_want_to_create_a_contest(contestFormat: "Liverpool",
                 contestYear: 2023,
                 cityName: "Liverpool",
                 group0ParticipatingCountryCode: "XX",
@@ -44,8 +43,7 @@ public static partial class CreateContestTests
 
             // Then
             admin.Then_my_request_should_succeed_with_status_code(201);
-            admin.Then_the_created_contest_should_match(
-                contestFormat: "Liverpool",
+            admin.Then_the_created_contest_should_match(contestFormat: "Liverpool",
                 contestYear: 2023,
                 cityName: "Liverpool",
                 completed: false,
@@ -71,9 +69,8 @@ public static partial class CreateContestTests
             Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
 
             // Given
-            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "IT", "NO", "XX");
-            admin.Given_I_want_to_create_a_contest(
-                contestFormat: "Liverpool",
+            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "IT", "XX");
+            admin.Given_I_want_to_create_a_contest(contestFormat: "Liverpool",
                 contestYear: 2025,
                 cityName: "Basel",
                 group0ParticipatingCountryCode: "XX",
@@ -98,8 +95,7 @@ public static partial class CreateContestTests
 
             // Then
             admin.Then_my_request_should_succeed_with_status_code(201);
-            admin.Then_the_created_contest_should_match(
-                contestFormat: "Liverpool",
+            admin.Then_the_created_contest_should_match(contestFormat: "Liverpool",
                 contestYear: 2025,
                 cityName: "Basel",
                 completed: false,
@@ -141,7 +137,8 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 404,
                 title: "Orphan participating country ID",
                 detail: "No country exists with the provided country ID.");
-            admin.Then_the_response_problem_details_should_have_a_countryId_extension_with_the_ID_of_the_country("XX");
+            admin.Then_the_response_problem_details_extensions_should_include_the_ID_of_the_country_with_country_code("XX");
+            await admin.Then_no_contests_should_exist();
         }
 
         [Theory]
@@ -152,7 +149,7 @@ public static partial class CreateContestTests
 
             // Given
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            await admin.Given_I_have_deleted_the_country_with_country_code("CZ");
+            await admin.Given_I_have_deleted_the_country_with_country_code("BE");
             admin.Given_I_want_to_create_a_Liverpool_format_contest_with_participating_countries(
                 group0CountryCode: "XX",
                 group1CountryCodes: ["AT", "BE", "CZ"],
@@ -166,7 +163,8 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 404,
                 title: "Orphan participating country ID",
                 detail: "No country exists with the provided country ID.");
-            admin.Then_the_response_problem_details_should_have_a_countryId_extension_with_the_ID_of_the_country("CZ");
+            admin.Then_the_response_problem_details_extensions_should_include_the_ID_of_the_country_with_country_code("BE");
+            await admin.Then_no_contests_should_exist();
         }
 
         [Theory]
@@ -177,7 +175,7 @@ public static partial class CreateContestTests
 
             // Given
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            await admin.Given_I_have_deleted_the_country_with_country_code("FI");
+            await admin.Given_I_have_deleted_the_country_with_country_code("EE");
             admin.Given_I_want_to_create_a_Liverpool_format_contest_with_participating_countries(
                 group0CountryCode: "XX",
                 group1CountryCodes: ["AT", "BE", "CZ"],
@@ -191,7 +189,8 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 404,
                 title: "Orphan participating country ID",
                 detail: "No country exists with the provided country ID.");
-            admin.Then_the_response_problem_details_should_have_a_countryId_extension_with_the_ID_of_the_country("FI");
+            admin.Then_the_response_problem_details_extensions_should_include_the_ID_of_the_country_with_country_code("EE");
+            await admin.Then_no_contests_should_exist();
         }
 
         [Theory]
@@ -202,8 +201,7 @@ public static partial class CreateContestTests
 
             // Given
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            await admin.Given_I_have_created_a_Liverpool_format_contest(
-                contestYear: 2025,
+            await admin.Given_I_have_created_a_Liverpool_format_contest(contestYear: 2025,
                 cityName: "Basel",
                 group0CountryCode: "XX",
                 group1CountryCodes: ["AT", "BE", "CZ"],
@@ -218,7 +216,7 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 409,
                 title: "Contest year conflict",
                 detail: "A contest already exists with the provided contest year.");
-            admin.Then_the_response_problem_details_should_have_a_contestYear_extension_with(2025);
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "contestYear", value: 2025);
             await admin.Then_my_given_contest_should_be_the_only_existing_contest();
         }
 
@@ -240,7 +238,7 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 422,
                 title: "Illegal contest year value",
                 detail: "Contest year value must be an integer between 2016 and 2050.");
-            admin.Then_the_response_problem_details_should_have_a_contestYear_extension_with(3000);
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "contestYear", value: 3000);
             await admin.Then_no_contests_should_exist();
         }
 
@@ -262,7 +260,7 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 422,
                 title: "Illegal city name value",
                 detail: "City name value must be a non-empty, non-whitespace string of no more than 200 characters.");
-            admin.Then_the_response_problem_details_should_have_a_cityName_extension_with(" ");
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "cityName", value: " ");
             await admin.Then_no_contests_should_exist();
         }
 
@@ -275,9 +273,7 @@ public static partial class CreateContestTests
 
             // Given
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            admin.Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_1_participant(
-                actName: " ",
-                songTitle: "ArbitrarySongTitle");
+            admin.Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_1_participant_act_name(" ");
 
             // When
             await admin.When_I_send_my_request();
@@ -287,32 +283,7 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 422,
                 title: "Illegal act name value",
                 detail: "Act name value must be a non-empty, non-whitespace string of no more than 200 characters.");
-            admin.Then_the_response_problem_details_should_have_an_actName_extension_with(" ");
-            await admin.Then_no_contests_should_exist();
-        }
-
-        [Theory]
-        [InlineData("v1.0")]
-        public async Task Should_fail_on_Liverpool_format_contest_with_illegal_group_2_participant_act_name_value(
-            string apiVersion)
-        {
-            Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
-
-            // Given
-            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            admin.Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_2_participant(
-                actName: " ",
-                songTitle: "ArbitrarySongTitle");
-
-            // When
-            await admin.When_I_send_my_request();
-
-            // Then
-            admin.Then_my_request_should_fail_with_status_code(422);
-            admin.Then_the_response_problem_details_should_match(status: 422,
-                title: "Illegal act name value",
-                detail: "Act name value must be a non-empty, non-whitespace string of no more than 200 characters.");
-            admin.Then_the_response_problem_details_should_have_an_actName_extension_with(" ");
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "actName", value: " ");
             await admin.Then_no_contests_should_exist();
         }
 
@@ -325,9 +296,7 @@ public static partial class CreateContestTests
 
             // Given
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            admin.Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_1_participant(
-                actName: "ArbitraryActName",
-                songTitle: " ");
+            admin.Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_1_participant_song_title(" ");
 
             // When
             await admin.When_I_send_my_request();
@@ -337,7 +306,30 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 422,
                 title: "Illegal song title value",
                 detail: "Song title value must be a non-empty, non-whitespace string of no more than 200 characters.");
-            admin.Then_the_response_problem_details_should_have_a_songTitle_extension_with(" ");
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "songTitle", value: " ");
+            await admin.Then_no_contests_should_exist();
+        }
+
+        [Theory]
+        [InlineData("v1.0")]
+        public async Task Should_fail_on_Liverpool_format_contest_with_illegal_group_2_participant_act_name_value(
+            string apiVersion)
+        {
+            Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
+
+            // Given
+            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
+            admin.Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_2_participant_act_name(" ");
+
+            // When
+            await admin.When_I_send_my_request();
+
+            // Then
+            admin.Then_my_request_should_fail_with_status_code(422);
+            admin.Then_the_response_problem_details_should_match(status: 422,
+                title: "Illegal act name value",
+                detail: "Act name value must be a non-empty, non-whitespace string of no more than 200 characters.");
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "actName", value: " ");
             await admin.Then_no_contests_should_exist();
         }
 
@@ -350,9 +342,7 @@ public static partial class CreateContestTests
 
             // Given
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            admin.Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_2_participant(
-                actName: "ArbitraryActName",
-                songTitle: " ");
+            admin.Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_2_participant_song_title(" ");
 
             // When
             await admin.When_I_send_my_request();
@@ -362,13 +352,13 @@ public static partial class CreateContestTests
             admin.Then_the_response_problem_details_should_match(status: 422,
                 title: "Illegal song title value",
                 detail: "Song title value must be a non-empty, non-whitespace string of no more than 200 characters.");
-            admin.Then_the_response_problem_details_should_have_a_songTitle_extension_with(" ");
+            admin.Then_the_response_problem_details_extensions_should_contain(key: "songTitle", value: " ");
             await admin.Then_no_contests_should_exist();
         }
 
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_fail_on_Liverpool_format_contest_with_duplicate_group_0_and_group_1_participating_country_IDs(
+        public async Task Should_fail_on_Liverpool_format_contest_with_duplicate_group_0_and_1_participating_country_IDs(
             string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
@@ -393,7 +383,7 @@ public static partial class CreateContestTests
 
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_fail_on_Liverpool_format_contest_with_duplicate_group_0_and_group_2_participating_country_IDs(
+        public async Task Should_fail_on_Liverpool_format_contest_with_duplicate_group_0_and_2_participating_country_IDs(
             string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
@@ -418,7 +408,7 @@ public static partial class CreateContestTests
 
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_fail_on_Liverpool_format_contest_with_duplicate_group_1_and_group_2_participating_country_IDs(
+        public async Task Should_fail_on_Liverpool_format_contest_with_duplicate_group_1_and_2_participating_country_IDs(
             string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
@@ -427,8 +417,8 @@ public static partial class CreateContestTests
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
             admin.Given_I_want_to_create_a_Liverpool_format_contest_with_participating_countries(
                 group0CountryCode: "XX",
-                group1CountryCodes: ["AT", "BE", "CZ", "FI"],
-                group2CountryCodes: ["DK", "EE", "FI"]);
+                group1CountryCodes: ["AT", "BE", "CZ"],
+                group2CountryCodes: ["DK", "EE", "FI", "AT"]);
 
             // When
             await admin.When_I_send_my_request();
@@ -452,7 +442,7 @@ public static partial class CreateContestTests
             await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
             admin.Given_I_want_to_create_a_Liverpool_format_contest_with_participating_countries(
                 group0CountryCode: "XX",
-                group1CountryCodes: ["AT", "BE", "CZ", "AT"],
+                group1CountryCodes: ["AT", "BE", "CZ", "CZ"],
                 group2CountryCodes: ["DK", "EE", "FI"]);
 
             // When
@@ -478,7 +468,7 @@ public static partial class CreateContestTests
             admin.Given_I_want_to_create_a_Liverpool_format_contest_with_participating_countries(
                 group0CountryCode: "XX",
                 group1CountryCodes: ["AT", "BE", "CZ"],
-                group2CountryCodes: ["DK", "EE", "FI", "DK"]);
+                group2CountryCodes: ["DK", "EE", "FI", "FI"]);
 
             // When
             await admin.When_I_send_my_request();
@@ -498,7 +488,7 @@ public static partial class CreateContestTests
             Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
 
             // Given
-            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
+            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
             admin.Given_I_want_to_create_a_Liverpool_format_contest_with_participating_countries(
                 group1CountryCodes: ["AT", "BE", "CZ"],
                 group2CountryCodes: ["DK", "EE", "FI"]);
@@ -606,24 +596,38 @@ public static partial class CreateContestTests
             Request = RequestFactory.Contests.CreateContest(requestBody);
         }
 
-        public void Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_1_participant(string songTitle = "",
-            string actName = "")
+        public void Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_1_participant_act_name(string actName)
         {
             CreateContestRequest requestBody = CreateDefaultLiverpoolFormatContest();
 
-            requestBody.Group1Participants[0] =
-                requestBody.Group1Participants[0] with { ActName = actName, SongTitle = songTitle };
+            requestBody.Group1Participants[0] = requestBody.Group1Participants[0] with { ActName = actName };
 
             Request = RequestFactory.Contests.CreateContest(requestBody);
         }
 
-        public void Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_2_participant(string songTitle = "",
-            string actName = "")
+        public void Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_1_participant_song_title(string songTitle)
         {
             CreateContestRequest requestBody = CreateDefaultLiverpoolFormatContest();
 
-            requestBody.Group2Participants[0] =
-                requestBody.Group2Participants[0] with { ActName = actName, SongTitle = songTitle };
+            requestBody.Group1Participants[0] = requestBody.Group1Participants[0] with { SongTitle = songTitle };
+
+            Request = RequestFactory.Contests.CreateContest(requestBody);
+        }
+
+        public void Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_2_participant_act_name(string actName)
+        {
+            CreateContestRequest requestBody = CreateDefaultLiverpoolFormatContest();
+
+            requestBody.Group2Participants[0] = requestBody.Group2Participants[0] with { ActName = actName };
+
+            Request = RequestFactory.Contests.CreateContest(requestBody);
+        }
+
+        public void Given_I_want_to_create_a_Liverpool_format_contest_with_a_group_2_participant_song_title(string songTitle)
+        {
+            CreateContestRequest requestBody = CreateDefaultLiverpoolFormatContest();
+
+            requestBody.Group2Participants[0] = requestBody.Group2Participants[0] with { SongTitle = songTitle };
 
             Request = RequestFactory.Contests.CreateContest(requestBody);
         }

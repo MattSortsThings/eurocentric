@@ -1,5 +1,5 @@
-using System.Text.Json;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Responses;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 using Eurocentric.Features.AdminApi.V1.Contests;
@@ -30,8 +30,8 @@ public static partial class CreateContestTests
                 ContestYear = contestYear,
                 CityName = cityName,
                 ContestFormat = Enum.Parse<ContestFormat>(contestFormat),
-                Group1Participants = MarkdownParser.ParseTable(group1Participants, MapRowToContestParticipantSpecification),
-                Group2Participants = MarkdownParser.ParseTable(group2Participants, MapRowToContestParticipantSpecification),
+                Group1Participants = MarkdownParser.ParseTable(group1Participants, MapRowToContestParticipantSpec).ToArray(),
+                Group2Participants = MarkdownParser.ParseTable(group2Participants, MapRowToContestParticipantSpec).ToArray(),
                 Group0ParticipatingCountryId = group0ParticipatingCountryCode is null
                     ? null
                     : GivenCountries.LookupId(group0ParticipatingCountryCode)
@@ -52,7 +52,12 @@ public static partial class CreateContestTests
             Contest createdContest = ResponseObject.Contest;
 
             ContestFormat expectedFormat = Enum.Parse<ContestFormat>(contestFormat);
+
             IOrderedEnumerable<Participant> expectedParticipants = MarkdownParser.ParseTable(participants, MapRowToParticipant)
+                .OrderBy(participant => participant.ParticipantGroup)
+                .ThenBy(participant => participant.ParticipatingCountryId);
+
+            IOrderedEnumerable<Participant> actualParticipants = createdContest.Participants
                 .OrderBy(participant => participant.ParticipantGroup)
                 .ThenBy(participant => participant.ParticipatingCountryId);
 
@@ -61,51 +66,16 @@ public static partial class CreateContestTests
             Assert.Equal(expectedFormat, createdContest.ContestFormat);
             Assert.Equal(completed, createdContest.Completed);
             Assert.Equal(childBroadcasts, createdContest.ChildBroadcasts.Length);
-            Assert.Equal(expectedParticipants, createdContest.Participants);
+            Assert.Equal(expectedParticipants, actualParticipants);
         }
 
-        public void Then_the_response_problem_details_should_have_a_countryId_extension_with_the_ID_of_the_country(
+        public void Then_the_response_problem_details_extensions_should_include_the_ID_of_the_country_with_country_code(
             string countryCode)
         {
-            Assert.NotNull(ResponseProblemDetails);
-
             Guid expectedCountryId = GivenCountries.LookupId(countryCode);
 
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "countryId", Value: JsonElement je }
-                                                                      && je.GetGuid() == expectedCountryId);
-        }
-
-        public void Then_the_response_problem_details_should_have_a_contestYear_extension_with(int contestYear)
-        {
-            Assert.NotNull(ResponseProblemDetails);
-
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "contestYear", Value: JsonElement je }
-                                                                      && je.GetInt32() == contestYear);
-        }
-
-        public void Then_the_response_problem_details_should_have_a_cityName_extension_with(string cityName)
-        {
-            Assert.NotNull(ResponseProblemDetails);
-
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "cityName", Value: JsonElement je }
-                                                                      && je.GetString() == cityName);
-        }
-
-        public void Then_the_response_problem_details_should_have_an_actName_extension_with(string actName)
-        {
-            Assert.NotNull(ResponseProblemDetails);
-
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "actName", Value: JsonElement je }
-                                                                      && je.GetString() == actName);
-        }
-
-
-        public void Then_the_response_problem_details_should_have_a_songTitle_extension_with(string songTitle)
-        {
-            Assert.NotNull(ResponseProblemDetails);
-
-            Assert.Contains(ResponseProblemDetails.Extensions, kvp => kvp is { Key: "songTitle", Value: JsonElement je }
-                                                                      && je.GetString() == songTitle);
+            this.Then_the_response_problem_details_extensions_should_contain(key: "countryId",
+                value: expectedCountryId.ToString());
         }
 
         public async Task Then_the_created_contest_should_be_retrievable_by_its_ID()
@@ -156,7 +126,7 @@ public static partial class CreateContestTests
             return problemOrResponse.AsResponse.Data!.Contests;
         }
 
-        private ContestParticipantSpecification MapRowToContestParticipantSpecification(Dictionary<string, string> row) =>
+        private ContestParticipantSpecification MapRowToContestParticipantSpec(Dictionary<string, string> row) =>
             new(GivenCountries.LookupId(row["CountryCode"]), row["ActName"], row["SongTitle"]);
 
         private Participant MapRowToParticipant(Dictionary<string, string> row) => new()
