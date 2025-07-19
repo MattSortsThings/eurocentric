@@ -36,11 +36,11 @@ public abstract class AdminActorWithResponse<TResponse> : IAdminActor, IResponse
 
     public CountryCollection GivenCountries => _lazyCountryCollection.Value;
 
-    public TResponse? ResponseObject { get; private set; }
-
     public HttpStatusCode ResponseStatusCode { get; private set; }
 
     public ProblemDetails? ResponseProblemDetails { get; private set; }
+
+    public TResponse? ResponseObject { get; private set; }
 
     public async Task When_I_send_my_request()
     {

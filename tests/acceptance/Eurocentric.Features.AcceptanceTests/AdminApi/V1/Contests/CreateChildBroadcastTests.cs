@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Broadcasts;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Contests;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Countries;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Responses;
@@ -257,28 +258,11 @@ public static partial class CreateChildBroadcastTests
         {
             Broadcast expectedBroadcast = GivenBroadcasts.GetSingle();
 
-            Broadcast[] existingBroadcasts = await GetAllExistingBroadcastsAsync();
+            Broadcast[] existingBroadcasts = await this.GetAllExistingBroadcastsAsync();
 
             Broadcast existingBroadcast = Assert.Single(existingBroadcasts);
 
             Assert.Equal(expectedBroadcast, existingBroadcast, new BroadcastEqualityComparer());
-        }
-
-        public async Task Then_no_broadcasts_should_exist()
-        {
-            Broadcast[] existingBroadcasts = await GetAllExistingBroadcastsAsync();
-
-            Assert.Empty(existingBroadcasts);
-        }
-
-        private async Task<Broadcast[]> GetAllExistingBroadcastsAsync()
-        {
-            RestRequest request = RequestFactory.Broadcasts.GetBroadcasts();
-
-            ProblemOrResponse<GetBroadcastsResponse> problemOrResponse =
-                await RestClient.SendAsync<GetBroadcastsResponse>(request, TestContext.Current.CancellationToken);
-
-            return problemOrResponse.AsResponse.Data!.Broadcasts;
         }
 
         private async Task<Broadcast> GetExistingBroadcastByIdAsync(Guid broadcastId)

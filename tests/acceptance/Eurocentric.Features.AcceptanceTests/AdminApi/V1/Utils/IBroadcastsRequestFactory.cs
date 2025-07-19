@@ -8,6 +8,13 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 public interface IBroadcastsRequestFactory
 {
     /// <summary>
+    ///     Creates a REST request for the "DeleteBroadcast" endpoint.
+    /// </summary>
+    /// <param name="broadcastId">The broadcast ID.</param>
+    /// <returns>A <see cref="RestRequest" /> instance.</returns>
+    public RestRequest DeleteBroadcast(Guid broadcastId);
+
+    /// <summary>
     ///     Creates a REST request for the "GetBroadcast" endpoint.
     /// </summary>
     /// <param name="broadcastId">The broadcast ID.</param>

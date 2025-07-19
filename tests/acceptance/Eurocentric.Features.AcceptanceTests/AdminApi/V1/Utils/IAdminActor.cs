@@ -3,7 +3,7 @@ using Eurocentric.Features.AdminApi.V1.Contests;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 
-public interface IAdminActor
+public interface IAdminActor : IResponseVerifier
 {
     public static readonly ContestParticipantSpecification DefaultContestParticipantSpecification =
         new(Guid.Empty, "ActName", "SongTitle");

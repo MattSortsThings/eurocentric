@@ -4,59 +4,56 @@ using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Contests;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Countries;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Mixins.Responses;
 using Eurocentric.Features.AcceptanceTests.Utils;
-using Eurocentric.Features.AdminApi.V1.Broadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Contracts;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts;
 
-public static class GetBroadcastTests
+public static class DeleteBroadcastTests
 {
     public sealed class Endpoint(WebAppFixture fixture) : AcceptanceTest(fixture)
     {
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_retrieve_requested_contest(string apiVersion)
+        public async Task Should_delete_requested_broadcast(string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
 
             // Given
-            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            await admin.Given_I_have_created_a_Liverpool_format_contest(contestYear: 2025,
-                cityName: "Basel",
-                group0CountryCode: "XX",
+            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
+            await admin.Given_I_have_created_a_Stockholm_format_contest(contestYear: 2016,
+                cityName: "Stockholm",
                 group1CountryCodes: ["AT", "BE", "CZ"],
                 group2CountryCodes: ["DK", "EE", "FI"]);
             await admin.Given_I_have_created_a_child_broadcast_for_my_contest(contestStage: "GrandFinal",
-                broadcastDate: "2025-05-03",
-                competingCountryCodes: ["AT", "DK"]);
-            admin.Given_I_want_to_retrieve_my_broadcast();
+                broadcastDate: "2016-05-01",
+                competingCountryCodes: ["AT", "BE", "CZ", "DK", "EE", "FI"]);
+            admin.Given_I_want_to_delete_my_broadcast();
 
             // When
             await admin.When_I_send_my_request();
 
             // Then
-            admin.Then_my_request_should_succeed_with_status_code(200);
-            admin.Then_the_retrieved_broadcast_should_be_my_broadcast();
+            admin.Then_my_request_should_succeed_with_status_code(204);
+            await admin.Then_no_broadcasts_should_exist();
         }
 
         [Theory]
         [InlineData("v1.0")]
-        public async Task Should_fail_on_non_existent_country_requested(string apiVersion)
+        public async Task Should_fail_on_non_existent_broadcast_requested(string apiVersion)
         {
             Admin admin = new(RestClient, BackDoor, RequestFactory.WithApiVersion(apiVersion));
 
             // Given
-            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-            await admin.Given_I_have_created_a_Liverpool_format_contest(contestYear: 2025,
-                cityName: "Basel",
-                group0CountryCode: "XX",
+            await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
+            await admin.Given_I_have_created_a_Stockholm_format_contest(contestYear: 2016,
+                cityName: "Stockholm",
                 group1CountryCodes: ["AT", "BE", "CZ"],
                 group2CountryCodes: ["DK", "EE", "FI"]);
             await admin.Given_I_have_created_a_child_broadcast_for_my_contest(contestStage: "GrandFinal",
-                broadcastDate: "2025-05-03",
-                competingCountryCodes: ["AT", "DK"]);
+                broadcastDate: "2016-05-01",
+                competingCountryCodes: ["AT", "BE", "CZ", "DK", "EE", "FI"]);
             await admin.Given_I_have_deleted_my_broadcast();
-            admin.Given_I_want_to_retrieve_my_broadcast();
+            admin.Given_I_want_to_delete_my_broadcast();
 
             // When
             await admin.When_I_send_my_request();
@@ -70,28 +67,18 @@ public static class GetBroadcastTests
         }
     }
 
-    private sealed class Admin : AdminActorWithResponse<GetBroadcastResponse>
+    private sealed class Admin : AdminActorWithoutResponse
     {
         public Admin(IWebAppFixtureRestClient restClient, IWebAppFixtureBackDoor backDoor, IRequestFactory requestFactory) :
             base(restClient, backDoor, requestFactory)
         {
         }
 
-        public void Given_I_want_to_retrieve_my_broadcast()
+        public void Given_I_want_to_delete_my_broadcast()
         {
-            Broadcast broadcast = GivenBroadcasts.GetSingle();
+            Broadcast myBroadcast = GivenBroadcasts.GetSingle();
 
-            Request = RequestFactory.Broadcasts.GetBroadcast(broadcast.Id);
-        }
-
-        public void Then_the_retrieved_broadcast_should_be_my_broadcast()
-        {
-            Assert.NotNull(ResponseObject);
-
-            Broadcast expectedBroadcast = GivenBroadcasts.GetSingle();
-            Broadcast retrievedBroadcast = ResponseObject.Broadcast;
-
-            Assert.Equal(expectedBroadcast, retrievedBroadcast, new BroadcastEqualityComparer());
+            Request = RequestFactory.Broadcasts.DeleteBroadcast(myBroadcast.Id);
         }
     }
 }

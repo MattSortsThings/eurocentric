@@ -6,6 +6,7 @@ internal static partial class EndpointConstants
     {
         internal static class Broadcasts
         {
+            internal const string DeleteBroadcast = "AdminApi.V1.Broadcasts.DeleteBroadcast";
             internal const string GetBroadcast = "AdminApi.V1.Broadcasts.GetBroadcast";
             internal const string GetBroadcasts = "AdminApi.V1.Broadcasts.GetBroadcasts";
         }
