@@ -62,6 +62,27 @@ public static class AdminActorExtensions
         admin.GivenContests.Add(createdContest);
     }
 
+    public static async Task Given_I_have_created_a_child_broadcast_for_my_contest(this IAdminActor admin,
+        string[] competingCountryCodes = null!,
+        string broadcastDate = "",
+        string contestStage = "")
+    {
+        Contest myContest = admin.GivenContests.GetSingle();
+
+        CreateChildBroadcastRequest requestBody = new()
+        {
+            ContestStage = Enum.Parse<ContestStage>(contestStage),
+            BroadcastDate = DateOnly.ParseExact(broadcastDate, "yyyy-MM-dd"),
+            CompetingCountryIds = competingCountryCodes.Select(admin.GivenCountries.LookupId).ToArray()
+        };
+
+        Broadcast createdBroadcast = await admin.CreateChildBroadcastAsync(myContest.Id, requestBody);
+        admin.GivenBroadcasts.Add(createdBroadcast);
+
+        Contest updatedContest = await admin.GetExistingContestByIdAsync(myContest.Id);
+        admin.GivenContests.Replace(updatedContest);
+    }
+
     public static async Task Given_I_have_deleted_my_contest(this IAdminActor admin)
     {
         ContestId contestId = ContestId.FromValue(admin.GivenContests.GetSingle().Id);
@@ -82,6 +103,25 @@ public static class AdminActorExtensions
 
         ProblemOrResponse<CreateContestResponse> problemOrResponse =
             await admin.RestClient.SendAsync<CreateContestResponse>(request, TestContext.Current.CancellationToken);
+
+        return problemOrResponse.AsResponse.Data!.Contest;
+    }
+
+    private static async Task<Broadcast> CreateChildBroadcastAsync(this IAdminActor admin, Guid contestId,
+        CreateChildBroadcastRequest requestBody)
+    {
+        RestRequest request = admin.RequestFactory.Contests.CreateChildBroadcast(contestId, requestBody);
+        ProblemOrResponse<CreateChildBroadcastResponse> problemOrResponse =
+            await admin.RestClient.SendAsync<CreateChildBroadcastResponse>(request, TestContext.Current.CancellationToken);
+
+        return problemOrResponse.AsResponse.Data!.Broadcast;
+    }
+
+    private static async Task<Contest> GetExistingContestByIdAsync(this IAdminActor admin, Guid contestId)
+    {
+        RestRequest request = admin.RequestFactory.Contests.GetContest(contestId);
+        ProblemOrResponse<GetContestResponse> problemOrResponse =
+            await admin.RestClient.SendAsync<GetContestResponse>(request, TestContext.Current.CancellationToken);
 
         return problemOrResponse.AsResponse.Data!.Contest;
     }

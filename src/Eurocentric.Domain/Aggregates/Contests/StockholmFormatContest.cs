@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using ErrorOr;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
@@ -22,6 +23,15 @@ public sealed class StockholmFormatContest : Contest
 
     /// <inheritdoc />
     public override ContestFormat ContestFormat { get; private protected init; } = ContestFormat.Stockholm;
+
+    private protected override IBroadcastEligibilityRulesSet GetBroadcastEligibilityRules(ContestStage contestStage) =>
+        contestStage switch
+        {
+            ContestStage.SemiFinal1 => new SemiFinal1BroadcastEligibilityRules(),
+            ContestStage.SemiFinal2 => new SemiFinal2BroadcastEligibilityRules(),
+            ContestStage.GrandFinal => new GrandFinalBroadcastEligibilityRules(),
+            _ => throw new InvalidEnumArgumentException(nameof(contestStage), (int)contestStage, typeof(ContestStage))
+        };
 
     /// <summary>
     ///     Starts the process of creating a new <see cref="StockholmFormatContest" /> instance using the fluent builder.
@@ -56,5 +66,35 @@ public sealed class StockholmFormatContest : Contest
                    || groupSizes.TryGetValue(ParticipantGroup.One, out int group1Size) is false || group1Size < 3
                    || groupSizes.TryGetValue(ParticipantGroup.Two, out int group2Size) is false || group2Size < 3;
         }
+    }
+
+    private sealed class SemiFinal1BroadcastEligibilityRules : IBroadcastEligibilityRulesSet
+    {
+        public bool MayCompete(Participant participant) => participant.ParticipantGroup == ParticipantGroup.One;
+
+        public bool HasJury(Participant participant) => participant.ParticipantGroup == ParticipantGroup.One;
+
+        public bool HasTelevote(Participant participant) => participant.ParticipantGroup == ParticipantGroup.One;
+    }
+
+    private sealed class SemiFinal2BroadcastEligibilityRules : IBroadcastEligibilityRulesSet
+    {
+        public bool MayCompete(Participant participant) => participant.ParticipantGroup == ParticipantGroup.Two;
+
+        public bool HasJury(Participant participant) => participant.ParticipantGroup == ParticipantGroup.Two;
+
+        public bool HasTelevote(Participant participant) => participant.ParticipantGroup == ParticipantGroup.Two;
+    }
+
+    private sealed class GrandFinalBroadcastEligibilityRules : IBroadcastEligibilityRulesSet
+    {
+        public bool MayCompete(Participant participant) =>
+            participant.ParticipantGroup is ParticipantGroup.One or ParticipantGroup.Two;
+
+        public bool HasJury(Participant participant) =>
+            participant.ParticipantGroup is ParticipantGroup.One or ParticipantGroup.Two;
+
+        public bool HasTelevote(Participant participant) =>
+            participant.ParticipantGroup is ParticipantGroup.One or ParticipantGroup.Two;
     }
 }

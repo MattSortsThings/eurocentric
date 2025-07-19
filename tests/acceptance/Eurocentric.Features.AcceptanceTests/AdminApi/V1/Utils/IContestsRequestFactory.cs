@@ -9,6 +9,14 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 public interface IContestsRequestFactory
 {
     /// <summary>
+    ///     Creates a REST request for the "CreateChildBroadcast" endpoint.
+    /// </summary>
+    /// <param name="contestId">The contest ID.</param>
+    /// <param name="requestBody">The request body.</param>
+    /// <returns>A <see cref="RestRequest" /> instance.</returns>
+    public RestRequest CreateChildBroadcast(Guid contestId, CreateChildBroadcastRequest requestBody);
+
+    /// <summary>
     ///     Creates a REST request for the "CreateContest" endpoint.
     /// </summary>
     /// <param name="requestBody">The request body.</param>

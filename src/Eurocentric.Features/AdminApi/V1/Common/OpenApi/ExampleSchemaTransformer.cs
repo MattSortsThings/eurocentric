@@ -12,6 +12,8 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
         new Dictionary<Type, IOpenApiAny>
         {
             [typeof(Broadcast)] = Broadcast.CreateExample().ToOpenApiAny(),
+            [typeof(CreateChildBroadcastRequest)] = CreateChildBroadcastRequest.CreateExample().ToOpenApiAny(),
+            [typeof(CreateChildBroadcastResponse)] = CreateChildBroadcastResponse.CreateExample().ToOpenApiAny(),
             [typeof(CreateContestRequest)] = CreateContestRequest.CreateExample().ToOpenApiAny(),
             [typeof(CreateContestResponse)] = CreateContestResponse.CreateExample().ToOpenApiAny(),
             [typeof(CreateCountryRequest)] = CreateCountryRequest.CreateExample().ToOpenApiAny(),

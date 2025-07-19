@@ -21,7 +21,7 @@ public sealed record EightCountryIds
 
     public CountryId Gb { get; } = CountryId.FromValue(Guid.Parse("07acb390-f9c6-4f7f-b0e5-d8cb87500d8e"));
 
-    public CountryId Hu { get; } = CountryId.FromValue(Guid.Parse("08acb390-f9c6-4f7f-b0e5-d8cb87500d8e"));
+    public CountryId Hr { get; } = CountryId.FromValue(Guid.Parse("08acb390-f9c6-4f7f-b0e5-d8cb87500d8e"));
 
     public void Deconstruct(out CountryId at, out CountryId be, out CountryId cz, out CountryId dk, out CountryId ee,
         out CountryId fi, out CountryId gb, out CountryId hu)
@@ -33,6 +33,6 @@ public sealed record EightCountryIds
         ee = Ee;
         fi = Fi;
         gb = Gb;
-        hu = Hu;
+        hu = Hr;
     }
 }

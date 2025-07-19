@@ -24,6 +24,12 @@ public sealed class RequestFactory : IRequestFactory,
     public RestRequest GetBroadcasts() => Get("/admin/api/{apiVersion}/broadcasts")
         .AddUrlSegment("apiVersion", _apiVersion);
 
+    public RestRequest CreateChildBroadcast(Guid contestId, CreateChildBroadcastRequest requestBody) =>
+        Post("/admin/api/{apiVersion}/contests/{contestId}/broadcasts")
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("contestId", contestId)
+            .AddJsonBody(requestBody);
+
     public RestRequest CreateContest(CreateContestRequest requestBody) => Post("/admin/api/{apiVersion}/contests")
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddJsonBody(requestBody);

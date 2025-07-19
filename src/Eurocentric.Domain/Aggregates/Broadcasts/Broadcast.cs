@@ -49,7 +49,7 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     /// <summary>
     ///     Gets the broadcast's stage in its parent contest aggregate.
     /// </summary>
-    public ContestStage ContestStage { get; private init; }
+    public ContestStage ContestStage { get; }
 
     /// <summary>
     ///     Gets a boolean value indicating whether the broadcast has been completed.
