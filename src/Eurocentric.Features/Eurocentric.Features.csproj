@@ -8,4 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer"/>
+    <PackageReference Include="SlimMessageBus.Host.Memory"/>
+  </ItemGroup>
 </Project>
