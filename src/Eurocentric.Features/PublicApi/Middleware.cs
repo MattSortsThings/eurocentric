@@ -1,4 +1,4 @@
-using Eurocentric.Features.PublicApi.V0.Common;
+using Eurocentric.Features.PublicApi.V0;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 

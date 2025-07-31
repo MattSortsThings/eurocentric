@@ -1,9 +1,11 @@
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
+using Eurocentric.Features.PublicApi.V0.Queryables;
+using Eurocentric.Features.PublicApi.V0.Rankings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Eurocentric.Features.PublicApi.V0.Common;
+namespace Eurocentric.Features.PublicApi.V0;
 
 /// <summary>
 ///     Extension methods to be invoked when configuring web application middleware.
@@ -21,8 +23,8 @@ internal static class Middleware
             .AllowAnonymous()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        v0Group.MapGet("placeholder", () => TypedResults.Ok($"Public API zapped to the extreme at {DateTime.Now}!"))
-            .HasApiVersion(0, 1)
-            .HasApiVersion(0, 2);
+        v0Group.MapQueryablesEndpoints();
+
+        v0Group.MapRankingsEndpoints();
     }
 }

@@ -15,7 +15,7 @@ internal static class Startup
     /// <returns>The same <see cref="WebApplicationBuilder" /> instance, so that method invocations can be chained.</returns>
     internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddInfrastructureServices(builder.Configuration)
+        builder.Services.AddInfrastructureServices()
             .AddFeaturesServices();
 
         return builder;
