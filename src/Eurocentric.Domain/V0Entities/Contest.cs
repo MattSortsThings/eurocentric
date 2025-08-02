@@ -4,19 +4,19 @@ namespace Eurocentric.Domain.V0Entities;
 
 public sealed record Contest
 {
-    public required Guid Id { get; init; }
+    public Guid Id { get; init; }
 
-    public required int ContestYear { get; init; }
+    public int ContestYear { get; init; }
 
-    public required string CityName { get; init; }
+    public string CityName { get; init; } = string.Empty;
 
-    public required ContestFormat ContestFormat { get; init; }
+    public ContestFormat ContestFormat { get; init; }
 
-    public required bool Completed { get; init; }
+    public bool Completed { get; init; }
 
-    public required IList<ChildBroadcast> ChildBroadcasts { get; init; }
+    public IList<ChildBroadcast> ChildBroadcasts { get; init; } = [];
 
-    public required IList<Participant> Participants { get; init; }
+    public IList<Participant> Participants { get; init; } = [];
 
     public static Contest CreateLiverpoolFormat(int contestYear, string cityName, IList<Guid> participatingCountryIds)
     {
@@ -63,7 +63,7 @@ public sealed record Contest
             Id = Guid.NewGuid(),
             ContestYear = contestYear,
             CityName = cityName,
-            ContestFormat = ContestFormat.Liverpool,
+            ContestFormat = ContestFormat.Stockholm,
             Participants = participants,
             Completed = false,
             ChildBroadcasts = []

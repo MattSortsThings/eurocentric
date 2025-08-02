@@ -4,17 +4,17 @@ namespace Eurocentric.Features.AdminApi.V0.Common.Dtos;
 
 public sealed record Contest
 {
-    public required Guid Id { get; init; }
+    public Guid Id { get; init; }
 
-    public required int ContestYear { get; init; }
+    public int ContestYear { get; init; }
 
-    public required string CityName { get; init; }
+    public string CityName { get; init; } = string.Empty;
 
-    public required ContestFormat ContestFormat { get; init; }
+    public ContestFormat ContestFormat { get; init; }
 
-    public required bool Completed { get; init; }
+    public bool Completed { get; init; }
 
-    public required ChildBroadcast[] ChildBroadcasts { get; init; }
+    public ChildBroadcast[] ChildBroadcasts { get; init; } = [];
 
-    public required Participant[] Participants { get; init; }
+    public Participant[] Participants { get; init; } = [];
 }
