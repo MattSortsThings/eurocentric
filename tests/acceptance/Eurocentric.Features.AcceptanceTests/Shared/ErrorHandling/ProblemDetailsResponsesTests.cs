@@ -13,7 +13,8 @@ public static class ProblemDetailsResponsesTests
     private static async Task CreateAContestWithContestYearAsync(this IWebAppFixtureRestClient sut, int contestYear)
     {
         RestRequest createContestRequest = new RestRequest("/admin/api/v0.2/contests", Method.Post)
-            .AddJsonBody(DefaultCreateContestRequest() with { ContestYear = contestYear });
+            .AddJsonBody(DefaultCreateContestRequest() with { ContestYear = contestYear })
+            .UseSecretApiKey();
 
         _ = await sut.SendAsync(createContestRequest);
     }
@@ -35,7 +36,8 @@ public static class ProblemDetailsResponsesTests
             Guid contestId = Guid.Parse("d730ad20-3d70-4160-8849-c4c52f5752e0");
 
             RestRequest request = new RestRequest("/admin/api/v0.2/contests/{contestId}")
-                .AddUrlSegment("contestId", contestId);
+                .AddUrlSegment("contestId", contestId)
+                .UseSecretApiKey();
 
             // Act
             ProblemOrResponse result = await SystemUnderTest.SendAsync(request);
@@ -65,7 +67,8 @@ public static class ProblemDetailsResponsesTests
             CreateContestRequest requestBody = DefaultCreateContestRequest() with { ContestYear = sharedContestYear };
 
             RestRequest request = new RestRequest("/admin/api/v0.2/contests", Method.Post)
-                .AddJsonBody(requestBody);
+                .AddJsonBody(requestBody)
+                .UseSecretApiKey();
 
             // Act
             ProblemOrResponse result = await SystemUnderTest.SendAsync(request);
@@ -93,7 +96,8 @@ public static class ProblemDetailsResponsesTests
             CreateContestRequest requestBody = DefaultCreateContestRequest() with { ContestYear = illegalContestYear };
 
             RestRequest request = new RestRequest("/admin/api/v0.2/contests", Method.Post)
-                .AddJsonBody(requestBody);
+                .AddJsonBody(requestBody)
+                .UseSecretApiKey();
 
             // Act
             ProblemOrResponse result = await SystemUnderTest.SendAsync(request);

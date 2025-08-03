@@ -34,5 +34,5 @@ public sealed class RestRequestFactory : IRestRequestFactory,
 
     public IRestRequestFactory.IRankingsEndpoints Rankings => this;
 
-    private static RestRequest GetRequest(string route) => new(route);
+    private static RestRequest GetRequest(string route) => new RestRequest(route).UseDemoApiKey();
 }

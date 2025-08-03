@@ -1,9 +1,24 @@
+using Eurocentric.Features.Shared.Security;
 using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Utils;
 
 public static class RestRequestExtensions
 {
+    public static RestRequest UseDemoApiKey(this RestRequest request)
+    {
+        request.AddHeader(ApiKeyConstants.HttpRequestHeaderName, TestApiKeys.Demo);
+
+        return request;
+    }
+
+    public static RestRequest UseSecretApiKey(this RestRequest request)
+    {
+        request.AddHeader(ApiKeyConstants.HttpRequestHeaderName, TestApiKeys.Secret);
+
+        return request;
+    }
+
     public static RestRequest AddQueryParameters(this RestRequest request, IReadOnlyDictionary<string, object?> queryParams)
     {
         foreach (var (key, value) in queryParams)

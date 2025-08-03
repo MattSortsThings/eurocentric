@@ -27,7 +27,8 @@ public static class ExceptionHandlingTests
                                        """;
 
             RestRequest request = new RestRequest("/admin/api/v0.2/contests", Method.Post)
-                .AddJsonBody(requestBody);
+                .AddJsonBody(requestBody)
+                .UseSecretApiKey();
 
             const string expectedExceptionMessage = "Failed to read parameter \"CreateContestRequest requestBody\" " +
                                                     "from the request body as JSON.";
@@ -67,7 +68,8 @@ public static class ExceptionHandlingTests
                                        """;
 
             RestRequest request = new RestRequest("/admin/api/v0.2/contests", Method.Post)
-                .AddJsonBody(requestBody);
+                .AddJsonBody(requestBody)
+                .UseSecretApiKey();
 
             const string expectedExceptionMessage = "Failed to read parameter \"CreateContestRequest requestBody\" " +
                                                     "from the request body as JSON.";
@@ -107,7 +109,8 @@ public static class ExceptionHandlingTests
                                        """;
 
             RestRequest request = new RestRequest("/admin/api/v0.2/contests", Method.Post)
-                .AddJsonBody(requestBody);
+                .AddJsonBody(requestBody)
+                .UseSecretApiKey();
 
             const string expectedExceptionMessage = "The value of argument 'contestFormat' (999999) " +
                                                     "is invalid for Enum type 'ContestFormat'. (Parameter 'contestFormat')";
@@ -136,7 +139,8 @@ public static class ExceptionHandlingTests
         {
             // Arrange
             RestRequest request = new RestRequest("/public/api/v0.2/rankings/competing-countries/points-in-range")
-                .AddQueryParameter("maxPoints", 12);
+                .AddQueryParameter("maxPoints", 12)
+                .UseSecretApiKey();
 
             const string expectedExceptionMessage = "Required parameter \"int MinPoints\" was not provided from query string.";
 
@@ -164,7 +168,8 @@ public static class ExceptionHandlingTests
         {
             // Arrange
             RestRequest request = new RestRequest("/public/api/v0.2/rankings/competing-countries/points-average")
-                .AddQueryParameter("votingMethod", "NOT_A_VOTING_METHOD");
+                .AddQueryParameter("votingMethod", "NOT_A_VOTING_METHOD")
+                .UseSecretApiKey();
 
             const string expectedExceptionMessage = "Failed to bind parameter \"Nullable<QueryableVotingMethod> VotingMethod\"" +
                                                     " from \"NOT_A_VOTING_METHOD\".";
@@ -193,7 +198,8 @@ public static class ExceptionHandlingTests
         {
             // Arrange
             RestRequest request = new RestRequest("/public/api/v0.2/rankings/competing-countries/points-average")
-                .AddQueryParameter("votingMethod", 999999);
+                .AddQueryParameter("votingMethod", 999999)
+                .UseSecretApiKey();
 
             const string expectedExceptionMessage = "The value of argument 'votingMethod' (999999) is invalid " +
                                                     "for Enum type 'QueryableVotingMethod'. (Parameter 'votingMethod')";
@@ -219,12 +225,14 @@ public static class ExceptionHandlingTests
         }
 
         [Test]
+        [Property("Expensive", "true")]
         public async Task Should_return_503_with_ProblemDetails_given_database_timeout_while_handling_request_using_EF_Core()
         {
             // Arrange
             await SystemUnderTest.PauseDbContainerAsync();
 
-            RestRequest request = new("/public/api/v0.2/queryables/countries");
+            RestRequest request = new RestRequest("/public/api/v0.2/queryables/countries")
+                .UseSecretApiKey();
 
             // Act
             ProblemOrResponse result = await SystemUnderTest.SendAsync(request);
@@ -247,12 +255,14 @@ public static class ExceptionHandlingTests
         }
 
         [Test]
+        [Property("Expensive", "true")]
         public async Task Should_return_503_with_ProblemDetails_given_database_timeout_while_handling_request_using_Dapper()
         {
             // Arrange
             await SystemUnderTest.PauseDbContainerAsync();
 
-            RestRequest request = new("/public/api/v0.2/rankings/competing-countries/points-average");
+            RestRequest request = new RestRequest("/public/api/v0.2/rankings/competing-countries/points-average")
+                .UseSecretApiKey();
 
             // Act
             ProblemOrResponse result = await SystemUnderTest.SendAsync(request);

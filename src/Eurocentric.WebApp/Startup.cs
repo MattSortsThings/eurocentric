@@ -32,9 +32,13 @@ internal static class Startup
 
         app.UseStatusCodePages();
 
-        app.UseVersionedApiEndpoints();
-
         app.UseExceptionHandler();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
+
+        app.UseVersionedApiEndpoints();
 
         return app;
     }

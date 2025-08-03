@@ -1,7 +1,7 @@
 namespace Eurocentric.Features.AcceptanceTests.Shared.Utils;
 
-[NotInParallel("Shared")]
 [Category("acceptance")]
+[NotInParallel("AcceptanceTests.Shared")]
 public abstract class SerialCleanAcceptanceTest
 {
     [ClassDataSource<CleanWebAppFixture>(Shared = SharedType.PerAssembly)]

@@ -29,16 +29,6 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
     /// <inheritdoc />
     public abstract Task InitializeAsync();
 
-    // public async Task InitializeAsync()
-    // {
-    //     await DbContainer.StartAsync();
-    //     DbConnectionString = DbContainer.GetConnectionString();
-    //     _ = Server;
-    //     await MigrateDbAsync();
-    //     await SeedDbAsync();
-    // }
-
-
     /// <inheritdoc />
     public void ExecuteScoped(Action<IServiceProvider> action)
     {
@@ -116,6 +106,7 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
         GC.SuppressFinalize(this);
     }
 
+
     public async Task EraseAllDataAsync()
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
@@ -128,9 +119,9 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting("Logging:LogLevel:Default", "Critical");
-        builder.UseSetting("Logging:Microsoft.AspNetCore", "Critical");
+        ModifyLoggingSettings(builder);
         ModifyDbConnectionSettings(builder);
+        UseTestApiKeys(builder);
         builder.ConfigureServices(ConfigureRestClient);
     }
 
@@ -166,4 +157,16 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
             configureRestClient: options => options.Timeout = TimeSpan.FromSeconds(10),
             configureSerialization: config => config.UseSystemTextJson(jsonOptions.Value.SerializerOptions));
     });
+
+    private static void ModifyLoggingSettings(IWebHostBuilder builder)
+    {
+        builder.UseSetting("Logging:LogLevel:Default", "None");
+        builder.UseSetting("Logging:Microsoft:AspNetCore", "None");
+    }
+
+    private static void UseTestApiKeys(IWebHostBuilder builder)
+    {
+        builder.UseSetting("ApiKeySecurity:DemoApiKey", TestApiKeys.Demo);
+        builder.UseSetting("ApiKeySecurity:SecretApiKey", TestApiKeys.Secret);
+    }
 }
