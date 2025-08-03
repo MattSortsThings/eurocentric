@@ -19,13 +19,9 @@ internal static class CreateContestFeature
 {
     internal static async Task<IResult> ExecuteAsync([FromBody] CreateContestRequest requestBody,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<CreateContestResponse> errorsOrResponse =
-            await bus.Send(requestBody.ToCommand(), cancellationToken: cancellationToken);
-
-        return MapToCreatedAtRoute(errorsOrResponse.Value);
-    }
+        CancellationToken cancellationToken = default) => await bus.SendWithResponseMapperAsync(requestBody.ToCommand(),
+        MapToCreatedAtRoute,
+        cancellationToken);
 
     private static CreatedAtRoute<CreateContestResponse> MapToCreatedAtRoute(CreateContestResponse responseBody) =>
         TypedResults.CreatedAtRoute(responseBody,
@@ -63,7 +59,7 @@ internal static class CreateContestFeature
                 .Any(existing => existing.ContestYear == contest.ContestYear))
             {
                 return Error.Conflict("Contest year conflict",
-                    "A contest already exists with the specified contest year.",
+                    "A contest already exists with the provided contest year.",
                     new Dictionary<string, object> { { "contestYear", contestYear } });
             }
 

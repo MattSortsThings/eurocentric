@@ -14,13 +14,9 @@ internal static class GetContestFeature
 {
     internal static async Task<IResult> ExecuteAsync([FromRoute(Name = "contestId")] Guid contestId,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetContestResponse> errorsOrResponse =
-            await bus.Send(new Query(contestId), cancellationToken: cancellationToken);
-
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+        CancellationToken cancellationToken = default) => await bus.SendWithResponseMapperAsync(new Query(contestId),
+        TypedResults.Ok,
+        cancellationToken);
 
     internal sealed record Query(Guid ContestId) : IQuery<GetContestResponse>;
 

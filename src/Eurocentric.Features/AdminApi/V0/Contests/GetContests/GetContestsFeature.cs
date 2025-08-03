@@ -11,12 +11,10 @@ namespace Eurocentric.Features.AdminApi.V0.Contests.GetContests;
 
 internal static class GetContestsFeature
 {
-    internal static async Task<IResult> ExecuteAsync(IRequestResponseBus bus, CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetContestsResponse> errorsOrProblem = await bus.Send(new Query(), cancellationToken: cancellationToken);
-
-        return TypedResults.Ok(errorsOrProblem.Value);
-    }
+    internal static async Task<IResult> ExecuteAsync(IRequestResponseBus bus, CancellationToken cancellationToken = default) =>
+        await bus.SendWithResponseMapperAsync(new Query(),
+            TypedResults.Ok,
+            cancellationToken);
 
     internal sealed record Query : IQuery<GetContestsResponse>;
 

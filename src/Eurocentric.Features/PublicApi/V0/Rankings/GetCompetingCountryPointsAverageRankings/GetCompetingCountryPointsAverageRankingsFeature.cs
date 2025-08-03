@@ -17,13 +17,9 @@ internal static class GetCompetingCountryPointsAverageRankingsFeature
     internal static async Task<IResult> ExecuteAsync(
         [AsParameters] GetCompetingCountryPointsAverageRankingsRequest queryParams,
         IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetCompetingCountryPointsAverageRankingsResponse> errorsOrResponse =
-            await bus.Send(queryParams.ToQuery(), cancellationToken: cancellationToken);
-
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+        CancellationToken cancellationToken = default) => await bus.SendWithResponseMapperAsync(queryParams.ToQuery(),
+        TypedResults.Ok,
+        cancellationToken);
 
     private static Query ToQuery(this GetCompetingCountryPointsAverageRankingsRequest queryParams) => new()
     {

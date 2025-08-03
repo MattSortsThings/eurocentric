@@ -20,16 +20,17 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
     IWebAppFixtureBackDoor,
     IWebAppFixtureRestClient
 {
-    public Guid Id { get; } = Guid.NewGuid();
-
-    private MsSqlContainer DbContainer { get; } = new MsSqlBuilder()
+    private protected MsSqlContainer DbContainer { get; } = new MsSqlBuilder()
         .WithCleanUp(true)
         .Build();
+
+    private string DbConnectionString { get; set; } = string.Empty;
 
     /// <inheritdoc />
     public async Task InitializeAsync()
     {
         await DbContainer.StartAsync();
+        DbConnectionString = DbContainer.GetConnectionString();
         _ = Server;
         await MigrateDbAsync();
         await SeedDbAsync();
@@ -125,9 +126,8 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("Logging:LogLevel:Default", "Warning");
-        AddDbContainerToConfiguration(builder);
+        ModifyDbConnectionSettings(builder);
         builder.ConfigureServices(ConfigureRestClient);
-        AddExtraConfiguration(builder);
     }
 
     /// <summary>
@@ -140,16 +140,6 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
     /// <returns>A task representing the</returns>
     private protected virtual Task SeedDbAsync() => Task.CompletedTask;
 
-    /// <summary>
-    ///     Override this method to add extra configuration or services to the web host builder.
-    /// </summary>
-    /// <remarks>
-    ///     This method is invoked exactly once, at the end of the <see cref="ConfigureWebHost" /> method execution,
-    ///     before the web host has been built. The base class method implementation does nothing.
-    /// </remarks>
-    /// <param name="builder">The web host builder.</param>
-    private protected virtual void AddExtraConfiguration(IWebHostBuilder builder) { }
-
     private async Task MigrateDbAsync()
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
@@ -157,9 +147,9 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
         await dbContext.Database.MigrateAsync();
     }
 
-    private void AddDbContainerToConfiguration(IWebHostBuilder builder)
+    private void ModifyDbConnectionSettings(IWebHostBuilder builder)
     {
-        builder.UseSetting("ConnectionStrings:" + DbConfigKeys.ConnectionStrings.AzureSql, DbContainer.GetConnectionString());
+        builder.UseSetting("ConnectionStrings:" + DbConfigKeys.ConnectionStrings.AzureSql, DbConnectionString);
         builder.UseSetting(DbConfigKeys.DbConnection.CommandTimeoutInSeconds, "2");
         builder.UseSetting(DbConfigKeys.DbConnection.MaxRetryCount, "0");
     }

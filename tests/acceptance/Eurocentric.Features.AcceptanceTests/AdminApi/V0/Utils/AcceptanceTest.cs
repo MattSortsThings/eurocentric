@@ -1,10 +1,12 @@
+using Eurocentric.Features.AcceptanceTests.Utils;
+
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utils;
 
 [Category("acceptance")]
-[NotInParallel("AdminApi.V0")]
+[NotInParallel(TestKeys.AdminApiV0)]
 public abstract class AcceptanceTest
 {
-    [ClassDataSource<CleanWebAppFixture>(Shared = SharedType.Keyed, Key = "AdminApi.V0")]
+    [ClassDataSource<CleanWebAppFixture>(Shared = SharedType.Keyed, Key = TestKeys.AdminApiV0)]
     public required CleanWebAppFixture SystemUnderTest { get; init; }
 
     [After(Test)]

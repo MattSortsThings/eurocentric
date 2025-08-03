@@ -8,13 +8,10 @@ namespace Eurocentric.Features.PublicApi.V0.Queryables.GetQueryableContestStages
 
 internal static class GetQueryableContestStagesFeature
 {
-    internal static async Task<IResult> ExecuteAsync(IRequestResponseBus bus, CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetQueryableContestStagesResponse> errorsOrResponse =
-            await bus.Send(new Query(), cancellationToken: cancellationToken);
-
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+    internal static async Task<IResult> ExecuteAsync(IRequestResponseBus bus, CancellationToken cancellationToken = default) =>
+        await bus.SendWithResponseMapperAsync(new Query(),
+            TypedResults.Ok,
+            cancellationToken);
 
     internal sealed record Query : IQuery<GetQueryableContestStagesResponse>;
 
