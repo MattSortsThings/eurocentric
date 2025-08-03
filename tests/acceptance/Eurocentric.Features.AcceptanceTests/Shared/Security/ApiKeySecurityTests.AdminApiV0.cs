@@ -12,7 +12,7 @@ public static partial class ApiKeySecurityTests
         private const string GetContestsRoute = "/admin/api/v0.2/contests";
 
         [Test]
-        public async Task Should_authenticate_request_using_secret_API_key()
+        public async Task Should_authenticate_and_authorize_request_using_secret_API_key()
         {
             // Arrange
             RestRequest request = new RestRequest(GetContestsRoute)
@@ -28,7 +28,7 @@ public static partial class ApiKeySecurityTests
         }
 
         [Test]
-        public async Task Should_authenticate_request_using_demo_API_key()
+        public async Task Should_authenticate_but_not_authorize_request_using_demo_API_key()
         {
             // Arrange
             RestRequest request = new RestRequest(GetContestsRoute)
@@ -38,9 +38,9 @@ public static partial class ApiKeySecurityTests
             ProblemOrResponse result = await SystemUnderTest.SendAsync(request);
 
             // Assert
-            HttpStatusCode statusCode = result.AsResponse.StatusCode;
+            HttpStatusCode statusCode = result.AsProblem.StatusCode;
 
-            await Assert.That(statusCode).IsEqualTo(HttpStatusCode.OK);
+            await Assert.That(statusCode).IsEqualTo(HttpStatusCode.Forbidden);
         }
 
         [Test]
