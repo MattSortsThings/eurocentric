@@ -4,9 +4,9 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Utils;
 
 [Category("acceptance")]
 [NotInParallel(TestKeys.AdminApiV0)]
-public abstract class AcceptanceTest
+public abstract class SerialCleanAcceptanceTest
 {
-    [ClassDataSource<CleanWebAppFixture>(Shared = SharedType.Keyed, Key = TestKeys.AdminApiV0)]
+    [ClassDataSource<CleanWebAppFixture>(Shared = SharedType.PerAssembly)]
     public required CleanWebAppFixture SystemUnderTest { get; init; }
 
     [After(Test)]

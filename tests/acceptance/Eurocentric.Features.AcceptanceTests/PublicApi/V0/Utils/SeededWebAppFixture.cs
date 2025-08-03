@@ -9,7 +9,15 @@ public sealed class SeededWebAppFixture : WebAppFixture
 {
     private const string ScriptsPathPrefix = "Eurocentric.Features.AcceptanceTests.PublicApi.V0.Utils.Scripts.";
 
-    private protected override async Task SeedDbAsync()
+    public override async Task InitializeAsync()
+    {
+        await StartDbContainerAndUseConnectionStringAsync();
+        EnsureServerStarted();
+        await MigrateDbAsync();
+        await SeedDbAsync();
+    }
+
+    private async Task SeedDbAsync()
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
         await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();

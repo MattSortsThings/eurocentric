@@ -7,7 +7,7 @@ namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Queryables;
 
 public static class GetQueryableContestStagesTests
 {
-    public sealed class GetQueryableContestStagesFeature : AcceptanceTest
+    public sealed class GetQueryableContestStages : ParallelSeededAcceptanceTest
     {
         [Test]
         [Arguments("v0.1")]

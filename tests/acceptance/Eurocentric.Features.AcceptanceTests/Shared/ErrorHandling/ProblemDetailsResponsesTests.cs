@@ -4,7 +4,6 @@ using Eurocentric.Features.AcceptanceTests.Shared.Utils;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V0.Common.Enums;
 using Eurocentric.Features.AdminApi.V0.Contests.CreateContest;
-using Eurocentric.Features.AdminApi.V0.Contests.GetContest;
 using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.ErrorHandling;
@@ -27,7 +26,7 @@ public static class ProblemDetailsResponsesTests
         ParticipatingCountryIds = Enumerable.Range(0, 3).Select(_ => Guid.NewGuid()).ToArray()
     };
 
-    public sealed class Endpoints : AcceptanceTest
+    public sealed class Endpoints : SerialCleanAcceptanceTest
     {
         [Test]
         public async Task Should_return_404_with_ProblemDetails_when_request_references_non_existent_resource()
@@ -35,12 +34,11 @@ public static class ProblemDetailsResponsesTests
             // Arrange
             Guid contestId = Guid.Parse("d730ad20-3d70-4160-8849-c4c52f5752e0");
 
-            RestRequest getContestRequest = new RestRequest("/admin/api/v0.2/contests/{contestId}")
+            RestRequest request = new RestRequest("/admin/api/v0.2/contests/{contestId}")
                 .AddUrlSegment("contestId", contestId);
 
             // Act
-            ProblemOrResponse<GetContestResponse>
-                result = await SystemUnderTest.SendAsync<GetContestResponse>(getContestRequest);
+            ProblemOrResponse result = await SystemUnderTest.SendAsync(request);
 
             // Assert
             var (statusCode, problemDetails) = (result.AsProblem.StatusCode, result.AsProblem.Data!);
@@ -66,12 +64,11 @@ public static class ProblemDetailsResponsesTests
 
             CreateContestRequest requestBody = DefaultCreateContestRequest() with { ContestYear = sharedContestYear };
 
-            RestRequest createContestRequest = new RestRequest("/admin/api/v0.2/contests", Method.Post)
+            RestRequest request = new RestRequest("/admin/api/v0.2/contests", Method.Post)
                 .AddJsonBody(requestBody);
 
             // Act
-            ProblemOrResponse<CreateContestResponse> result =
-                await SystemUnderTest.SendAsync<CreateContestResponse>(createContestRequest);
+            ProblemOrResponse result = await SystemUnderTest.SendAsync(request);
 
             // Assert
             var (statusCode, problemDetails) = (result.AsProblem.StatusCode, result.AsProblem.Data!);
@@ -95,12 +92,11 @@ public static class ProblemDetailsResponsesTests
 
             CreateContestRequest requestBody = DefaultCreateContestRequest() with { ContestYear = illegalContestYear };
 
-            RestRequest createContestRequest = new RestRequest("/admin/api/v0.2/contests", Method.Post)
+            RestRequest request = new RestRequest("/admin/api/v0.2/contests", Method.Post)
                 .AddJsonBody(requestBody);
 
             // Act
-            ProblemOrResponse<CreateContestResponse> result =
-                await SystemUnderTest.SendAsync<CreateContestResponse>(createContestRequest);
+            ProblemOrResponse result = await SystemUnderTest.SendAsync(request);
 
             // Assert
             var (statusCode, problemDetails) = (result.AsProblem.StatusCode, result.AsProblem.Data!);

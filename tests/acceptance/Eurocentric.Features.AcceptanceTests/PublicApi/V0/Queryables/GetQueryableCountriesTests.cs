@@ -5,7 +5,7 @@ namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Queryables;
 
 public static class GetQueryableCountriesTests
 {
-    public sealed class GetQueryableCountriesFeature : AcceptanceTest
+    public sealed class GetQueryableCountries : ParallelSeededAcceptanceTest
     {
         [Test]
         [Arguments("v0.1")]

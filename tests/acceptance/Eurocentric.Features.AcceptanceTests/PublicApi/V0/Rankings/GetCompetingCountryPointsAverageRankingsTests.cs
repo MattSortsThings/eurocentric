@@ -9,7 +9,7 @@ namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Rankings;
 
 public static class GetCompetingCountryPointsAverageRankingsTests
 {
-    public sealed class GetCompetingCountryPointsAverageRankingsFeature : AcceptanceTest
+    public sealed class GetCompetingCountryPointsAverageRankings : ParallelSeededAcceptanceTest
     {
         [Test]
         [Arguments("v0.2")]

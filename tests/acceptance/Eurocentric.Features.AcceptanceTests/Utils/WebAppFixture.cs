@@ -27,14 +27,17 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
     private string DbConnectionString { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    public async Task InitializeAsync()
-    {
-        await DbContainer.StartAsync();
-        DbConnectionString = DbContainer.GetConnectionString();
-        _ = Server;
-        await MigrateDbAsync();
-        await SeedDbAsync();
-    }
+    public abstract Task InitializeAsync();
+
+    // public async Task InitializeAsync()
+    // {
+    //     await DbContainer.StartAsync();
+    //     DbConnectionString = DbContainer.GetConnectionString();
+    //     _ = Server;
+    //     await MigrateDbAsync();
+    //     await SeedDbAsync();
+    // }
+
 
     /// <inheritdoc />
     public void ExecuteScoped(Action<IServiceProvider> action)
@@ -125,22 +128,21 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting("Logging:LogLevel:Default", "Warning");
+        builder.UseSetting("Logging:LogLevel:Default", "Critical");
+        builder.UseSetting("Logging:Microsoft.AspNetCore", "Critical");
         ModifyDbConnectionSettings(builder);
         builder.ConfigureServices(ConfigureRestClient);
     }
 
-    /// <summary>
-    ///     Override this method to seed the database asynchronously during fixture initialization.
-    /// </summary>
-    /// <remarks>
-    ///     This method is invoked exactly once, during the <see cref="InitializeAsync" /> method execution, after the web
-    ///     host has been built. The base class method implementation does nothing.
-    /// </remarks>
-    /// <returns>A task representing the</returns>
-    private protected virtual Task SeedDbAsync() => Task.CompletedTask;
+    private protected async Task StartDbContainerAndUseConnectionStringAsync()
+    {
+        await DbContainer.StartAsync();
+        DbConnectionString = DbContainer.GetConnectionString().TrimEnd(';') + ";Connect Timeout=1;";
+    }
 
-    private async Task MigrateDbAsync()
+    private protected void EnsureServerStarted() => _ = Server;
+
+    private protected async Task MigrateDbAsync()
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
         await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();

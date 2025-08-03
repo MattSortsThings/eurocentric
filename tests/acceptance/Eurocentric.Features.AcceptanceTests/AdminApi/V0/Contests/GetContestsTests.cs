@@ -11,7 +11,7 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Contests;
 
 public static class GetContestsTests
 {
-    public sealed class GetContestsFeature : AcceptanceTest
+    public sealed class GetContests : SerialCleanAcceptanceTest
     {
         [Test]
         [Arguments("v0.2")]

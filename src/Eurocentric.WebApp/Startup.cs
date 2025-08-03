@@ -34,6 +34,8 @@ internal static class Startup
 
         app.UseVersionedApiEndpoints();
 
+        app.UseExceptionHandler();
+
         return app;
     }
 }

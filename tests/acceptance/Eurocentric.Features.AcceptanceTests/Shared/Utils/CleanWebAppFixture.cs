@@ -5,7 +5,16 @@ namespace Eurocentric.Features.AcceptanceTests.Shared.Utils;
 
 public sealed class CleanWebAppFixture : WebAppFixture
 {
-    public async Task EnsureDbContainerUnpausedAsync()
+    public override async Task InitializeAsync()
+    {
+        await StartDbContainerAndUseConnectionStringAsync();
+        EnsureServerStarted();
+        await MigrateDbAsync();
+    }
+
+    public async Task PauseDbContainerAsync() => await DbContainer.PauseAsync();
+
+    public async Task UnpauseDbContainerAsync()
     {
         if (DbContainer.State == TestcontainersStates.Paused)
         {
