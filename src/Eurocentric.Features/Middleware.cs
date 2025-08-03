@@ -2,6 +2,7 @@ using Eurocentric.Features.AdminApi;
 using Eurocentric.Features.PublicApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Scalar.AspNetCore;
 
 namespace Eurocentric.Features;
 
@@ -26,5 +27,10 @@ public static class Middleware
     ///     <see cref="Eurocentric.Features" /> assembly.
     /// </summary>
     /// <param name="app">The web application.</param>
-    public static void UseApiDocumentationEndpoints(this IEndpointRouteBuilder app) => app.MapOpenApi().AllowAnonymous();
+    public static void UseApiDocumentationEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.MapOpenApi().AllowAnonymous();
+
+        app.MapScalarApiReference("docs").AllowAnonymous();
+    }
 }
