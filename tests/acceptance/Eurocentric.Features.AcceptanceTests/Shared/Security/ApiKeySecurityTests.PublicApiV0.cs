@@ -12,7 +12,7 @@ public static partial class ApiKeySecurityTests
         private const string GetQueryableContestStagesRoute = "/public/api/v0.2/queryables/contest-stages";
 
         [Test]
-        public async Task Should_authenticate_request_using_secret_API_key()
+        public async Task Should_authenticate_and_authorize_request_using_secret_API_key()
         {
             // Arrange
             RestRequest request = new RestRequest(GetQueryableContestStagesRoute)
@@ -28,7 +28,7 @@ public static partial class ApiKeySecurityTests
         }
 
         [Test]
-        public async Task Should_authenticate_request_using_demo_API_key()
+        public async Task Should_authenticate_and_authorize_request_using_demo_API_key()
         {
             // Arrange
             RestRequest request = new RestRequest(GetQueryableContestStagesRoute)
