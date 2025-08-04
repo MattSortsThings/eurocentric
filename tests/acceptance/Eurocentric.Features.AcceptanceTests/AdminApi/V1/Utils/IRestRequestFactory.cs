@@ -8,6 +8,8 @@ public interface IRestRequestFactory
 
     public interface ICountriesEndpoints
     {
+        public RestRequest GetCountries();
+
         public RestRequest GetCountry(Guid countryId);
     }
 }

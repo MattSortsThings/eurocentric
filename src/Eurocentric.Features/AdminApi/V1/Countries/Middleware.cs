@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
+using Eurocentric.Features.AdminApi.V1.Countries.GetCountries;
 using Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,5 +28,12 @@ internal static class Middleware
             .HasApiVersion(1, 0)
             .Produces<GetCountryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);
+
+        group.MapGet("/", GetCountriesFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.GetCountries)
+            .WithSummary("Get all countries")
+            .WithDescription("Retrieves a list of all existing countries, in country code order.")
+            .HasApiVersion(1, 0)
+            .Produces<GetCountriesResponse>();
     }
 }
