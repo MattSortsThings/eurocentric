@@ -1,4 +1,5 @@
 using System.Net;
+using Eurocentric.Features.AcceptanceTests.Utils.Assertions;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
@@ -26,7 +27,7 @@ public abstract class Actor
     public async Task Then_the_response_problem_details_should_match(string detail = "", string title = "", int status = 0) =>
         await Assert.That(ResponseProblemDetails)
             .IsNotNull()
-            .And.HasMember(problemDetails => problemDetails.Detail).EqualTo(detail)
-            .And.HasMember(problemDetails => problemDetails.Title).EqualTo(title)
-            .And.HasMember(problemDetails => problemDetails.Status).EqualTo(status);
+            .And.HasDetail(detail)
+            .And.HasTitle(title)
+            .And.HasStatus(status);
 }
