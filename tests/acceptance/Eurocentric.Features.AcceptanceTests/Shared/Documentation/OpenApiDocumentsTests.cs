@@ -25,6 +25,7 @@ public static class OpenApiDocumentsTests
         [Test]
         [Arguments("admin-api-v0.1")]
         [Arguments("admin-api-v0.2")]
+        [Arguments("admin-api-v1.0")]
         [Arguments("public-api-v0.1")]
         [Arguments("public-api-v0.2")]
         public async Task Should_serve_requested_API_documentation_page_to_anonymous_client(string docName)
@@ -51,6 +52,7 @@ public static class OpenApiDocumentsTests
         [Test]
         [Arguments("admin-api-v0.1", "/admin/api/v0.1")]
         [Arguments("admin-api-v0.2", "/admin/api/v0.2")]
+        [Arguments("admin-api-v1.0", "/admin/api/v1.0")]
         [Arguments("public-api-v0.1", "/public/api/v0.1")]
         [Arguments("public-api-v0.2", "/public/api/v0.2")]
         public async Task Should_serve_requested_OpenAPI_document_to_anonymous_client(string docName, string pathPrefix)
@@ -76,6 +78,7 @@ public static class OpenApiDocumentsTests
         [Arguments("admin-api-v0")]
         [Arguments("admin-api-v0.3")]
         [Arguments("admin-api-v1")]
+        [Arguments("admin-api-v1.1")]
         [Arguments("public-api-v0")]
         [Arguments("public-api-v0.3")]
         [Arguments("public-api-v1")]

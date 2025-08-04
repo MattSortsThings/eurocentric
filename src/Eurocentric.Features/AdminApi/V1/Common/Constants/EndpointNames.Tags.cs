@@ -1,0 +1,9 @@
+namespace Eurocentric.Features.AdminApi.V1.Common.Constants;
+
+internal static partial class EndpointNames
+{
+    internal static class Tags
+    {
+        internal const string Countries = "Countries";
+    }
+}

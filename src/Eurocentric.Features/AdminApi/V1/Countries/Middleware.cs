@@ -1,0 +1,31 @@
+using Eurocentric.Features.AdminApi.V1.Common.Constants;
+using Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+
+namespace Eurocentric.Features.AdminApi.V1.Countries;
+
+/// <summary>
+///     Extension methods to be invoked when configuring web application middleware.
+/// </summary>
+internal static class Middleware
+{
+    /// <summary>
+    ///     Adds the endpoints tagged with "Countries".
+    /// </summary>
+    /// <param name="builder">The endpoint route builder to which the endpoints are to be added.</param>
+    internal static void MapCountriesEndpoints(this IEndpointRouteBuilder builder)
+    {
+        RouteGroupBuilder group = builder.MapGroup("countries")
+            .WithTags(EndpointNames.Tags.Countries);
+
+        group.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.GetCountry)
+            .WithSummary("Get a country")
+            .WithDescription("Retrieves a single country.")
+            .HasApiVersion(1, 0)
+            .Produces<GetCountryResponse>()
+            .ProducesProblem(StatusCodes.Status404NotFound);
+    }
+}
