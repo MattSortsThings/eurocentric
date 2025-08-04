@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ErrorOr"/>
+    <PackageReference Include="JetBrains.Annotations"/>
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>

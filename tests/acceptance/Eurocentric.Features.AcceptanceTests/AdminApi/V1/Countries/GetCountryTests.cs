@@ -3,26 +3,23 @@ using Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries;
 
-public static class GetCountryTests
+public sealed class GetCountryTests : SerialCleanAcceptanceTest
 {
-    public sealed class GetCountry : SerialCleanAcceptanceTest
+    [Test]
+    [Arguments("v1.0")]
+    public async Task Endpoint_should_retrieve_dummy_country(string apiVersion)
     {
-        [Test]
-        [Arguments("v1.0")]
-        public async Task Should_retrieve_dummy_country(string apiVersion)
-        {
-            AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
+        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
-            // Given
-            admin.Given_I_want_to_retrieve_the_country_with_ID("84662458-b362-41a8-bb2f-ed03272bfc91");
+        // Given
+        admin.Given_I_want_to_retrieve_the_country_with_ID("84662458-b362-41a8-bb2f-ed03272bfc91");
 
-            // When
-            await admin.When_I_send_my_request();
+        // When
+        await admin.When_I_send_my_request();
 
-            // Then
-            await admin.Then_my_request_should_SUCCEED_with_status_code_200_OK();
-            await admin.Then_the_retrieved_country_should_have_the_ID("84662458-b362-41a8-bb2f-ed03272bfc91");
-        }
+        // Then
+        await admin.Then_my_request_should_SUCCEED_with_status_code_200_OK();
+        await admin.Then_the_retrieved_country_should_have_the_ID("84662458-b362-41a8-bb2f-ed03272bfc91");
     }
 
     private sealed class AdminActor : AdminActorWithResponse<GetCountryResponse>

@@ -1,10 +1,15 @@
 using ErrorOr;
-using Eurocentric.Features.AdminApi.V1.Common.Dtos;
+using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
+using Eurocentric.Features.AdminApi.V1.Common.Mapping;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SlimMessageBus;
+using CountryAggregate = Eurocentric.Domain.Aggregates.Countries.Country;
+using CountryDto = Eurocentric.Features.AdminApi.V1.Common.Dtos.Country;
 
 namespace Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
 
@@ -17,15 +22,24 @@ internal static class GetCountryFeature
 
     internal sealed record Query(Guid CountryId) : IQuery<GetCountryResponse>;
 
+    [UsedImplicitly]
     internal sealed class QueryHandler(AppDbContext dbContext) : IQueryHandler<Query, GetCountryResponse>
     {
         public async Task<ErrorOr<GetCountryResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
-            Country dummyCountry = Country.CreateExample();
+            CountryDto dummyCountry = CreateDummyCountry(query.CountryId);
 
-            return new GetCountryResponse(dummyCountry with { Id = query.CountryId });
+            return new GetCountryResponse(dummyCountry);
+        }
+
+        private static CountryDto CreateDummyCountry(Guid countryId)
+        {
+            CountryAggregate aggregate = new(CountryId.FromValue(countryId), CountryCode.FromValue("AT").Value,
+                CountryName.FromValue("Austria").Value);
+
+            return aggregate.ToCountryDto();
         }
     }
 }
