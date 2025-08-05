@@ -67,6 +67,8 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
             Guid myCountryId = myCountry.Id;
 
             await ApiDriver.DeleteSingleCountryAsync(myCountryId);
+
+            MyCountry = null;
             MyDeletedCountryId = myCountryId;
         }
 

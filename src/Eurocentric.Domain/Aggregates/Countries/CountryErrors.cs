@@ -5,7 +5,7 @@ using Eurocentric.Domain.ValueObjects;
 namespace Eurocentric.Domain.Aggregates.Countries;
 
 /// <summary>
-///     Factory methods to create common contest aggregate errors.
+///     Factory methods to create common country aggregate errors.
 /// </summary>
 public static class CountryErrors
 {

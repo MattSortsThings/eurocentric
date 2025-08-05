@@ -12,6 +12,19 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Extensions.Coun
 
 public static class ApiDriverExtensions
 {
+    public static async Task<List<CountryDto>> CreateMultipleCountriesAsync(this IApiDriver driver, params string[] countryCodes)
+    {
+        List<CountryDto> countries = new(countryCodes.Length);
+
+        foreach (string countryCode in countryCodes)
+        {
+            CountryDto country = await driver.CreateSingleCountryAsync(countryCode: countryCode);
+            countries.Add(country);
+        }
+
+        return countries;
+    }
+
     public static async Task<CountryDto> CreateSingleCountryAsync(this IApiDriver driver,
         string countryName = TestDefaults.CountryName,
         string countryCode = "")

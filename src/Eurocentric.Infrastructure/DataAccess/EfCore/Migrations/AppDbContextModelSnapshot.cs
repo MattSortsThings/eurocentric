@@ -17,10 +17,52 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Eurocentric.Domain.Aggregates.Contests.Contest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CityName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("city_name");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("bit")
+                        .HasColumnName("completed");
+
+                    b.Property<int>("ContestFormat")
+                        .HasColumnType("int")
+                        .HasColumnName("contest_format");
+
+                    b.Property<int>("ContestYear")
+                        .HasColumnType("int")
+                        .HasColumnName("contest_year");
+
+                    b.HasKey("Id")
+                        .HasName("pk_contest");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.HasAlternateKey("ContestYear")
+                        .HasName("ak_contest_contest_year");
+
+                    b.ToTable("contest", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_contest_contest_format_enum_value", "[contest_format] BETWEEN 0 AND 1");
+                        });
+
+                    b.HasDiscriminator<int>("ContestFormat").IsComplete(true);
+
+                    b.UseTphMappingStrategy();
+                });
 
             modelBuilder.Entity("Eurocentric.Domain.Aggregates.Countries.Country", b =>
                 {
@@ -152,6 +194,115 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
                         .HasName("ak_country_country_code");
 
                     b.ToTable("country", "v0");
+                });
+
+            modelBuilder.Entity("Eurocentric.Domain.Aggregates.Contests.LiverpoolFormatContest", b =>
+                {
+                    b.HasBaseType("Eurocentric.Domain.Aggregates.Contests.Contest");
+
+                    b.ToTable("contest", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_contest_contest_format_enum_value", "[contest_format] BETWEEN 0 AND 1");
+                        });
+
+                    b.HasDiscriminator().HasValue(0);
+                });
+
+            modelBuilder.Entity("Eurocentric.Domain.Aggregates.Contests.StockholmFormatContest", b =>
+                {
+                    b.HasBaseType("Eurocentric.Domain.Aggregates.Contests.Contest");
+
+                    b.ToTable("contest", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_contest_contest_format_enum_value", "[contest_format] BETWEEN 0 AND 1");
+                        });
+
+                    b.HasDiscriminator().HasValue(1);
+                });
+
+            modelBuilder.Entity("Eurocentric.Domain.Aggregates.Contests.Contest", b =>
+                {
+                    b.OwnsMany("Eurocentric.Domain.Aggregates.Contests.ChildBroadcast", "ChildBroadcasts", b1 =>
+                        {
+                            b1.Property<Guid>("ContestId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("contest_id");
+
+                            b1.Property<Guid>("BroadcastId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("broadcast_id");
+
+                            b1.Property<bool>("Completed")
+                                .HasColumnType("bit")
+                                .HasColumnName("completed");
+
+                            b1.Property<int>("ContestStage")
+                                .HasColumnType("int")
+                                .HasColumnName("contest_stage");
+
+                            b1.HasKey("ContestId", "BroadcastId")
+                                .HasName("pk_contest_child_broadcast");
+
+                            SqlServerKeyBuilderExtensions.IsClustered(b1.HasKey("ContestId", "BroadcastId"));
+
+                            b1.HasIndex("ContestId", "ContestStage")
+                                .IsUnique()
+                                .HasDatabaseName("ix_contest_child_broadcast_contest_id_contest_stage");
+
+                            b1.ToTable("contest_child_broadcast", null, t =>
+                                {
+                                    t.HasCheckConstraint("ck_contest_child_broadcast_contest_stage_enum_value", "[contest_stage] BETWEEN 0 AND 2");
+                                });
+
+                            b1.WithOwner()
+                                .HasForeignKey("ContestId")
+                                .HasConstraintName("fk_contest_child_broadcast_contest_contest_id");
+                        });
+
+                    b.OwnsMany("Eurocentric.Domain.Aggregates.Contests.Participant", "Participants", b1 =>
+                        {
+                            b1.Property<Guid>("ContestId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("contest_id");
+
+                            b1.Property<Guid>("ParticipatingCountryId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("participating_country_id");
+
+                            b1.Property<string>("ActName")
+                                .HasMaxLength(200)
+                                .HasColumnType("nvarchar(200)")
+                                .HasColumnName("act_name");
+
+                            b1.Property<int>("ParticipantGroup")
+                                .HasColumnType("int")
+                                .HasColumnName("participant_group");
+
+                            b1.Property<string>("SongTitle")
+                                .HasMaxLength(200)
+                                .HasColumnType("nvarchar(200)")
+                                .HasColumnName("song_title");
+
+                            b1.HasKey("ContestId", "ParticipatingCountryId")
+                                .HasName("pk_contest_participant");
+
+                            SqlServerKeyBuilderExtensions.IsClustered(b1.HasKey("ContestId", "ParticipatingCountryId"));
+
+                            b1.ToTable("contest_participant", null, t =>
+                                {
+                                    t.HasCheckConstraint("ck_contest_participant_participant_group_enum_value", "[participant_group] BETWEEN 0 AND 2");
+
+                                    t.HasCheckConstraint("ck_contest_participant_permitted_nullability", "([participant_group] = 0 AND [act_name] IS NULL AND [song_title] IS NULL) OR ([participant_group] <> 0 AND [act_name] IS NOT NULL AND [song_title] IS NOT NULL)");
+                                });
+
+                            b1.WithOwner()
+                                .HasForeignKey("ContestId")
+                                .HasConstraintName("fk_contest_participant_contest_contest_id");
+                        });
+
+                    b.Navigation("ChildBroadcasts");
+
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("Eurocentric.Domain.Aggregates.Countries.Country", b =>

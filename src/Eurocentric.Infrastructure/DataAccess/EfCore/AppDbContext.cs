@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Contest = Eurocentric.Domain.Aggregates.Contests.Contest;
 using Country = Eurocentric.Domain.Aggregates.Countries.Country;
 using V0Country = Eurocentric.Domain.V0Entities.Country;
 using V0Contest = Eurocentric.Domain.V0Entities.Contest;
@@ -12,6 +13,8 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore;
 public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Contest> Contests => Set<Contest>();
 
     public DbSet<Country> Countries => Set<Country>();
 
