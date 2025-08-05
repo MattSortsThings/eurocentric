@@ -23,7 +23,6 @@ This document outlines system design decisions taken during development of the *
   - [Acceptance test driven development (ATDD)](#acceptance-test-driven-development-atdd)
     - [Acceptance tests](#acceptance-tests)
     - [Unit tests](#unit-tests)
-    - [Architecture tests](#architecture-tests)
   - [Version control](#version-control)
   - [Continuous integration and continuous delivery (CI/CD)](#continuous-integration-and-continuous-delivery-cicd)
   - [Data access](#data-access)
@@ -211,7 +210,6 @@ The development loop is as follows:
 3. Implement the feature using unit tests for domain/feature functionality.
 4. Make the acceptance tests pass.
 5. Refactor code.
-6. Maintain code style using architecture tests that must always pass.
 
 ### Acceptance tests
 
@@ -226,10 +224,6 @@ Acceptance tests are divided into separate collections, each with its own fixtur
 ### Unit tests
 
 Unit tests are written for domain types in the `Eurocentric.Domain` assembly and for utility class in the `Eurocentric.Features` assembly.
-
-### Architecture tests
-
-Architecture tests are written to enforce design rules in the `Eurocentric.Domain`, `Eurocentric.Features` and `Eurocentric.Infrastructure` assembly.
 
 ## Version control
 
