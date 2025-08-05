@@ -1,5 +1,6 @@
 using Eurocentric.Infrastructure.DataAccess.Dapper;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
+using Eurocentric.Infrastructure.IdProviders;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Infrastructure;
@@ -18,7 +19,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddDapperDataAccess()
-            .AddEfCoreDataAccess();
+            .AddEfCoreDataAccess()
+            .AddIdProviders();
 
         return services;
     }

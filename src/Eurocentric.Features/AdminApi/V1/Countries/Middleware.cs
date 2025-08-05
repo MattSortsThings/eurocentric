@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
+using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
 using Eurocentric.Features.AdminApi.V1.Countries.GetCountries;
 using Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +21,16 @@ internal static class Middleware
     {
         RouteGroupBuilder group = builder.MapGroup("countries")
             .WithTags(EndpointNames.Tags.Countries);
+
+        group.MapPost("/", CreateCountryFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.CreateCountry)
+            .WithSummary("Create a country")
+            .WithDescription("Creates a new country.")
+            .HasApiVersion(1, 0)
+            .Produces<CreateCountryResponse>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
 
         group.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.GetCountry)

@@ -40,4 +40,10 @@ public sealed class Country : AggregateRoot<CountryId>
     public IReadOnlyList<ContestId> ParticipatingContestIds => _participatingContestIds
         .ToArray()
         .AsReadOnly();
+
+    /// <summary>
+    ///     Starts the process of creating a new <see cref="Country" /> instance using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="CountryBuilder" /> instance.</returns>
+    public static CountryBuilder Create() => new();
 }

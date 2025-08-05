@@ -32,7 +32,19 @@ public static class ProblemDetailsExtensions
         [CallerArgumentExpression(nameof(expectedKey))]
         string a2 = "") =>
         valueSource.RegisterAssertion(
-            new ProblemDetailsExtensionsContainsExpectedKeyAndGuidValueAssertion(expectedKey, expectedValue), [a1, a2]);
+            new ProblemDetailsExtensionsContainsExpectedKeyAndGuidValueAssertion(expectedKey, expectedValue),
+            [a1, a2]);
+
+    public static InvokableValueAssertionBuilder<ProblemDetails> HasExtension(this IValueSource<ProblemDetails> valueSource,
+        string expectedKey,
+        string expectedValue,
+        [CallerArgumentExpression(nameof(expectedKey))]
+        string a1 = "",
+        [CallerArgumentExpression(nameof(expectedKey))]
+        string a2 = "") =>
+        valueSource.RegisterAssertion(
+            new ProblemDetailsExtensionsContainsExpectedKeyAndStringValueAssertion(expectedKey, expectedValue),
+            [a1, a2]);
 
     private sealed class ProblemDetailsStatusEqualsExpectedValueAssertion(int expected)
         : ExpectedValueAssertCondition<ProblemDetails, int>(expected)
@@ -84,6 +96,42 @@ public static class ProblemDetailsExtensions
                 }
 
                 else if (value is JsonElement je && je.GetGuid() is var g && g == expectedValue)
+                {
+                    result = AssertionResult.Passed;
+                }
+                else
+                {
+                    result = AssertionResult.Fail($"value was {value}");
+                }
+            }
+            else
+            {
+                result = AssertionResult.Fail("it was null");
+            }
+
+            return result;
+        }
+
+        protected override string GetFailureMessage(ProblemDetails? actualValue) =>
+            $"to contain the key \"{expectedKey}\" with value \"{expectedValue}\"";
+    }
+
+    private class ProblemDetailsExtensionsContainsExpectedKeyAndStringValueAssertion(string expectedKey, string expectedValue)
+        : ValueAssertCondition<ProblemDetails>
+    {
+        protected override AssertionResult Passes(ProblemDetails? actualValue)
+        {
+            AssertionResult result;
+
+            if (actualValue is not null)
+            {
+                if (!actualValue.Extensions.TryGetValue(expectedKey, out object? value))
+                {
+                    result = AssertionResult.Fail("key was not found");
+                }
+
+                else if (value is JsonElement je && je.GetString() is var s &&
+                         string.Equals(s, expectedValue, StringComparison.InvariantCulture))
                 {
                     result = AssertionResult.Passed;
                 }

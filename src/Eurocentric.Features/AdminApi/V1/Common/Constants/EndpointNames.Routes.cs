@@ -4,6 +4,7 @@ internal static partial class EndpointNames
 {
     internal static class Routes
     {
+        internal const string CreateCountry = "AdminApi.V0.Countries.CreateCountry";
         internal const string GetCountries = "AdminApi.V0.Countries.GetCountries";
         internal const string GetCountry = "AdminApi.V0.Countries.GetCountry";
     }

@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
 using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
@@ -11,6 +12,10 @@ public sealed class RestRequestFactory : IRestRequestFactory, IRestRequestFactor
     {
         _apiVersion = apiVersion;
     }
+
+    public RestRequest CreateCountry(CreateCountryRequest requestBody) => PostRequest("/admin/api/{apiVersion}/countries")
+        .AddUrlSegment("apiVersion", _apiVersion)
+        .AddJsonBody(requestBody);
 
     public RestRequest GetCountries() => GetRequest("/admin/api/{apiVersion}/countries")
         .AddUrlSegment("apiVersion", _apiVersion);
