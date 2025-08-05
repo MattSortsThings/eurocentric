@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Attributes;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Comparers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Extensions.Countries;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
@@ -10,8 +11,8 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Countries;
 public sealed class GetCountriesTests : SerialCleanAcceptanceTest
 {
     [Test]
-    [Arguments("v1.0")]
-    public async Task Request_should_retrieve_all_existing_countries_in_country_code_order(string apiVersion)
+    [ApiVersion1Point0AndUp]
+    public async Task Endpoint_should_retrieve_all_existing_countries_in_country_code_order(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
@@ -33,8 +34,8 @@ public sealed class GetCountriesTests : SerialCleanAcceptanceTest
     }
 
     [Test]
-    [Arguments("v1.0")]
-    public async Task Request_should_retrieve_empty_list_when_no_countries_exist(string apiVersion)
+    [ApiVersion1Point0AndUp]
+    public async Task Endpoint_should_retrieve_empty_list_when_no_countries_exist(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 

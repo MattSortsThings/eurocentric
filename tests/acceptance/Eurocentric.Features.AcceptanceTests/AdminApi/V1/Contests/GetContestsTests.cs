@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Attributes;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Comparers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Extensions.Contests;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Extensions.Countries;
@@ -11,7 +12,7 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests;
 public sealed class GetContestsTests : SerialCleanAcceptanceTest
 {
     [Test]
-    [Arguments("v1.0")]
+    [ApiVersion1Point0AndUp]
     public async Task Endpoint_should_retrieve_all_existing_contests_in_contest_year_order(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
@@ -48,7 +49,7 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
     }
 
     [Test]
-    [Arguments("v1.0")]
+    [ApiVersion1Point0AndUp]
     public async Task Endpoint_should_retrieve_empty_list_when_no_contests_exist(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));

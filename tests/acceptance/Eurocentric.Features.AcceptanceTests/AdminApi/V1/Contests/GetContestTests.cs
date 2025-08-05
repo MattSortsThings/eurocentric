@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Attributes;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Comparers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Extensions.Contests;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Extensions.Countries;
@@ -12,7 +13,7 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests;
 public sealed class GetContestTests : SerialCleanAcceptanceTest
 {
     [Test]
-    [Arguments("v1.0")]
+    [ApiVersion1Point0AndUp]
     public async Task Endpoint_should_retrieve_requested_contest_scenario_1(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
@@ -36,7 +37,7 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
     }
 
     [Test]
-    [Arguments("v1.0")]
+    [ApiVersion1Point0AndUp]
     public async Task Endpoint_should_retrieve_requested_contest_scenario_2(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
@@ -59,7 +60,7 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
     }
 
     [Test]
-    [Arguments("v1.0")]
+    [ApiVersion1Point0AndUp]
     public async Task Endpoint_should_fail_on_non_existent_contest_requested(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
