@@ -1,5 +1,6 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContest;
+using Eurocentric.Features.AdminApi.V1.Contests.GetContests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -27,5 +28,12 @@ internal static class Middleware
             .HasApiVersion(1, 0)
             .Produces<GetContestResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);
+
+        group.MapGet("/", GetContestsFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Contests.GetContests)
+            .WithSummary("Get all contests")
+            .WithDescription("Retrieves a list of all existing contests, in contest year order.")
+            .HasApiVersion(1, 0)
+            .Produces<GetContestsResponse>();
     }
 }
