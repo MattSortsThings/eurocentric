@@ -34,7 +34,7 @@ public sealed class Country : AggregateRoot<CountryId>
     public CountryName CountryName { get; private init; } = null!;
 
     /// <summary>
-    ///     Gets a list of the IDs of all contest aggregates in which the country has a participant, in no particular order.
+    ///     Gets a list of the IDs of all contest aggregates in which the country has a participant.
     /// </summary>
     /// <remarks>Accessing this property creates and returns a new list populated from the instance's private data.</remarks>
     public IReadOnlyList<ContestId> ParticipatingContestIds => _participatingContestIds

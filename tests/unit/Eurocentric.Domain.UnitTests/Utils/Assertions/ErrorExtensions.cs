@@ -39,6 +39,16 @@ public static class ErrorExtensions
         new ErrorMetadataContainsExpectedKeyAndStringValueAssertion(expectedKey, expectedValue),
         [a1, a2]);
 
+    public static InvokableValueAssertionBuilder<Error> HasMetadataEntry(this IValueSource<Error> valueSource,
+        string expectedKey,
+        int expectedValue,
+        [CallerArgumentExpression(nameof(expectedKey))]
+        string a1 = "",
+        [CallerArgumentExpression(nameof(expectedValue))]
+        string a2 = "") => valueSource.RegisterAssertion(
+        new ErrorMetadataContainsExpectedKeyAndInt32ValueAssertion(expectedKey, expectedValue),
+        [a1, a2]);
+
     private sealed class ErrorCodeEqualsExpectedValueAssertion(string expected)
         : ExpectedValueAssertCondition<Error, string>(expected)
     {
