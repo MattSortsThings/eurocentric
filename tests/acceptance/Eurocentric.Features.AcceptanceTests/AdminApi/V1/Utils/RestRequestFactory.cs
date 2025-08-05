@@ -4,7 +4,9 @@ using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 
-public sealed class RestRequestFactory : IRestRequestFactory, IRestRequestFactory.ICountriesEndpoints
+public sealed class RestRequestFactory : IRestRequestFactory,
+    IRestRequestFactory.IContestsEndpoints,
+    IRestRequestFactory.ICountriesEndpoints
 {
     private readonly string _apiVersion;
 
@@ -12,6 +14,10 @@ public sealed class RestRequestFactory : IRestRequestFactory, IRestRequestFactor
     {
         _apiVersion = apiVersion;
     }
+
+    public RestRequest GetContest(Guid contestId) => GetRequest("/admin/api/{apiVersion}/contests/{contestId}")
+        .AddUrlSegment("apiVersion", _apiVersion)
+        .AddUrlSegment("contestId", contestId);
 
     public RestRequest CreateCountry(CreateCountryRequest requestBody) => PostRequest("/admin/api/{apiVersion}/countries")
         .AddUrlSegment("apiVersion", _apiVersion)
@@ -23,6 +29,8 @@ public sealed class RestRequestFactory : IRestRequestFactory, IRestRequestFactor
     public RestRequest GetCountry(Guid countryId) => GetRequest("/admin/api/{apiVersion}/countries/{countryId}")
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddUrlSegment("countryId", countryId);
+
+    public IRestRequestFactory.IContestsEndpoints Contests => this;
 
     public IRestRequestFactory.ICountriesEndpoints Countries => this;
 

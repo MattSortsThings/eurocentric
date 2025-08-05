@@ -3,6 +3,7 @@ using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Common.Mapping;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
@@ -16,6 +17,7 @@ internal static class GetCountriesFeature
 
     internal sealed record Query : IQuery<GetCountriesResponse>;
 
+    [UsedImplicitly]
     internal sealed class QueryHandler(AppDbContext dbContext) : IQueryHandler<Query, GetCountriesResponse>
     {
         public async Task<ErrorOr<GetCountriesResponse>> OnHandle(Query query, CancellationToken cancellationToken)

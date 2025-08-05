@@ -23,7 +23,7 @@ internal static class Middleware
             .WithTags(EndpointNames.Tags.Countries);
 
         group.MapPost("/", CreateCountryFeature.ExecuteAsync)
-            .WithName(EndpointNames.Routes.CreateCountry)
+            .WithName(EndpointNames.Routes.Countries.CreateCountry)
             .WithSummary("Create a country")
             .WithDescription("Creates a new country.")
             .HasApiVersion(1, 0)
@@ -33,7 +33,7 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
 
         group.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
-            .WithName(EndpointNames.Routes.GetCountry)
+            .WithName(EndpointNames.Routes.Countries.GetCountry)
             .WithSummary("Get a country")
             .WithDescription("Retrieves a single country.")
             .HasApiVersion(1, 0)
@@ -41,7 +41,7 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status404NotFound);
 
         group.MapGet("/", GetCountriesFeature.ExecuteAsync)
-            .WithName(EndpointNames.Routes.GetCountries)
+            .WithName(EndpointNames.Routes.Countries.GetCountries)
             .WithSummary("Get all countries")
             .WithDescription("Retrieves a list of all existing countries, in country code order.")
             .HasApiVersion(1, 0)

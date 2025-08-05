@@ -5,6 +5,7 @@ using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.Mapping;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
@@ -33,11 +34,12 @@ internal static class CreateCountryFeature
 
     private static CreatedAtRoute<CreateCountryResponse> MapToCreatedAtRoute(CreateCountryResponse response) =>
         TypedResults.CreatedAtRoute(response,
-            EndpointNames.Routes.GetCountry,
+            EndpointNames.Routes.Countries.GetCountry,
             new RouteValueDictionary { { "countryId", response.Country.Id } });
 
     internal sealed record Command(string CountryCode, string CountryName) : ICommand<CreateCountryResponse>;
 
+    [UsedImplicitly]
     internal sealed class CommandHandler(AppDbContext dbContext, ICountryIdProvider idProvider)
         : ICommandHandler<Command, CreateCountryResponse>
     {

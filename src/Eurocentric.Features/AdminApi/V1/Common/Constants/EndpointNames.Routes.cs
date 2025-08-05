@@ -4,8 +4,16 @@ internal static partial class EndpointNames
 {
     internal static class Routes
     {
-        internal const string CreateCountry = "AdminApi.V0.Countries.CreateCountry";
-        internal const string GetCountries = "AdminApi.V0.Countries.GetCountries";
-        internal const string GetCountry = "AdminApi.V0.Countries.GetCountry";
+        internal static class Contests
+        {
+            internal const string GetContest = "AdminApi.V1.Contests.GetContest";
+        }
+
+        internal static class Countries
+        {
+            internal const string GetCountry = "AdminApi.V1.Countries.GetCountry";
+            internal const string GetCountries = "AdminApi.V1.Countries.GetCountries";
+            internal const string CreateCountry = "AdminApi.V1.Countries.CreateCountry";
+        }
     }
 }

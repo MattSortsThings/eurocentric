@@ -33,6 +33,8 @@ public sealed class CountryEqualityComparer : IEqualityComparer<Country>
                    .SequenceEqual(y.ParticipatingContestIds.OrderBy(id => id));
     }
 
-    public int GetHashCode(Country obj) =>
-        HashCode.Combine(obj.Id, obj.CountryCode, obj.CountryName, obj.ParticipatingContestIds);
+    public int GetHashCode(Country obj) => HashCode.Combine(obj.Id,
+        obj.CountryCode,
+        obj.CountryName,
+        obj.ParticipatingContestIds);
 }
