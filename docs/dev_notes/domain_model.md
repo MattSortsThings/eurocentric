@@ -26,15 +26,16 @@ The following are the key domain transactions. Aggregates are in **BOLD CAPITALS
 The domain has 3 aggregate types:
 
 - A **COUNTRY** aggregate represents a specific country or pseudo-country in the system. It tracks all the **CONTEST** aggregates in which the **COUNTRY** is a **Participant**.
-- A **CONTEST** aggregate represents a specific contest in the system. It owns multiple **Participants**. It creates and tracks its child **BROADCAST** aggregates.
+- A **CONTEST** aggregate represents a specific contest in the system. It owns multiple **Participants** and zero, one, or multiple **ChildBroadcasts**. It creates and tracks its child **BROADCAST** aggregates.
 - A **BROADCAST** aggregate represents a specific stage of a specific contest in the system. It owns multiple **Competitors**, zero or multiple **Juries**, and multiple **Televotes**. It awards the points to the **Competitors** from the **Juries** and **Televotes**.
 
-The domain has 4 owned entity types:
+The domain has 5 owned entity types:
 
 - A **Participant** entity represents a specific country participating in a specific contest. It is owned by a **CONTEST**.
 - A **Competitor** entity represents a specific country competing in a specific broadcast. It is owned by a **BROADCAST**.
 - A **Jury** entity represents a specific country awarding a set of jury points in a specific broadcast. It is owned by a **BROADCAST**.
 - A **Televote** entity represents a specific country awarding a set of televote points in a specific broadcast. It is owned by a **BROADCAST**.
+- A **ChildBroadcast** entity represents a specific broadcast from the perspective of its parent contest. It is owned by a **CONTEST**.
 
 ## Entity relationship diagram
 
@@ -49,6 +50,7 @@ COUNTRY }|..o{ CONTEST : "participates in"
 CONTEST ||..o{ BROADCAST : "parent of"
 
 CONTEST ||--|{ Participant : owns
+CONTEST ||--|{ ChildBroadcast : owns
 BROADCAST ||--|{ Competitor : owns
 BROADCAST ||--o{ Jury : owns
 BROADCAST ||--|{ Televote : owns
@@ -68,13 +70,14 @@ BROADCAST ||--|{ Televote : owns
 1. A **CONTEST** has a unique ID.
 2. A **CONTEST** has a unique contest year.
 3. A **CONTEST** maintains an always-up-to-date record of all its child **BROADCASTS** and their `Completed` values.
-4. A **CONTEST** can only be deleted from the system when it has zero child **BROADCASTS**.
+4. A **CONTEST** can only be deleted from the system when it has zero **ChildBroadcasts**.
 5. A **CONTEST** has a boolean `Completed` value.
 6. A **CONTEST** using the "Stockholm" format has at least 3 **Participants** in group 1, at least 3 in group 2, and none in group 0.
 7. A **CONTEST** using the "Liverpool" format has at least 3 **Participants** in group 1, at least 3 in group 2, and one in group 0.
-8. A **CONTEST** cannot create a child **BROADCAST** when it already has a child **BROADCAST** with the same contest stage.
-9. Each **Participant** in a **CONTEST** represents a different **COUNTRY**.
-10. A **CONTEST** becomes `Completed` when it has created all 3 child **BROADCASTS**, and they are all `Completed`.
+8. A **CONTEST** cannot create a child **BROADCAST** when it already has a **ChildBroadcast** with the same contest stage.
+9. Each **ChildBroadcast** in a **CONTEST** represents a different **BROADCAST** and is always up to date.
+10. Each **Participant** in a **CONTEST** represents a different **COUNTRY**.
+11. A **CONTEST** becomes `Completed` when it has created all 3 **ChildBroadcasts**, and they are all `Completed`.
 
 ### Broadcasts subdomain
 
