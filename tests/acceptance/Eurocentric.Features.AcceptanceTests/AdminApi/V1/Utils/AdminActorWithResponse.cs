@@ -4,15 +4,10 @@ using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 
-public abstract class AdminActorWithResponse<TResponse> : Actor
+public abstract class AdminActorWithResponse<TResponse>(IApiDriver apiDriver) : Actor
     where TResponse : class
 {
-    protected AdminActorWithResponse(IApiDriver apiDriver)
-    {
-        ApiDriver = apiDriver;
-    }
-
-    private protected IApiDriver ApiDriver { get; }
+    private protected IApiDriver ApiDriver { get; } = apiDriver;
 
     private protected TResponse? ResponseBody { get; private set; }
 

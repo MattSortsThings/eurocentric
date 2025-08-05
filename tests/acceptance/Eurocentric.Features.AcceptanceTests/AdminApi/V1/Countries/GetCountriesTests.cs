@@ -49,12 +49,8 @@ public sealed class GetCountriesTests : SerialCleanAcceptanceTest
         await admin.Then_the_retrieved_countries_should_be_an_empty_list();
     }
 
-    private sealed class AdminActor : AdminActorWithResponse<GetCountriesResponse>
+    private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetCountriesResponse>(apiDriver)
     {
-        public AdminActor(IApiDriver apiDriver) : base(apiDriver)
-        {
-        }
-
         private List<Country> MyCountries { get; } = [];
 
         public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "")

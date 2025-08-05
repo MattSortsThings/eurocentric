@@ -129,12 +129,8 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         await admin.Then_no_countries_should_exist_in_the_system();
     }
 
-    private sealed class AdminActor : AdminActorWithResponse<CreateCountryResponse>
+    private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<CreateCountryResponse>(apiDriver)
     {
-        public AdminActor(IApiDriver apiDriver) : base(apiDriver)
-        {
-        }
-
         private Country? MyExistingCountry { get; set; }
 
         public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "")

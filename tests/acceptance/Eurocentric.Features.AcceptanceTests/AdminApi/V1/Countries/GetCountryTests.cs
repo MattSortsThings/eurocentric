@@ -52,12 +52,8 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
         await admin.Then_the_response_problem_details_extensions_should_include_my_deleted_country_ID();
     }
 
-    private sealed class AdminActor : AdminActorWithResponse<GetCountryResponse>
+    private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetCountryResponse>(apiDriver)
     {
-        public AdminActor(IApiDriver apiDriver) : base(apiDriver)
-        {
-        }
-
         private Country? MyCountry { get; set; }
 
         private Guid? MyDeletedCountryId { get; set; }

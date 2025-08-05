@@ -22,12 +22,8 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
         await admin.Then_the_retrieved_contest_ID_should_be("f27b02e5-346c-4fbf-a5bd-667c51820aa1");
     }
 
-    private sealed class AdminActor : AdminActorWithResponse<GetContestResponse>
+    private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetContestResponse>(apiDriver)
     {
-        public AdminActor(IApiDriver apiDriver) : base(apiDriver)
-        {
-        }
-
         public void Given_I_want_to_retrieve_the_contest_with_ID(string contestId) =>
             Request = ApiDriver.RequestFactory.Contests.GetContest(Guid.Parse(contestId));
 
