@@ -8,6 +8,7 @@ using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Features.AdminApi.V1.Common.Mapping;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +68,7 @@ internal static class CreateContestFeature
         ContestParticipantDatum[] Group1ParticipantData,
         ContestParticipantDatum[] Group2ParticipantData) : ICommand<CreateContestResponse>;
 
+    [UsedImplicitly]
     internal sealed class CommandHandler(AppDbContext dbContext, IContestIdProvider idProvider)
         : ICommandHandler<Command, CreateContestResponse>
     {

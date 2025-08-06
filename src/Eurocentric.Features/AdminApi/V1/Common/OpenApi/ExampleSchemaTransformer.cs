@@ -11,7 +11,10 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
     private protected override IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; } =
         new Dictionary<Type, IOpenApiAny>
         {
+            [typeof(Award)] = Award.CreateExample().ToOpenApiAny(),
+            [typeof(Broadcast)] = Broadcast.CreateExample().ToOpenApiAny(),
             [typeof(ChildBroadcast)] = ChildBroadcast.CreateExample().ToOpenApiAny(),
+            [typeof(Competitor)] = Competitor.CreateExample().ToOpenApiAny(),
             [typeof(CreateContestRequest)] = CreateContestRequest.CreateExample().ToOpenApiAny(),
             [typeof(CreateContestResponse)] = CreateContestResponse.CreateExample().ToOpenApiAny(),
             [typeof(CreateCountryRequest)] = CreateCountryRequest.CreateExample().ToOpenApiAny(),
@@ -19,6 +22,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(Contest)] = Contest.CreateExample().ToOpenApiAny(),
             [typeof(ContestParticipantDatum)] = ContestParticipantDatum.CreateExample().ToOpenApiAny(),
             [typeof(Country)] = Country.CreateExample().ToOpenApiAny(),
-            [typeof(Participant)] = Participant.CreateExample().ToOpenApiAny()
+            [typeof(Participant)] = Participant.CreateExample().ToOpenApiAny(),
+            [typeof(Voter)] = Voter.CreateExample().ToOpenApiAny()
         };
 }

@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi.V1.Broadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Contests;
 using Eurocentric.Features.AdminApi.V1.Countries;
@@ -25,6 +26,7 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
+        v1Group.MapBroadcastsEndpoints();
         v1Group.MapCountriesEndpoints();
         v1Group.MapContestsEndpoints();
     }
