@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
 using RestSharp;
 
@@ -14,6 +15,10 @@ public sealed class RestRequestFactory : IRestRequestFactory,
     {
         _apiVersion = apiVersion;
     }
+
+    public RestRequest CreateContest(CreateContestRequest requestBody) => PostRequest("/admin/api/{apiVersion}/contests")
+        .AddUrlSegment("apiVersion", _apiVersion)
+        .AddJsonBody(requestBody);
 
     public RestRequest GetContest(Guid contestId) => GetRequest("/admin/api/{apiVersion}/contests/{contestId}")
         .AddUrlSegment("apiVersion", _apiVersion)

@@ -15,6 +15,6 @@ public sealed record Participant : IExampleProvider<Participant>
 
     public static Participant CreateExample() => new()
     {
-        ParticipatingCountryId = ExampleValues.CountryId, ParticipantGroup = 2, ActName = "JJ", SongTitle = "Wasted Love"
+        ParticipatingCountryId = ExampleValues.CountryId1Of3, ParticipantGroup = 2, ActName = "JJ", SongTitle = "Wasted Love"
     };
 }

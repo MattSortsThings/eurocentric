@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
+using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContest;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContests;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +21,17 @@ internal static class Middleware
     {
         RouteGroupBuilder group = builder.MapGroup("contests")
             .WithTags(EndpointNames.Tags.Contests);
+
+        group.MapPost("/", CreateContestFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Contests.CreateContest)
+            .WithSummary("Create a contest")
+            .WithDescription("Creates a new country.")
+            .HasApiVersion(1, 0)
+            .Produces<CreateContestResponse>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
 
         group.MapGet("/{contestId:guid}", GetContestFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Contests.GetContest)

@@ -15,7 +15,7 @@ public sealed record Country : IExampleProvider<Country>
 
     public static Country CreateExample() => new()
     {
-        Id = ExampleValues.CountryId,
+        Id = ExampleValues.CountryId1Of3,
         CountryCode = "AT",
         CountryName = "Austria",
         ParticipatingContestIds = [ExampleValues.ContestId]

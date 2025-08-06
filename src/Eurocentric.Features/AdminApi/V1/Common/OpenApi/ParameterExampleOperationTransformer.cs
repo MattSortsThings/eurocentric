@@ -11,6 +11,6 @@ internal class ParameterExampleOperationTransformer : BaseParameterExampleOperat
         {
             ["broadcastId"] = ExampleValues.BroadcastId.ToOpenApiAny(),
             ["contestId"] = ExampleValues.ContestId.ToOpenApiAny(),
-            ["countryId"] = ExampleValues.CountryId.ToOpenApiAny()
+            ["countryId"] = ExampleValues.CountryId1Of3.ToOpenApiAny()
         };
 }

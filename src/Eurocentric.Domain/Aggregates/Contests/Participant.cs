@@ -1,5 +1,7 @@
+using ErrorOr;
 using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.ErrorHandling;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -46,4 +48,18 @@ public sealed class Participant : Entity
     ///     Gets the song title for the participant.
     /// </summary>
     public SongTitle? SongTitle { get; init; }
+
+    internal static Participant CreateInGroup0(CountryId participatingCountryId) => new(participatingCountryId);
+
+    internal static ErrorOr<Participant> CreateInGroup1(CountryId participatingCountryId,
+        ErrorOr<ActName> errorsOrActName,
+        ErrorOr<SongTitle> errorsOrSongTitle) => Tuple.Create(errorsOrActName, errorsOrSongTitle)
+        .Combine()
+        .Then(tuple => new Participant(participatingCountryId, ParticipantGroup.One, tuple.Item1, tuple.Item2));
+
+    internal static ErrorOr<Participant> CreateInGroup2(CountryId participatingCountryId,
+        ErrorOr<ActName> errorsOrActName,
+        ErrorOr<SongTitle> errorsOrSongTitle) => Tuple.Create(errorsOrActName, errorsOrSongTitle)
+        .Combine()
+        .Then(tuple => new Participant(participatingCountryId, ParticipantGroup.Two, tuple.Item1, tuple.Item2));
 }
