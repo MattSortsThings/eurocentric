@@ -21,6 +21,9 @@ public sealed class RestRequestFactory : IRestRequestFactory,
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddUrlSegment("broadcastId", broadcastId);
 
+    public RestRequest GetBroadcasts() => GetRequest("/admin/api/{apiVersion}/broadcasts")
+        .AddUrlSegment("apiVersion", _apiVersion);
+
     public RestRequest CreateContest(CreateContestRequest requestBody) => PostRequest("/admin/api/{apiVersion}/contests")
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddJsonBody(requestBody);

@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcast;
+using Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,5 +28,12 @@ internal static class Middleware
             .HasApiVersion(1, 0)
             .Produces<GetBroadcastResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);
+
+        group.MapGet("/", GetBroadcastsFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Broadcasts.GetBroadcasts)
+            .WithSummary("Get all broadcasts")
+            .WithDescription("Retrieves a list of all existing broadcasts, in broadcast date order.")
+            .HasApiVersion(1, 0)
+            .Produces<GetBroadcastsResponse>();
     }
 }
