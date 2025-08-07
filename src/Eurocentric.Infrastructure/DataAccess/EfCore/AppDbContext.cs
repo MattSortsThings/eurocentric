@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Broadcast = Eurocentric.Domain.Aggregates.Broadcasts.Broadcast;
 using Contest = Eurocentric.Domain.Aggregates.Contests.Contest;
 using Country = Eurocentric.Domain.Aggregates.Countries.Country;
 using V0Country = Eurocentric.Domain.V0Entities.Country;
@@ -13,6 +14,8 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore;
 public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Broadcast> Broadcasts => Set<Broadcast>();
 
     public DbSet<Contest> Contests => Set<Contest>();
 

@@ -8,11 +8,10 @@ public static class TestDefaults
     public const string CountryName = "CountryName";
     public const string CountryCode = "AA";
     public const string CityName = "CityName";
-    public const string ActName = "ActName";
-    public const string SongTitle = "SongTitle";
+    public const string DateFormat = "yyyy-MM-dd";
 
     public static ContestParticipantDatum ParticipantDatum(Guid countryId) => new()
     {
-        ParticipatingCountryId = countryId, ActName = ActName, SongTitle = SongTitle
+        ParticipatingCountryId = countryId, ActName = "ActName", SongTitle = "SongTitle"
     };
 }

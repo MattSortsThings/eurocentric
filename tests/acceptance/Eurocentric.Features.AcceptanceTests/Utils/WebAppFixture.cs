@@ -112,6 +112,7 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
         await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+        await dbContext.Broadcasts.ExecuteDeleteAsync();
         await dbContext.Contests.ExecuteDeleteAsync();
         await dbContext.Countries.ExecuteDeleteAsync();
         await dbContext.V0Broadcasts.ExecuteDeleteAsync();
