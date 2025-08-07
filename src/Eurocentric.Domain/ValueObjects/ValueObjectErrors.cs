@@ -19,6 +19,16 @@ public static class ValueObjectErrors
 
     /// <summary>
     ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to instantiate a
+    ///     <see cref="BroadcastDate" /> object with an illegal value.
+    /// </summary>
+    /// <param name="value">The illegal value that was provided.</param>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error IllegalBroadcastDateValue(DateOnly value) => Error.Failure("Illegal broadcast date value",
+        "Broadcast date value must have a year between 2016 and 2050.",
+        new Dictionary<string, object> { ["broadcastDate"] = value });
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to instantiate a
     ///     <see cref="CityName" /> object with an illegal value.
     /// </summary>
     /// <param name="value">The illegal value that was provided.</param>

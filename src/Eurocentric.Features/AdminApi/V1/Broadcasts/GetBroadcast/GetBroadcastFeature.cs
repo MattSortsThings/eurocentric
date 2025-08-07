@@ -1,10 +1,11 @@
 using ErrorOr;
-using Eurocentric.Features.AdminApi.V1.Common.Dtos;
+using Eurocentric.Features.AdminApi.V1.Common.Mapping;
 using Eurocentric.Features.Shared.Messaging;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SlimMessageBus;
+using BroadcastAggregate = Eurocentric.Domain.Aggregates.Broadcasts.Broadcast;
 
 namespace Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcast;
 
@@ -24,9 +25,9 @@ internal static class GetBroadcastFeature
         {
             await Task.CompletedTask;
 
-            Broadcast dummyBroadcast = Broadcast.CreateExample() with { Id = query.BroadcastId };
+            BroadcastAggregate dummyBroadcast = BroadcastAggregate.CreateDummyBroadcast();
 
-            return new GetBroadcastResponse(dummyBroadcast);
+            return new GetBroadcastResponse(dummyBroadcast.ToBroadcastDto() with { Id = query.BroadcastId });
         }
     }
 }

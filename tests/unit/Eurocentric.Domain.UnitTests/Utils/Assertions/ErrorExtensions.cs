@@ -49,6 +49,16 @@ public static class ErrorExtensions
         new ErrorMetadataContainsExpectedKeyAndInt32ValueAssertion(expectedKey, expectedValue),
         [a1, a2]);
 
+    public static InvokableValueAssertionBuilder<Error> HasMetadataEntry(this IValueSource<Error> valueSource,
+        string expectedKey,
+        DateOnly expectedValue,
+        [CallerArgumentExpression(nameof(expectedKey))]
+        string a1 = "",
+        [CallerArgumentExpression(nameof(expectedValue))]
+        string a2 = "") => valueSource.RegisterAssertion(
+        new ErrorMetadataContainsExpectedKeyAndDateOnlyValueAssertion(expectedKey, expectedValue),
+        [a1, a2]);
+
     private sealed class ErrorCodeEqualsExpectedValueAssertion(string expected)
         : ExpectedValueAssertCondition<Error, string>(expected)
     {
@@ -136,6 +146,42 @@ public static class ErrorExtensions
                 else
                 {
                     result = AssertionResult.FailIf(intValue != expectedValue, $"value was {intValue}");
+                }
+            }
+            else
+            {
+                result = AssertionResult.Fail("metadata was null");
+            }
+
+            return result;
+        }
+
+        protected override string GetFailureMessage(Error actualValue) =>
+            $"to contain the key \"{expectedKey}\" with value {expectedValue}";
+    }
+
+    private class ErrorMetadataContainsExpectedKeyAndDateOnlyValueAssertion(string expectedKey, DateOnly expectedValue)
+        : ValueAssertCondition<Error>
+    {
+        protected override AssertionResult Passes(Error actualValue)
+        {
+            AssertionResult result;
+
+            if (actualValue.Metadata is { } metadata)
+            {
+                if (!metadata.TryGetValue(expectedKey, out object? value))
+                {
+                    result = AssertionResult.Fail("key was not found");
+                }
+
+                else if (value is not DateOnly dateOnlyValue)
+                {
+                    result = AssertionResult.Fail($"value was {value}");
+                }
+
+                else
+                {
+                    result = AssertionResult.FailIf(dateOnlyValue != expectedValue, $"value was {dateOnlyValue}");
                 }
             }
             else
