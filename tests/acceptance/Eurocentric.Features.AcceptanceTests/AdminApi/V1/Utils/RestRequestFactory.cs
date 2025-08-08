@@ -18,6 +18,10 @@ public sealed class RestRequestFactory : IRestRequestFactory,
         _apiVersion = apiVersion;
     }
 
+    public RestRequest DeleteBroadcast(Guid broadcastId) => DeleteRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}")
+        .AddUrlSegment("apiVersion", _apiVersion)
+        .AddUrlSegment("broadcastId", broadcastId);
+
     public RestRequest GetBroadcast(Guid broadcastId) => GetRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}")
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddUrlSegment("broadcastId", broadcastId);
@@ -58,6 +62,8 @@ public sealed class RestRequestFactory : IRestRequestFactory,
     public IRestRequestFactory.IContestsEndpoints Contests => this;
 
     public IRestRequestFactory.ICountriesEndpoints Countries => this;
+
+    private static RestRequest DeleteRequest(string route) => new RestRequest(route, Method.Delete).UseSecretApiKey();
 
     private static RestRequest GetRequest(string route) => new RestRequest(route).UseSecretApiKey();
 

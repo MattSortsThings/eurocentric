@@ -17,7 +17,8 @@ public abstract class BroadcastBuilder
     ///     Sets the <see cref="Broadcast.BroadcastDate" /> value of the <see cref="Broadcast" /> to be built.
     /// </summary>
     /// <param name="errorsOrBroadcastDate">
-    ///     The discriminated union of <i>EITHER</i> a list of <see cref="Error" /> objects <i>OR</i> a <see cref="BroadcastDate" /> object.
+    ///     The discriminated union of <i>EITHER</i> a list of <see cref="Error" /> objects <i>OR</i> a
+    ///     <see cref="BroadcastDate" /> object.
     /// </param>
     /// <returns>The same <see cref="BroadcastBuilder" /> instance, so that method invocations can be chained.</returns>
     public abstract BroadcastBuilder WithBroadcastDate(ErrorOr<BroadcastDate> errorsOrBroadcastDate);

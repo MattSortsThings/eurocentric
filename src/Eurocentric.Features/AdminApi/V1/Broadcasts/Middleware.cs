@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi.V1.Broadcasts.DeleteBroadcast;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcast;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
@@ -35,5 +36,13 @@ internal static class Middleware
             .WithDescription("Retrieves a list of all existing broadcasts, in broadcast date order.")
             .HasApiVersion(1, 0)
             .Produces<GetBroadcastsResponse>();
+
+        group.MapDelete("/{broadcastId:guid}", DeleteBroadcastFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Broadcasts.DeleteBroadcast)
+            .WithSummary("Delete a broadcast")
+            .WithDescription("Deletes a single existing broadcast")
+            .HasApiVersion(1, 0)
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status404NotFound);
     }
 }

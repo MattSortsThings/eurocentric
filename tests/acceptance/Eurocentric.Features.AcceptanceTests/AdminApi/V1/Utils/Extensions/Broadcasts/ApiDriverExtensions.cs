@@ -1,12 +1,8 @@
-using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcasts;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Common.Enums;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateChildBroadcast;
-using Eurocentric.Infrastructure.DataAccess.EfCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Extensions.Broadcasts;
@@ -41,18 +37,9 @@ public static class ApiDriverExtensions
 
     public static async Task DeleteSingleBroadcastAsync(this IApiDriver driver, Guid broadcastId)
     {
-        BroadcastId broadcastIdToDelete = BroadcastId.FromValue(broadcastId);
-        await driver.BackDoor.ExecuteScopedAsync(DeleteAsync(broadcastIdToDelete));
-    }
+        RestRequest request = driver.RequestFactory.Broadcasts.DeleteBroadcast(broadcastId);
+        ProblemOrResponse response = await driver.RestClient.SendAsync(request);
 
-    private static Func<IServiceProvider, Task> DeleteAsync(BroadcastId broadcastId)
-    {
-        BroadcastId broadcastIdToDelete = broadcastId;
-
-        return async sp =>
-        {
-            await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-            await dbContext.Broadcasts.Where(broadcast => broadcast.Id == broadcastIdToDelete).ExecuteDeleteAsync();
-        };
+        await Assert.That(response.IsT1).IsTrue();
     }
 }
