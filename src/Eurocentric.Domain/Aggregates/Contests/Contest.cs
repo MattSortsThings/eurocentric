@@ -1,5 +1,8 @@
+using ErrorOr;
 using Eurocentric.Domain.Abstractions;
+using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.ErrorHandling;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -33,7 +36,7 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// <summary>
     ///     Gets the year in which the contest is held.
     /// </summary>
-    public ContestYear ContestYear { get; private init; } = null!;
+    public ContestYear ContestYear { get; } = null!;
 
     /// <summary>
     ///     Gets the name of the city in which the contest is held.
@@ -61,4 +64,174 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// </summary>
     /// <remarks>Accessing this property creates and returns a new list populated from the instance's private data.</remarks>
     public IReadOnlyList<Participant> Participants => _participants.ToArray().AsReadOnly();
+
+    /// <summary>
+    ///     Adds a new <see cref="ChildBroadcast" /> object to the contest's <see cref="ChildBroadcasts" /> collection with the
+    ///     provided <see cref="ChildBroadcast.BroadcastId" /> and <see cref="ChildBroadcast.ContestStage" /> values and a
+    ///     <see cref="ChildBroadcast.Completed" /> value of <see langword="false" />.
+    /// </summary>
+    /// <param name="broadcastId">The ID of the broadcast aggregate.</param>
+    /// <param name="contestStage">The contest stage of the broadcast aggregate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance already contains a <see cref="ChildBroadcast" /> matching the
+    ///     <paramref name="broadcastId" /> or <paramref name="contestStage" /> arguments.
+    /// </exception>
+    public void AddChildBroadcast(BroadcastId broadcastId, ContestStage contestStage)
+    {
+        ArgumentNullException.ThrowIfNull(broadcastId);
+
+        if (_childBroadcasts.Any(broadcast => broadcast.BroadcastId == broadcastId))
+        {
+            throw new ArgumentException("Contest already contains a ChildBroadcast object with the same BroadcastId value.");
+        }
+
+        if (_childBroadcasts.Any(broadcast => broadcast.ContestStage == contestStage))
+        {
+            throw new ArgumentException("Contest already contains a ChildBroadcast object with the same ContestStage value.");
+        }
+
+        _childBroadcasts.Add(new ChildBroadcast(broadcastId, contestStage));
+    }
+
+    /// <summary>
+    ///     Starts the process of building a new broadcast aggregate representing the First Semi-Final child broadcast of the
+    ///     contest, using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="BroadcastBuilder" /> instance.</returns>
+    public BroadcastBuilder CreateSemiFinal1() =>
+        _childBroadcasts.Any(b => b.ContestStage == ContestStage.SemiFinal1)
+            ? new ContestStageConflictBuilder(ContestStage.SemiFinal1)
+            : InitializeSemiFinal1ChildBroadcastBuilder(this);
+
+    /// <summary>
+    ///     Starts the process of building a new broadcast aggregate representing the Second Semi-Final child broadcast of the
+    ///     contest, using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="BroadcastBuilder" /> instance.</returns>
+    public BroadcastBuilder CreateSemiFinal2() =>
+        _childBroadcasts.Any(b => b.ContestStage == ContestStage.SemiFinal2)
+            ? new ContestStageConflictBuilder(ContestStage.SemiFinal2)
+            : InitializeSemiFinal2ChildBroadcastBuilder(this);
+
+    /// <summary>
+    ///     Starts the process of building a new broadcast aggregate representing the Grand Final child broadcast of the
+    ///     contest, using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="BroadcastBuilder" /> instance.</returns>
+    public BroadcastBuilder CreateGrandFinal() =>
+        _childBroadcasts.Any(b => b.ContestStage == ContestStage.GrandFinal)
+            ? new ContestStageConflictBuilder(ContestStage.GrandFinal)
+            : InitializeGrandFinalChildBroadcastBuilder(this);
+
+    private protected abstract ChildBroadcastBuilder InitializeSemiFinal1ChildBroadcastBuilder(Contest parentContest);
+
+    private protected abstract ChildBroadcastBuilder InitializeSemiFinal2ChildBroadcastBuilder(Contest parentContest);
+
+    private protected abstract ChildBroadcastBuilder InitializeGrandFinalChildBroadcastBuilder(Contest parentContest);
+
+    private sealed class ContestStageConflictBuilder(ContestStage contestStage) : BroadcastBuilder
+    {
+        public override BroadcastBuilder WithBroadcastDate(ErrorOr<BroadcastDate> errorsOrBroadcastDate) => this;
+
+        public override BroadcastBuilder WithCompetingCountryIds(IEnumerable<CountryId> competingCountryIds)
+        {
+            ArgumentNullException.ThrowIfNull(competingCountryIds);
+
+            return this;
+        }
+
+        public override ErrorOr<Broadcast> Build(Func<BroadcastId> idProvider)
+        {
+            ArgumentNullException.ThrowIfNull(idProvider);
+
+            return ContestErrors.ChildBroadcastContestStageConflict(contestStage);
+        }
+    }
+
+    private protected abstract class ChildBroadcastBuilder : BroadcastBuilder
+    {
+        private readonly Contest _parentContest;
+
+        protected ChildBroadcastBuilder(Contest parentContest)
+        {
+            _parentContest = parentContest;
+        }
+
+        private ErrorOr<BroadcastDate> ErrorsOrBroadcastDate { get; set; } = BroadcastErrors.BroadcastDateNotSet();
+
+        private ErrorOr<List<Competitor>> ErrorsOrCompetitors { get; set; } = BroadcastErrors.CompetitorsNotSet();
+
+        private protected abstract ContestStage ContestStage { get; }
+
+        private protected abstract bool MayCompete(Participant participant);
+
+        private protected abstract bool HasJury(Participant participant);
+
+        private protected abstract bool HasTelevote(Participant participant);
+
+        public override BroadcastBuilder WithBroadcastDate(ErrorOr<BroadcastDate> errorsOrBroadcastDate)
+        {
+            if (errorsOrBroadcastDate is { IsError: false, Value: var bd } && bd.Value.Year != _parentContest.ContestYear.Value)
+            {
+                ErrorsOrBroadcastDate = ContestErrors.ChildBroadcastDateOutOfRange(bd);
+            }
+            else
+            {
+                ErrorsOrBroadcastDate = errorsOrBroadcastDate;
+            }
+
+            return this;
+        }
+
+        public override BroadcastBuilder WithCompetingCountryIds(IEnumerable<CountryId> competingCountryIds)
+        {
+            ArgumentNullException.ThrowIfNull(competingCountryIds);
+
+            ErrorsOrCompetitors = CreateCompetitors(competingCountryIds);
+
+            return this;
+        }
+
+        public override ErrorOr<Broadcast> Build(Func<BroadcastId> idProvider)
+        {
+            ArgumentNullException.ThrowIfNull(idProvider);
+
+            return Tuple.Create(ErrorsOrBroadcastDate, ErrorsOrCompetitors)
+                .Combine()
+                .Then(tuple => new Broadcast(idProvider(),
+                    tuple.Item1,
+                    _parentContest.Id,
+                    ContestStage,
+                    tuple.Item2,
+                    CreateJuries(),
+                    CreateTelevotes()));
+        }
+
+        private List<Jury> CreateJuries() => _parentContest._participants.Where(HasJury)
+            .Select(participant => participant.CreateJury()).ToList();
+
+        private List<Televote> CreateTelevotes() => _parentContest._participants.Where(HasTelevote)
+            .Select(participant => participant.CreateTelevote()).ToList();
+
+        private ErrorOr<List<Competitor>> CreateCompetitors(IEnumerable<CountryId> competingCountryIds) => competingCountryIds
+            .Select(id =>
+                _parentContest._participants.SingleOrDefault(participant => participant.ParticipatingCountryId.Equals(id)))
+            .Select(participant => participant is null || !MayCompete(participant)
+                ? ContestErrors.ChildBroadcastCompetingCountryIdsMismatch()
+                : participant.ToErrorOr())
+            .ToList()
+            .Collect()
+            .FailIf(DuplicateCompetingCountryIds, BroadcastErrors.DuplicateCompetingCountryIds())
+            .FailIf(IllegalCompetitorCount, BroadcastErrors.IllegalCompetitorCount())
+            .Then(MapToOrderedCompetitors);
+
+        private static List<Competitor> MapToOrderedCompetitors(IEnumerable<Participant> participants) =>
+            participants.Select((participant, index) => participant.CreateCompetitor(index + 1)).ToList();
+
+        private static bool IllegalCompetitorCount(ICollection<Participant> competitors) => competitors.Count < 2;
+
+        private static bool DuplicateCompetingCountryIds(IEnumerable<Participant> competitors) =>
+            competitors.GroupBy(x => x.ParticipatingCountryId).Any(g => g.Count() > 1);
+    }
 }

@@ -114,7 +114,9 @@ public sealed class BroadcastDateTests : UnitTest
     public async Task FromValue_should_return_Errors_when_value_is_date_with_year_earlier_than_2016()
     {
         // Arrange
-        DateOnly value = DateOnly.ParseExact("2015-12-31", DateFormat);
+        const string dateValue = "2015-12-31";
+
+        DateOnly value = DateOnly.ParseExact(dateValue, DateFormat);
 
         // Act
         ErrorOr<BroadcastDate> result = BroadcastDate.FromValue(value);
@@ -128,14 +130,16 @@ public sealed class BroadcastDateTests : UnitTest
             .HasType(ErrorType.Failure)
             .And.HasCode("Illegal broadcast date value")
             .And.HasDescription("Broadcast date value must have a year between 2016 and 2050.")
-            .And.HasMetadataEntry("broadcastDate", value);
+            .And.HasMetadataEntry("broadcastDate", dateValue);
     }
 
     [Test]
     public async Task FromValue_should_return_Errors_when_value_is_date_with_year_later_than_2050()
     {
         // Arrange
-        DateOnly value = DateOnly.ParseExact("2051-01-01", DateFormat);
+        const string dateValue = "2051-01-01";
+
+        DateOnly value = DateOnly.ParseExact(dateValue, DateFormat);
 
         // Act
         ErrorOr<BroadcastDate> result = BroadcastDate.FromValue(value);
@@ -149,6 +153,6 @@ public sealed class BroadcastDateTests : UnitTest
             .HasType(ErrorType.Failure)
             .And.HasCode("Illegal broadcast date value")
             .And.HasDescription("Broadcast date value must have a year between 2016 and 2050.")
-            .And.HasMetadataEntry("broadcastDate", value);
+            .And.HasMetadataEntry("broadcastDate", dateValue);
     }
 }

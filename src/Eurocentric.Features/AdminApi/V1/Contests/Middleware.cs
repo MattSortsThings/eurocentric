@@ -1,4 +1,5 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
+using Eurocentric.Features.AdminApi.V1.Contests.CreateChildBroadcast;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContest;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContests;
@@ -28,6 +29,17 @@ internal static class Middleware
             .WithDescription("Creates a new country.")
             .HasApiVersion(1, 0)
             .Produces<CreateContestResponse>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
+
+        group.MapPost("/{contestId:guid}/broadcasts", CreateChildBroadcastFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Contests.CreateChildBroadcast)
+            .WithSummary("Create a child broadcast")
+            .WithDescription("Creates a new broadcast as a child of an existing contest.")
+            .HasApiVersion(1, 0)
+            .Produces<CreateChildBroadcastResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict)

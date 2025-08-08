@@ -18,7 +18,7 @@ public abstract class Actor
     public async Task Then_my_request_should_SUCCEED_with_status_code_200_OK() => await Assert.That(ResponseStatusCode)
         .IsEqualTo(HttpStatusCode.OK);
 
-    public async Task Then_my_request_should_SUCCEED_with_status_code_201_OK() => await Assert.That(ResponseStatusCode)
+    public async Task Then_my_request_should_SUCCEED_with_status_code_201_Created() => await Assert.That(ResponseStatusCode)
         .IsEqualTo(HttpStatusCode.Created);
 
     public async Task Then_my_request_should_FAIL_with_status_code_404_NotFound() => await Assert.That(ResponseStatusCode)

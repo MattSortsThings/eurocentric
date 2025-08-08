@@ -24,7 +24,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_201_OK();
+        await admin.Then_my_request_should_SUCCEED_with_status_code_201_Created();
         await admin.Then_the_created_country_should_match(countryCode: "AT", countryName: "Austria");
         await admin.Then_the_created_country_should_be_the_only_existing_country_in_the_system();
     }
@@ -42,7 +42,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_201_OK();
+        await admin.Then_my_request_should_SUCCEED_with_status_code_201_Created();
         await admin.Then_the_created_country_should_match(countryCode: "BA", countryName: "Bosnia & Herzegovina");
         await admin.Then_the_created_country_should_be_the_only_existing_country_in_the_system();
     }
@@ -60,7 +60,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_201_OK();
+        await admin.Then_my_request_should_SUCCEED_with_status_code_201_Created();
         await admin.Then_the_created_country_should_match(countryCode: "XX", countryName: "Rest of the World");
         await admin.Then_the_created_country_should_be_the_only_existing_country_in_the_system();
     }

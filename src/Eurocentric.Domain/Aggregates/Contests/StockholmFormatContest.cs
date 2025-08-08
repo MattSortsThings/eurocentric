@@ -27,6 +27,16 @@ public sealed class StockholmFormatContest : Contest
     /// <inheritdoc />
     public override ContestFormat ContestFormat { get; private protected init; } = ContestFormat.Stockholm;
 
+    private protected override ChildBroadcastBuilder InitializeSemiFinal1ChildBroadcastBuilder(Contest parentContest) =>
+        new SemiFinal1Builder(parentContest);
+
+    private protected override ChildBroadcastBuilder InitializeSemiFinal2ChildBroadcastBuilder(Contest parentContest) =>
+        new SemiFinal2Builder(parentContest);
+
+    private protected override ChildBroadcastBuilder InitializeGrandFinalChildBroadcastBuilder(Contest parentContest) =>
+        new GrandFinalBuilder(parentContest);
+
+
     /// <summary>
     ///     Starts the process of creating a new <see cref="StockholmFormatContest" /> instance using the fluent builder.
     /// </summary>
@@ -57,5 +67,57 @@ public sealed class StockholmFormatContest : Contest
                    || groupSizes.TryGetValue(ParticipantGroup.One, out int group1Size) is false || group1Size < 3
                    || groupSizes.TryGetValue(ParticipantGroup.Two, out int group2Size) is false || group2Size < 3;
         }
+    }
+
+    private sealed class SemiFinal1Builder : ChildBroadcastBuilder
+    {
+        public SemiFinal1Builder(Contest parentContest) : base(parentContest)
+        {
+            ContestStage = ContestStage.SemiFinal1;
+        }
+
+        private protected override ContestStage ContestStage { get; }
+
+        private protected override bool MayCompete(Participant participant) =>
+            participant.ParticipantGroup == ParticipantGroup.One;
+
+        private protected override bool HasJury(Participant participant) => participant.ParticipantGroup == ParticipantGroup.One;
+
+        private protected override bool HasTelevote(Participant participant) =>
+            participant.ParticipantGroup == ParticipantGroup.One;
+    }
+
+    private sealed class SemiFinal2Builder : ChildBroadcastBuilder
+    {
+        public SemiFinal2Builder(Contest parentContest) : base(parentContest)
+        {
+            ContestStage = ContestStage.SemiFinal2;
+        }
+
+        private protected override ContestStage ContestStage { get; }
+
+        private protected override bool MayCompete(Participant participant) =>
+            participant.ParticipantGroup == ParticipantGroup.Two;
+
+        private protected override bool HasJury(Participant participant) => participant.ParticipantGroup == ParticipantGroup.Two;
+
+        private protected override bool HasTelevote(Participant participant) =>
+            participant.ParticipantGroup == ParticipantGroup.Two;
+    }
+
+    private sealed class GrandFinalBuilder : ChildBroadcastBuilder
+    {
+        public GrandFinalBuilder(Contest parentContest) : base(parentContest)
+        {
+            ContestStage = ContestStage.GrandFinal;
+        }
+
+        private protected override ContestStage ContestStage { get; }
+
+        private protected override bool MayCompete(Participant participant) => true;
+
+        private protected override bool HasJury(Participant participant) => true;
+
+        private protected override bool HasTelevote(Participant participant) => true;
     }
 }

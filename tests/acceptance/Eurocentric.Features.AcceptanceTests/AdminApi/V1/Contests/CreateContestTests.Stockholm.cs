@@ -40,7 +40,7 @@ public sealed partial class CreateContestTests
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_201_OK();
+        await admin.Then_my_request_should_SUCCEED_with_status_code_201_Created();
         await admin.Then_the_created_contest_should_match(
             contestFormat: "Stockholm",
             contestYear: 2016,
@@ -93,7 +93,7 @@ public sealed partial class CreateContestTests
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_201_OK();
+        await admin.Then_my_request_should_SUCCEED_with_status_code_201_Created();
         await admin.Then_the_created_contest_should_match(
             contestFormat: "Stockholm",
             contestYear: 2022,

@@ -1,5 +1,6 @@
 using ErrorOr;
 using Eurocentric.Domain.Abstractions;
+using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
 using Eurocentric.Domain.Identifiers;
@@ -48,6 +49,12 @@ public sealed class Participant : Entity
     ///     Gets the song title for the participant.
     /// </summary>
     public SongTitle? SongTitle { get; init; }
+
+    internal Competitor CreateCompetitor(int runningOrderPosition) => new(ParticipatingCountryId, runningOrderPosition);
+
+    internal Jury CreateJury() => new(ParticipatingCountryId);
+
+    internal Televote CreateTelevote() => new(ParticipatingCountryId);
 
     internal static Participant CreateInGroup0(CountryId participatingCountryId) => new(participatingCountryId);
 

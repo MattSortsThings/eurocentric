@@ -1,4 +1,5 @@
 using ErrorOr;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 
@@ -72,4 +73,37 @@ public static class ContestErrors
     /// <returns>A new <see cref="Error" /> instance.</returns>
     public static Error CityNameNotSet() => Error.Unexpected("City name not set",
         "Contest builder invoked without setting city name.");
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to create a child broadcast
+    ///     for a
+    ///     contest that already has a child broadcast with the provided contest stage value.
+    /// </summary>
+    /// <param name="contestStage">The contest stage value.</param>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error ChildBroadcastContestStageConflict(ContestStage contestStage) =>
+        Error.Conflict("Child broadcast contest stage conflict",
+            "The contest already has a child broadcast with the provided contest stage.",
+            new Dictionary<string, object> { { "contestStage", contestStage.ToString() } });
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to create a child broadcast
+    ///     with a date outside the year of the parent contest.
+    /// </summary>
+    /// <param name="broadcastDate">The broadcast date value.</param>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error ChildBroadcastDateOutOfRange(BroadcastDate broadcastDate) => Error.Conflict(
+        "Child broadcast date out of range",
+        "Child broadcast date must match parent contest year.",
+        new Dictionary<string, object> { { "broadcastDate", broadcastDate.Value.ToString("yyyy-MM-dd") } });
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to create a child broadcast
+    ///     with competing country IDs that do not match the parent contest's participants.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error ChildBroadcastCompetingCountryIdsMismatch() =>
+        Error.Conflict("Child broadcast competing country IDs mismatch",
+            "Every competitor in a child broadcast must have a competing country ID matching a participant " +
+            "in the parent contest that is eligible to compete in the broadcast's contest stage.");
 }

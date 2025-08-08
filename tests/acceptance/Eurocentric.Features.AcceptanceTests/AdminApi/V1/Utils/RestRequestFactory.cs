@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Contests.CreateChildBroadcast;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
 using RestSharp;
@@ -27,6 +28,12 @@ public sealed class RestRequestFactory : IRestRequestFactory,
     public RestRequest CreateContest(CreateContestRequest requestBody) => PostRequest("/admin/api/{apiVersion}/contests")
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddJsonBody(requestBody);
+
+    public RestRequest CreateChildBroadcast(Guid contestId, CreateChildBroadcastRequest requestBody) =>
+        PostRequest("/admin/api/{apiVersion}/contests/{contestId}/broadcasts")
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("contestId", contestId)
+            .AddJsonBody(requestBody);
 
     public RestRequest GetContest(Guid contestId) => GetRequest("/admin/api/{apiVersion}/contests/{contestId}")
         .AddUrlSegment("apiVersion", _apiVersion)

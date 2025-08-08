@@ -25,7 +25,7 @@ public static class ValueObjectErrors
     /// <returns>A new <see cref="Error" /> instance.</returns>
     public static Error IllegalBroadcastDateValue(DateOnly value) => Error.Failure("Illegal broadcast date value",
         "Broadcast date value must have a year between 2016 and 2050.",
-        new Dictionary<string, object> { ["broadcastDate"] = value });
+        new Dictionary<string, object> { ["broadcastDate"] = value.ToString("yyyy-MM-dd") });
 
     /// <summary>
     ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to instantiate a

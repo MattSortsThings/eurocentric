@@ -58,6 +58,14 @@ public static class ApiDriverExtensions
         return response.AsResponse.Data!.Contest;
     }
 
+    public static async Task<ContestDto> GetSingleContestAsync(this IApiDriver driver, Guid contestId)
+    {
+        RestRequest request = driver.RequestFactory.Contests.GetContest(contestId);
+        ProblemOrResponse<CreateContestResponse> response = await driver.RestClient.SendAsync<CreateContestResponse>(request);
+
+        return response.AsResponse.Data!.Contest;
+    }
+
     public static async Task<ContestDto[]> GetAllContestsAsync(this IApiDriver driver)
     {
         RestRequest request = driver.RequestFactory.Contests.GetContests();

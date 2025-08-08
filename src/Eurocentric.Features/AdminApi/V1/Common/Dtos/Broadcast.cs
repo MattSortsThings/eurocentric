@@ -29,7 +29,7 @@ public sealed record Broadcast : IExampleProvider<Broadcast>
         return new Broadcast
         {
             Id = ExampleValues.BroadcastId,
-            BroadcastDate = DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd"),
+            BroadcastDate = new DateOnly(2025, 5, 17),
             ParentContestId = ExampleValues.ContestId,
             ContestStage = ContestStage.GrandFinal,
             Completed = false,
