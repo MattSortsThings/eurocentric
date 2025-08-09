@@ -80,6 +80,40 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     public IReadOnlyList<Televote> Televotes => _televotes.ToArray().AsReadOnly();
 
     /// <summary>
+    ///     Awards a set of points awards from a jury to the competitors in the broadcast.
+    /// </summary>
+    /// <remarks>
+    ///     This operation <i>EITHER</i> succeeds and modifies the instance's private data <i>OR</i> fails and rolls back
+    ///     all changes.
+    /// </remarks>
+    /// <param name="votingCountryId">The voting country ID of the jury to award its points.</param>
+    /// <param name="rankedCompetingCountryIds">An ordered list of the competing country IDs to be awarded points.</param>
+    /// <returns>
+    ///     The discriminated union of <i>EITHER</i> a list of <see cref="Error" /> objects <i>OR</i> an
+    ///     <see cref="Result.Updated" /> value.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    ///     <paramref name="votingCountryId" /> is <see langword="null" />, or
+    ///     <paramref name="rankedCompetingCountryIds" /> is <see langword="null" />.
+    /// </exception>
+    public ErrorOr<Updated> AwardJuryPoints(CountryId votingCountryId, IReadOnlyList<CountryId> rankedCompetingCountryIds)
+    {
+        ArgumentNullException.ThrowIfNull(votingCountryId);
+        ArgumentNullException.ThrowIfNull(rankedCompetingCountryIds);
+
+        ErrorOr<Jury> errorsOrJury = GetJuryToAwardPoints(votingCountryId);
+        ErrorOr<List<Competitor>> errorsOrRankedCompetitors =
+            GetCompetitorsToReceivePoints(votingCountryId, rankedCompetingCountryIds);
+
+        return Tuple.Create(errorsOrJury, errorsOrRankedCompetitors)
+            .Combine()
+            .ThenDo(tuple => tuple.Item1.AwardPoints(tuple.Item2))
+            .ThenDo(_ => UpdateCompetitorFinishingPositions())
+            .ThenDo(_ => UpdatedCompleted())
+            .Then(_ => Result.Updated);
+    }
+
+    /// <summary>
     ///     Awards a set of points awards from a televote to the competitors in the broadcast.
     /// </summary>
     /// <remarks>
@@ -111,6 +145,15 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .ThenDo(_ => UpdateCompetitorFinishingPositions())
             .ThenDo(_ => UpdatedCompleted())
             .Then(_ => Result.Updated);
+    }
+
+    private ErrorOr<Jury> GetJuryToAwardPoints(CountryId votingCountryId)
+    {
+        Jury? jury = _juries.FirstOrDefault(jury => jury.VotingCountryId.Equals(votingCountryId));
+
+        return jury is null || jury.PointsAwarded
+            ? BroadcastErrors.JuryVotingCountryIdMismatch()
+            : jury;
     }
 
     private ErrorOr<Televote> GetTelevoteToAwardPoints(CountryId votingCountryId)

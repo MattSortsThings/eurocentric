@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardJuryPoints;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardTelevotePoints;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateChildBroadcast;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
@@ -18,6 +19,12 @@ public sealed class RestRequestFactory : IRestRequestFactory,
     {
         _apiVersion = apiVersion;
     }
+
+    public RestRequest AwardJuryPoints(Guid broadcastId, AwardJuryPointsRequest requestBody) =>
+        PatchRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}/award-jury")
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("broadcastId", broadcastId)
+            .AddJsonBody(requestBody);
 
     public RestRequest AwardTelevotePoints(Guid broadcastId, AwardTelevotePointsRequest requestBody) =>
         PatchRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}/award-televote")

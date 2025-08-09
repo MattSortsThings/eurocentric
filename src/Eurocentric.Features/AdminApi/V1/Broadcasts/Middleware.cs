@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardJuryPoints;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardTelevotePoints;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.DeleteBroadcast;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcast;
@@ -45,6 +46,16 @@ internal static class Middleware
             .HasApiVersion(1, 0)
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound);
+
+        group.MapPatch("/{broadcastId:guid}/award-jury", AwardJuryPointsFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Broadcasts.AwardJuryPoints)
+            .WithSummary("Award jury points in a broadcast")
+            .WithDescription("Awards the points from a jury to the competitors in an existing broadcast.")
+            .HasApiVersion(1, 0)
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict);
 
         group.MapPatch("/{broadcastId:guid}/award-televote", AwardTelevotePointsFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Broadcasts.AwardTelevotePoints)

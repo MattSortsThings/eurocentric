@@ -16,11 +16,11 @@ using TUnit.Assertions.Enums;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Broadcasts;
 
-public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
+public sealed partial class AwardJuryPointsTests : SerialCleanAcceptanceTest
 {
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_award_points_for_televote_in_broadcast_scenario_1_of_4(string apiVersion)
+    public async Task Endpoint_should_award_points_for_jury_in_broadcast_scenario_1_of_4(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
@@ -32,7 +32,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
             competingCountryCodes: ["AT", "BE", "CZ"]);
 
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
             votingCountryCode: "AT",
             rankedCompetingCountryCodes: ["BE", "CZ"]);
 
@@ -47,20 +47,20 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
                          | RunningOrder | CountryCode | TelevoteAwards | JuryAwards | Finish |
                          |--------------|-------------|----------------|------------|--------|
                          | 1            | AT          | {}             | {}         | 3      |
-                         | 2            | BE          | {AT:12}        | {}         | 1      |
-                         | 3            | CZ          | {AT:10}        | {}         | 2      |
+                         | 2            | BE          | {}             | {AT:12}    | 1      |
+                         | 3            | CZ          | {}             | {AT:10}    | 2      |
                          """,
             televotes: """
                        | CountryCode | PointsAwarded |
                        |-------------|---------------|
-                       | AT          | true          |
+                       | AT          | false         |
                        | BE          | false         |
                        | CZ          | false         |
                        """,
             juries: """
                     | CountryCode | PointsAwarded |
                     |-------------|---------------|
-                    | AT          | false         |
+                    | AT          | true          |
                     | BE          | false         |
                     | CZ          | false         |
                     """);
@@ -68,116 +68,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_award_points_for_televote_in_broadcast_scenario_2_of_4(string apiVersion)
-    {
-        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
-
-        // Given
-        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
-        await admin.Given_I_have_created_a_Stockholm_format_contest_for_my_countries(contestYear: 2025,
-            group1CountryCodes: ["AT", "BE", "CZ"],
-            group2CountryCodes: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
-            competingCountryCodes: ["AT", "BE", "CZ"]);
-        await admin.Given_I_have_awarded_televote_points_in_my_broadcast(
-            """
-            | VotingCountryCode | RankedCompetingCountryCodes |
-            |-------------------|-----------------------------|
-            | AT                | [BE,CZ]                     |
-            """);
-
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
-            votingCountryCode: "BE",
-            rankedCompetingCountryCodes: ["CZ", "AT"]);
-
-        // When
-        await admin.When_I_send_my_request();
-
-        // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_204_NoContent();
-        await admin.Then_my_broadcast_should_now_match(
-            completed: false,
-            competitors: """
-                         | RunningOrder | CountryCode | TelevoteAwards | JuryAwards | Finish |
-                         |--------------|-------------|----------------|------------|--------|
-                         | 1            | AT          | {BE:10}        | {}         | 3      |
-                         | 2            | BE          | {AT:12}        | {}         | 2      |
-                         | 3            | CZ          | {AT:10,BE:12}  | {}         | 1      |
-                         """,
-            televotes: """
-                       | CountryCode | PointsAwarded |
-                       |-------------|---------------|
-                       | AT          | true          |
-                       | BE          | true          |
-                       | CZ          | false         |
-                       """,
-            juries: """
-                    | CountryCode | PointsAwarded |
-                    |-------------|---------------|
-                    | AT          | false         |
-                    | BE          | false         |
-                    | CZ          | false         |
-                    """);
-    }
-
-    [Test]
-    [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_award_points_for_televote_in_broadcast_scenario_3_of_4(string apiVersion)
-    {
-        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
-
-        // Given
-        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
-        await admin.Given_I_have_created_a_Stockholm_format_contest_for_my_countries(contestYear: 2025,
-            group1CountryCodes: ["AT", "BE", "CZ"],
-            group2CountryCodes: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
-            competingCountryCodes: ["AT", "BE", "CZ"]);
-        await admin.Given_I_have_awarded_televote_points_in_my_broadcast(
-            """
-            | VotingCountryCode | RankedCompetingCountryCodes |
-            |-------------------|-----------------------------|
-            | BE                | [CZ,AT]                     |
-            | AT                | [BE,CZ]                     |
-            """);
-
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
-            votingCountryCode: "CZ",
-            rankedCompetingCountryCodes: ["AT", "BE"]);
-
-        // When
-        await admin.When_I_send_my_request();
-
-        // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_204_NoContent();
-        await admin.Then_my_broadcast_should_now_match(
-            completed: false,
-            competitors: """
-                         | RunningOrder | CountryCode | TelevoteAwards | JuryAwards | Finish |
-                         |--------------|-------------|----------------|------------|--------|
-                         | 1            | AT          | {BE:10,CZ:12}  | {}         | 1      |
-                         | 2            | BE          | {AT:12:CZ:10}  | {}         | 2      |
-                         | 3            | CZ          | {AT:10,BE:12}  | {}         | 3      |
-                         """,
-            televotes: """
-                       | CountryCode | PointsAwarded |
-                       |-------------|---------------|
-                       | AT          | true          |
-                       | BE          | true          |
-                       | CZ          | true          |
-                       """,
-            juries: """
-                    | CountryCode | PointsAwarded |
-                    |-------------|---------------|
-                    | AT          | false         |
-                    | BE          | false         |
-                    | CZ          | false         |
-                    """);
-    }
-
-    [Test]
-    [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_award_points_for_televote_in_broadcast_scenario_4_of_4(string apiVersion)
+    public async Task Endpoint_should_award_points_for_jury_in_broadcast_scenario_2_of_4(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
@@ -192,11 +83,57 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
             """
             | VotingCountryCode | RankedCompetingCountryCodes |
             |-------------------|-----------------------------|
-            | CZ                | [AT,BE]                     |
-            | BE                | [CZ,AT]                     |
             | AT                | [BE,CZ]                     |
             """);
-        await admin.Given_I_have_awarded_televote_points_in_my_broadcast(
+
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
+            votingCountryCode: "BE",
+            rankedCompetingCountryCodes: ["CZ", "AT"]);
+
+        // When
+        await admin.When_I_send_my_request();
+
+        // Then
+        await admin.Then_my_request_should_SUCCEED_with_status_code_204_NoContent();
+        await admin.Then_my_broadcast_should_now_match(
+            completed: false,
+            competitors: """
+                         | RunningOrder | CountryCode | TelevoteAwards | JuryAwards    | Finish |
+                         |--------------|-------------|----------------|---------------|--------|
+                         | 1            | AT          | {}             | {BE:10}       | 3      |
+                         | 2            | BE          | {}             | {AT:12}       | 2      |
+                         | 3            | CZ          | {}             | {AT:10,BE:12} | 1      |
+                         """,
+            televotes: """
+                       | CountryCode | PointsAwarded |
+                       |-------------|---------------|
+                       | AT          | false         |
+                       | BE          | false         |
+                       | CZ          | false         |
+                       """,
+            juries: """
+                    | CountryCode | PointsAwarded |
+                    |-------------|---------------|
+                    | AT          | true          |
+                    | BE          | true          |
+                    | CZ          | false         |
+                    """);
+    }
+
+    [Test]
+    [ApiVersion1Point0AndUp]
+    public async Task Endpoint_should_award_points_for_jury_in_broadcast_scenario_3_of_4(string apiVersion)
+    {
+        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
+        await admin.Given_I_have_created_a_Stockholm_format_contest_for_my_countries(contestYear: 2025,
+            group1CountryCodes: ["AT", "BE", "CZ"],
+            group2CountryCodes: ["DK", "EE", "FI"]);
+        await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
+            competingCountryCodes: ["AT", "BE", "CZ"]);
+        await admin.Given_I_have_awarded_jury_points_in_my_broadcast(
             """
             | VotingCountryCode | RankedCompetingCountryCodes |
             |-------------------|-----------------------------|
@@ -204,7 +141,70 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
             | AT                | [BE,CZ]                     |
             """);
 
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
+            votingCountryCode: "CZ",
+            rankedCompetingCountryCodes: ["AT", "BE"]);
+
+        // When
+        await admin.When_I_send_my_request();
+
+        // Then
+        await admin.Then_my_request_should_SUCCEED_with_status_code_204_NoContent();
+        await admin.Then_my_broadcast_should_now_match(
+            completed: false,
+            competitors: """
+                         | RunningOrder | CountryCode | TelevoteAwards | JuryAwards    | Finish |
+                         |--------------|-------------|----------------|---------------|--------|
+                         | 1            | AT          | {}             | {BE:10,CZ:12} | 1      |
+                         | 2            | BE          | {}             | {AT:12,CZ:10} | 2      |
+                         | 3            | CZ          | {}             | {AT:10,BE:12} | 3      |
+                         """,
+            televotes: """
+                       | CountryCode | PointsAwarded |
+                       |-------------|---------------|
+                       | AT          | false         |
+                       | BE          | false         |
+                       | CZ          | false         |
+                       """,
+            juries: """
+                    | CountryCode | PointsAwarded |
+                    |-------------|---------------|
+                    | AT          | true          |
+                    | BE          | true          |
+                    | CZ          | true          |
+                    """);
+    }
+
+    [Test]
+    [ApiVersion1Point0AndUp]
+    public async Task Endpoint_should_award_points_for_jury_in_broadcast_scenario_4_of_4(string apiVersion)
+    {
+        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
+        await admin.Given_I_have_created_a_Stockholm_format_contest_for_my_countries(contestYear: 2025,
+            group1CountryCodes: ["AT", "BE", "CZ"],
+            group2CountryCodes: ["DK", "EE", "FI"]);
+        await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
+            competingCountryCodes: ["AT", "BE", "CZ"]);
+        await admin.Given_I_have_awarded_televote_points_in_my_broadcast(
+            """
+            | VotingCountryCode | RankedCompetingCountryCodes |
+            |-------------------|-----------------------------|
+            | CZ                | [AT,BE]                     |
+            | BE                | [CZ,AT]                     |
+            | AT                | [BE,CZ]                     |
+            """);
+        await admin.Given_I_have_awarded_jury_points_in_my_broadcast(
+            """
+            | VotingCountryCode | RankedCompetingCountryCodes |
+            |-------------------|-----------------------------|
+            | BE                | [CZ,AT]                     |
+            | AT                | [BE,CZ]                     |
+            """);
+
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
             votingCountryCode: "CZ",
             rankedCompetingCountryCodes: ["AT", "BE"]);
 
@@ -219,7 +219,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
                          | RunningOrder | CountryCode | TelevoteAwards | JuryAwards    | Finish |
                          |--------------|-------------|----------------|---------------|--------|
                          | 1            | AT          | {BE:10,CZ:12}  | {BE:10,CZ:12} | 1      |
-                         | 2            | BE          | {AT:12:CZ:10}  | {AT:12:CZ:10} | 2      |
+                         | 2            | BE          | {AT:12,CZ:10}  | {AT:12,CZ:10} | 2      |
                          | 3            | CZ          | {AT:10,BE:12}  | {AT:10,BE:12} | 3      |
                          """,
             televotes: """
@@ -240,199 +240,6 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_award_points_for_televote_in_televote_only_broadcast_scenario_1_of_4(string apiVersion)
-    {
-        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
-
-        // Given
-        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-        await admin.Given_I_have_created_a_Liverpool_format_contest_for_my_countries(contestYear: 2025,
-            group0CountryCode: "XX",
-            group1CountryCodes: ["AT", "BE", "CZ"],
-            group2CountryCodes: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
-            competingCountryCodes: ["AT", "BE", "CZ"]);
-
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
-            votingCountryCode: "AT",
-            rankedCompetingCountryCodes: ["BE", "CZ"]);
-
-        // When
-        await admin.When_I_send_my_request();
-
-        // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_204_NoContent();
-        await admin.Then_my_broadcast_should_now_match(
-            completed: false,
-            competitors: """
-                         | RunningOrder | CountryCode | TelevoteAwards | JuryAwards | Finish |
-                         |--------------|-------------|----------------|------------|--------|
-                         | 1            | AT          | {}             | {}         | 3      |
-                         | 2            | BE          | {AT:12}        | {}         | 1      |
-                         | 3            | CZ          | {AT:10}        | {}         | 2      |
-                         """,
-            televotes: """
-                       | CountryCode | PointsAwarded |
-                       |-------------|---------------|
-                       | AT          | true          |
-                       | BE          | false         |
-                       | CZ          | false         |
-                       | XX          | false         |
-                       """);
-    }
-
-    [Test]
-    [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_award_points_for_televote_in_televote_only_broadcast_scenario_2_of_4(string apiVersion)
-    {
-        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
-
-        // Given
-        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-        await admin.Given_I_have_created_a_Liverpool_format_contest_for_my_countries(contestYear: 2025,
-            group0CountryCode: "XX",
-            group1CountryCodes: ["AT", "BE", "CZ"],
-            group2CountryCodes: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
-            competingCountryCodes: ["AT", "BE", "CZ"]);
-        await admin.Given_I_have_awarded_televote_points_in_my_broadcast(
-            """
-            | VotingCountryCode | RankedCompetingCountryCodes |
-            |-------------------|-----------------------------|
-            | AT                | [BE,CZ]                     |
-            """);
-
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
-            votingCountryCode: "BE",
-            rankedCompetingCountryCodes: ["CZ", "AT"]);
-
-        // When
-        await admin.When_I_send_my_request();
-
-        // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_204_NoContent();
-        await admin.Then_my_broadcast_should_now_match(
-            completed: false,
-            competitors: """
-                         | RunningOrder | CountryCode | TelevoteAwards | JuryAwards | Finish |
-                         |--------------|-------------|----------------|------------|--------|
-                         | 1            | AT          | {BE:10}        | {}         | 3      |
-                         | 2            | BE          | {AT:12}        | {}         | 2      |
-                         | 3            | CZ          | {AT:10,BE:12}  | {}         | 1      |
-                         """,
-            televotes: """
-                       | CountryCode | PointsAwarded |
-                       |-------------|---------------|
-                       | AT          | true          |
-                       | BE          | true          |
-                       | CZ          | false         |
-                       | XX          | false         |
-                       """);
-    }
-
-    [Test]
-    [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_award_points_for_televote_in_televote_only_broadcast_scenario_3_of_4(string apiVersion)
-    {
-        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
-
-        // Given
-        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-        await admin.Given_I_have_created_a_Liverpool_format_contest_for_my_countries(contestYear: 2025,
-            group0CountryCode: "XX",
-            group1CountryCodes: ["AT", "BE", "CZ"],
-            group2CountryCodes: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
-            competingCountryCodes: ["AT", "BE", "CZ"]);
-        await admin.Given_I_have_awarded_televote_points_in_my_broadcast(
-            """
-            | VotingCountryCode | RankedCompetingCountryCodes |
-            |-------------------|-----------------------------|
-            | BE                | [CZ,AT]                     |
-            | AT                | [BE,CZ]                     |
-            """);
-
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
-            votingCountryCode: "CZ",
-            rankedCompetingCountryCodes: ["AT", "BE"]);
-
-        // When
-        await admin.When_I_send_my_request();
-
-        // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_204_NoContent();
-        await admin.Then_my_broadcast_should_now_match(
-            completed: false,
-            competitors: """
-                         | RunningOrder | CountryCode | TelevoteAwards | JuryAwards | Finish |
-                         |--------------|-------------|----------------|------------|--------|
-                         | 1            | AT          | {BE:10,CZ:12}  | {}         | 1      |
-                         | 2            | BE          | {AT:12:CZ:10}  | {}         | 2      |
-                         | 3            | CZ          | {AT:10,BE:12}  | {}         | 3      |
-                         """,
-            televotes: """
-                       | CountryCode | PointsAwarded |
-                       |-------------|---------------|
-                       | AT          | true          |
-                       | BE          | true          |
-                       | CZ          | true          |
-                       | XX          | false         |
-                       """);
-    }
-
-    [Test]
-    [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_award_points_for_televote_in_televote_only_broadcast_scenario_4_of_4(string apiVersion)
-    {
-        AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
-
-        // Given
-        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
-        await admin.Given_I_have_created_a_Liverpool_format_contest_for_my_countries(contestYear: 2025,
-            group0CountryCode: "XX",
-            group1CountryCodes: ["AT", "BE", "CZ"],
-            group2CountryCodes: ["DK", "EE", "FI"]);
-        await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
-            competingCountryCodes: ["AT", "BE", "CZ"]);
-        await admin.Given_I_have_awarded_televote_points_in_my_broadcast(
-            """
-            | VotingCountryCode | RankedCompetingCountryCodes |
-            |-------------------|-----------------------------|
-            | CZ                | [AT,BE]                     |
-            | BE                | [CZ,AT]                     |
-            | AT                | [BE,CZ]                     |
-            """);
-
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
-            votingCountryCode: "XX",
-            rankedCompetingCountryCodes: ["CZ", "AT", "BE"]);
-
-        // When
-        await admin.When_I_send_my_request();
-
-        // Then
-        await admin.Then_my_request_should_SUCCEED_with_status_code_204_NoContent();
-        await admin.Then_my_broadcast_should_now_match(
-            completed: true,
-            competitors: """
-                         | RunningOrder | CountryCode | TelevoteAwards      | JuryAwards | Finish |
-                         |--------------|-------------|---------------------|------------|--------|
-                         | 1            | AT          | {BE:10,CZ:12,XX:10} | {}         | 2      |
-                         | 2            | BE          | {AT:12:CZ:10,XX:8}  | {}         | 3      |
-                         | 3            | CZ          | {AT:10,BE:12,XX:12} | {}         | 1      |
-                         """,
-            televotes: """
-                       | CountryCode | PointsAwarded |
-                       |-------------|---------------|
-                       | AT          | true          |
-                       | BE          | true          |
-                       | CZ          | true          |
-                       | XX          | true          |
-                       """);
-    }
-
-    [Test]
-    [ApiVersion1Point0AndUp]
     public async Task Endpoint_should_fail_on_non_existent_broadcast_requested(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
@@ -446,7 +253,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
             competingCountryCodes: ["AT", "BE", "CZ"]);
         await admin.Given_I_have_deleted_my_broadcast();
 
-        await admin.Given_I_want_to_award_televote_points_in_my_deleted_broadcast();
+        await admin.Given_I_want_to_award_jury_points_in_my_deleted_broadcast();
 
         // When
         await admin.When_I_send_my_request();
@@ -461,7 +268,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_fail_on_voting_country_ID_matching_no_televote(string apiVersion)
+    public async Task Endpoint_should_fail_on_voting_country_ID_matching_no_jury(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
@@ -473,7 +280,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
             competingCountryCodes: ["AT", "BE", "CZ"]);
 
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
             votingCountryCode: "FI",
             rankedCompetingCountryCodes: ["AT", "BE", "CZ"]);
 
@@ -483,27 +290,27 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         // Then
         await admin.Then_my_request_should_FAIL_with_status_code_409_Conflict();
         await admin.Then_the_response_problem_details_should_match(status: 409,
-            title: "Televote voting country ID mismatch",
-            detail: "Voting country ID must match a televote in the broadcast that has not yet awarded its points.");
+            title: "Jury voting country ID mismatch",
+            detail: "Voting country ID must match a jury in the broadcast that has not yet awarded its points.");
         await admin.Then_my_broadcast_should_be_unchanged();
     }
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_fail_on_voting_country_ID_matching_televote_with_points_awarded(string apiVersion)
+    public async Task Endpoint_should_fail_on_voting_country_ID_matching_jury_with_points_awarded(string apiVersion)
     {
         AdminActor admin = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "XX");
+        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
         await admin.Given_I_have_created_a_Stockholm_format_contest_for_my_countries(contestYear: 2025,
             group1CountryCodes: ["AT", "BE", "CZ"],
             group2CountryCodes: ["DK", "EE", "FI"]);
         await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
             competingCountryCodes: ["AT", "BE", "CZ"]);
-        await admin.Given_I_have_awarded_all_the_televote_points_in_my_broadcast();
+        await admin.Given_I_have_awarded_all_the_jury_points_in_my_broadcast();
 
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
             votingCountryCode: "AT",
             rankedCompetingCountryCodes: ["BE", "CZ"]);
 
@@ -513,8 +320,8 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         // Then
         await admin.Then_my_request_should_FAIL_with_status_code_409_Conflict();
         await admin.Then_the_response_problem_details_should_match(status: 409,
-            title: "Televote voting country ID mismatch",
-            detail: "Voting country ID must match a televote in the broadcast that has not yet awarded its points.");
+            title: "Jury voting country ID mismatch",
+            detail: "Voting country ID must match a jury in the broadcast that has not yet awarded its points.");
         await admin.Then_my_broadcast_should_be_unchanged();
     }
 
@@ -532,7 +339,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
             competingCountryCodes: ["AT", "BE", "CZ"]);
 
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
             votingCountryCode: "AT",
             rankedCompetingCountryCodes: ["BE", "CZ", "FI"]);
 
@@ -562,9 +369,9 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
             competingCountryCodes: ["AT", "BE", "CZ"]);
 
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
             votingCountryCode: "AT",
-            rankedCompetingCountryCodes: ["CZ"]);
+            rankedCompetingCountryCodes: ["BE"]);
 
         // When
         await admin.When_I_send_my_request();
@@ -592,7 +399,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
             competingCountryCodes: ["AT", "BE", "CZ"]);
 
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
             votingCountryCode: "AT",
             rankedCompetingCountryCodes: ["BE", "CZ", "AT"]);
 
@@ -622,7 +429,7 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         await admin.Given_I_have_created_the_SemiFinal1_child_broadcast_for_my_contest(broadcastDate: "2025-05-01",
             competingCountryCodes: ["AT", "BE", "CZ"]);
 
-        await admin.Given_I_want_to_award_televote_points_in_my_broadcast(
+        await admin.Given_I_want_to_award_jury_points_in_my_broadcast(
             votingCountryCode: "AT",
             rankedCompetingCountryCodes: ["BE", "CZ", "CZ"]);
 
@@ -654,20 +461,6 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
             CountryIds.Populate(createdCountries);
         }
 
-        public async Task Given_I_have_created_a_Liverpool_format_contest_for_my_countries(string[] group2CountryCodes = null!,
-            string[] group1CountryCodes = null!,
-            string group0CountryCode = "",
-            int contestYear = 0)
-        {
-            Contest createdContest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(cityName: TestDefaults.CityName,
-                contestYear: contestYear,
-                group0CountryId: CountryIds.GetSingle(group0CountryCode),
-                group1CountryIds: CountryIds.GetMultiple(group1CountryCodes),
-                group2CountryIds: CountryIds.GetMultiple(group2CountryCodes));
-
-            ContestId = createdContest.Id;
-        }
-
         public async Task Given_I_have_created_a_Stockholm_format_contest_for_my_countries(string[] group2CountryCodes = null!,
             string[] group1CountryCodes = null!,
             int contestYear = 0)
@@ -692,6 +485,17 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
                 competingCountryIds: CountryIds.GetMultiple(competingCountryCodes));
 
             Broadcast = createdBroadcast;
+        }
+
+        public async Task Given_I_have_deleted_my_broadcast()
+        {
+            Broadcast myBroadcast = await Assert.That(Broadcast).IsNotNull();
+            Guid myBroadcastId = myBroadcast.Id;
+
+            await ApiDriver.DeleteSingleBroadcastAsync(myBroadcastId);
+
+            Broadcast = null;
+            DeletedBroadcastId = myBroadcastId;
         }
 
         public async Task Given_I_have_awarded_jury_points_in_my_broadcast(string requests)
@@ -720,54 +524,43 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
             Broadcast = await ApiDriver.GetSingleBroadcastAsync(myBroadcastId);
         }
 
-        public async Task Given_I_have_deleted_my_broadcast()
+        public async Task Given_I_have_awarded_all_the_jury_points_in_my_broadcast()
         {
             Broadcast myBroadcast = await Assert.That(Broadcast).IsNotNull();
             Guid myBroadcastId = myBroadcast.Id;
 
-            await ApiDriver.DeleteSingleBroadcastAsync(myBroadcastId);
+            IEnumerable<AwardJuryPointsRequest> requestBodies = GenerateAllAwardJuryPointsRequests(myBroadcast);
 
-            Broadcast = null;
-            DeletedBroadcastId = myBroadcastId;
-        }
-
-        public async Task Given_I_have_awarded_all_the_televote_points_in_my_broadcast()
-        {
-            Broadcast myBroadcast = await Assert.That(Broadcast).IsNotNull();
-            Guid myBroadcastId = myBroadcast.Id;
-
-            IEnumerable<AwardTelevotePointsRequest> requestBodies = GenerateAllAwardTelevotePointsRequests(myBroadcast);
-
-            await ApiDriver.AwardMultipleTelevotePointsAsync(myBroadcastId, requestBodies);
+            await ApiDriver.AwardMultipleJuryPointsAsync(myBroadcastId, requestBodies);
 
             Broadcast = await ApiDriver.GetSingleBroadcastAsync(myBroadcastId);
         }
 
-        public async Task Given_I_want_to_award_televote_points_in_my_broadcast(string[] rankedCompetingCountryCodes = null!,
+        public async Task Given_I_want_to_award_jury_points_in_my_broadcast(string[] rankedCompetingCountryCodes = null!,
             string votingCountryCode = "")
         {
             Broadcast myBroadcast = await Assert.That(Broadcast).IsNotNull();
 
-            AwardTelevotePointsRequest requestBody = new()
+            AwardJuryPointsRequest requestBody = new()
             {
                 VotingCountryId = CountryIds.GetSingle(votingCountryCode),
                 RankedCompetingCountryIds = CountryIds.GetMultiple(rankedCompetingCountryCodes)
             };
 
-            Request = ApiDriver.RequestFactory.Broadcasts.AwardTelevotePoints(myBroadcast.Id, requestBody);
+            Request = ApiDriver.RequestFactory.Broadcasts.AwardJuryPoints(myBroadcast.Id, requestBody);
         }
 
-        public async Task Given_I_want_to_award_televote_points_in_my_deleted_broadcast()
+        public async Task Given_I_want_to_award_jury_points_in_my_deleted_broadcast()
         {
             Guid myDeletedBroadcastId = await Assert.That(DeletedBroadcastId).IsNotNull();
             Guid[] countryIds = CountryIds.GetAll();
 
-            AwardTelevotePointsRequest requestBody = new()
+            AwardJuryPointsRequest requestBody = new()
             {
                 VotingCountryId = countryIds[0], RankedCompetingCountryIds = countryIds.Skip(0).ToArray()
             };
 
-            Request = ApiDriver.RequestFactory.Broadcasts.AwardTelevotePoints(myDeletedBroadcastId, requestBody);
+            Request = ApiDriver.RequestFactory.Broadcasts.AwardJuryPoints(myDeletedBroadcastId, requestBody);
         }
 
         public async Task Then_my_broadcast_should_be_unchanged()
@@ -776,6 +569,14 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
             Broadcast myRetrievedBroadcast = await ApiDriver.GetSingleBroadcastAsync(myBroadcast.Id);
 
             await Assert.That(myRetrievedBroadcast).IsEqualTo(myBroadcast, new BroadcastEqualityComparer());
+        }
+
+        public async Task Then_the_response_problem_details_extensions_should_include_my_deleted_broadcast_ID()
+        {
+            ProblemDetails problemDetails = await Assert.That(ResponseProblemDetails).IsNotNull();
+            Guid myDeletedBroadcastId = await Assert.That(DeletedBroadcastId).IsNotNull();
+
+            await Assert.That(problemDetails).HasExtension("broadcastId", myDeletedBroadcastId);
         }
 
         public async Task Then_my_broadcast_should_now_match(string? televotes = null,
@@ -808,14 +609,6 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
 
             await Assert.That(myRetrievedBroadcast.Competitors.OrderBy(competitor => competitor.CompetingCountryId))
                 .IsEquivalentTo(expectedCompetitors, new CompetitorEqualityComparer(), CollectionOrdering.Matching);
-        }
-
-        public async Task Then_the_response_problem_details_extensions_should_include_my_deleted_broadcast_ID()
-        {
-            ProblemDetails problemDetails = await Assert.That(ResponseProblemDetails).IsNotNull();
-            Guid myDeletedBroadcastId = await Assert.That(DeletedBroadcastId).IsNotNull();
-
-            await Assert.That(problemDetails).HasExtension("broadcastId", myDeletedBroadcastId);
         }
 
         private AwardJuryPointsRequest MapRowToAwardJuryPointsRequest(Dictionary<string, string> row)
@@ -872,15 +665,15 @@ public sealed partial class AwardTelevotePointsTests : SerialCleanAcceptanceTest
         [GeneratedRegex("(?<VotingCountryCode>[A-Z]{2}):(?<PointsValue>[0-9]+)", RegexOptions.Compiled)]
         private static partial Regex AwardRegex();
 
-        private static IEnumerable<AwardTelevotePointsRequest> GenerateAllAwardTelevotePointsRequests(Broadcast broadcast)
+        private static IEnumerable<AwardJuryPointsRequest> GenerateAllAwardJuryPointsRequests(Broadcast broadcast)
         {
             Guid[] allCompetingCountryIds = broadcast.Competitors.Select(competitor => competitor.CompetingCountryId).ToArray();
 
-            foreach (Voter televote in broadcast.Televotes.Where(voter => !voter.PointsAwarded))
+            foreach (Voter televote in broadcast.Juries.Where(voter => !voter.PointsAwarded))
             {
                 Guid votingCountryId = televote.VotingCountryId;
 
-                yield return new AwardTelevotePointsRequest
+                yield return new AwardJuryPointsRequest
                 {
                     VotingCountryId = votingCountryId,
                     RankedCompetingCountryIds = allCompetingCountryIds.Where(id => id != votingCountryId).ToArray()

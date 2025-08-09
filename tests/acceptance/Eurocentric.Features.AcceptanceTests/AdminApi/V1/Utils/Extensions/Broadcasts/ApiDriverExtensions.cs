@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardJuryPoints;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardTelevotePoints;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcast;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.GetBroadcasts;
@@ -51,6 +52,18 @@ public static class ApiDriverExtensions
         ProblemOrResponse response = await driver.RestClient.SendAsync(request);
 
         await Assert.That(response.IsT1).IsTrue();
+    }
+
+    public static async Task AwardMultipleJuryPointsAsync(this IApiDriver driver,
+        Guid broadcastId,
+        IEnumerable<AwardJuryPointsRequest> requestBodies)
+    {
+        foreach (AwardJuryPointsRequest requestBody in requestBodies)
+        {
+            RestRequest request = driver.RequestFactory.Broadcasts.AwardJuryPoints(broadcastId, requestBody);
+            ProblemOrResponse response = await driver.RestClient.SendAsync(request);
+            await Assert.That(response.IsT1).IsTrue();
+        }
     }
 
     public static async Task AwardMultipleTelevotePointsAsync(this IApiDriver driver,

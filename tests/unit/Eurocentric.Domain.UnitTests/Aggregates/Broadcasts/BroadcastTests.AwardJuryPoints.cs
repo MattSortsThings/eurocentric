@@ -11,23 +11,24 @@ namespace Eurocentric.Domain.UnitTests.Aggregates.Broadcasts;
 public sealed partial class BroadcastTests
 {
     [Test]
-    public async Task AwardTelevotePoints_should_set_Completed_to_false_when_any_Jury_or_Televote_remains_false_PointsAwarded()
+    public async Task AwardJuryPoints_should_set_Completed_to_false_when_any_Jury_or_Televote_remains_false_PointsAwarded()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId, CzId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId]);
 
         // Assert
         await Assert.That(result.IsError).IsFalse();
 
-        await Assert.That(sut.Juries).IsEmpty();
+        await Assert.That(sut.Juries).IsNotEmpty()
+            .And.Contains(Matchers.Jury().HasPointsAwarded(false).Build());
+
         await Assert.That(sut.Televotes).IsNotEmpty()
             .And.Contains(Matchers.Televote().HasPointsAwarded(false).Build());
 
@@ -35,27 +36,31 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_set_Completed_to_true_when_no_Jury_or_Televote_remains_false_PointsAwarded()
+    public async Task AwardJuryPoints_should_set_Completed_to_true_when_no_Jury_or_Televote_remains_false_PointsAwarded()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
+        sut.AwardTelevotePoints(AtId, [BeId, CzId]);
         sut.AwardTelevotePoints(BeId, [AtId, CzId]);
         sut.AwardTelevotePoints(CzId, [AtId, BeId]);
-        sut.AwardTelevotePoints(XxId, [AtId, BeId, CzId]);
+
+        sut.AwardJuryPoints(BeId, [AtId, CzId]);
+        sut.AwardJuryPoints(CzId, [AtId, BeId]);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId, CzId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId]);
 
         // Assert
         await Assert.That(result.IsError).IsFalse();
 
-        await Assert.That(sut.Juries).IsEmpty();
+        await Assert.That(sut.Juries).IsNotEmpty()
+            .And.ContainsOnly(Matchers.Jury().HasPointsAwarded(true).Build());
+
         await Assert.That(sut.Televotes).IsNotEmpty()
             .And.ContainsOnly(Matchers.Televote().HasPointsAwarded(true).Build());
 
@@ -63,18 +68,17 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_update_ranked_Competitors_FinishingPosition_values_and_TelevoteAwards()
+    public async Task AwardJuryPoints_should_updated_ranked_Competitors_FinishingPosition_values_and_JuryAwards()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId, CzId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId]);
 
         // Assert
         await Assert.That(result.IsError).IsFalse();
@@ -84,36 +88,35 @@ public sealed partial class BroadcastTests
                 .HasRunningOrderPosition(1)
                 .HasCompetingCountryId(AtId)
                 .HasFinishingPosition(3)
-                .HasNoTelevoteAwards()
-                .HasNoJuryAwards().Build())
+                .HasNoJuryAwards()
+                .HasNoTelevoteAwards().Build())
             .And.Contains(Matchers.Competitor()
                 .HasRunningOrderPosition(2)
                 .HasCompetingCountryId(BeId)
                 .HasFinishingPosition(1)
-                .HasSingleTelevoteAward(AtId, PointsValue.Twelve)
-                .HasNoJuryAwards().Build())
+                .HasSingleJuryAward(AtId, PointsValue.Twelve)
+                .HasNoTelevoteAwards().Build())
             .And.Contains(Matchers.Competitor()
                 .HasRunningOrderPosition(3)
                 .HasCompetingCountryId(CzId)
                 .HasFinishingPosition(2)
-                .HasSingleTelevoteAward(AtId, PointsValue.Ten)
-                .HasNoJuryAwards().Build());
+                .HasSingleJuryAward(AtId, PointsValue.Ten)
+                .HasNoTelevoteAwards().Build());
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_award_top_ten_ranked_Competitors_12_points_to_1_point_and_all_others_0_points()
+    public async Task AwardJuryPoints_should_award_top_ten_ranked_Competitors_12_points_to_1_point_and_all_others_0_points()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId, DkId, EeId, FiId, GbId],
-            group2CountryIds: [HrId, ItId, JpId, KgId, LuId, MkId]);
+            group2CountryIds: [HrId, ItId, JpId, KgId, LuId, MkId, XxId]);
 
         Broadcast sut = CreateGrandFinalBroadcastWithCompetitors(parentContest,
             AtId, BeId, CzId, DkId, EeId, FiId, GbId, HrId, ItId, JpId, KgId, LuId, MkId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(XxId,
+        ErrorOr<Updated> result = sut.AwardJuryPoints(XxId,
             [AtId, BeId, CzId, DkId, EeId, FiId, GbId, HrId, ItId, JpId, KgId, LuId, MkId]);
 
         // Assert
@@ -121,81 +124,81 @@ public sealed partial class BroadcastTests
 
         await Assert.That(sut.Competitors)
             .Contains(Matchers.Competitor()
-                .HasCompetingCountryId(AtId).HasSingleTelevoteAward(XxId, PointsValue.Twelve).Build())
+                .HasCompetingCountryId(AtId).HasSingleJuryAward(XxId, PointsValue.Twelve).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(BeId).HasSingleTelevoteAward(XxId, PointsValue.Ten).Build())
+                .HasCompetingCountryId(BeId).HasSingleJuryAward(XxId, PointsValue.Ten).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(CzId).HasSingleTelevoteAward(XxId, PointsValue.Eight).Build())
+                .HasCompetingCountryId(CzId).HasSingleJuryAward(XxId, PointsValue.Eight).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(DkId).HasSingleTelevoteAward(XxId, PointsValue.Seven).Build())
+                .HasCompetingCountryId(DkId).HasSingleJuryAward(XxId, PointsValue.Seven).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(EeId).HasSingleTelevoteAward(XxId, PointsValue.Six).Build())
+                .HasCompetingCountryId(EeId).HasSingleJuryAward(XxId, PointsValue.Six).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(FiId).HasSingleTelevoteAward(XxId, PointsValue.Five).Build())
+                .HasCompetingCountryId(FiId).HasSingleJuryAward(XxId, PointsValue.Five).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(GbId).HasSingleTelevoteAward(XxId, PointsValue.Four).Build())
+                .HasCompetingCountryId(GbId).HasSingleJuryAward(XxId, PointsValue.Four).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(HrId).HasSingleTelevoteAward(XxId, PointsValue.Three).Build())
+                .HasCompetingCountryId(HrId).HasSingleJuryAward(XxId, PointsValue.Three).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(ItId).HasSingleTelevoteAward(XxId, PointsValue.Two).Build())
+                .HasCompetingCountryId(ItId).HasSingleJuryAward(XxId, PointsValue.Two).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(JpId).HasSingleTelevoteAward(XxId, PointsValue.One).Build())
+                .HasCompetingCountryId(JpId).HasSingleJuryAward(XxId, PointsValue.One).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(KgId).HasSingleTelevoteAward(XxId, PointsValue.Zero).Build())
+                .HasCompetingCountryId(KgId).HasSingleJuryAward(XxId, PointsValue.Zero).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(LuId).HasSingleTelevoteAward(XxId, PointsValue.Zero).Build())
+                .HasCompetingCountryId(LuId).HasSingleJuryAward(XxId, PointsValue.Zero).Build())
             .And.Contains(Matchers.Competitor()
-                .HasCompetingCountryId(MkId).HasSingleTelevoteAward(XxId, PointsValue.Zero).Build());
+                .HasCompetingCountryId(MkId).HasSingleJuryAward(XxId, PointsValue.Zero).Build());
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_set_Televote_PointsAwarded_to_true()
+    public async Task AwardJuryPoints_should_set_Jury_PointsAwarded_to_true()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId, CzId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId]);
 
         // Assert
         await Assert.That(result.IsError).IsFalse();
 
-        await Assert.That(sut.Televotes)
-            .Contains(Matchers.Televote().HasVotingCountryId(AtId).HasPointsAwarded(true).Build())
-            .And.Contains(Matchers.Televote().HasVotingCountryId(BeId).HasPointsAwarded(false).Build())
-            .And.Contains(Matchers.Televote().HasVotingCountryId(CzId).HasPointsAwarded(false).Build())
-            .And.Contains(Matchers.Televote().HasVotingCountryId(XxId).HasPointsAwarded(false).Build());
+        await Assert.That(sut.Juries)
+            .Contains(Matchers.Jury().HasVotingCountryId(AtId).HasPointsAwarded(true).Build())
+            .And.Contains(Matchers.Jury().HasVotingCountryId(BeId).HasPointsAwarded(false).Build())
+            .And.Contains(Matchers.Jury().HasVotingCountryId(CzId).HasPointsAwarded(false).Build());
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_fail_and_return_Errors_given_voting_country_ID_matching_no_Televote()
+    public async Task AwardJuryPoints_should_fail_and_return_Errors_given_voting_country_ID_matching_no_Jury()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(FiId, [BeId, CzId, BeId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(FiId, [BeId, CzId, BeId]);
 
         // Assert
         await Assert.That(result.IsError).IsTrue();
 
         await Assert.That(result.FirstError)
             .HasType(ErrorType.Conflict)
-            .And.HasCode("Televote voting country ID mismatch")
-            .And.HasDescription("Voting country ID must match a televote in the broadcast that has not yet awarded its points.");
+            .And.HasCode("Jury voting country ID mismatch")
+            .And.HasDescription("Voting country ID must match a jury in the broadcast that has not yet awarded its points.");
 
         await Assert.That(sut.Competitors)
             .ContainsOnly(Matchers.Competitor().HasNoTelevoteAwards().HasNoJuryAwards().Build());
+
+        await Assert.That(sut.Juries)
+            .ContainsOnly(Matchers.Jury().HasPointsAwarded(false).Build());
 
         await Assert.That(sut.Televotes)
             .ContainsOnly(Matchers.Televote().HasPointsAwarded(false).Build());
@@ -204,65 +207,62 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_fail_and_return_Errors_given_voting_country_ID_of_Televote_true_PointsAwarded()
+    public async Task AwardJuryPoints_should_fail_and_return_Errors_given_voting_country_ID_of_Jury_true_PointsAwarded()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
-        sut.AwardTelevotePoints(AtId, [BeId, CzId]);
+        sut.AwardJuryPoints(AtId, [BeId, CzId]);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId, CzId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId]);
 
         // Assert
         await Assert.That(result.IsError).IsTrue();
 
         await Assert.That(result.FirstError)
             .HasType(ErrorType.Conflict)
-            .And.HasCode("Televote voting country ID mismatch")
-            .And.HasDescription("Voting country ID must match a televote in the broadcast that has not yet awarded its points.");
+            .And.HasCode("Jury voting country ID mismatch")
+            .And.HasDescription("Voting country ID must match a jury in the broadcast that has not yet awarded its points.");
 
         await Assert.That(sut.Competitors)
             .Contains(Matchers.Competitor()
                 .HasCompetingCountryId(BeId)
-                .HasSingleTelevoteAward(AtId, PointsValue.Twelve)
-                .HasNoJuryAwards().Build())
+                .HasSingleJuryAward(AtId, PointsValue.Twelve)
+                .HasNoTelevoteAwards().Build())
             .And.Contains(Matchers.Competitor()
                 .HasCompetingCountryId(CzId)
-                .HasSingleTelevoteAward(AtId, PointsValue.Ten)
-                .HasNoJuryAwards().Build())
+                .HasSingleJuryAward(AtId, PointsValue.Ten)
+                .HasNoTelevoteAwards().Build())
             .And.Contains(Matchers.Competitor()
                 .HasCompetingCountryId(AtId)
-                .HasNoTelevoteAwards()
-                .HasNoJuryAwards().Build());
+                .HasNoJuryAwards()
+                .HasNoTelevoteAwards().Build());
 
-        await Assert.That(sut.Televotes)
-            .Contains(Matchers.Televote().HasVotingCountryId(AtId).HasPointsAwarded(true).Build())
-            .And.Contains(Matchers.Televote().HasVotingCountryId(BeId).HasPointsAwarded(false).Build())
-            .And.Contains(Matchers.Televote().HasVotingCountryId(CzId).HasPointsAwarded(false).Build())
-            .And.Contains(Matchers.Televote().HasVotingCountryId(XxId).HasPointsAwarded(false).Build());
+        await Assert.That(sut.Juries)
+            .Contains(Matchers.Jury().HasVotingCountryId(AtId).HasPointsAwarded(true).Build())
+            .And.Contains(Matchers.Jury().HasVotingCountryId(BeId).HasPointsAwarded(false).Build())
+            .And.Contains(Matchers.Jury().HasVotingCountryId(CzId).HasPointsAwarded(false).Build());
 
         await Assert.That(sut.Completed).IsFalse();
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_fail_and_return_Errors_given_duplicate_competing_country_IDs()
+    public async Task AwardJuryPoints_should_fail_and_return_Errors_given_duplicate_competing_country_IDs()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId, CzId, BeId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId, BeId]);
 
         // Assert
         await Assert.That(result.IsError).IsTrue();
@@ -276,6 +276,9 @@ public sealed partial class BroadcastTests
         await Assert.That(sut.Competitors)
             .ContainsOnly(Matchers.Competitor().HasNoTelevoteAwards().HasNoJuryAwards().Build());
 
+        await Assert.That(sut.Juries)
+            .ContainsOnly(Matchers.Jury().HasPointsAwarded(false).Build());
+
         await Assert.That(sut.Televotes)
             .ContainsOnly(Matchers.Televote().HasPointsAwarded(false).Build());
 
@@ -283,18 +286,17 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_fail_and_return_Errors_given_competing_country_ID_matching_no_Competitor()
+    public async Task AwardJuryPoints_should_fail_and_return_Errors_given_competing_country_ID_matching_no_Competitor()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId, CzId, FiId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId, FiId]);
 
         // Assert
         await Assert.That(result.IsError).IsTrue();
@@ -308,6 +310,9 @@ public sealed partial class BroadcastTests
         await Assert.That(sut.Competitors)
             .ContainsOnly(Matchers.Competitor().HasNoTelevoteAwards().HasNoJuryAwards().Build());
 
+        await Assert.That(sut.Juries)
+            .ContainsOnly(Matchers.Jury().HasPointsAwarded(false).Build());
+
         await Assert.That(sut.Televotes)
             .ContainsOnly(Matchers.Televote().HasPointsAwarded(false).Build());
 
@@ -315,18 +320,17 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_fail_and_return_Errors_given_competing_country_ID_omitting_Competitor()
+    public async Task AwardJuryPoints_should_fail_and_return_Errors_given_competing_country_ID_omitting_Competitor()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId]);
 
         // Assert
         await Assert.That(result.IsError).IsTrue();
@@ -340,6 +344,9 @@ public sealed partial class BroadcastTests
         await Assert.That(sut.Competitors)
             .ContainsOnly(Matchers.Competitor().HasNoTelevoteAwards().HasNoJuryAwards().Build());
 
+        await Assert.That(sut.Juries)
+            .ContainsOnly(Matchers.Jury().HasPointsAwarded(false).Build());
+
         await Assert.That(sut.Televotes)
             .ContainsOnly(Matchers.Televote().HasPointsAwarded(false).Build());
 
@@ -347,18 +354,17 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_fail_and_return_Errors_given_competing_country_ID_equal_to_voting_country_ID()
+    public async Task AwardJuryPoints_should_fail_and_return_Errors_given_competing_country_ID_equal_to_voting_country_ID()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
         Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
 
         // Act
-        ErrorOr<Updated> result = sut.AwardTelevotePoints(AtId, [BeId, CzId, AtId]);
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId, AtId]);
 
         // Assert
         await Assert.That(result.IsError).IsTrue();
@@ -372,6 +378,9 @@ public sealed partial class BroadcastTests
         await Assert.That(sut.Competitors)
             .ContainsOnly(Matchers.Competitor().HasNoTelevoteAwards().HasNoJuryAwards().Build());
 
+        await Assert.That(sut.Juries)
+            .ContainsOnly(Matchers.Jury().HasPointsAwarded(false).Build());
+
         await Assert.That(sut.Televotes)
             .ContainsOnly(Matchers.Televote().HasPointsAwarded(false).Build());
 
@@ -379,11 +388,10 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_throw_given_null_votingCountryId_arg()
+    public async Task AwardJuryPoints_should_throw_given_null_votingCountryId_arg()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
@@ -391,7 +399,7 @@ public sealed partial class BroadcastTests
 
         CountryId[] arbitraryCompetingCountryIds = [AtId, BeId];
 
-        Action act = () => sut.AwardTelevotePoints(null!, arbitraryCompetingCountryIds);
+        Action act = () => sut.AwardJuryPoints(null!, arbitraryCompetingCountryIds);
 
         // Assert
         await Assert.That(act).Throws<ArgumentNullException>()
@@ -400,11 +408,10 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
-    public async Task AwardTelevotePoints_should_throw_given_null_rankedCompetingCountryIds_arg()
+    public async Task AwardJuryPoints_should_throw_given_null_rankedCompetingCountryIds_arg()
     {
         // Arrange
-        LiverpoolFormatContest parentContest = CreateLiverpoolFormatContest(
-            group0CountryId: XxId,
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
             group1CountryIds: [AtId, BeId, CzId],
             group2CountryIds: [DkId, EeId, FiId]);
 
@@ -412,7 +419,7 @@ public sealed partial class BroadcastTests
 
         CountryId arbitraryVotingCountryId = XxId;
 
-        Action act = () => sut.AwardTelevotePoints(arbitraryVotingCountryId, null!);
+        Action act = () => sut.AwardJuryPoints(arbitraryVotingCountryId, null!);
 
         // Assert
         await Assert.That(act).Throws<ArgumentNullException>()

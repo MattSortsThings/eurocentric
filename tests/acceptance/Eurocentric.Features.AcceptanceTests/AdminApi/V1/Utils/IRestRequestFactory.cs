@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardJuryPoints;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardTelevotePoints;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateChildBroadcast;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
@@ -16,6 +17,8 @@ public interface IRestRequestFactory
 
     public interface IBroadcastsEndpoints
     {
+        public RestRequest AwardJuryPoints(Guid broadcastId, AwardJuryPointsRequest requestBody);
+
         public RestRequest AwardTelevotePoints(Guid broadcastId, AwardTelevotePointsRequest requestBody);
 
         public RestRequest DeleteBroadcast(Guid broadcastId);

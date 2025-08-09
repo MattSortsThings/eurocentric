@@ -36,6 +36,14 @@ public sealed class CompetitorMatcherBuilder
         return this;
     }
 
+    public CompetitorMatcherBuilder HasSingleJuryAward(CountryId votingCountryId, PointsValue pointsValue)
+    {
+        _predicates.Add(competitor => competitor.JuryAwards.Single() is { } award && award.PointsValue == pointsValue &&
+                                      award.VotingCountryId == votingCountryId);
+
+        return this;
+    }
+
     public CompetitorMatcherBuilder HasNoJuryAwards()
     {
         _predicates.Add(competitor => competitor.JuryAwards.Count == 0);

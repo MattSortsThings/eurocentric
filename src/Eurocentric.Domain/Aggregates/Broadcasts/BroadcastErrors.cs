@@ -71,6 +71,15 @@ public static class BroadcastErrors
         "excluding the voting country ID, exactly once.");
 
     /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to award jury points in a
+    ///     broadcast with a voting country ID that does not match a jury in the broadcast that has not yet awarded its
+    ///     points.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error JuryVotingCountryIdMismatch() => Error.Conflict("Jury voting country ID mismatch",
+        "Voting country ID must match a jury in the broadcast that has not yet awarded its points.");
+
+    /// <summary>
     ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to award televote points in a
     ///     broadcast with a voting country ID that does not match a televote in the broadcast that has not yet awarded its
     ///     points.
