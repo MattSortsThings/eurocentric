@@ -43,7 +43,7 @@ jobs:
         run: dotnet build ${{ env.SOLUTION_PATH }} -c Release --no-restore
 
       - name: Test with dotnet
-        run: dotnet test ${{ env.SOLUTION_PATH }} -c Release --no-restore --no-build --verbosity minimal -- --hide-test-output
+        run: dotnet test ${{ env.SOLUTION_PATH }} -c Release --no-restore --no-build --verbosity minimal
 
       - name: Publish with dotnet
         run: dotnet publish ${{ env.API_PROJECT_PATH }} -c Release --no-restore --no-build --property:PublishDir=${{ env.PUBLISH_DIR }}
