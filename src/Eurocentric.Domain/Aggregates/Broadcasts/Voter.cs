@@ -1,4 +1,5 @@
 using Eurocentric.Domain.Abstractions;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using JetBrains.Annotations;
 
@@ -7,7 +8,7 @@ namespace Eurocentric.Domain.Aggregates.Broadcasts;
 /// <summary>
 ///     Represents a voter in a broadcast.
 /// </summary>
-public class Voter : Entity
+public abstract class Voter : Entity
 {
     [UsedImplicitly(Reason = "EF Core")]
     private protected Voter()
@@ -28,4 +29,20 @@ public class Voter : Entity
     ///     Gets a boolean value indicating whether the voter has awarded its points.
     /// </summary>
     public bool PointsAwarded { get; private set; }
+
+    internal void AwardPoints(ICollection<Competitor> competitors)
+    {
+        IEnumerable<PointsValue> pointsValues = Enum.GetValues<PointsValue>()
+            .OrderByDescending(value => value)
+            .Concat(Enumerable.Repeat(PointsValue.Zero, competitors.Count));
+
+        foreach (var (competitor, pointsValue) in competitors.Zip(pointsValues))
+        {
+            GivePointsAward(competitor, pointsValue);
+        }
+
+        PointsAwarded = true;
+    }
+
+    private protected abstract void GivePointsAward(Competitor competitor, PointsValue pointsValue);
 }

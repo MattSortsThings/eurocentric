@@ -1,5 +1,7 @@
+using ErrorOr;
 using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.ErrorHandling;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -76,4 +78,78 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     /// </summary>
     /// <remarks>Accessing this property creates and returns a new list populated from the instance's private data.</remarks>
     public IReadOnlyList<Televote> Televotes => _televotes.ToArray().AsReadOnly();
+
+    /// <summary>
+    ///     Awards a set of points awards from a televote to the competitors in the broadcast.
+    /// </summary>
+    /// <remarks>
+    ///     This operation <i>EITHER</i> succeeds and modifies the instance's private data <i>OR</i> fails and rolls back
+    ///     all changes.
+    /// </remarks>
+    /// <param name="votingCountryId">The voting country ID of the televote to award its points.</param>
+    /// <param name="rankedCompetingCountryIds">An ordered list of the competing country IDs to be awarded points.</param>
+    /// <returns>
+    ///     The discriminated union of <i>EITHER</i> a list of <see cref="Error" /> objects <i>OR</i> an
+    ///     <see cref="Result.Updated" /> value.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    ///     <paramref name="votingCountryId" /> is <see langword="null" />, or
+    ///     <paramref name="rankedCompetingCountryIds" /> is <see langword="null" />.
+    /// </exception>
+    public ErrorOr<Updated> AwardTelevotePoints(CountryId votingCountryId, IReadOnlyList<CountryId> rankedCompetingCountryIds)
+    {
+        ArgumentNullException.ThrowIfNull(votingCountryId);
+        ArgumentNullException.ThrowIfNull(rankedCompetingCountryIds);
+
+        ErrorOr<Televote> errorsOrTelevote = GetTelevoteToAwardPoints(votingCountryId);
+        ErrorOr<List<Competitor>> errorsOrRankedCompetitors =
+            GetCompetitorsToReceivePoints(votingCountryId, rankedCompetingCountryIds);
+
+        return Tuple.Create(errorsOrTelevote, errorsOrRankedCompetitors)
+            .Combine()
+            .ThenDo(tuple => tuple.Item1.AwardPoints(tuple.Item2))
+            .ThenDo(_ => UpdateCompetitorFinishingPositions())
+            .ThenDo(_ => UpdatedCompleted())
+            .Then(_ => Result.Updated);
+    }
+
+    private ErrorOr<Televote> GetTelevoteToAwardPoints(CountryId votingCountryId)
+    {
+        Televote? televote = _televotes.FirstOrDefault(televote => televote.VotingCountryId.Equals(votingCountryId));
+
+        return televote is null || televote.PointsAwarded
+            ? BroadcastErrors.TelevoteVotingCountryIdMismatch()
+            : televote;
+    }
+
+    private ErrorOr<List<Competitor>> GetCompetitorsToReceivePoints(CountryId votingCountryId,
+        IReadOnlyList<CountryId> rankedCompetingCountryIds)
+    {
+        IOrderedEnumerable<CountryId> expectedCountryIds = _competitors.Select(competitor => competitor.CompetingCountryId)
+            .Where(countryId => countryId != votingCountryId)
+            .OrderBy(countryId => countryId);
+
+        IOrderedEnumerable<CountryId> actualCountryIds = rankedCompetingCountryIds.OrderBy(countryId => countryId);
+
+        return !actualCountryIds.SequenceEqual(expectedCountryIds)
+            ? BroadcastErrors.RankedCompetingCountryIdsMismatch()
+            : rankedCompetingCountryIds.Join(_competitors,
+                    countryId => countryId,
+                    competitor => competitor.CompetingCountryId,
+                    (_, competitor) => competitor)
+                .ToList();
+    }
+
+    private void UpdateCompetitorFinishingPositions()
+    {
+        _competitors.Sort(Competitor.BroadcastCompetitorComparer);
+
+        for (int i = 0; i < _competitors.Count; i++)
+        {
+            _competitors[i].FinishingPosition = i + 1;
+        }
+    }
+
+    private void UpdatedCompleted() =>
+        Completed = _juries.All(jury => jury.PointsAwarded) && _televotes.All(televote => televote.PointsAwarded);
 }

@@ -31,6 +31,14 @@ public sealed class CountryIdLookup
     public Guid GetSingle(string countryCode) => _dictionary[countryCode];
 
     /// <summary>
+    ///     Retrieves the country ID values matching the provided country code value, with the original order preserved.
+    /// </summary>
+    /// <param name="countryCodes">The country codes.</param>
+    /// <returns>An array of <see cref="Guid" /> country ID values.</returns>
+    public Guid[] GetMultiple(params string[] countryCodes) =>
+        countryCodes.Select(countryCode => _dictionary[countryCode]).ToArray();
+
+    /// <summary>
     ///     Creates and returns an array containing all the country ID values stored in the instance.
     /// </summary>
     /// <returns>An array of <see cref="Guid" /> country ID values.</returns>

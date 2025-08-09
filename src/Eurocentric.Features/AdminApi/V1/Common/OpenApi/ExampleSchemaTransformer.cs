@@ -1,3 +1,4 @@
+using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardTelevotePoints;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
@@ -12,6 +13,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
         new Dictionary<Type, IOpenApiAny>
         {
             [typeof(Award)] = Award.CreateExample().ToOpenApiAny(),
+            [typeof(AwardTelevotePointsRequest)] = AwardTelevotePointsRequest.CreateExample().ToOpenApiAny(),
             [typeof(Broadcast)] = Broadcast.CreateExample().ToOpenApiAny(),
             [typeof(ChildBroadcast)] = ChildBroadcast.CreateExample().ToOpenApiAny(),
             [typeof(Competitor)] = Competitor.CreateExample().ToOpenApiAny(),

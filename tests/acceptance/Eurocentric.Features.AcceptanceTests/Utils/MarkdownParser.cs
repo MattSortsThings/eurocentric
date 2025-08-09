@@ -4,8 +4,13 @@ namespace Eurocentric.Features.AcceptanceTests.Utils;
 
 public static partial class MarkdownParser
 {
-    public static IEnumerable<T> ParseTable<T>(string markdownTable, Func<Dictionary<string, string>, T> rowMapper)
+    public static IEnumerable<T> ParseTable<T>(string? markdownTable, Func<Dictionary<string, string>, T> rowMapper)
     {
+        if (string.IsNullOrEmpty(markdownTable))
+        {
+            return [];
+        }
+
         string[] lines = NewLineRegex().Split(markdownTable)
             .Where(line => !string.IsNullOrWhiteSpace(line))
             .Select(line => line.Trim())

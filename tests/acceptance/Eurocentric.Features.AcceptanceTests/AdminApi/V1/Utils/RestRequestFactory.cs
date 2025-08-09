@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardTelevotePoints;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateChildBroadcast;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
@@ -17,6 +18,12 @@ public sealed class RestRequestFactory : IRestRequestFactory,
     {
         _apiVersion = apiVersion;
     }
+
+    public RestRequest AwardTelevotePoints(Guid broadcastId, AwardTelevotePointsRequest requestBody) =>
+        PatchRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}/award-televote")
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddUrlSegment("broadcastId", broadcastId)
+            .AddJsonBody(requestBody);
 
     public RestRequest DeleteBroadcast(Guid broadcastId) => DeleteRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}")
         .AddUrlSegment("apiVersion", _apiVersion)
@@ -66,6 +73,8 @@ public sealed class RestRequestFactory : IRestRequestFactory,
     private static RestRequest DeleteRequest(string route) => new RestRequest(route, Method.Delete).UseSecretApiKey();
 
     private static RestRequest GetRequest(string route) => new RestRequest(route).UseSecretApiKey();
+
+    private static RestRequest PatchRequest(string route) => new RestRequest(route, Method.Patch).UseSecretApiKey();
 
     private static RestRequest PostRequest(string route) => new RestRequest(route, Method.Post).UseSecretApiKey();
 }

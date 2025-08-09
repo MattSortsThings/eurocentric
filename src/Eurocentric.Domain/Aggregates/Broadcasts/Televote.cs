@@ -1,4 +1,6 @@
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
+using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 
 namespace Eurocentric.Domain.Aggregates.Broadcasts;
@@ -16,4 +18,7 @@ public sealed class Televote : Voter
     public Televote(CountryId votingCountryId) : base(votingCountryId)
     {
     }
+
+    private protected override void GivePointsAward(Competitor competitor, PointsValue pointsValue) =>
+        competitor.ReceiveAward(new TelevoteAward(VotingCountryId, pointsValue));
 }

@@ -59,4 +59,23 @@ public static class BroadcastErrors
     /// <returns>A new <see cref="Error" /> instance.</returns>
     public static Error CompetitorsNotSet() => Error.Unexpected("Competitors not set",
         "Broadcast builder invoked without setting competitors.");
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to award points in a broadcast
+    ///     with a list of ranked competing country IDs that does not comprise every competing country ID in the broadcast
+    ///     excluding the voting country ID.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error RankedCompetingCountryIdsMismatch() => Error.Conflict("Ranked competing country IDs mismatch",
+        "Ranked competing country IDs must comprise every competing country ID in the broadcast, " +
+        "excluding the voting country ID, exactly once.");
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to award televote points in a
+    ///     broadcast with a voting country ID that does not match a televote in the broadcast that has not yet awarded its
+    ///     points.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error TelevoteVotingCountryIdMismatch() => Error.Conflict("Televote voting country ID mismatch",
+        "Voting country ID must match a televote in the broadcast that has not yet awarded its points.");
 }
