@@ -76,14 +76,4 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     /// </summary>
     /// <remarks>Accessing this property creates and returns a new list populated from the instance's private data.</remarks>
     public IReadOnlyList<Televote> Televotes => _televotes.ToArray().AsReadOnly();
-
-    public static Broadcast CreateDummyBroadcast() => new(
-        BroadcastId.FromValue(Guid.NewGuid()),
-        BroadcastDate.FromValue(DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd")).Value,
-        ContestId.FromValue(Guid.NewGuid()),
-        ContestStage.GrandFinal,
-        Enumerable.Range(1, 10).Select(i => new Competitor(CountryId.FromValue(Guid.NewGuid()), i)).ToList(),
-        Enumerable.Range(1, 10).Select(_ => new Jury(CountryId.FromValue(Guid.NewGuid()))).ToList(),
-        Enumerable.Range(1, 10).Select(_ => new Televote(CountryId.FromValue(Guid.NewGuid()))).ToList()
-    );
 }
