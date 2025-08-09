@@ -2,7 +2,6 @@ using ErrorOr;
 using Eurocentric.Domain.UnitTests.Utils;
 using Eurocentric.Domain.UnitTests.Utils.Assertions;
 using Eurocentric.Domain.ValueObjects;
-using TUnit.Assertions.AssertConditions.Throws;
 using TUnit.Assertions.Enums;
 
 namespace Eurocentric.Domain.UnitTests.ValueObjects;

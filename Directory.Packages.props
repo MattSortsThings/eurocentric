@@ -26,6 +26,6 @@
     <PackageVersion Include="Scalar.AspNetCore" Version="2.6.8"/>
     <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.0"/>
     <PackageVersion Include="Testcontainers.MsSql" Version="4.6.0"/>
-    <PackageVersion Include="TUnit" Version="0.25.21"/>
+    <PackageVersion Include="TUnit" Version="0.53.0"/>
   </ItemGroup>
 </Project>

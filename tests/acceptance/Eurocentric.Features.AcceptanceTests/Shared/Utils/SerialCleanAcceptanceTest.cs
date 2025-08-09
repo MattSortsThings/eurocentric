@@ -8,5 +8,9 @@ public abstract class SerialCleanAcceptanceTest
     public required CleanWebAppFixture SystemUnderTest { get; init; }
 
     [After(Test)]
-    public async Task ResetAsync() => await SystemUnderTest.UnpauseDbContainerAsync();
+    public async Task ResetAsync()
+    {
+        await SystemUnderTest.UnpauseDbContainerAsync();
+        await SystemUnderTest.EraseAllDataAsync();
+    }
 }

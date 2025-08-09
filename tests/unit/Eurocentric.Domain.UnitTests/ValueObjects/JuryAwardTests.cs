@@ -2,7 +2,6 @@ using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.UnitTests.Utils;
 using Eurocentric.Domain.ValueObjects;
-using TUnit.Assertions.AssertConditions.Throws;
 
 namespace Eurocentric.Domain.UnitTests.ValueObjects;
 

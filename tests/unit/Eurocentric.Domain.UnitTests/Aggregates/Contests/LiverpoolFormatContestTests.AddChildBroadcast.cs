@@ -1,7 +1,6 @@
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Identifiers;
-using TUnit.Assertions.AssertConditions.Throws;
 
 namespace Eurocentric.Domain.UnitTests.Aggregates.Contests;
 

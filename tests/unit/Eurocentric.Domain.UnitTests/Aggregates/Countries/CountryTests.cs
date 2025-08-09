@@ -4,7 +4,6 @@ using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.UnitTests.Utils;
 using Eurocentric.Domain.UnitTests.Utils.Assertions;
 using Eurocentric.Domain.ValueObjects;
-using TUnit.Assertions.AssertConditions.Throws;
 
 namespace Eurocentric.Domain.UnitTests.Aggregates.Countries;
 
