@@ -88,8 +88,8 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
             string[] group1CountryCodes = null!,
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group1CountryIds = CountryIds.GetMultiple(group1CountryCodes);
+            Guid[] group2CountryIds = CountryIds.GetMultiple(group2CountryCodes);
 
             Contest myContest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: TestDefaults.CityName,
@@ -105,7 +105,7 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
         {
             Guid myContestId = await Assert.That(ContestId).IsNotNull();
             DateOnly date = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat);
-            Guid[] competingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] competingCountryIds = CountryIds.GetMultiple(competingCountryCodes);
 
             MyBroadcast = await ApiDriver.CreateSingleBroadcastAsync(contestStage: ContestStage.GrandFinal,
                 broadcastDate: date,

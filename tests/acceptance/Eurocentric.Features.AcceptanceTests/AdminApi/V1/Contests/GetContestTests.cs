@@ -105,8 +105,8 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group1CountryIds = CountryIds.GetMultiple(group1CountryCodes);
+            Guid[] group2CountryIds = CountryIds.GetMultiple(group2CountryCodes);
 
             Contest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
@@ -120,8 +120,8 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group1CountryIds = CountryIds.GetMultiple(group1CountryCodes);
+            Guid[] group2CountryIds = CountryIds.GetMultiple(group2CountryCodes);
 
             Contest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,

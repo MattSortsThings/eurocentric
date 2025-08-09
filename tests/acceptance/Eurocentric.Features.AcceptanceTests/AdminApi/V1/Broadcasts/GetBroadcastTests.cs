@@ -95,8 +95,8 @@ public sealed class GetBroadcastTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group1CountryIds = CountryIds.GetMultiple(group1CountryCodes);
+            Guid[] group2CountryIds = CountryIds.GetMultiple(group2CountryCodes);
 
             Contest myContest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
@@ -113,7 +113,7 @@ public sealed class GetBroadcastTests : SerialCleanAcceptanceTest
         {
             Guid myContestId = await Assert.That(ContestId).IsNotNull();
             DateOnly date = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat);
-            Guid[] competingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] competingCountryIds = CountryIds.GetMultiple(competingCountryCodes);
             ContestStage stage = Enum.Parse<ContestStage>(contestStage);
 
             Broadcast = await ApiDriver.CreateSingleBroadcastAsync(contestStage: stage,

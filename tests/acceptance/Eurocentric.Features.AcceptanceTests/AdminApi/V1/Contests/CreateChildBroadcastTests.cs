@@ -131,7 +131,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
             {
                 ContestStage = Enum.Parse<ContestStage>(contestStage),
                 BroadcastDate = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
-                CompetingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray()
+                CompetingCountryIds = CountryIds.GetMultiple(competingCountryCodes)
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -214,7 +214,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
             {
                 BroadcastDate = new DateOnly(myContest.ContestYear, 5, 31),
                 ContestStage = ContestStage.SemiFinal1,
-                CompetingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray()
+                CompetingCountryIds = CountryIds.GetMultiple(competingCountryCodes)
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -229,7 +229,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
             {
                 BroadcastDate = new DateOnly(myContest.ContestYear, 5, 31),
                 ContestStage = ContestStage.SemiFinal2,
-                CompetingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray()
+                CompetingCountryIds = CountryIds.GetMultiple(competingCountryCodes)
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
