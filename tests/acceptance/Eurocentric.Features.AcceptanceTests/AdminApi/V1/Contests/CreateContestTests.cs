@@ -15,7 +15,7 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
 {
     private sealed partial class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<CreateContestResponse>(apiDriver)
     {
-        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(10);
+        private CountryIdLookup CountryIds { get; } = new();
 
         private Contest? Contest { get; set; }
 
@@ -24,20 +24,15 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
             List<Country> createdCountries = await ApiDriver.CreateMultipleCountriesAsync(countryCodes);
-
-            foreach (Country country in createdCountries)
-            {
-                CountryCodesAndIds.Add(country.CountryCode, country.Id);
-            }
+            CountryIds.Populate(createdCountries);
         }
 
         public async Task Given_I_have_deleted_my_country(string countryCode)
         {
-            Guid myCountryId = CountryCodesAndIds[countryCode];
+            Guid myCountryId = CountryIds.RemoveSingle(countryCode);
 
             await ApiDriver.DeleteSingleCountryAsync(myCountryId);
 
-            CountryCodesAndIds.Remove(countryCode);
             DeletedCountryId = myCountryId;
         }
 
@@ -54,7 +49,7 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
                 CityName = cityName,
                 ContestYear = contestYear,
                 Group0ParticipatingCountryId =
-                    group0CountryCode is not null ? CountryCodesAndIds[group0CountryCode] : null,
+                    group0CountryCode is not null ? CountryIds.GetSingle(group0CountryCode) : null,
                 Group1ParticipantData = MarkdownParser.ParseTable(group1Participants, MapRowToParticipantDatum).ToArray(),
                 Group2ParticipantData = MarkdownParser.ParseTable(group2Participants, MapRowToParticipantDatum).ToArray()
             };
@@ -151,14 +146,14 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
         private Participant MapRowToParticipant(Dictionary<string, string> row) => new()
         {
             ParticipantGroup = int.Parse(row["Group"]),
-            ParticipatingCountryId = CountryCodesAndIds[row["CountryCode"]],
+            ParticipatingCountryId = CountryIds.GetSingle(row["CountryCode"]),
             ActName = string.IsNullOrWhiteSpace(row["ActName"]) ? null : row["ActName"],
             SongTitle = string.IsNullOrWhiteSpace(row["SongTitle"]) ? null : row["SongTitle"]
         };
 
         private ContestParticipantDatum MapRowToParticipantDatum(Dictionary<string, string> row) => new()
         {
-            ParticipatingCountryId = CountryCodesAndIds[row["CountryCode"]],
+            ParticipatingCountryId = CountryIds.GetSingle(row["CountryCode"]),
             ActName = row["ActName"],
             SongTitle = row["SongTitle"]
         };

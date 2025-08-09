@@ -482,8 +482,8 @@ public sealed partial class CreateChildBroadcastTests
             string[] group1CountryCodes = null!,
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
 
             Contest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: TestDefaults.CityName,

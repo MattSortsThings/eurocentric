@@ -45,7 +45,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
     private sealed partial class AdminActor(IApiDriver apiDriver)
         : AdminActorWithResponse<CreateChildBroadcastResponse>(apiDriver)
     {
-        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(8);
+        private CountryIdLookup CountryIds { get; } = new();
 
         private Contest? Contest { get; set; }
 
@@ -56,11 +56,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
             List<Country> createdCountries = await ApiDriver.CreateMultipleCountriesAsync(countryCodes);
-
-            foreach (Country country in createdCountries)
-            {
-                CountryCodesAndIds.Add(country.CountryCode, country.Id);
-            }
+            CountryIds.Populate(createdCountries);
         }
 
         public async Task Given_I_have_created_a_SemiFinal1_broadcast_for_my_contest_with_broadcast_date(string broadcastDate)
@@ -135,7 +131,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
             {
                 ContestStage = Enum.Parse<ContestStage>(contestStage),
                 BroadcastDate = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
-                CompetingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray()
+                CompetingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -149,7 +145,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
             {
                 BroadcastDate = new DateOnly(2025, 5, 31),
                 ContestStage = ContestStage.SemiFinal1,
-                CompetingCountryIds = CountryCodesAndIds.Values.Take(2).ToArray()
+                CompetingCountryIds = CountryIds.GetAll()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myDeletedContestId, requestBody);
@@ -218,7 +214,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
             {
                 BroadcastDate = new DateOnly(myContest.ContestYear, 5, 31),
                 ContestStage = ContestStage.SemiFinal1,
-                CompetingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray()
+                CompetingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -233,7 +229,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
             {
                 BroadcastDate = new DateOnly(myContest.ContestYear, 5, 31),
                 ContestStage = ContestStage.SemiFinal2,
-                CompetingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray()
+                CompetingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -248,7 +244,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
             {
                 BroadcastDate = new DateOnly(myContest.ContestYear, 5, 31),
                 ContestStage = ContestStage.GrandFinal,
-                CompetingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray()
+                CompetingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -376,12 +372,12 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
 
         private Voter MapToVoter(Dictionary<string, string> row) => new()
         {
-            VotingCountryId = CountryCodesAndIds[row["CountryCode"]], PointsAwarded = bool.Parse(row["PointsAwarded"])
+            VotingCountryId = CountryIds.GetSingle(row["CountryCode"]), PointsAwarded = bool.Parse(row["PointsAwarded"])
         };
 
         private Competitor MapToCompetitor(Dictionary<string, string> row) => new()
         {
-            CompetingCountryId = CountryCodesAndIds[row["CountryCode"]],
+            CompetingCountryId = CountryIds.GetSingle(row["CountryCode"]),
             RunningOrderPosition = int.Parse(row["RunningOrder"]),
             FinishingPosition = int.Parse(row["Finish"]),
             JuryAwards = [],

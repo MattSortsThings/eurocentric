@@ -580,12 +580,12 @@ public sealed partial class CreateContestTests
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
 
             Contest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
-                group0CountryId: CountryCodesAndIds[group0CountryCode],
+                group0CountryId: CountryIds.GetSingle(group0CountryCode),
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
         }
@@ -691,12 +691,12 @@ public sealed partial class CreateContestTests
                 ContestYear = TestDefaults.ContestYear,
                 CityName = TestDefaults.CityName,
                 Group0ParticipatingCountryId = group0CountryCode is not null
-                    ? CountryCodesAndIds[group0CountryCode]
+                    ? CountryIds.GetSingle(group0CountryCode)
                     : null,
-                Group1ParticipantData = group1CountryCodes.Select(c => CountryCodesAndIds[c])
+                Group1ParticipantData = group1CountryCodes.Select(CountryIds.GetSingle)
                     .Select(TestDefaults.ParticipantDatum)
                     .ToArray(),
-                Group2ParticipantData = group2CountryCodes.Select(c => CountryCodesAndIds[c])
+                Group2ParticipantData = group2CountryCodes.Select(CountryIds.GetSingle)
                     .Select(TestDefaults.ParticipantDatum)
                     .ToArray()
             };
@@ -706,7 +706,7 @@ public sealed partial class CreateContestTests
 
         private CreateContestRequest CreateDefaultLiverpoolFormatContest()
         {
-            Guid[] myCountryIds = CountryCodesAndIds.Values.ToArray();
+            Guid[] myCountryIds = CountryIds.GetAll();
 
             return new CreateContestRequest
             {

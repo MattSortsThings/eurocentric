@@ -70,7 +70,7 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithoutResponse(apiDriver)
     {
-        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(6);
+        private CountryIdLookup CountryIds { get; } = new();
 
         private Guid? ContestId { get; set; }
 
@@ -81,19 +81,15 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
             List<Country> createdCountries = await ApiDriver.CreateMultipleCountriesAsync(countryCodes);
-
-            foreach (Country country in createdCountries)
-            {
-                CountryCodesAndIds.Add(country.CountryCode, country.Id);
-            }
+            CountryIds.Populate(createdCountries);
         }
 
         public async Task Given_I_have_created_a_Stockholm_format_contest_for_my_countries(string[] group2CountryCodes = null!,
             string[] group1CountryCodes = null!,
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
 
             Contest myContest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: TestDefaults.CityName,
@@ -109,7 +105,7 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
         {
             Guid myContestId = await Assert.That(ContestId).IsNotNull();
             DateOnly date = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat);
-            Guid[] competingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] competingCountryIds = competingCountryCodes.Select(CountryIds.GetSingle).ToArray();
 
             MyBroadcast = await ApiDriver.CreateSingleBroadcastAsync(contestStage: ContestStage.GrandFinal,
                 broadcastDate: date,

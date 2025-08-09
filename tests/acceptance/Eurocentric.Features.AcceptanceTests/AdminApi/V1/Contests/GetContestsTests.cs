@@ -67,18 +67,14 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetContestsResponse>(apiDriver)
     {
-        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(7);
+        private CountryIdLookup CountryIds { get; } = new();
 
-        private List<Contest> Contests { get; } = new(4);
+        private List<Contest> Contests { get; } = [];
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
             List<Country> createdCountries = await ApiDriver.CreateMultipleCountriesAsync(countryCodes);
-
-            foreach (Country country in createdCountries)
-            {
-                CountryCodesAndIds.Add(country.CountryCode, country.Id);
-            }
+            CountryIds.Populate(createdCountries);
         }
 
         public async Task Given_I_have_created_a_Stockholm_format_contest_for_my_countries(string[] group2CountryCodes = null!,
@@ -86,8 +82,8 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
 
             Contest contest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
@@ -103,12 +99,12 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(CountryIds.GetSingle).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(CountryIds.GetSingle).ToArray();
 
             Contest contest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
-                group0CountryId: CountryCodesAndIds[group0CountryCode],
+                group0CountryId: CountryIds.GetSingle(group0CountryCode),
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
 
