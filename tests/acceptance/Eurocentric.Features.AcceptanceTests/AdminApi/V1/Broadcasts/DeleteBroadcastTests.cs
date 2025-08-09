@@ -70,13 +70,13 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithoutResponse(apiDriver)
     {
-        private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(6);
+        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(6);
 
-        private Guid? MyContestId { get; set; }
+        private Guid? ContestId { get; set; }
 
         private Broadcast? MyBroadcast { get; set; }
 
-        private Guid? MyDeletedBroadcastId { get; set; }
+        private Guid? DeletedBroadcastId { get; set; }
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
@@ -84,7 +84,7 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
 
             foreach (Country country in createdCountries)
             {
-                MyCountryCodesAndIds.Add(country.CountryCode, country.Id);
+                CountryCodesAndIds.Add(country.CountryCode, country.Id);
             }
         }
 
@@ -92,24 +92,24 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
             string[] group1CountryCodes = null!,
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
             Contest myContest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: TestDefaults.CityName,
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
 
-            MyContestId = myContest.Id;
+            ContestId = myContest.Id;
         }
 
         public async Task Given_I_have_created_a_GrandFinal_child_broadcast_for_my_contest(
             string[] competingCountryCodes = null!,
             string broadcastDate = "")
         {
-            Guid myContestId = await Assert.That(MyContestId).IsNotNull();
+            Guid myContestId = await Assert.That(ContestId).IsNotNull();
             DateOnly date = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat);
-            Guid[] competingCountryIds = competingCountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] competingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
             MyBroadcast = await ApiDriver.CreateSingleBroadcastAsync(contestStage: ContestStage.GrandFinal,
                 broadcastDate: date,
@@ -125,7 +125,7 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
             await ApiDriver.DeleteSingleBroadcastAsync(myBroadcastId);
 
             MyBroadcast = null;
-            MyDeletedBroadcastId = myBroadcastId;
+            DeletedBroadcastId = myBroadcastId;
         }
 
         public async Task Given_I_want_to_delete_my_broadcast()
@@ -137,7 +137,7 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
 
         public async Task Given_I_want_to_delete_my_deleted_broadcast()
         {
-            Guid myDeletedBroadcastId = await Assert.That(MyDeletedBroadcastId).IsNotNull();
+            Guid myDeletedBroadcastId = await Assert.That(DeletedBroadcastId).IsNotNull();
 
             Request = ApiDriver.RequestFactory.Broadcasts.DeleteBroadcast(myDeletedBroadcastId);
         }
@@ -152,7 +152,7 @@ public sealed class DeleteBroadcastTests : SerialCleanAcceptanceTest
         public async Task Then_the_response_problem_details_extensions_should_include_my_deleted_broadcast_ID()
         {
             ProblemDetails problemDetails = await Assert.That(ResponseProblemDetails).IsNotNull();
-            Guid myDeletedBroadcastId = await Assert.That(MyDeletedBroadcastId).IsNotNull();
+            Guid myDeletedBroadcastId = await Assert.That(DeletedBroadcastId).IsNotNull();
 
             await Assert.That(problemDetails).HasExtension("broadcastId", myDeletedBroadcastId);
         }

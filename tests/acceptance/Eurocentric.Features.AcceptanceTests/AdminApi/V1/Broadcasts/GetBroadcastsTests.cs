@@ -68,11 +68,11 @@ public sealed class GetBroadcastsTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetBroadcastsResponse>(apiDriver)
     {
-        private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new();
+        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new();
 
-        private Guid? MyContestId { get; set; }
+        private Guid? ContestId { get; set; }
 
-        private List<Broadcast> MyBroadcasts { get; } = [];
+        private List<Broadcast> Broadcasts { get; } = [];
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
@@ -80,7 +80,7 @@ public sealed class GetBroadcastsTests : SerialCleanAcceptanceTest
 
             foreach (Country country in createdCountries)
             {
-                MyCountryCodesAndIds.Add(country.CountryCode, country.Id);
+                CountryCodesAndIds.Add(country.CountryCode, country.Id);
             }
         }
 
@@ -89,15 +89,15 @@ public sealed class GetBroadcastsTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
             Contest myContest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
 
-            MyContestId = myContest.Id;
+            ContestId = myContest.Id;
         }
 
         public async Task Given_I_have_created_a_child_broadcast_for_my_contest(
@@ -105,9 +105,9 @@ public sealed class GetBroadcastsTests : SerialCleanAcceptanceTest
             string broadcastDate = "",
             string contestStage = "")
         {
-            Guid myContestId = await Assert.That(MyContestId).IsNotNull();
+            Guid myContestId = await Assert.That(ContestId).IsNotNull();
             DateOnly date = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat);
-            Guid[] competingCountryIds = competingCountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] competingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
             ContestStage stage = Enum.Parse<ContestStage>(contestStage);
 
             Broadcast broadcast = await ApiDriver.CreateSingleBroadcastAsync(contestStage: stage,
@@ -115,7 +115,7 @@ public sealed class GetBroadcastsTests : SerialCleanAcceptanceTest
                 competingCountryIds: competingCountryIds,
                 contestId: myContestId);
 
-            MyBroadcasts.Add(broadcast);
+            Broadcasts.Add(broadcast);
         }
 
         public void Given_I_want_to_retrieve_all_existing_broadcasts() =>
@@ -125,7 +125,7 @@ public sealed class GetBroadcastsTests : SerialCleanAcceptanceTest
         {
             GetBroadcastsResponse responseBody = await Assert.That(ResponseBody).IsNotNull();
 
-            IOrderedEnumerable<Broadcast> expectedBroadcasts = MyBroadcasts.OrderBy(broadcast => broadcast.BroadcastDate);
+            IOrderedEnumerable<Broadcast> expectedBroadcasts = Broadcasts.OrderBy(broadcast => broadcast.BroadcastDate);
 
             await Assert.That(responseBody.Broadcasts)
                 .IsEquivalentTo(expectedBroadcasts, new BroadcastEqualityComparer(), CollectionOrdering.Matching);

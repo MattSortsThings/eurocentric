@@ -15,11 +15,11 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
 {
     private sealed partial class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<CreateContestResponse>(apiDriver)
     {
-        private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(10);
+        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(10);
 
-        private Contest? MyExistingContest { get; set; }
+        private Contest? Contest { get; set; }
 
-        private Guid? MyDeletedCountryId { get; set; }
+        private Guid? DeletedCountryId { get; set; }
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
@@ -27,18 +27,18 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
 
             foreach (Country country in createdCountries)
             {
-                MyCountryCodesAndIds.Add(country.CountryCode, country.Id);
+                CountryCodesAndIds.Add(country.CountryCode, country.Id);
             }
         }
 
         public async Task Given_I_have_deleted_my_country(string countryCode)
         {
-            Guid myCountryId = MyCountryCodesAndIds[countryCode];
+            Guid myCountryId = CountryCodesAndIds[countryCode];
 
             await ApiDriver.DeleteSingleCountryAsync(myCountryId);
 
-            MyCountryCodesAndIds.Remove(countryCode);
-            MyDeletedCountryId = myCountryId;
+            CountryCodesAndIds.Remove(countryCode);
+            DeletedCountryId = myCountryId;
         }
 
         public void Given_I_want_to_create_a_contest_for_my_countries(string group2Participants = "",
@@ -54,7 +54,7 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
                 CityName = cityName,
                 ContestYear = contestYear,
                 Group0ParticipatingCountryId =
-                    group0CountryCode is not null ? MyCountryCodesAndIds[group0CountryCode] : null,
+                    group0CountryCode is not null ? CountryCodesAndIds[group0CountryCode] : null,
                 Group1ParticipantData = MarkdownParser.ParseTable(group1Participants, MapRowToParticipantDatum).ToArray(),
                 Group2ParticipantData = MarkdownParser.ParseTable(group2Participants, MapRowToParticipantDatum).ToArray()
             };
@@ -80,7 +80,7 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
 
         public async Task Then_the_response_problem_details_extensions_should_include_my_deleted_country_ID()
         {
-            Guid myDeletedCountryId = await Assert.That(MyDeletedCountryId).IsNotNull();
+            Guid myDeletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
 
             await Assert.That(ResponseProblemDetails).IsNotNull()
                 .And.HasExtension("countryId", myDeletedCountryId);
@@ -118,7 +118,7 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
 
         public async Task Then_my_given_contest_should_be_the_only_existing_contest_in_the_system()
         {
-            Contest myGivenContest = await Assert.That(MyExistingContest).IsNotNull();
+            Contest myGivenContest = await Assert.That(Contest).IsNotNull();
 
             Contest[] existingContests = await ApiDriver.GetAllContestsAsync();
 
@@ -151,14 +151,14 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
         private Participant MapRowToParticipant(Dictionary<string, string> row) => new()
         {
             ParticipantGroup = int.Parse(row["Group"]),
-            ParticipatingCountryId = MyCountryCodesAndIds[row["CountryCode"]],
+            ParticipatingCountryId = CountryCodesAndIds[row["CountryCode"]],
             ActName = string.IsNullOrWhiteSpace(row["ActName"]) ? null : row["ActName"],
             SongTitle = string.IsNullOrWhiteSpace(row["SongTitle"]) ? null : row["SongTitle"]
         };
 
         private ContestParticipantDatum MapRowToParticipantDatum(Dictionary<string, string> row) => new()
         {
-            ParticipatingCountryId = MyCountryCodesAndIds[row["CountryCode"]],
+            ParticipatingCountryId = CountryCodesAndIds[row["CountryCode"]],
             ActName = row["ActName"],
             SongTitle = row["SongTitle"]
         };

@@ -132,12 +132,12 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<CreateCountryResponse>(apiDriver)
     {
-        private Country? MyExistingCountry { get; set; }
+        private Country? Country { get; set; }
 
         public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "")
         {
             Country country = await ApiDriver.CreateSingleCountryAsync(countryCode: countryCode, countryName: countryName);
-            MyExistingCountry = country;
+            Country = country;
         }
 
         public void Given_I_want_to_create_a_country(string countryName = "", string countryCode = "")
@@ -184,7 +184,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
         public async Task Then_my_given_country_should_be_the_only_existing_country_in_the_system()
         {
-            Country myExistingCountry = await Assert.That(MyExistingCountry).IsNotNull();
+            Country myExistingCountry = await Assert.That(Country).IsNotNull();
 
             Country[] existingCountries = await ApiDriver.GetAllCountriesAsync();
 

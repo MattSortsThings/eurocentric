@@ -67,9 +67,9 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetContestsResponse>(apiDriver)
     {
-        private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(7);
+        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(7);
 
-        private List<Contest> MyContests { get; } = new(4);
+        private List<Contest> Contests { get; } = new(4);
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
@@ -77,7 +77,7 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
 
             foreach (Country country in createdCountries)
             {
-                MyCountryCodesAndIds.Add(country.CountryCode, country.Id);
+                CountryCodesAndIds.Add(country.CountryCode, country.Id);
             }
         }
 
@@ -86,15 +86,15 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
             Contest contest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
 
-            MyContests.Add(contest);
+            Contests.Add(contest);
         }
 
         public async Task Given_I_have_created_a_Liverpool_format_contest_for_my_countries(string[] group2CountryCodes = null!,
@@ -103,16 +103,16 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
             Contest contest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
-                group0CountryId: MyCountryCodesAndIds[group0CountryCode],
+                group0CountryId: CountryCodesAndIds[group0CountryCode],
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
 
-            MyContests.Add(contest);
+            Contests.Add(contest);
         }
 
         public void Given_I_want_to_retrieve_all_existing_contests() =>
@@ -120,7 +120,7 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
 
         public async Task Then_the_retrieved_contests_should_be_my_contests_in_contest_year_order()
         {
-            IOrderedEnumerable<Contest> expectedContests = MyContests.OrderBy(contest => contest.ContestYear);
+            IOrderedEnumerable<Contest> expectedContests = Contests.OrderBy(contest => contest.ContestYear);
 
             GetContestsResponse responseBody = await Assert.That(ResponseBody).IsNotNull();
 

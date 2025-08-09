@@ -88,11 +88,11 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetContestResponse>(apiDriver)
     {
-        private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(7);
+        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(7);
 
-        private Contest? MyContest { get; set; }
+        private Contest? Contest { get; set; }
 
-        private Guid? MyDeletedContestId { get; set; }
+        private Guid? DeletedContestId { get; set; }
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
@@ -100,7 +100,7 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
 
             foreach (Country country in createdCountries)
             {
-                MyCountryCodesAndIds.Add(country.CountryCode, country.Id);
+                CountryCodesAndIds.Add(country.CountryCode, country.Id);
             }
         }
 
@@ -109,10 +109,10 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
-            MyContest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
+            Contest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
@@ -124,37 +124,37 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
-            MyContest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(contestYear: contestYear,
+            Contest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
-                group0CountryId: MyCountryCodesAndIds[group0CountryCode],
+                group0CountryId: CountryCodesAndIds[group0CountryCode],
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
         }
 
         public async Task Given_I_have_deleted_my_contest()
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
             Guid myContestId = myContest.Id;
 
             await ApiDriver.DeleteSingleContestAsync(myContestId);
 
-            MyContest = null;
-            MyDeletedContestId = myContestId;
+            Contest = null;
+            DeletedContestId = myContestId;
         }
 
         public async Task Given_I_want_to_retrieve_my_contest()
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             Request = ApiDriver.RequestFactory.Contests.GetContest(myContest.Id);
         }
 
         public async Task Given_I_want_to_retrieve_my_deleted_contest()
         {
-            Guid myDeletedContestId = await Assert.That(MyDeletedContestId).IsNotNull();
+            Guid myDeletedContestId = await Assert.That(DeletedContestId).IsNotNull();
 
             Request = ApiDriver.RequestFactory.Contests.GetContest(myDeletedContestId);
         }
@@ -162,7 +162,7 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
         public async Task Then_the_retrieved_contest_should_be_my_contest()
         {
             GetContestResponse responseBody = await Assert.That(ResponseBody).IsNotNull();
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             await Assert.That(responseBody.Contest).IsEqualTo(myContest, new ContestEqualityComparer());
         }
@@ -170,7 +170,7 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
         public async Task Then_the_response_problem_details_extensions_should_include_my_deleted_contest_ID()
         {
             ProblemDetails problemDetails = await Assert.That(ResponseProblemDetails).IsNotNull();
-            Guid myDeletedContestId = await Assert.That(MyDeletedContestId).IsNotNull();
+            Guid myDeletedContestId = await Assert.That(DeletedContestId).IsNotNull();
 
             await Assert.That(problemDetails).HasExtension("contestId", myDeletedContestId);
         }

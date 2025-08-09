@@ -55,34 +55,34 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetCountryResponse>(apiDriver)
     {
-        private Country? MyCountry { get; set; }
+        private Country? Country { get; set; }
 
-        private Guid? MyDeletedCountryId { get; set; }
+        private Guid? DeletedCountryId { get; set; }
 
         public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "") =>
-            MyCountry = await ApiDriver.CreateSingleCountryAsync(countryCode: countryCode, countryName: countryName);
+            Country = await ApiDriver.CreateSingleCountryAsync(countryCode: countryCode, countryName: countryName);
 
         public async Task Given_I_have_deleted_my_country()
         {
-            Country myCountry = await Assert.That(MyCountry).IsNotNull();
+            Country myCountry = await Assert.That(Country).IsNotNull();
             Guid myCountryId = myCountry.Id;
 
             await ApiDriver.DeleteSingleCountryAsync(myCountryId);
 
-            MyCountry = null;
-            MyDeletedCountryId = myCountryId;
+            Country = null;
+            DeletedCountryId = myCountryId;
         }
 
         public async Task Given_I_want_to_retrieve_my_country()
         {
-            Country myCountry = await Assert.That(MyCountry).IsNotNull();
+            Country myCountry = await Assert.That(Country).IsNotNull();
 
             Request = ApiDriver.RequestFactory.Countries.GetCountry(myCountry.Id);
         }
 
         public async Task Given_I_want_to_retrieve_my_deleted_country()
         {
-            Guid myDeletedCountryId = await Assert.That(MyDeletedCountryId).IsNotNull();
+            Guid myDeletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
 
             Request = ApiDriver.RequestFactory.Countries.GetCountry(myDeletedCountryId);
         }
@@ -90,7 +90,7 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
         public async Task Then_the_retrieved_country_should_be_my_country()
         {
             GetCountryResponse responseBody = await Assert.That(ResponseBody).IsNotNull();
-            Country expectedCountry = await Assert.That(MyCountry).IsNotNull();
+            Country expectedCountry = await Assert.That(Country).IsNotNull();
 
             await Assert.That(responseBody.Country)
                 .IsEqualTo(expectedCountry, new CountryEqualityComparer());
@@ -99,7 +99,7 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
         public async Task Then_the_response_problem_details_extensions_should_include_my_deleted_country_ID()
         {
             ProblemDetails problemDetails = await Assert.That(ResponseProblemDetails).IsNotNull();
-            Guid myDeletedCountryId = await Assert.That(MyDeletedCountryId).IsNotNull();
+            Guid myDeletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
 
             await Assert.That(problemDetails).HasExtension("countryId", myDeletedCountryId);
         }

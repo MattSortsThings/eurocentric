@@ -45,13 +45,13 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
     private sealed partial class AdminActor(IApiDriver apiDriver)
         : AdminActorWithResponse<CreateChildBroadcastResponse>(apiDriver)
     {
-        private Dictionary<string, Guid> MyCountryCodesAndIds { get; } = new(8);
+        private Dictionary<string, Guid> CountryCodesAndIds { get; } = new(8);
 
-        private Contest? MyContest { get; set; }
+        private Contest? Contest { get; set; }
 
-        private Guid? MyDeletedContestId { get; set; }
+        private Guid? DeletedContestId { get; set; }
 
-        private Broadcast? MyExistingBroadcast { get; set; }
+        private Broadcast? Broadcast { get; set; }
 
         public async Task Given_I_have_created_some_countries(params string[] countryCodes)
         {
@@ -59,83 +59,83 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
 
             foreach (Country country in createdCountries)
             {
-                MyCountryCodesAndIds.Add(country.CountryCode, country.Id);
+                CountryCodesAndIds.Add(country.CountryCode, country.Id);
             }
         }
 
         public async Task Given_I_have_created_a_SemiFinal1_broadcast_for_my_contest_with_broadcast_date(string broadcastDate)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             Guid[] competingCountryIds = myContest.Participants.Where(participant => participant.ParticipantGroup == 1)
                 .Select(participant => participant.ParticipatingCountryId)
                 .ToArray();
 
-            MyExistingBroadcast = await ApiDriver.CreateSingleBroadcastAsync(
+            Broadcast = await ApiDriver.CreateSingleBroadcastAsync(
                 broadcastDate: DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
                 contestStage: ContestStage.SemiFinal1,
                 competingCountryIds: competingCountryIds,
                 contestId: myContest.Id);
 
-            MyContest = await ApiDriver.GetSingleContestAsync(myContest.Id);
+            Contest = await ApiDriver.GetSingleContestAsync(myContest.Id);
         }
 
         public async Task Given_I_have_created_a_SemiFinal2_broadcast_for_my_contest_with_broadcast_date(string broadcastDate)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             Guid[] competingCountryIds = myContest.Participants.Where(participant => participant.ParticipantGroup == 2)
                 .Select(participant => participant.ParticipatingCountryId)
                 .ToArray();
 
-            MyExistingBroadcast = await ApiDriver.CreateSingleBroadcastAsync(
+            Broadcast = await ApiDriver.CreateSingleBroadcastAsync(
                 broadcastDate: DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
                 contestStage: ContestStage.SemiFinal2,
                 competingCountryIds: competingCountryIds,
                 contestId: myContest.Id);
 
-            MyContest = await ApiDriver.GetSingleContestAsync(myContest.Id);
+            Contest = await ApiDriver.GetSingleContestAsync(myContest.Id);
         }
 
         public async Task Given_I_have_created_a_GrandFinal_broadcast_for_my_contest_with_broadcast_date(string broadcastDate)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             Guid[] competingCountryIds = myContest.Participants.Where(participant => participant.ParticipantGroup != 0)
                 .Select(participant => participant.ParticipatingCountryId)
                 .ToArray();
 
-            MyExistingBroadcast = await ApiDriver.CreateSingleBroadcastAsync(
+            Broadcast = await ApiDriver.CreateSingleBroadcastAsync(
                 broadcastDate: DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
                 contestStage: ContestStage.GrandFinal,
                 competingCountryIds: competingCountryIds,
                 contestId: myContest.Id);
 
-            MyContest = await ApiDriver.GetSingleContestAsync(myContest.Id);
+            Contest = await ApiDriver.GetSingleContestAsync(myContest.Id);
         }
 
         public async Task Given_I_have_deleted_my_contest()
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
             Guid myContestId = myContest.Id;
 
             await ApiDriver.DeleteSingleContestAsync(myContestId);
 
-            MyContest = null;
-            MyDeletedContestId = myContestId;
+            Contest = null;
+            DeletedContestId = myContestId;
         }
 
         public async Task Given_I_want_to_create_a_child_broadcast_for_my_contest(string[] competingCountryCodes = null!,
             string broadcastDate = "",
             string contestStage = "")
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             CreateChildBroadcastRequest requestBody = new()
             {
                 ContestStage = Enum.Parse<ContestStage>(contestStage),
                 BroadcastDate = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
-                CompetingCountryIds = competingCountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray()
+                CompetingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -143,13 +143,13 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
 
         public async Task Given_I_want_to_create_a_child_broadcast_for_my_deleted_contest()
         {
-            Guid myDeletedContestId = await Assert.That(MyDeletedContestId).IsNotNull();
+            Guid myDeletedContestId = await Assert.That(DeletedContestId).IsNotNull();
 
             CreateChildBroadcastRequest requestBody = new()
             {
                 BroadcastDate = new DateOnly(2025, 5, 31),
                 ContestStage = ContestStage.SemiFinal1,
-                CompetingCountryIds = MyCountryCodesAndIds.Values.Take(2).ToArray()
+                CompetingCountryIds = CountryCodesAndIds.Values.Take(2).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myDeletedContestId, requestBody);
@@ -158,7 +158,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         public async Task Given_I_want_to_create_a_SemiFinal1_child_broadcast_for_my_contest_with_broadcast_date(
             string broadcastDate)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             CreateChildBroadcastRequest requestBody = new()
             {
@@ -176,7 +176,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         public async Task Given_I_want_to_create_a_SemiFinal2_child_broadcast_for_my_contest_with_broadcast_date(
             string broadcastDate)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             CreateChildBroadcastRequest requestBody = new()
             {
@@ -194,7 +194,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         public async Task Given_I_want_to_create_a_GrandFinal_child_broadcast_for_my_contest_with_broadcast_date(
             string broadcastDate)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             CreateChildBroadcastRequest requestBody = new()
             {
@@ -212,13 +212,13 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         public async Task Given_I_want_to_create_a_SemiFinal1_child_broadcast_for_my_contest_with_competing_countries(
             params string[] competingCountryCodes)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             CreateChildBroadcastRequest requestBody = new()
             {
                 BroadcastDate = new DateOnly(myContest.ContestYear, 5, 31),
                 ContestStage = ContestStage.SemiFinal1,
-                CompetingCountryIds = competingCountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray()
+                CompetingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -227,13 +227,13 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         public async Task Given_I_want_to_create_a_SemiFinal2_child_broadcast_for_my_contest_with_competing_countries(
             params string[] competingCountryCodes)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             CreateChildBroadcastRequest requestBody = new()
             {
                 BroadcastDate = new DateOnly(myContest.ContestYear, 5, 31),
                 ContestStage = ContestStage.SemiFinal2,
-                CompetingCountryIds = competingCountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray()
+                CompetingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -242,13 +242,13 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         public async Task Given_I_want_to_create_a_GrandFinal_child_broadcast_for_my_contest_with_competing_countries(
             params string[] competingCountryCodes)
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             CreateChildBroadcastRequest requestBody = new()
             {
                 BroadcastDate = new DateOnly(myContest.ContestYear, 5, 31),
                 ContestStage = ContestStage.GrandFinal,
-                CompetingCountryIds = competingCountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray()
+                CompetingCountryIds = competingCountryCodes.Select(c => CountryCodesAndIds[c]).ToArray()
             };
 
             Request = ApiDriver.RequestFactory.Contests.CreateChildBroadcast(myContest.Id, requestBody);
@@ -257,7 +257,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         public async Task Then_the_response_problem_details_extensions_should_include_my_deleted_contest_ID()
         {
             ProblemDetails problemDetails = await Assert.That(ResponseProblemDetails).IsNotNull();
-            Guid myDeletedContestId = await Assert.That(MyDeletedContestId).IsNotNull();
+            Guid myDeletedContestId = await Assert.That(DeletedContestId).IsNotNull();
 
             await Assert.That(problemDetails).HasExtension("contestId", myDeletedContestId);
         }
@@ -298,7 +298,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
         {
             CreateChildBroadcastResponse responseBody = await Assert.That(ResponseBody).IsNotNull();
 
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             await Assert.That(responseBody.Broadcast)
                 .HasMember(broadcast => broadcast.ParentContestId).EqualTo(myContest.Id);
@@ -318,7 +318,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
 
         public async Task Then_my_contest_should_now_contain_a_single_child_broadcast_referencing_the_created_broadcast()
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
             Contest myRetrievedContest = await ApiDriver.GetSingleContestAsync(myContest.Id);
 
             CreateChildBroadcastResponse responseBody = await Assert.That(ResponseBody).IsNotNull();
@@ -348,7 +348,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
 
         public async Task Then_my_contest_should_be_unchanged()
         {
-            Contest myContest = await Assert.That(MyContest).IsNotNull();
+            Contest myContest = await Assert.That(Contest).IsNotNull();
 
             Contest myRetrievedContest = await ApiDriver.GetSingleContestAsync(myContest.Id);
 
@@ -357,7 +357,7 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
 
         public async Task Then_my_given_broadcast_should_be_the_only_existing_broadcast_in_the_system()
         {
-            Broadcast myGivenBroadcast = await Assert.That(MyExistingBroadcast).IsNotNull();
+            Broadcast myGivenBroadcast = await Assert.That(Broadcast).IsNotNull();
 
             Broadcast[] existingBroadcasts = await ApiDriver.GetAllBroadcastsAsync();
 
@@ -376,12 +376,12 @@ public sealed partial class CreateChildBroadcastTests : SerialCleanAcceptanceTes
 
         private Voter MapToVoter(Dictionary<string, string> row) => new()
         {
-            VotingCountryId = MyCountryCodesAndIds[row["CountryCode"]], PointsAwarded = bool.Parse(row["PointsAwarded"])
+            VotingCountryId = CountryCodesAndIds[row["CountryCode"]], PointsAwarded = bool.Parse(row["PointsAwarded"])
         };
 
         private Competitor MapToCompetitor(Dictionary<string, string> row) => new()
         {
-            CompetingCountryId = MyCountryCodesAndIds[row["CountryCode"]],
+            CompetingCountryId = CountryCodesAndIds[row["CountryCode"]],
             RunningOrderPosition = int.Parse(row["RunningOrder"]),
             FinishingPosition = int.Parse(row["Finish"]),
             JuryAwards = [],

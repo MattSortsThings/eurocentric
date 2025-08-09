@@ -52,12 +52,12 @@ public sealed class GetCountriesTests : SerialCleanAcceptanceTest
 
     private sealed class AdminActor(IApiDriver apiDriver) : AdminActorWithResponse<GetCountriesResponse>(apiDriver)
     {
-        private List<Country> MyCountries { get; } = [];
+        private List<Country> Countries { get; } = [];
 
         public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "")
         {
             Country myCountry = await ApiDriver.CreateSingleCountryAsync(countryCode: countryCode, countryName: countryName);
-            MyCountries.Add(myCountry);
+            Countries.Add(myCountry);
         }
 
         public void Given_I_want_to_retrieve_all_existing_countries() =>
@@ -65,7 +65,7 @@ public sealed class GetCountriesTests : SerialCleanAcceptanceTest
 
         public async Task Then_the_retrieved_countries_should_be_my_countries_in_country_code_order()
         {
-            IOrderedEnumerable<Country> expectedCountries = MyCountries.OrderBy(country => country.CountryCode);
+            IOrderedEnumerable<Country> expectedCountries = Countries.OrderBy(country => country.CountryCode);
 
             GetCountriesResponse responseBody = await Assert.That(ResponseBody).IsNotNull();
 

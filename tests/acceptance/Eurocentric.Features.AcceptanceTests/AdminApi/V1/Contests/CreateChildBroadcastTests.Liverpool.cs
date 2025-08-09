@@ -576,12 +576,12 @@ public sealed partial class CreateChildBroadcastTests
             string group0CountryCode = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
-            MyContest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(contestYear: contestYear,
+            Contest = await ApiDriver.CreateSingleLiverpoolFormatContestAsync(contestYear: contestYear,
                 cityName: TestDefaults.CityName,
-                group0CountryId: MyCountryCodesAndIds[group0CountryCode],
+                group0CountryId: CountryCodesAndIds[group0CountryCode],
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
         }

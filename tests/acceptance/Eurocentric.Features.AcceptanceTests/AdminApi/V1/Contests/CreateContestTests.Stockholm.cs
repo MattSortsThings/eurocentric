@@ -494,10 +494,10 @@ public sealed partial class CreateContestTests
             string cityName = "",
             int contestYear = 0)
         {
-            Guid[] group1CountryIds = group1CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
-            Guid[] group2CountryIds = group2CountryCodes.Select(c => MyCountryCodesAndIds[c]).ToArray();
+            Guid[] group1CountryIds = group1CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
+            Guid[] group2CountryIds = group2CountryCodes.Select(c => CountryCodesAndIds[c]).ToArray();
 
-            MyExistingContest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
+            Contest = await ApiDriver.CreateSingleStockholmFormatContestAsync(contestYear: contestYear,
                 cityName: cityName,
                 group1CountryIds: group1CountryIds,
                 group2CountryIds: group2CountryIds);
@@ -505,7 +505,7 @@ public sealed partial class CreateContestTests
 
         public async Task Given_I_want_to_create_a_Stockholm_format_contest_with_my_deleted_country_as_a_group_1_participant()
         {
-            Guid myDeletedCountryId = await Assert.That(MyDeletedCountryId).IsNotNull();
+            Guid myDeletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
 
             CreateContestRequest requestBody = CreateDefaultStockholmFormatContest();
 
@@ -519,7 +519,7 @@ public sealed partial class CreateContestTests
 
         public async Task Given_I_want_to_create_a_Stockholm_format_contest_with_my_deleted_country_as_a_group_2_participant()
         {
-            Guid myDeletedCountryId = await Assert.That(MyDeletedCountryId).IsNotNull();
+            Guid myDeletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
 
             CreateContestRequest requestBody = CreateDefaultStockholmFormatContest();
 
@@ -592,12 +592,12 @@ public sealed partial class CreateContestTests
                 ContestYear = TestDefaults.ContestYear,
                 CityName = TestDefaults.CityName,
                 Group0ParticipatingCountryId = group0CountryCode is not null
-                    ? MyCountryCodesAndIds[group0CountryCode]
+                    ? CountryCodesAndIds[group0CountryCode]
                     : null,
-                Group1ParticipantData = group1CountryCodes.Select(c => MyCountryCodesAndIds[c])
+                Group1ParticipantData = group1CountryCodes.Select(c => CountryCodesAndIds[c])
                     .Select(TestDefaults.ParticipantDatum)
                     .ToArray(),
-                Group2ParticipantData = group2CountryCodes.Select(c => MyCountryCodesAndIds[c])
+                Group2ParticipantData = group2CountryCodes.Select(c => CountryCodesAndIds[c])
                     .Select(TestDefaults.ParticipantDatum)
                     .ToArray()
             };
@@ -607,7 +607,7 @@ public sealed partial class CreateContestTests
 
         private CreateContestRequest CreateDefaultStockholmFormatContest()
         {
-            Guid[] myCountryIds = MyCountryCodesAndIds.Values.ToArray();
+            Guid[] myCountryIds = CountryCodesAndIds.Values.ToArray();
 
             return new CreateContestRequest
             {
