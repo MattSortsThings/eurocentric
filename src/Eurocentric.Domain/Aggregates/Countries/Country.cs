@@ -46,4 +46,7 @@ public sealed class Country : AggregateRoot<CountryId>
     /// </summary>
     /// <returns>A new <see cref="CountryBuilder" /> instance.</returns>
     public static CountryBuilder Create() => new();
+
+    /// <inheritdoc />
+    public override IDomainEvent[] DetachAllDomainEvents() => DetachDomainEvents().ToArray();
 }

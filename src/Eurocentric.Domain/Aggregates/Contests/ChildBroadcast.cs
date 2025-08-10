@@ -34,5 +34,5 @@ public sealed class ChildBroadcast : Entity
     /// <summary>
     ///     Gets a boolean value indicating whether all points have been awarded in the broadcast.
     /// </summary>
-    public bool Completed { get; private set; }
+    public bool Completed { get; internal set; }
 }

@@ -83,15 +83,37 @@ public abstract class Contest : AggregateRoot<ContestId>
 
         if (_childBroadcasts.Any(broadcast => broadcast.BroadcastId == broadcastId))
         {
-            throw new ArgumentException("Contest already contains a ChildBroadcast object with the same BroadcastId value.");
+            throw new ArgumentException("Contest already contains a ChildBroadcast object with the provided BroadcastId value.");
         }
 
         if (_childBroadcasts.Any(broadcast => broadcast.ContestStage == contestStage))
         {
-            throw new ArgumentException("Contest already contains a ChildBroadcast object with the same ContestStage value.");
+            throw new ArgumentException(
+                "Contest already contains a ChildBroadcast object with the provided ContestStage value.");
         }
 
         _childBroadcasts.Add(new ChildBroadcast(broadcastId, contestStage));
+    }
+
+    /// <summary>
+    ///     Updates the contest to reflect the fact that the specified broadcast aggregate is now complete.
+    /// </summary>
+    /// <param name="broadcastId">The ID of the broadcast aggregate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance contains no <see cref="ChildBroadcast" /> matching the <paramref name="broadcastId" />argument.
+    /// </exception>
+    public void CompleteChildBroadcast(BroadcastId broadcastId)
+    {
+        ArgumentNullException.ThrowIfNull(broadcastId);
+
+        if (_childBroadcasts.FirstOrDefault(broadcast => broadcast.BroadcastId == broadcastId) is not { } childBroadcast)
+        {
+            throw new ArgumentException("Contest contains no ChildBroadcast object with the provided BroadcastId value.");
+        }
+
+        childBroadcast.Completed = true;
+        UpdateCompleted();
     }
 
     /// <summary>
@@ -123,6 +145,15 @@ public abstract class Contest : AggregateRoot<ContestId>
         _childBroadcasts.Any(b => b.ContestStage == ContestStage.GrandFinal)
             ? new ContestStageConflictBuilder(ContestStage.GrandFinal)
             : InitializeGrandFinalChildBroadcastBuilder(this);
+
+    /// <inheritdoc />
+    public override IDomainEvent[] DetachAllDomainEvents() => DetachDomainEvents()
+        .Concat(_childBroadcasts.SelectMany(broadcast => broadcast.DetachDomainEvents()))
+        .Concat(_participants.SelectMany(participant => participant.DetachDomainEvents()))
+        .ToArray();
+
+    private void UpdateCompleted() => Completed =
+        _childBroadcasts.Count(broadcast => broadcast.Completed) == Enum.GetValues<ContestStage>().Length;
 
     private protected abstract ChildBroadcastBuilder InitializeSemiFinal1ChildBroadcastBuilder(Contest parentContest);
 

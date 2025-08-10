@@ -1,7 +1,9 @@
 using ErrorOr;
+using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.UnitTests.Aggregates.Broadcasts.Utils;
 using Eurocentric.Domain.UnitTests.Utils.Assertions;
@@ -36,6 +38,25 @@ public sealed partial class BroadcastTests
     }
 
     [Test]
+    public async Task AwardJuryPoints_should_not_add_domain_event_when_any_Jury_or_Televote_remains_false_PointsAwarded()
+    {
+        // Arrange
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
+            group1CountryIds: [AtId, BeId, CzId],
+            group2CountryIds: [DkId, EeId, FiId]);
+
+        Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
+
+        // Act
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId]);
+
+        // Assert
+        await Assert.That(result.IsError).IsFalse();
+
+        await Assert.That(sut.DetachAllDomainEvents()).IsEmpty();
+    }
+
+    [Test]
     public async Task AwardJuryPoints_should_set_Completed_to_true_when_no_Jury_or_Televote_remains_false_PointsAwarded()
     {
         // Arrange
@@ -65,6 +86,35 @@ public sealed partial class BroadcastTests
             .And.ContainsOnly(Matchers.Televote().HasPointsAwarded(true).Build());
 
         await Assert.That(sut.Completed).IsTrue();
+    }
+
+    [Test]
+    public async Task AwardJuryPoints_should_add_domain_event_when_no_Jury_or_Televote_remains_false_PointsAwarded()
+    {
+        // Arrange
+        StockholmFormatContest parentContest = CreateStockholmFormatContest(
+            group1CountryIds: [AtId, BeId, CzId],
+            group2CountryIds: [DkId, EeId, FiId]);
+
+        Broadcast sut = CreateSemiFinal1BroadcastWithCompetitors(parentContest, AtId, BeId, CzId);
+
+        sut.AwardTelevotePoints(AtId, [BeId, CzId]);
+        sut.AwardTelevotePoints(BeId, [AtId, CzId]);
+        sut.AwardTelevotePoints(CzId, [AtId, BeId]);
+
+        sut.AwardJuryPoints(BeId, [AtId, CzId]);
+        sut.AwardJuryPoints(CzId, [AtId, BeId]);
+
+        // Act
+        ErrorOr<Updated> result = sut.AwardJuryPoints(AtId, [BeId, CzId]);
+
+        // Assert
+        await Assert.That(result.IsError).IsFalse();
+
+        IDomainEvent? domainEvent = await Assert.That(sut.DetachAllDomainEvents()).HasSingleItem();
+
+        await Assert.That(domainEvent).IsNotNull()
+            .And.IsTypeOf<BroadcastCompletedEvent>();
     }
 
     [Test]

@@ -85,12 +85,19 @@ public static class ApiDriverExtensions
         await driver.AwardMultipleJuryPointsAsync(broadcast.Id, requestBodies);
     }
 
-    public static async Task AwardAllTelevotePointsAsync(this IApiDriver driver, Broadcast broadcast)
+    public static async Task AwardAllTelevotePointsAsync(this IApiDriver driver, Broadcast broadcast,
+        Guid? excludedVotingCountryId = null)
     {
         IEnumerable<AwardTelevotePointsRequest> requestBodies = broadcast.GenerateAllAwardTelevotePointsRequests();
 
+        if (excludedVotingCountryId is { } id)
+        {
+            requestBodies = requestBodies.Where(request => request.VotingCountryId != id);
+        }
+
         await driver.AwardMultipleTelevotePointsAsync(broadcast.Id, requestBodies);
     }
+
 
     private static IEnumerable<AwardJuryPointsRequest> GenerateAllAwardJuryPointsRequests(this Broadcast broadcast)
     {

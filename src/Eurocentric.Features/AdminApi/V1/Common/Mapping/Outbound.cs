@@ -52,7 +52,7 @@ internal static class Outbound
             {
                 BroadcastId = broadcast.BroadcastId.Value,
                 ContestStage = (ContestStage)(int)broadcast.ContestStage,
-                Completed = contest.Completed
+                Completed = broadcast.Completed
             }).ToArray(),
         Participants = contest.Participants.Select(participant => new Participant
         {

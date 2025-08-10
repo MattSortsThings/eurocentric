@@ -1,5 +1,6 @@
 using EntityFramework.Exceptions.SqlServer;
 using Eurocentric.Infrastructure.DataAccess.Common;
+using Eurocentric.Infrastructure.DataAccess.EfCore.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,8 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddEfCoreDataAccess(this IServiceCollection services)
     {
+        services.AddScoped<PublishDomainEventsSaveChangesInterceptor>();
+
         services.AddDbContext<AppDbContext>((sp, options) =>
         {
             IConfiguration config = sp.GetRequiredService<IConfiguration>();
@@ -32,7 +35,8 @@ public static class DependencyInjection
                             config.GetValue<int>(DbConfigKeys.DbConnection.CommandTimeoutInSeconds));
                     })
                 .UseSnakeCaseNamingConvention()
-                .UseExceptionProcessor();
+                .UseExceptionProcessor()
+                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsSaveChangesInterceptor>());
         });
 
         return services;

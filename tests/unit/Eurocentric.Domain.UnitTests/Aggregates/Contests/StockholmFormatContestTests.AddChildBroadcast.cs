@@ -63,7 +63,7 @@ public sealed partial class StockholmFormatContestTests
 
         // Assert
         await Assert.That(act).Throws<ArgumentException>()
-            .WithMessage("Contest already contains a ChildBroadcast object with the same BroadcastId value.");
+            .WithMessage("Contest already contains a ChildBroadcast object with the provided BroadcastId value.");
     }
 
     [Test]
@@ -83,6 +83,6 @@ public sealed partial class StockholmFormatContestTests
 
         // Assert
         await Assert.That(act).Throws<ArgumentException>()
-            .WithMessage("Contest already contains a ChildBroadcast object with the same ContestStage value.");
+            .WithMessage("Contest already contains a ChildBroadcast object with the provided ContestStage value.");
     }
 }

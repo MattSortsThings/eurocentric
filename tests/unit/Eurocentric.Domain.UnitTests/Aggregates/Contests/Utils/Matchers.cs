@@ -69,4 +69,26 @@ public static class Matchers
 
         return v => v.VotingCountryId.Equals(expectedCountryId) && !v.PointsAwarded;
     }
+
+    public static Func<ChildBroadcast, bool> ChildBroadcastCompleted(BroadcastId broadcastId,
+        ContestStage contestStage)
+    {
+        BroadcastId expectedBroadcastId = broadcastId;
+        ContestStage expectedContestStage = contestStage;
+
+
+        return b => b.BroadcastId == expectedBroadcastId
+                    && b.ContestStage == expectedContestStage && b.Completed;
+    }
+
+    public static Func<ChildBroadcast, bool> ChildBroadcastNotCompleted(BroadcastId broadcastId,
+        ContestStage contestStage)
+    {
+        BroadcastId expectedBroadcastId = broadcastId;
+        ContestStage expectedContestStage = contestStage;
+
+
+        return b => b.BroadcastId == expectedBroadcastId
+                    && b.ContestStage == expectedContestStage && !b.Completed;
+    }
 }

@@ -2,6 +2,7 @@ using ErrorOr;
 using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -110,6 +111,7 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .ThenDo(tuple => tuple.Item1.AwardPoints(tuple.Item2))
             .ThenDo(_ => UpdateCompetitorFinishingPositions())
             .ThenDo(_ => UpdatedCompleted())
+            .ThenDo(_ => RaiseDomainEventIfCompleted())
             .Then(_ => Result.Updated);
     }
 
@@ -144,6 +146,7 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .ThenDo(tuple => tuple.Item1.AwardPoints(tuple.Item2))
             .ThenDo(_ => UpdateCompetitorFinishingPositions())
             .ThenDo(_ => UpdatedCompleted())
+            .ThenDo(_ => RaiseDomainEventIfCompleted())
             .Then(_ => Result.Updated);
     }
 
@@ -171,6 +174,13 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .ThenDo(_ => UpdateCompetitorFinishingPositions())
             .Then(_ => Result.Updated);
     }
+
+    /// <inheritdoc />
+    public override IDomainEvent[] DetachAllDomainEvents() => DetachDomainEvents()
+        .Concat(_juries.SelectMany(jury => jury.DetachDomainEvents()))
+        .Concat(_televotes.SelectMany(televote => televote.DetachDomainEvents()))
+        .Concat(_competitors.SelectMany(competitor => competitor.DetachDomainEvents()))
+        .ToArray();
 
     private ErrorOr<Jury> GetJuryToAwardPoints(CountryId votingCountryId)
     {
@@ -231,6 +241,14 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
 
     private void UpdatedCompleted() =>
         Completed = _juries.All(jury => jury.PointsAwarded) && _televotes.All(televote => televote.PointsAwarded);
+
+    private void RaiseDomainEventIfCompleted()
+    {
+        if (Completed)
+        {
+            AddDomainEvent(new BroadcastCompletedEvent(this));
+        }
+    }
 
     private bool RunningOrderLocked() =>
         Completed || _juries.Any(jury => jury.PointsAwarded) || _televotes.Any(televote => televote.PointsAwarded);

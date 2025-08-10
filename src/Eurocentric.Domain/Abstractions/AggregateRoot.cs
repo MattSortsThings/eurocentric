@@ -6,7 +6,7 @@ namespace Eurocentric.Domain.Abstractions;
 ///     Abstract base class for a domain aggregate root entity type.
 /// </summary>
 /// <typeparam name="TId">The aggregate system ID type.</typeparam>
-public abstract class AggregateRoot<TId> : Entity
+public abstract class AggregateRoot<TId> : Entity, IDomainEventSource
     where TId : ValueObject
 {
     [UsedImplicitly(Reason = "EF Core")]
@@ -23,4 +23,7 @@ public abstract class AggregateRoot<TId> : Entity
     ///     Gets the aggregate's system ID.
     /// </summary>
     public TId Id { get; private protected init; } = null!;
+
+    /// <inheritdoc />
+    public abstract IDomainEvent[] DetachAllDomainEvents();
 }
