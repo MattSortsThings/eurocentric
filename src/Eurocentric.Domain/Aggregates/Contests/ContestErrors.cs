@@ -106,4 +106,12 @@ public static class ContestErrors
         Error.Conflict("Child broadcast competing country IDs mismatch",
             "Every competitor in a child broadcast must have a competing country ID matching a participant " +
             "in the parent contest that is eligible to compete in the broadcast's contest stage.");
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to delete a contest aggregate
+    ///     that has one or more child broadcasts.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error ContestDeletionBlocked() => Error.Conflict("Contest deletion blocked",
+        "The contest cannot be deleted because it has one or more child broadcasts.");
 }

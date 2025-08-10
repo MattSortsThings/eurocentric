@@ -37,6 +37,8 @@ public interface IRestRequestFactory
 
         public RestRequest CreateChildBroadcast(Guid contestId, CreateChildBroadcastRequest requestBody);
 
+        public RestRequest DeleteContest(Guid contestId);
+
         public RestRequest GetContest(Guid contestId);
 
         public RestRequest GetContests();

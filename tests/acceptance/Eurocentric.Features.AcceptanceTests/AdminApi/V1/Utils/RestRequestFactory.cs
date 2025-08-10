@@ -60,6 +60,10 @@ public sealed class RestRequestFactory : IRestRequestFactory,
             .AddUrlSegment("contestId", contestId)
             .AddJsonBody(requestBody);
 
+    public RestRequest DeleteContest(Guid contestId) => DeleteRequest("/admin/api/{apiVersion}/contests/{contestId}")
+        .AddUrlSegment("apiVersion", _apiVersion)
+        .AddUrlSegment("contestId", contestId);
+
     public RestRequest GetContest(Guid contestId) => GetRequest("/admin/api/{apiVersion}/contests/{contestId}")
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddUrlSegment("contestId", contestId);

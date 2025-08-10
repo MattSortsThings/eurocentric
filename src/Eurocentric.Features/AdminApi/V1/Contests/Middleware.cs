@@ -1,6 +1,7 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateChildBroadcast;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
+using Eurocentric.Features.AdminApi.V1.Contests.DeleteContest;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContest;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContests;
 using Microsoft.AspNetCore.Builder;
@@ -59,5 +60,14 @@ internal static class Middleware
             .WithDescription("Retrieves a list of all existing contests, in contest year order.")
             .HasApiVersion(1, 0)
             .Produces<GetContestsResponse>();
+
+        group.MapDelete("/{contestId:guid}", DeleteContestFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Contests.DeleteContest)
+            .WithSummary("Delete a contest")
+            .WithDescription("Deletes a single contest")
+            .HasApiVersion(1, 0)
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict);
     }
 }

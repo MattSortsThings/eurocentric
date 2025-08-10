@@ -3,6 +3,7 @@ using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 
@@ -10,6 +11,7 @@ namespace Eurocentric.Features.AdminApi.V1.Contests.HandleBroadcastDeleted;
 
 internal static class HandleBroadcastDeletedFeature
 {
+    [UsedImplicitly]
     internal sealed class DomainEventHandler(AppDbContext dbContext) : IConsumer<BroadcastDeletedEvent>
     {
         public async Task OnHandle(BroadcastDeletedEvent message, CancellationToken cancellationToken)
