@@ -101,7 +101,7 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// <param name="broadcastId">The ID of the broadcast aggregate.</param>
     /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException">
-    ///     This instance contains no <see cref="ChildBroadcast" /> matching the <paramref name="broadcastId" />argument.
+    ///     This instance contains no <see cref="ChildBroadcast" /> matching the <paramref name="broadcastId" /> argument.
     /// </exception>
     public void CompleteChildBroadcast(BroadcastId broadcastId)
     {
@@ -113,6 +113,27 @@ public abstract class Contest : AggregateRoot<ContestId>
         }
 
         childBroadcast.Completed = true;
+        UpdateCompleted();
+    }
+
+    /// <summary>
+    ///     Updates the contest to reflect the fact that the specified broadcast aggregate has been deleted.
+    /// </summary>
+    /// <param name="broadcastId">The ID of the broadcast aggregate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance contains no <see cref="ChildBroadcast" /> matching the <paramref name="broadcastId" /> argument.
+    /// </exception>
+    public void RemoveChildBroadcast(BroadcastId broadcastId)
+    {
+        ArgumentNullException.ThrowIfNull(broadcastId);
+
+        if (_childBroadcasts.FirstOrDefault(broadcast => broadcast.BroadcastId == broadcastId) is not { } childBroadcast)
+        {
+            throw new ArgumentException("Contest contains no ChildBroadcast object with the provided BroadcastId value.");
+        }
+
+        _childBroadcasts.Remove(childBroadcast);
         UpdateCompleted();
     }
 

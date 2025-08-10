@@ -182,6 +182,11 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
         .Concat(_competitors.SelectMany(competitor => competitor.DetachDomainEvents()))
         .ToArray();
 
+    /// <summary>
+    ///     Adds a <see cref="BroadcastDeletedEvent " /> to this instance.
+    /// </summary>
+    public void AddBroadcastDeletedEvent() => AddDomainEvent(new BroadcastDeletedEvent(this));
+
     private ErrorOr<Jury> GetJuryToAwardPoints(CountryId votingCountryId)
     {
         Jury? jury = _juries.FirstOrDefault(jury => jury.VotingCountryId.Equals(votingCountryId));

@@ -25,6 +25,7 @@ internal static class DeleteBroadcastFeature
     {
         public async Task<ErrorOr<Deleted>> OnHandle(Command command, CancellationToken cancellationToken) =>
             await GetTrackedBroadcastAsync(command.BroadcastId)
+                .ThenDo(broadcast => broadcast.AddBroadcastDeletedEvent())
                 .ThenDo(broadcast => dbContext.Broadcasts.Remove(broadcast))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(_ => Result.Deleted);
