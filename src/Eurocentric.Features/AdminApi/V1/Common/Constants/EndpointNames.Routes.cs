@@ -9,6 +9,7 @@ internal static partial class EndpointNames
             internal const string AwardJuryPoints = "AdminApi.V1.Broadcasts.AwardJuryPoints";
             internal const string AwardTelevotePoints = "AdminApi.V1.Broadcasts.AwardTelevotePoints";
             internal const string DeleteBroadcast = "AdminApi.V1.Broadcasts.DeleteBroadcast";
+            internal const string DisqualifyCompetitor = "AdminApi.V1.Broadcasts.DisqualifyCompetitor";
             internal const string GetBroadcast = "AdminApi.V1.Broadcasts.GetBroadcast";
             internal const string GetBroadcasts = "AdminApi.V1.Broadcasts.GetBroadcasts";
         }

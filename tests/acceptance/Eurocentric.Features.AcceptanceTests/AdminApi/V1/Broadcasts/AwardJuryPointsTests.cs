@@ -527,13 +527,9 @@ public sealed partial class AwardJuryPointsTests : SerialCleanAcceptanceTest
         public async Task Given_I_have_awarded_all_the_jury_points_in_my_broadcast()
         {
             Broadcast myBroadcast = await Assert.That(Broadcast).IsNotNull();
-            Guid myBroadcastId = myBroadcast.Id;
+            await ApiDriver.AwardAllJuryPointsAsync(myBroadcast);
 
-            IEnumerable<AwardJuryPointsRequest> requestBodies = GenerateAllAwardJuryPointsRequests(myBroadcast);
-
-            await ApiDriver.AwardMultipleJuryPointsAsync(myBroadcastId, requestBodies);
-
-            Broadcast = await ApiDriver.GetSingleBroadcastAsync(myBroadcastId);
+            Broadcast = await ApiDriver.GetSingleBroadcastAsync(myBroadcast.Id);
         }
 
         public async Task Given_I_want_to_award_jury_points_in_my_broadcast(string[] rankedCompetingCountryCodes = null!,
@@ -664,21 +660,5 @@ public sealed partial class AwardJuryPointsTests : SerialCleanAcceptanceTest
 
         [GeneratedRegex("(?<VotingCountryCode>[A-Z]{2}):(?<PointsValue>[0-9]+)", RegexOptions.Compiled)]
         private static partial Regex AwardRegex();
-
-        private static IEnumerable<AwardJuryPointsRequest> GenerateAllAwardJuryPointsRequests(Broadcast broadcast)
-        {
-            Guid[] allCompetingCountryIds = broadcast.Competitors.Select(competitor => competitor.CompetingCountryId).ToArray();
-
-            foreach (Voter televote in broadcast.Juries.Where(voter => !voter.PointsAwarded))
-            {
-                Guid votingCountryId = televote.VotingCountryId;
-
-                yield return new AwardJuryPointsRequest
-                {
-                    VotingCountryId = votingCountryId,
-                    RankedCompetingCountryIds = allCompetingCountryIds.Where(id => id != votingCountryId).ToArray()
-                };
-            }
-        }
     }
 }

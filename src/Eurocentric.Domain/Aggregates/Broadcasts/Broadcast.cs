@@ -147,6 +147,31 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .Then(_ => Result.Updated);
     }
 
+    /// <summary>
+    ///     Disqualifies a competitor from the broadcast.
+    /// </summary>
+    /// <remarks>
+    ///     When a competitor is disqualified, it is removed from the list of competitors. The remaining competitors'
+    ///     finishing positions are updated to close the gap. This method can only be invoked when no jury or televote in the
+    ///     broadcast has awarded its points.
+    /// </remarks>
+    /// <param name="competingCountryId">The voting country ID of the competitor to disqualify.</param>
+    /// <returns>
+    ///     The discriminated union of <i>EITHER</i> a list of <see cref="Error" /> objects <i>OR</i> an
+    ///     <see cref="Result.Updated" /> value.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="competingCountryId" /> is <see langword="null" />.</exception>
+    public ErrorOr<Updated> DisqualifyCompetitor(CountryId competingCountryId)
+    {
+        ArgumentNullException.ThrowIfNull(competingCountryId);
+
+        return GetCompetitorToDisqualify(competingCountryId)
+            .FailIf(_ => RunningOrderLocked(), BroadcastErrors.BroadcastRunningOrderLocked())
+            .ThenDo(RemoveCompetitor)
+            .ThenDo(_ => UpdateCompetitorFinishingPositions())
+            .Then(_ => Result.Updated);
+    }
+
     private ErrorOr<Jury> GetJuryToAwardPoints(CountryId votingCountryId)
     {
         Jury? jury = _juries.FirstOrDefault(jury => jury.VotingCountryId.Equals(votingCountryId));
@@ -183,6 +208,17 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
                 .ToList();
     }
 
+    private ErrorOr<Competitor> GetCompetitorToDisqualify(CountryId competingCountryId)
+    {
+        Competitor? competitor = _competitors.FirstOrDefault(competitor => competitor.CompetingCountryId == competingCountryId);
+
+        return competitor is null
+            ? BroadcastErrors.DisqualifiedCompetingCountryIdMismatch(competingCountryId)
+            : competitor;
+    }
+
+    private void RemoveCompetitor(Competitor competitor) => _competitors.Remove(competitor);
+
     private void UpdateCompetitorFinishingPositions()
     {
         _competitors.Sort(Competitor.BroadcastCompetitorComparer);
@@ -195,4 +231,7 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
 
     private void UpdatedCompleted() =>
         Completed = _juries.All(jury => jury.PointsAwarded) && _televotes.All(televote => televote.PointsAwarded);
+
+    private bool RunningOrderLocked() =>
+        Completed || _juries.Any(jury => jury.PointsAwarded) || _televotes.Any(televote => televote.PointsAwarded);
 }

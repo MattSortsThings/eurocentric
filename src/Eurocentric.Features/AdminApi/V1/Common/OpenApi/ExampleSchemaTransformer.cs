@@ -1,5 +1,6 @@
 using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardJuryPoints;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardTelevotePoints;
+using Eurocentric.Features.AdminApi.V1.Broadcasts.DisqualifyCompetitor;
 using Eurocentric.Features.AdminApi.V1.Common.Dtos;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
@@ -26,6 +27,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(Contest)] = Contest.CreateExample().ToOpenApiAny(),
             [typeof(ContestParticipantDatum)] = ContestParticipantDatum.CreateExample().ToOpenApiAny(),
             [typeof(Country)] = Country.CreateExample().ToOpenApiAny(),
+            [typeof(DisqualifyCompetitorRequest)] = DisqualifyCompetitorRequest.CreateExample().ToOpenApiAny(),
             [typeof(Participant)] = Participant.CreateExample().ToOpenApiAny(),
             [typeof(Voter)] = Voter.CreateExample().ToOpenApiAny()
         };

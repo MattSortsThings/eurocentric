@@ -87,4 +87,22 @@ public static class BroadcastErrors
     /// <returns>A new <see cref="Error" /> instance.</returns>
     public static Error TelevoteVotingCountryIdMismatch() => Error.Conflict("Televote voting country ID mismatch",
         "Voting country ID must match a televote in the broadcast that has not yet awarded its points.");
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to disqualify a competitor
+    ///     with a competing country ID that has no matching competitor in the broadcast.
+    /// </summary>
+    /// <param name="countryId">The country ID.</param>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error DisqualifiedCompetingCountryIdMismatch(CountryId countryId) =>
+        Error.Conflict("Disqualified competing country ID mismatch",
+            "Disqualified competing country ID has no matching competitor in broadcast.");
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to modify the running order of
+    ///     a broadcast in which at least one jury or televote has awarded its points.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error BroadcastRunningOrderLocked() => Error.Conflict("Broadcast running order locked",
+        "Broadcast running order cannot be modified once at least one jury or televote has awarded its points.");
 }

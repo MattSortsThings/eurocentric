@@ -1,5 +1,6 @@
 using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardJuryPoints;
 using Eurocentric.Features.AdminApi.V1.Broadcasts.AwardTelevotePoints;
+using Eurocentric.Features.AdminApi.V1.Broadcasts.DisqualifyCompetitor;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateChildBroadcast;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
@@ -20,6 +21,8 @@ public interface IRestRequestFactory
         public RestRequest AwardJuryPoints(Guid broadcastId, AwardJuryPointsRequest requestBody);
 
         public RestRequest AwardTelevotePoints(Guid broadcastId, AwardTelevotePointsRequest requestBody);
+
+        public RestRequest DisqualifyCompetitor(Guid broadcastId, DisqualifyCompetitorRequest requestBody);
 
         public RestRequest DeleteBroadcast(Guid broadcastId);
 

@@ -77,4 +77,50 @@ public static class ApiDriverExtensions
             await Assert.That(response.IsT1).IsTrue();
         }
     }
+
+    public static async Task AwardAllJuryPointsAsync(this IApiDriver driver, Broadcast broadcast)
+    {
+        IEnumerable<AwardJuryPointsRequest> requestBodies = broadcast.GenerateAllAwardJuryPointsRequests();
+
+        await driver.AwardMultipleJuryPointsAsync(broadcast.Id, requestBodies);
+    }
+
+    public static async Task AwardAllTelevotePointsAsync(this IApiDriver driver, Broadcast broadcast)
+    {
+        IEnumerable<AwardTelevotePointsRequest> requestBodies = broadcast.GenerateAllAwardTelevotePointsRequests();
+
+        await driver.AwardMultipleTelevotePointsAsync(broadcast.Id, requestBodies);
+    }
+
+    private static IEnumerable<AwardJuryPointsRequest> GenerateAllAwardJuryPointsRequests(this Broadcast broadcast)
+    {
+        Guid[] allCompetingCountryIds = broadcast.Competitors.Select(competitor => competitor.CompetingCountryId).ToArray();
+
+        foreach (Voter televote in broadcast.Juries.Where(voter => !voter.PointsAwarded))
+        {
+            Guid votingCountryId = televote.VotingCountryId;
+
+            yield return new AwardJuryPointsRequest
+            {
+                VotingCountryId = votingCountryId,
+                RankedCompetingCountryIds = allCompetingCountryIds.Where(id => id != votingCountryId).ToArray()
+            };
+        }
+    }
+
+    private static IEnumerable<AwardTelevotePointsRequest> GenerateAllAwardTelevotePointsRequests(this Broadcast broadcast)
+    {
+        Guid[] allCompetingCountryIds = broadcast.Competitors.Select(competitor => competitor.CompetingCountryId).ToArray();
+
+        foreach (Voter televote in broadcast.Televotes.Where(voter => !voter.PointsAwarded))
+        {
+            Guid votingCountryId = televote.VotingCountryId;
+
+            yield return new AwardTelevotePointsRequest
+            {
+                VotingCountryId = votingCountryId,
+                RankedCompetingCountryIds = allCompetingCountryIds.Where(id => id != votingCountryId).ToArray()
+            };
+        }
+    }
 }
