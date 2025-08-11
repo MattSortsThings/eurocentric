@@ -1,6 +1,8 @@
 using ErrorOr;
+using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.UnitTests.Aggregates.Contests.Utils;
 using Eurocentric.Domain.UnitTests.Utils.Assertions;
@@ -100,6 +102,33 @@ public sealed partial class StockholmFormatContestTests
             .And.Contains(Matchers.Group2Participant(BeId, actName: "BE act", songTitle: "BE song"))
             .And.Contains(Matchers.Group2Participant(DkId, actName: "DK act", songTitle: "DK song"))
             .And.Contains(Matchers.Group2Participant(EeId, actName: "EE act", songTitle: "EE song"));
+    }
+
+    [Test]
+    public async Task FluentBuilder_should_return_Contest_with_added_domain_event()
+    {
+        // Act
+        ErrorOr<Contest> result = StockholmFormatContest.Create()
+            .WithContestYear(ContestYear2025)
+            .WithCityName(ArbitraryCityName)
+            .AddGroup1Participant(AtId, ArbitraryActName, ArbitrarySongTitle)
+            .AddGroup1Participant(BeId, ArbitraryActName, ArbitrarySongTitle)
+            .AddGroup1Participant(CzId, ArbitraryActName, ArbitrarySongTitle)
+            .AddGroup2Participant(DkId, ArbitraryActName, ArbitrarySongTitle)
+            .AddGroup2Participant(EeId, ArbitraryActName, ArbitrarySongTitle)
+            .AddGroup2Participant(FiId, ArbitraryActName, ArbitrarySongTitle)
+            .Build(() => FixedContestId);
+
+        // Assert
+        await Assert.That(result.IsError).IsFalse();
+
+        StockholmFormatContest contest = await Assert.That(result.Value).IsTypeOf<StockholmFormatContest>()
+            .And.IsNotNull();
+
+        IDomainEvent? singleDomainEvent = await Assert.That(contest.DetachAllDomainEvents()).HasSingleItem();
+
+        await Assert.That(singleDomainEvent).IsNotNull()
+            .And.IsTypeOf<ContestCreatedEvent>();
     }
 
     [Test]

@@ -1,6 +1,7 @@
 using ErrorOr;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -54,7 +55,9 @@ public sealed class LiverpoolFormatContest : Contest
                         .FailIf(DuplicateParticipatingCountryIds, ContestErrors.DuplicateParticipatingCountryIds())
                         .FailIf(IllegalParticipantGroupSizes, ContestErrors.IllegalLiverpoolFormatParticipantGroups()))
                 .Combine()
-                .Then(Contest (tuple) => new LiverpoolFormatContest(idProvider(), tuple.Item1, tuple.Item2, tuple.Item3));
+                .Then(Contest (tuple) => new LiverpoolFormatContest(idProvider(), tuple.Item1, tuple.Item2, tuple.Item3))
+                .ThenDo(contest => contest.AddDomainEvent(new ContestCreatedEvent(contest)))
+                .Then(contest => contest);
         }
 
         private static bool IllegalParticipantGroupSizes(IList<Participant> participants)

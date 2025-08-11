@@ -41,12 +41,33 @@ public sealed class Country : AggregateRoot<CountryId>
         .ToArray()
         .AsReadOnly();
 
+    /// <inheritdoc />
+    public override IDomainEvent[] DetachAllDomainEvents() => DetachDomainEvents().ToArray();
+
+    /// <summary>
+    ///     Adds a copy of the provided <see cref="ContestId" /> value to the contest's <see cref="ParticipatingContestIds" />
+    ///     collection.
+    /// </summary>
+    /// <param name="contestId">The ID of the contest aggregate in which the country has a participant.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance already contains a <see cref="ContestId" /> equal to the <paramref name="contestId" /> arguments.
+    /// </exception>
+    public void AddParticipatingContestId(ContestId contestId)
+    {
+        ArgumentNullException.ThrowIfNull(contestId);
+
+        if (_participatingContestIds.Any(id => id.Equals(contestId)))
+        {
+            throw new ArgumentException("Country ParticipatingContestIds collection already contains provided ContestId value.");
+        }
+
+        _participatingContestIds.Add(ContestId.FromValue(contestId.Value));
+    }
+
     /// <summary>
     ///     Starts the process of creating a new <see cref="Country" /> instance using the fluent builder.
     /// </summary>
     /// <returns>A new <see cref="CountryBuilder" /> instance.</returns>
     public static CountryBuilder Create() => new();
-
-    /// <inheritdoc />
-    public override IDomainEvent[] DetachAllDomainEvents() => DetachDomainEvents().ToArray();
 }
