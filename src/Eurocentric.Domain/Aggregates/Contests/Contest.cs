@@ -3,6 +3,7 @@ using Eurocentric.Domain.Abstractions;
 using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ErrorHandling;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.Identifiers;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -172,6 +173,11 @@ public abstract class Contest : AggregateRoot<ContestId>
         .Concat(_childBroadcasts.SelectMany(broadcast => broadcast.DetachDomainEvents()))
         .Concat(_participants.SelectMany(participant => participant.DetachDomainEvents()))
         .ToArray();
+
+    /// <summary>
+    ///     Adds a <see cref="ContestDeletedEvent " /> to this instance.
+    /// </summary>
+    public void AddContestDeletedEvent() => AddDomainEvent(new ContestDeletedEvent(this));
 
     private void UpdateCompleted() => Completed =
         _childBroadcasts.Count(broadcast => broadcast.Completed) == Enum.GetValues<ContestStage>().Length;

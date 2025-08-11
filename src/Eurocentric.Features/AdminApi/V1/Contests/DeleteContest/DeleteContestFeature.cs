@@ -37,6 +37,7 @@ internal static class DeleteContestFeature
         public async Task<ErrorOr<Deleted>> OnHandle(Command command, CancellationToken cancellationToken) =>
             await GetTrackedContestAsync(command.ContestId)
                 .FailIfContestHasChildBroadcastsAsync()
+                .ThenDo(contest => contest.AddContestDeletedEvent())
                 .ThenDo(contest => dbContext.Contests.Remove(contest))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(_ => Result.Deleted);

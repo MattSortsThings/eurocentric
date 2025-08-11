@@ -6,14 +6,14 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 
-namespace Eurocentric.Features.AdminApi.V1.Countries.HandleContestCreated;
+namespace Eurocentric.Features.AdminApi.V1.Countries.HandleContestDeleted;
 
-internal static class HandleContestCreatedFeature
+internal static class HandleContestDeletedFeature
 {
     [UsedImplicitly]
-    internal sealed class DomainEventHandler(AppDbContext dbContext) : IConsumer<ContestCreatedEvent>
+    internal sealed class DomainEventHandler(AppDbContext dbContext) : IConsumer<ContestDeletedEvent>
     {
-        public async Task OnHandle(ContestCreatedEvent domainEvent, CancellationToken cancellationToken)
+        public async Task OnHandle(ContestDeletedEvent domainEvent, CancellationToken cancellationToken)
         {
             ContestId contestId = domainEvent.Contest.Id;
 
@@ -27,7 +27,7 @@ internal static class HandleContestCreatedFeature
 
             foreach (Country country in countries)
             {
-                country.AddParticipatingContestId(contestId);
+                country.RemoveParticipatingContestId(contestId);
             }
         }
     }

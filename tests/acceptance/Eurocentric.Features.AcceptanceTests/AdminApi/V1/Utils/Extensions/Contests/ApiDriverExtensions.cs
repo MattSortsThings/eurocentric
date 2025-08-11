@@ -1,10 +1,6 @@
-using Eurocentric.Domain.Identifiers;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.AdminApi.V1.Contests.CreateContest;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContests;
-using Eurocentric.Infrastructure.DataAccess.EfCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using RestSharp;
 using ContestDto = Eurocentric.Features.AdminApi.V1.Common.Dtos.Contest;
 using ContestFormat = Eurocentric.Features.AdminApi.V1.Common.Enums.ContestFormat;
@@ -76,19 +72,9 @@ public static class ApiDriverExtensions
 
     public static async Task DeleteSingleContestAsync(this IApiDriver driver, Guid contestId)
     {
-        ContestId contestIdToDelete = ContestId.FromValue(contestId);
+        RestRequest request = driver.RequestFactory.Contests.DeleteContest(contestId);
+        ProblemOrResponse response = await driver.RestClient.SendAsync(request);
 
-        await driver.BackDoor.ExecuteScopedAsync(DeleteContestAsync(contestIdToDelete));
-    }
-
-    private static Func<IServiceProvider, Task> DeleteContestAsync(ContestId contestId)
-    {
-        ContestId idToDelete = contestId;
-
-        return async sp =>
-        {
-            await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
-            await dbContext.Contests.Where(c => c.Id == idToDelete).ExecuteDeleteAsync();
-        };
+        await Assert.That(response.IsT1).IsTrue();
     }
 }

@@ -48,10 +48,11 @@ public sealed class Country : AggregateRoot<CountryId>
     ///     Adds a copy of the provided <see cref="ContestId" /> value to the contest's <see cref="ParticipatingContestIds" />
     ///     collection.
     /// </summary>
-    /// <param name="contestId">The ID of the contest aggregate in which the country has a participant.</param>
+    /// <param name="contestId">The ID of the contest aggregate.</param>
     /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException">
-    ///     This instance already contains a <see cref="ContestId" /> equal to the <paramref name="contestId" /> arguments.
+    ///     This instance already contains a <see cref="ContestId" /> value equal to the <paramref name="contestId" />
+    ///     argument.
     /// </exception>
     public void AddParticipatingContestId(ContestId contestId)
     {
@@ -63,6 +64,28 @@ public sealed class Country : AggregateRoot<CountryId>
         }
 
         _participatingContestIds.Add(ContestId.FromValue(contestId.Value));
+    }
+
+    /// <summary>
+    ///     Removes the provided <see cref="ContestId" /> value from the contest's <see cref="ParticipatingContestIds" />
+    ///     collection.
+    /// </summary>
+    /// <param name="contestId">The ID of the contest aggregate.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     This instance does not contain a <see cref="ContestId" /> value equal to the <paramref name="contestId" />
+    ///     argument.
+    /// </exception>
+    public void RemoveParticipatingContestId(ContestId contestId)
+    {
+        ArgumentNullException.ThrowIfNull(contestId);
+
+        if (_participatingContestIds.SingleOrDefault(id => id.Equals(contestId)) is not { } idToRemove)
+        {
+            throw new ArgumentException("Country ParticipatingContestIds collection does not contain provided ContestId value.");
+        }
+
+        _participatingContestIds.Remove(idToRemove);
     }
 
     /// <summary>
