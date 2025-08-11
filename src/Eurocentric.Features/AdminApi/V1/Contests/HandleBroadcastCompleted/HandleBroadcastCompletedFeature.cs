@@ -17,19 +17,15 @@ internal sealed class HandleBroadcastCompletedFeature
         public async Task OnHandle(BroadcastCompletedEvent domainEvent, CancellationToken cancellationToken)
         {
             Broadcast broadcast = domainEvent.Broadcast;
-            Contest parentContest = await GetTrackedContestAsync(broadcast.ParentContestId);
+
+            Contest parentContest = await dbContext.Contests.SingleAsync(contest =>
+                contest.Id == broadcast.ParentContestId, cancellationToken);
 
             parentContest.CompleteChildBroadcast(broadcast.Id);
+
             dbContext.Contests.Update(parentContest);
-            await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        private async Task<Contest> GetTrackedContestAsync(ContestId contestId)
-        {
-            Contest? contest = await dbContext.Contests.AsSplitQuery()
-                .FirstOrDefaultAsync(contest => contest.Id == contestId);
 
-            return contest ?? throw new ArgumentException("Contest not found.", nameof(contestId));
-        }
     }
 }

@@ -14,23 +14,16 @@ internal static class HandleBroadcastDeletedFeature
     [UsedImplicitly]
     internal sealed class DomainEventHandler(AppDbContext dbContext) : IConsumer<BroadcastDeletedEvent>
     {
-        public async Task OnHandle(BroadcastDeletedEvent message, CancellationToken cancellationToken)
+        public async Task OnHandle(BroadcastDeletedEvent domainEvent, CancellationToken cancellationToken)
         {
-            Broadcast broadcast = message.Broadcast;
+            Broadcast broadcast = domainEvent.Broadcast;
 
-            Contest parentContest = await GetTrackedContestAsync(broadcast.ParentContestId);
+            Contest parentContest = await dbContext.Contests.SingleAsync(contest =>
+                contest.Id == broadcast.ParentContestId, cancellationToken);
 
             parentContest.RemoveChildBroadcast(broadcast.Id);
+
             dbContext.Contests.Update(parentContest);
-            await dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-        private async Task<Contest> GetTrackedContestAsync(ContestId contestId)
-        {
-            Contest? contest = await dbContext.Contests.AsSplitQuery()
-                .FirstOrDefaultAsync(contest => contest.Id == contestId);
-
-            return contest ?? throw new ArgumentException("Contest not found.", nameof(contestId));
         }
     }
 }
