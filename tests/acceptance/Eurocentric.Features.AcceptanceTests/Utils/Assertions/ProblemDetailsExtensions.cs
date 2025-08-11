@@ -19,6 +19,16 @@ public static class ProblemDetailsExtensions
         [CallerArgumentExpression(nameof(expected))]
         string a1 = "") => valueSource.RegisterAssertion(new ProblemDetailsDetailEqualsExpectedValueAssertion(expected), [a1]);
 
+    public static InvokableValueAssertionBuilder<ProblemDetails> HasInstance(this IValueSource<ProblemDetails> valueSource,
+        string expected,
+        [CallerArgumentExpression(nameof(expected))]
+        string a1 = "") => valueSource.RegisterAssertion(new ProblemDetailsInstanceEqualsExpectedValueAssertion(expected), [a1]);
+
+    public static InvokableValueAssertionBuilder<ProblemDetails> HasType(this IValueSource<ProblemDetails> valueSource,
+        string expected,
+        [CallerArgumentExpression(nameof(expected))]
+        string a1 = "") => valueSource.RegisterAssertion(new ProblemDetailsTypeEqualsExpectedValueAssertion(expected), [a1]);
+
     public static InvokableValueAssertionBuilder<ProblemDetails> HasStatus(this IValueSource<ProblemDetails> valueSource,
         int expected,
         [CallerArgumentExpression(nameof(expected))]
@@ -89,6 +99,30 @@ public static class ProblemDetailsExtensions
             actualValue is null
                 ? AssertionResult.Fail("it was null")
                 : AssertionResult.FailIf(!string.Equals(actualValue.Detail, expectedValue, StringComparison.InvariantCulture),
+                    $"found \"{actualValue.Detail}\"");
+    }
+
+    private sealed class ProblemDetailsTypeEqualsExpectedValueAssertion(string expected)
+        : ExpectedValueAssertCondition<ProblemDetails, string>(expected)
+    {
+        protected override string GetExpectation() => $"to be equal to \"{ExpectedValue}\"";
+
+        protected override ValueTask<AssertionResult> GetResult(ProblemDetails? actualValue, string? expectedValue) =>
+            actualValue is null
+                ? AssertionResult.Fail("it was null")
+                : AssertionResult.FailIf(!string.Equals(actualValue.Type, expectedValue, StringComparison.InvariantCulture),
+                    $"found \"{actualValue.Detail}\"");
+    }
+
+    private sealed class ProblemDetailsInstanceEqualsExpectedValueAssertion(string expected)
+        : ExpectedValueAssertCondition<ProblemDetails, string>(expected)
+    {
+        protected override string GetExpectation() => $"to be equal to \"{ExpectedValue}\"";
+
+        protected override ValueTask<AssertionResult> GetResult(ProblemDetails? actualValue, string? expectedValue) =>
+            actualValue is null
+                ? AssertionResult.Fail("it was null")
+                : AssertionResult.FailIf(!string.Equals(actualValue.Instance, expectedValue, StringComparison.InvariantCulture),
                     $"found \"{actualValue.Detail}\"");
     }
 
