@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250807064121_Add_dbo_domain_aggregate_tables")]
+    [Migration("20250811081759_Add_dbo_domain_aggregate_tables")]
     partial class Add_dbo_domain_aggregate_tables
     {
         /// <inheritdoc />
