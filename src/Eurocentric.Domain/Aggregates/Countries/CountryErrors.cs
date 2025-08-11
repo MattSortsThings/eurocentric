@@ -43,4 +43,12 @@ public static class CountryErrors
     /// <returns></returns>
     public static Error CountryNameNotSet() => Error.Unexpected("Country name not set",
         "Country builder invoked without setting country name.");
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to delete a country aggregate
+    ///     that participates in one or more contests.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error CountryDeletionBlocked() => Error.Conflict("Country deletion blocked",
+        "The country cannot be deleted because it participates in one or more contests.");
 }

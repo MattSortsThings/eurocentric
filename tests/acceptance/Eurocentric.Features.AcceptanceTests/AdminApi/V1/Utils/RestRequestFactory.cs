@@ -75,6 +75,10 @@ public sealed class RestRequestFactory : IRestRequestFactory,
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddJsonBody(requestBody);
 
+    public RestRequest DeleteCountry(Guid countryId) => DeleteRequest("/admin/api/{apiVersion}/countries/{countryId}")
+        .AddUrlSegment("apiVersion", _apiVersion)
+        .AddUrlSegment("countryId", countryId);
+
     public RestRequest GetCountries() => GetRequest("/admin/api/{apiVersion}/countries")
         .AddUrlSegment("apiVersion", _apiVersion);
 

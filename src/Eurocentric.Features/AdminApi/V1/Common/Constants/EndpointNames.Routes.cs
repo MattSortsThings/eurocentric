@@ -25,9 +25,10 @@ internal static partial class EndpointNames
 
         internal static class Countries
         {
+            internal const string CreateCountry = "AdminApi.V1.Countries.CreateCountry";
+            internal const string DeleteCountry = "AdminApi.V1.Countries.DeleteCountry";
             internal const string GetCountry = "AdminApi.V1.Countries.GetCountry";
             internal const string GetCountries = "AdminApi.V1.Countries.GetCountries";
-            internal const string CreateCountry = "AdminApi.V1.Countries.CreateCountry";
         }
     }
 }

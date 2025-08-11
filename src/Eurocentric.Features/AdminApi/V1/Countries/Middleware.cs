@@ -1,5 +1,6 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
+using Eurocentric.Features.AdminApi.V1.Countries.DeleteCountry;
 using Eurocentric.Features.AdminApi.V1.Countries.GetCountries;
 using Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,15 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
+
+        group.MapDelete("/{countryId:guid}", DeleteCountryFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Countries.DeleteCountry)
+            .WithSummary("Delete a country")
+            .WithDescription("Deletes a single country.")
+            .HasApiVersion(1, 0)
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict);
 
         group.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Countries.GetCountry)
