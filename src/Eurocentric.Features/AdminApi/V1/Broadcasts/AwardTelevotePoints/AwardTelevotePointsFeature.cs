@@ -36,8 +36,7 @@ internal static class AwardTelevotePointsFeature
 
             return await GetTrackedBroadcastAsync(broadcastId)
                 .Then(broadcast => broadcast.AwardTelevotePoints(CountryId.FromValue(votingCountryId),
-                        rankedCompetingCountryIds.Select(CountryId.FromValue).ToArray())
-                    .ThenDo(_ => dbContext.Broadcasts.Update(broadcast)))
+                    rankedCompetingCountryIds.Select(CountryId.FromValue).ToArray()))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(updated => updated);
         }

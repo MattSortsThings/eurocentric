@@ -35,8 +35,7 @@ internal static class AwardJuryPointsFeature
 
             return await GetTrackedBroadcastAsync(broadcastId)
                 .Then(broadcast => broadcast.AwardJuryPoints(CountryId.FromValue(votingCountryId),
-                        rankedCompetingCountryIds.Select(CountryId.FromValue).ToArray())
-                    .ThenDo(_ => dbContext.Broadcasts.Update(broadcast)))
+                    rankedCompetingCountryIds.Select(CountryId.FromValue).ToArray()))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(updated => updated);
         }

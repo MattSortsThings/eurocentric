@@ -68,7 +68,6 @@ internal static class CreateChildBroadcastFeature
                 .FailOnBroadcastDateConflict(dbContext.Broadcasts.AsNoTracking().AsSplitQuery())
                 .ThenDo(broadcast => contest.AddChildBroadcast(broadcast.Id, broadcast.ContestStage))
                 .ThenDo(broadcast => dbContext.Broadcasts.Add(broadcast))
-                .ThenDo(_ => dbContext.Contests.Update(contest))
                 .Then(broadcast => broadcast.ToBroadcastDto()))
             .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
             .Then(broadcastDto => new CreateChildBroadcastResponse(broadcastDto));

@@ -1,7 +1,6 @@
 using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Events;
-using Eurocentric.Domain.Identifiers;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -22,10 +21,6 @@ internal sealed class HandleBroadcastCompletedFeature
                 contest.Id == broadcast.ParentContestId, cancellationToken);
 
             parentContest.CompleteChildBroadcast(broadcast.Id);
-
-            dbContext.Contests.Update(parentContest);
         }
-
-
     }
 }

@@ -34,8 +34,7 @@ internal static class DisqualifyCompetitorFeature
             (Guid broadcastId, Guid competingCountryId) = command;
 
             return await GetTrackedBroadcastAsync(broadcastId)
-                .Then(broadcast => broadcast.DisqualifyCompetitor(CountryId.FromValue(competingCountryId))
-                    .ThenDo(_ => dbContext.Broadcasts.Update(broadcast)))
+                .Then(broadcast => broadcast.DisqualifyCompetitor(CountryId.FromValue(competingCountryId)))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(updated => updated);
         }
