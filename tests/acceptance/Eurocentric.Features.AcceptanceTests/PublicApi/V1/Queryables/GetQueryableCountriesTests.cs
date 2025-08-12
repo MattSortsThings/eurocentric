@@ -87,7 +87,7 @@ public sealed class GetQueryableCountriesTests : ParallelSeededAcceptanceTest
                 .IsEquivalentTo(expectedQueryableCountries, CollectionOrdering.Matching);
         }
 
-        private QueryableCountry MapToQueryableCountry(Dictionary<string, string> row) => new()
+        private static QueryableCountry MapToQueryableCountry(Dictionary<string, string> row) => new()
         {
             CountryCode = row["CountryCode"], CountryName = row["CountryName"]
         };

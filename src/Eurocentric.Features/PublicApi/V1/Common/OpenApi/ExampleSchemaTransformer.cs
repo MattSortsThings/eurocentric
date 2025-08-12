@@ -11,6 +11,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
         new Dictionary<Type, IOpenApiAny>
         {
             [typeof(QueryableContestStage[])] = Enum.GetValues<QueryableContestStage>().ToOpenApiAny(),
+            [typeof(QueryableContest)] = QueryableContest.CreateExample().ToOpenApiAny(),
             [typeof(QueryableCountry)] = QueryableCountry.CreateExample().ToOpenApiAny(),
             [typeof(QueryableVotingMethod[])] = Enum.GetValues<QueryableVotingMethod>().ToOpenApiAny()
         };
