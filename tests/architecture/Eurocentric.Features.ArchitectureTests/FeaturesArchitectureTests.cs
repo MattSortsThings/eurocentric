@@ -178,6 +178,33 @@ public sealed class FeaturesArchitectureTests
     }
 
     [Test]
+    public async Task Types_that_implement_IConsumer_should_implement_IDomainEventHandler()
+    {
+        // Arrange
+        TypesShouldConjunction rule = Types()
+            .That().ImplementInterface(typeof(IConsumer<>))
+            .And().AreNot(typeof(IDomainEventHandler<>))
+            .Should().ImplementInterface(typeof(IDomainEventHandler<>));
+
+        // Assert
+        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+    }
+
+    [Test]
+    public async Task Classes_that_implement_IDomainEventHandler_should_be_nested_internal_sealed_and_named_DomainEventHandler()
+    {
+        // Arrange
+        ClassesShouldConjunction rule = Classes()
+            .That().ImplementInterface(typeof(IDomainEventHandler<>))
+            .Should().BeNested()
+            .AndShould().BeInternal()
+            .AndShould().BeSealed()
+            .AndShould().HaveName("DomainEventHandler");
+
+        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+    }
+
+    [Test]
     public async Task Types_in_AdminApi_V0_namespace_should_not_depend_on_other_API_version_types()
     {
         // Arrange

@@ -1,17 +1,17 @@
 using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Events;
+using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
-using SlimMessageBus;
 
 namespace Eurocentric.Features.AdminApi.V1.Contests.HandleBroadcastCompleted;
 
 internal static class HandleBroadcastCompletedFeature
 {
     [UsedImplicitly]
-    internal sealed class DomainEventHandler(AppDbContext dbContext) : IConsumer<BroadcastCompletedEvent>
+    internal sealed class DomainEventHandler(AppDbContext dbContext) : IDomainEventHandler<BroadcastCompletedEvent>
     {
         public async Task OnHandle(BroadcastCompletedEvent domainEvent, CancellationToken cancellationToken)
         {
