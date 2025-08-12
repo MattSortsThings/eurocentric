@@ -1,4 +1,3 @@
-using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Contests.Utils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Attributes;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Extensions.Broadcasts;
