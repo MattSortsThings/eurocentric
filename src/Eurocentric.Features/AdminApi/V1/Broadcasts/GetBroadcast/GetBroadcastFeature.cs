@@ -23,7 +23,7 @@ internal static class GetBroadcastFeature
     internal sealed record Query(Guid BroadcastId) : IQuery<GetBroadcastResponse>;
 
     [UsedImplicitly]
-    internal sealed class Handler(AppDbContext dbContext) : IQueryHandler<Query, GetBroadcastResponse>
+    internal sealed class QueryHandler(AppDbContext dbContext) : IQueryHandler<Query, GetBroadcastResponse>
     {
         public async Task<ErrorOr<GetBroadcastResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {

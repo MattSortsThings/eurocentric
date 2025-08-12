@@ -15,6 +15,7 @@
     <PackageReference Include="SlimMessageBus.Host.Memory"/>
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).ArchitectureTests"/>
     <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
   </ItemGroup>
 </Project>

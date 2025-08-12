@@ -15,7 +15,7 @@ internal static class GetQueryableCountriesFeature
             TypedResults.Ok,
             cancellationToken);
 
-    internal sealed class Query : IQuery<GetQueryableCountriesResponse>;
+    internal sealed record Query : IQuery<GetQueryableCountriesResponse>;
 
     internal sealed class QueryHandler(AppDbContext dbContext) : IQueryHandler<Query, GetQueryableCountriesResponse>
     {

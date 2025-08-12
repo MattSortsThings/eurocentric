@@ -14,6 +14,9 @@
     <PackageReference Include="SlimMessageBus"/>
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).ArchitectureTests"/>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Domain\Eurocentric.Domain.csproj"/>
   </ItemGroup>
   <ItemGroup>

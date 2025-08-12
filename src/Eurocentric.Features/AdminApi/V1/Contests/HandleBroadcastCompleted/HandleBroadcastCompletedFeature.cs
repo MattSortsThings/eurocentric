@@ -8,7 +8,7 @@ using SlimMessageBus;
 
 namespace Eurocentric.Features.AdminApi.V1.Contests.HandleBroadcastCompleted;
 
-internal sealed class HandleBroadcastCompletedFeature
+internal static class HandleBroadcastCompletedFeature
 {
     [UsedImplicitly]
     internal sealed class DomainEventHandler(AppDbContext dbContext) : IConsumer<BroadcastCompletedEvent>
