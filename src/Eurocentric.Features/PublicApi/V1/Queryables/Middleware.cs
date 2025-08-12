@@ -1,4 +1,5 @@
 using Eurocentric.Features.PublicApi.V1.Common.Constants;
+using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableBroadcasts;
 using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableContests;
 using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableContestStages;
 using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableCountries;
@@ -22,6 +23,13 @@ internal static class Middleware
     {
         RouteGroupBuilder group = builder.MapGroup("queryables")
             .WithTags(EndpointNames.Tags.Queryables);
+
+        group.MapGet("broadcasts", GetQueryableBroadcastsFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Queryables.GetQueryableBroadcasts)
+            .WithSummary("Get queryable broadcasts")
+            .WithDescription("Retrieves a list of all the queryable broadcasts, in broadcast date order.")
+            .HasApiVersion(1, 0)
+            .Produces<GetQueryableBroadcastsResponse>();
 
         group.MapGet("contest-stages", GetQueryableContestStagesFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Queryables.GetQueryableContestStages)
