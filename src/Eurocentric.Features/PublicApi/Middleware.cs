@@ -1,4 +1,5 @@
 using Eurocentric.Features.PublicApi.V0;
+using Eurocentric.Features.PublicApi.V1;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -19,5 +20,6 @@ internal static class Middleware
             .MapGroup("public/api");
 
         api.MapV0Endpoints();
+        api.MapV1Endpoints();
     }
 }

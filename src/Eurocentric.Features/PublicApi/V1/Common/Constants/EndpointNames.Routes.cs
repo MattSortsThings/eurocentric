@@ -1,0 +1,12 @@
+namespace Eurocentric.Features.PublicApi.V1.Common.Constants;
+
+internal static partial class EndpointNames
+{
+    internal static class Routes
+    {
+        internal static class Queryables
+        {
+            internal const string GetQueryableVotingMethods = "PublicApi.V1.Queryables.GetQueryableVotingMethods";
+        }
+    }
+}

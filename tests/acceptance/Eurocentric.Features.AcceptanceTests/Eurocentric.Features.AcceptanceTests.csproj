@@ -15,5 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="PublicApi\V0\Utils\Scripts\*.sql"/>
+    <EmbeddedResource Include="PublicApi\V1\Utils\Scripts\seeding_1_of_3_add_50_countries.sql"/>
+    <EmbeddedResource Include="PublicApi\V1\Utils\Scripts\seeding_2_of_3_add_2022_contest.sql"/>
+    <EmbeddedResource Include="PublicApi\V1\Utils\Scripts\seeding_3_of_3_add_2023_contest.sql"/>
   </ItemGroup>
 </Project>
