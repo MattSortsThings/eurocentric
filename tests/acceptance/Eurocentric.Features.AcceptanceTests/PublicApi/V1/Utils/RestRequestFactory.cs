@@ -13,6 +13,9 @@ public sealed class RestRequestFactory : IRestRequestFactory,
         _apiVersion = apiVersion;
     }
 
+    public RestRequest GetQueryableContestStages() => GetRequest("/public/api/{apiVersion}/queryables/contest-stages")
+        .AddUrlSegment("apiVersion", _apiVersion);
+
     public RestRequest GetQueryableVotingMethods() => GetRequest("/public/api/{apiVersion}/queryables/voting-methods")
         .AddUrlSegment("apiVersion", _apiVersion);
 

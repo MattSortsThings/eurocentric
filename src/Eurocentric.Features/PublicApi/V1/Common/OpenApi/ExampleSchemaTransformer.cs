@@ -9,6 +9,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
     private protected override IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; } =
         new Dictionary<Type, IOpenApiAny>
         {
+            [typeof(QueryableContestStage[])] = Enum.GetValues<QueryableContestStage>().ToOpenApiAny(),
             [typeof(QueryableVotingMethod[])] = Enum.GetValues<QueryableVotingMethod>().ToOpenApiAny()
         };
 }

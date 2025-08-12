@@ -8,6 +8,8 @@ public interface IRestRequestFactory
 
     public interface IQueryablesEndpoints
     {
+        public RestRequest GetQueryableContestStages();
+
         public RestRequest GetQueryableVotingMethods();
     }
 }

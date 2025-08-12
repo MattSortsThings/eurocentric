@@ -1,4 +1,5 @@
 using Eurocentric.Features.PublicApi.V1.Common.Constants;
+using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableContestStages;
 using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableVotingMethods;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,13 @@ internal static class Middleware
     {
         RouteGroupBuilder group = builder.MapGroup("queryables")
             .WithTags(EndpointNames.Tags.Queryables);
+
+        group.MapGet("contest-stages", GetQueryableContestStagesFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Queryables.GetQueryableContestStages)
+            .WithSummary("Get queryable contest stages")
+            .WithDescription("Retrieves an ordered list of all QueryableContestStage enum values.")
+            .HasApiVersion(1, 0)
+            .Produces<GetQueryableContestStagesResponse>();
 
         group.MapGet("voting-methods", GetQueryableVotingMethodsFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Queryables.GetQueryableVotingMethods)
