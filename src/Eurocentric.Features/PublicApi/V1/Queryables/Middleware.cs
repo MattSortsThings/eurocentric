@@ -1,5 +1,6 @@
 using Eurocentric.Features.PublicApi.V1.Common.Constants;
 using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableContestStages;
+using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableCountries;
 using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableVotingMethods;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,13 @@ internal static class Middleware
             .WithDescription("Retrieves an ordered list of all QueryableContestStage enum values.")
             .HasApiVersion(1, 0)
             .Produces<GetQueryableContestStagesResponse>();
+
+        group.MapGet("countries", GetQueryableCountriesFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Queryables.GetQueryableCountries)
+            .WithSummary("Get queryable countries")
+            .WithDescription("Retrieves a list of all the queryable countries, in country code order.")
+            .HasApiVersion(1, 0)
+            .Produces<GetQueryableCountriesResponse>();
 
         group.MapGet("voting-methods", GetQueryableVotingMethodsFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Queryables.GetQueryableVotingMethods)

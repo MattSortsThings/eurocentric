@@ -10,6 +10,8 @@ public interface IRestRequestFactory
     {
         public RestRequest GetQueryableContestStages();
 
+        public RestRequest GetQueryableCountries();
+
         public RestRequest GetQueryableVotingMethods();
     }
 }

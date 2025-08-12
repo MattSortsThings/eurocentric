@@ -1,6 +1,7 @@
 using ErrorOr;
 using Eurocentric.Features.PublicApi.V1.Common.Enums;
 using Eurocentric.Features.Shared.Messaging;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using SlimMessageBus;
 
@@ -13,6 +14,7 @@ internal static class GetQueryableVotingMethodsFeature
 
     internal sealed record Query : IQuery<GetQueryableVotingMethodsResponse>;
 
+    [UsedImplicitly]
     internal sealed class QueryHandler : IQueryHandler<Query, GetQueryableVotingMethodsResponse>
     {
         public Task<ErrorOr<GetQueryableVotingMethodsResponse>> OnHandle(Query query,
