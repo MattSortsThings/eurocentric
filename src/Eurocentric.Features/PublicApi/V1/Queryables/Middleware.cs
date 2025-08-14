@@ -47,7 +47,7 @@ internal static class Middleware
 
         group.MapGet("countries", GetQueryableCountriesFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Queryables.GetQueryableCountries)
-            .WithSummary("Get queryable cuntries")
+            .WithSummary("Get queryable countries")
             .WithDescription("Retrieves a list of all the queryable countries, in country code order.")
             .HasApiVersion(1, 0)
             .Produces<GetQueryableCountriesResponse>();
