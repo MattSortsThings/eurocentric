@@ -12,5 +12,11 @@ internal static partial class EndpointNames
             internal const string GetQueryableCountries = "PublicApi.V1.Queryables.GetQueryableCountries";
             internal const string GetQueryableVotingMethods = "PublicApi.V1.Queryables.GetQueryableVotingMethods";
         }
+
+        internal static class Rankings
+        {
+            internal const string GetCompetingCountryPointsAverageRankings =
+                "PublicApi.V1.Rankings.GetCompetingCountryPointsAverageRankings";
+        }
     }
 }

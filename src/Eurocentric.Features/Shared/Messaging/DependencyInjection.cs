@@ -17,7 +17,8 @@ internal static class DependencyInjection
     internal static IServiceCollection AddMessaging(this IServiceCollection services)
     {
         services.AddSlimMessageBus(builder => builder.WithProviderMemory()
-            .AutoDeclareFrom(typeof(DependencyInjection).Assembly, messageTypeToTopicConverter: type => type.FullName));
+            .AutoDeclareFrom(typeof(DependencyInjection).Assembly,
+                messageTypeToTopicConverter: type => type.FullName));
 
         return services;
     }

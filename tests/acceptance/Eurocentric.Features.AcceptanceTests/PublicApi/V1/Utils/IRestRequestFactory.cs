@@ -6,6 +6,8 @@ public interface IRestRequestFactory
 {
     public IQueryablesEndpoints Queryables { get; }
 
+    public IRankingsEndpoints Rankings { get; }
+
     public interface IQueryablesEndpoints
     {
         public RestRequest GetQueryableBroadcasts();
@@ -17,5 +19,10 @@ public interface IRestRequestFactory
         public RestRequest GetQueryableCountries();
 
         public RestRequest GetQueryableVotingMethods();
+    }
+
+    public interface IRankingsEndpoints
+    {
+        public RestRequest GetCompetingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
     }
 }

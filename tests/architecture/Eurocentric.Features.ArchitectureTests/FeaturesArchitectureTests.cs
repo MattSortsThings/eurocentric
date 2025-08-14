@@ -57,6 +57,7 @@ public sealed class FeaturesArchitectureTests
         // Arrange
         ClassesShouldConjunction rule = Classes()
             .That().HaveNameEndingWith("Request")
+            .And().AreNotAbstract()
             .Should().BePublic()
             .AndShould().BeSealed()
             .AndShould().NotBeNested()

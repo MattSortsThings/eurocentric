@@ -1,4 +1,5 @@
 using Eurocentric.Features.AcceptanceTests.Utils;
+using Eurocentric.Features.AcceptanceTests.Utils.Assertions;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
@@ -18,6 +19,12 @@ public abstract class EuroFanActorWithResponse<TResponse>(IApiDriver apiDriver) 
 
         problemOrResponse.Switch(PopulateFromUnsuccessfulResponse, PopulateFromSuccessfulResponse);
     }
+
+    public async Task Then_the_response_problem_details_extensions_should_include(string key, int value) =>
+        await Assert.That(ResponseProblemDetails).IsNotNull().And.HasExtension(key, value);
+
+    public async Task Then_the_response_problem_details_extensions_should_include(string key, string value) =>
+        await Assert.That(ResponseProblemDetails).IsNotNull().And.HasExtension(key, value);
 
     private void PopulateFromUnsuccessfulResponse(RestResponse<ProblemDetails> r)
     {

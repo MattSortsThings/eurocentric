@@ -7,5 +7,12 @@ namespace Eurocentric.Features.PublicApi.V1.Common.OpenApi;
 internal class ParameterExampleOperationTransformer : BaseParameterExampleOperationTransformer
 {
     private protected override IReadOnlyDictionary<string, IOpenApiAny> ParameterExamples { get; } =
-        new Dictionary<string, IOpenApiAny> { ["votingMethod"] = QueryParamDefaults.VotingMethod.ToOpenApiAny() };
+        new Dictionary<string, IOpenApiAny>
+        {
+            ["contestStage"] = QueryParamDefaults.ContestStage.ToOpenApiAny(),
+            ["descending"] = QueryParamDefaults.Descending.ToOpenApiAny(),
+            ["pageIndex"] = QueryParamDefaults.PageIndex.ToOpenApiAny(),
+            ["pageSize"] = QueryParamDefaults.PageSize.ToOpenApiAny(),
+            ["votingMethod"] = QueryParamDefaults.VotingMethod.ToOpenApiAny()
+        };
 }

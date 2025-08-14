@@ -43,6 +43,10 @@ public static class RestRequestExtensions
                     request.AddQueryParameter(key, g);
 
                     break;
+                case Enum en:
+                    request.AddQueryParameter(key, en.ToString());
+
+                    break;
                 default:
                     throw new NotSupportedException($"Value type {value.GetType()} is not supported.");
             }

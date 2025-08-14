@@ -4,7 +4,8 @@ using RestSharp;
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils;
 
 public sealed class RestRequestFactory : IRestRequestFactory,
-    IRestRequestFactory.IQueryablesEndpoints
+    IRestRequestFactory.IQueryablesEndpoints,
+    IRestRequestFactory.IRankingsEndpoints
 {
     private readonly string _apiVersion;
 
@@ -28,7 +29,14 @@ public sealed class RestRequestFactory : IRestRequestFactory,
     public RestRequest GetQueryableVotingMethods() => GetRequest("/public/api/{apiVersion}/queryables/voting-methods")
         .AddUrlSegment("apiVersion", _apiVersion);
 
+    public RestRequest GetCompetingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams) =>
+        GetRequest("/public/api/{apiVersion}/rankings/competing-countries/points-average")
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddQueryParameters(queryParams);
+
     public IRestRequestFactory.IQueryablesEndpoints Queryables => this;
+
+    public IRestRequestFactory.IRankingsEndpoints Rankings => this;
 
     private static RestRequest GetRequest(string route) => new RestRequest(route).UseDemoApiKey();
 }
