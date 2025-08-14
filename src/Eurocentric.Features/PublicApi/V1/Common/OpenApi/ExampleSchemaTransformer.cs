@@ -1,5 +1,7 @@
-using Eurocentric.Features.PublicApi.V1.Common.Dtos;
 using Eurocentric.Features.PublicApi.V1.Common.Enums;
+using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableBroadcasts;
+using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableContests;
+using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableCountries;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.OpenApi.Any;
 

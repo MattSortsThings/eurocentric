@@ -1,6 +1,5 @@
 using ErrorOr;
 using Eurocentric.Domain.Aggregates.Contests;
-using Eurocentric.Features.PublicApi.V1.Common.Dtos;
 using Eurocentric.Features.PublicApi.V1.Common.Enums;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;

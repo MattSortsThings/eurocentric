@@ -1,7 +1,7 @@
 using Eurocentric.Features.PublicApi.V1.Common.Enums;
 using Eurocentric.Features.Shared.Documentation;
 
-namespace Eurocentric.Features.PublicApi.V1.Common.Dtos;
+namespace Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableBroadcasts;
 
 public sealed record QueryableBroadcast : IExampleProvider<QueryableBroadcast>
 {

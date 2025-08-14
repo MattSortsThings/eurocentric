@@ -1,6 +1,6 @@
 using Eurocentric.Features.Shared.Documentation;
 
-namespace Eurocentric.Features.PublicApi.V1.Common.Dtos;
+namespace Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableContests;
 
 public sealed record QueryableContest : IExampleProvider<QueryableContest>
 {

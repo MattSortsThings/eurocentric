@@ -1,7 +1,6 @@
 using ErrorOr;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Aggregates.Countries;
-using Eurocentric.Features.PublicApi.V1.Common.Dtos;
 using Eurocentric.Features.Shared.Messaging;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using JetBrains.Annotations;

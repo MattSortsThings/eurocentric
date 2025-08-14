@@ -1,7 +1,6 @@
 using Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils;
 using Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils.Attributes;
 using Eurocentric.Features.AcceptanceTests.Utils;
-using Eurocentric.Features.PublicApi.V1.Common.Dtos;
 using Eurocentric.Features.PublicApi.V1.Common.Enums;
 using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableBroadcasts;
 using TUnit.Assertions.Enums;
