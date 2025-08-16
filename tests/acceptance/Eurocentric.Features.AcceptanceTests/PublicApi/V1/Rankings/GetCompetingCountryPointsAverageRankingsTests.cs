@@ -427,7 +427,7 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
 
         public async Task Then_the_response_rankings_page_should_match(string page)
         {
-            var (rankings, _, _) = await Assert.That(ResponseBody).IsNotNull();
+            (CompetingCountryPointsAverageRanking[] rankings, _, _) = await Assert.That(ResponseBody).IsNotNull();
 
             CompetingCountryPointsAverageRanking[] expected = MarkdownParser.ParseTable(page, MapRowToRanking).ToArray();
 
@@ -440,7 +440,7 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
             int? minYear = null,
             string contestStage = "")
         {
-            var (_, filtering, _) = await Assert.That(ResponseBody).IsNotNull();
+            (_, CompetingCountryPointsAverageFilteringMetadata filtering, _) = await Assert.That(ResponseBody).IsNotNull();
 
             CompetingCountryPointsAverageFilteringMetadata expectedFiltering = new()
             {
@@ -460,7 +460,7 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
             int pageSize = 0,
             int pageIndex = 0)
         {
-            var (_, _, pagination) = await Assert.That(ResponseBody).IsNotNull();
+            (_, _, PaginationMetadata pagination) = await Assert.That(ResponseBody).IsNotNull();
 
             PaginationMetadata expectedPagination = new()
             {

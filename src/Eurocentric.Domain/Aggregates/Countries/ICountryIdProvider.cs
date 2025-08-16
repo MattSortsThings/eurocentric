@@ -12,5 +12,5 @@ public interface ICountryIdProvider
     ///     according to RFC 9562, following the Version 7 format
     /// </summary>
     /// <returns>A new <see cref="CountryId" /> object.</returns>
-    public CountryId CreateSingle();
+    CountryId CreateSingle();
 }

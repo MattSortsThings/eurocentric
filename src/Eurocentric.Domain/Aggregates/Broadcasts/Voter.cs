@@ -36,7 +36,7 @@ public abstract class Voter : Entity
             .OrderByDescending(value => value)
             .Concat(Enumerable.Repeat(PointsValue.Zero, competitors.Count));
 
-        foreach (var (competitor, pointsValue) in competitors.Zip(pointsValues))
+        foreach ((Competitor competitor, PointsValue pointsValue) in competitors.Zip(pointsValues))
         {
             GivePointsAward(competitor, pointsValue);
         }

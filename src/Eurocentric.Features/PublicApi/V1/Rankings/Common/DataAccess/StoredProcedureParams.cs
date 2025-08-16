@@ -114,7 +114,7 @@ internal sealed class StoredProcedureParams : DynamicParameters
 
     private void AddVotingMethodFiltering(IVotingMethodFilteringQuery query)
     {
-        var (excludeJury, excludeTelevote) = MapToExcludeVotingMethodParams(query.VotingMethod);
+        (bool excludeJury, bool excludeTelevote) = MapToExcludeVotingMethodParams(query.VotingMethod);
 
         Add("@exclude_jury", excludeJury, DbType.Boolean, ParameterDirection.Input);
         Add("@exclude_televote", excludeTelevote, DbType.Boolean, ParameterDirection.Input);

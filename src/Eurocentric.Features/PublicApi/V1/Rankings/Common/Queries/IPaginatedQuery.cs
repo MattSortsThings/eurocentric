@@ -2,9 +2,9 @@ namespace Eurocentric.Features.PublicApi.V1.Rankings.Common.Queries;
 
 internal interface IPaginatedQuery
 {
-    public int PageIndex { get; }
+    int PageIndex { get; }
 
-    public int PageSize { get; }
+    int PageSize { get; }
 
-    public bool Descending { get; }
+    bool Descending { get; }
 }

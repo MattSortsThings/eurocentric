@@ -43,7 +43,7 @@ internal static class CreateContestFeature
     {
         public async Task<ErrorOr<CreateContestResponse>> OnHandle(Command command, CancellationToken cancellationToken)
         {
-            var (contestYear, cityName, contestFormat, participatingCountryIds) = command;
+            (int contestYear, string cityName, ContestFormat contestFormat, Guid[] participatingCountryIds) = command;
 
             Contest contest = GetFactoryFunction(contestFormat)(contestYear, cityName, participatingCountryIds);
 

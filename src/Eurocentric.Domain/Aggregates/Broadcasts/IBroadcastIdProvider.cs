@@ -12,5 +12,5 @@ public interface IBroadcastIdProvider
     ///     according to RFC 9562, following the Version 7 format
     /// </summary>
     /// <returns>A new <see cref="BroadcastId" /> object.</returns>
-    public BroadcastId CreateSingle();
+    BroadcastId CreateSingle();
 }

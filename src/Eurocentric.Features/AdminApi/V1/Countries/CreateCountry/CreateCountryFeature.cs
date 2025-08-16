@@ -23,7 +23,7 @@ internal static class CreateCountryFeature
 
     private static CountryBuilder Apply(this CountryBuilder builder, Command command)
     {
-        var (countryCode, countryName) = command;
+        (string countryCode, string countryName) = command;
 
         return builder.WithCountryCode(CountryCode.FromValue(countryCode))
             .WithCountryName(CountryName.FromValue(countryName));

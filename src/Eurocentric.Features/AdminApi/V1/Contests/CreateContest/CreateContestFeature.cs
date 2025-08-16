@@ -47,12 +47,12 @@ internal static class CreateContestFeature
             builder.AddGroup0Participant(CountryId.FromValue(g));
         }
 
-        foreach (var (id, act, song) in command.Group1ParticipantData)
+        foreach ((Guid id, string act, string song) in command.Group1ParticipantData)
         {
             builder.AddGroup1Participant(CountryId.FromValue(id), ActName.FromValue(act), SongTitle.FromValue(song));
         }
 
-        foreach (var (id, act, song) in command.Group2ParticipantData)
+        foreach ((Guid id, string act, string song) in command.Group2ParticipantData)
         {
             builder.AddGroup2Participant(CountryId.FromValue(id), ActName.FromValue(act), SongTitle.FromValue(song));
         }

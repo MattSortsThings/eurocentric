@@ -4,7 +4,7 @@ namespace Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils;
 
 public interface IApiDriver
 {
-    public IWebAppFixtureRestClient RestClient { get; }
+    IWebAppFixtureRestClient RestClient { get; }
 
-    public IRestRequestFactory RequestFactory { get; }
+    IRestRequestFactory RequestFactory { get; }
 }

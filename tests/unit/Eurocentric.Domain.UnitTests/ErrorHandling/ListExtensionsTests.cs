@@ -80,7 +80,7 @@ public sealed class ListExtensionsTests : UnitTest
 
         await Assert.That(result.Value).IsNull();
 
-        await Assert.That(result.Errors).IsEquivalentTo((List<Error>) [errorA, errorB], CollectionOrdering.Matching);
+        await Assert.That(result.Errors).IsEquivalentTo((List<Error>)[errorA, errorB], CollectionOrdering.Matching);
     }
 
     [Test]
@@ -106,6 +106,6 @@ public sealed class ListExtensionsTests : UnitTest
         await Assert.That(result.Value).IsNull();
 
         await Assert.That(result.Errors)
-            .IsEquivalentTo((List<Error>) [errorA, errorC, errorA, errorA, errorB], CollectionOrdering.Matching);
+            .IsEquivalentTo((List<Error>)[errorA, errorC, errorA, errorA, errorB], CollectionOrdering.Matching);
     }
 }

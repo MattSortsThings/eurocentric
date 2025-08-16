@@ -4,25 +4,25 @@ namespace Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils;
 
 public interface IRestRequestFactory
 {
-    public IQueryablesEndpoints Queryables { get; }
+    IQueryablesEndpoints Queryables { get; }
 
-    public IRankingsEndpoints Rankings { get; }
+    IRankingsEndpoints Rankings { get; }
 
-    public interface IQueryablesEndpoints
+    interface IQueryablesEndpoints
     {
-        public RestRequest GetQueryableBroadcasts();
+        RestRequest GetQueryableBroadcasts();
 
-        public RestRequest GetQueryableContestStages();
+        RestRequest GetQueryableContestStages();
 
-        public RestRequest GetQueryableContests();
+        RestRequest GetQueryableContests();
 
-        public RestRequest GetQueryableCountries();
+        RestRequest GetQueryableCountries();
 
-        public RestRequest GetQueryableVotingMethods();
+        RestRequest GetQueryableVotingMethods();
     }
 
-    public interface IRankingsEndpoints
+    interface IRankingsEndpoints
     {
-        public RestRequest GetCompetingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
+        RestRequest GetCompetingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
     }
 }

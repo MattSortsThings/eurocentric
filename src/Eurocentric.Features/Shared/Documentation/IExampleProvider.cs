@@ -15,5 +15,5 @@ internal interface IExampleProvider<out T>
     ///     Creates and returns an example of type <typeparamref name="T" />.
     /// </summary>
     /// <returns>An instance of type <typeparamref name="T" />.</returns>
-    public static abstract T CreateExample();
+    static abstract T CreateExample();
 }

@@ -32,7 +32,7 @@ internal static class AwardTelevotePointsFeature
     {
         public async Task<ErrorOr<Updated>> OnHandle(Command command, CancellationToken cancellationToken)
         {
-            var (broadcastId, votingCountryId, rankedCompetingCountryIds) = command;
+            (Guid broadcastId, Guid votingCountryId, Guid[] rankedCompetingCountryIds) = command;
 
             return await GetTrackedBroadcastAsync(broadcastId)
                 .Then(broadcast => broadcast.AwardTelevotePoints(CountryId.FromValue(votingCountryId),

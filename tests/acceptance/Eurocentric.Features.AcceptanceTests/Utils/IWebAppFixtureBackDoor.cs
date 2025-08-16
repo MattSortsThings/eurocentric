@@ -13,7 +13,7 @@ public interface IWebAppFixtureBackDoor
     ///     Encapsulates a synchronous operation that takes an application service provider as its input and does not return a
     ///     value. The operation to be executed.
     /// </param>
-    public void ExecuteScoped(Action<IServiceProvider> action);
+    void ExecuteScoped(Action<IServiceProvider> action);
 
     /// <summary>
     ///     Executes the provided operation on the web app fixture's service provider using a new asynchronous service scope.
@@ -23,7 +23,7 @@ public interface IWebAppFixtureBackDoor
     ///     a value. The operation to be executed.
     /// </param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public Task ExecuteScopedAsync(Func<IServiceProvider, Task> func);
+    Task ExecuteScopedAsync(Func<IServiceProvider, Task> func);
 
     /// <summary>
     ///     Executes the provided operation on the web app fixture's service provider using a new asynchronous service scope
@@ -34,5 +34,5 @@ public interface IWebAppFixtureBackDoor
     ///     The operation to be executed.
     /// </param>
     /// <returns>A task representing the asynchronous operation. The task result is the output of the operation.</returns>
-    public Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> func);
+    Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> func);
 }

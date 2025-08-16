@@ -10,48 +10,48 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils;
 
 public interface IRestRequestFactory
 {
-    public IBroadcastsEndpoints Broadcasts { get; }
+    IBroadcastsEndpoints Broadcasts { get; }
 
-    public IContestsEndpoints Contests { get; }
+    IContestsEndpoints Contests { get; }
 
-    public ICountriesEndpoints Countries { get; }
+    ICountriesEndpoints Countries { get; }
 
-    public interface IBroadcastsEndpoints
+    interface IBroadcastsEndpoints
     {
-        public RestRequest AwardJuryPoints(Guid broadcastId, AwardJuryPointsRequest requestBody);
+        RestRequest AwardJuryPoints(Guid broadcastId, AwardJuryPointsRequest requestBody);
 
-        public RestRequest AwardTelevotePoints(Guid broadcastId, AwardTelevotePointsRequest requestBody);
+        RestRequest AwardTelevotePoints(Guid broadcastId, AwardTelevotePointsRequest requestBody);
 
-        public RestRequest DisqualifyCompetitor(Guid broadcastId, DisqualifyCompetitorRequest requestBody);
+        RestRequest DisqualifyCompetitor(Guid broadcastId, DisqualifyCompetitorRequest requestBody);
 
-        public RestRequest DeleteBroadcast(Guid broadcastId);
+        RestRequest DeleteBroadcast(Guid broadcastId);
 
-        public RestRequest GetBroadcast(Guid broadcastId);
+        RestRequest GetBroadcast(Guid broadcastId);
 
-        public RestRequest GetBroadcasts();
+        RestRequest GetBroadcasts();
     }
 
-    public interface IContestsEndpoints
+    interface IContestsEndpoints
     {
-        public RestRequest CreateContest(CreateContestRequest requestBody);
+        RestRequest CreateContest(CreateContestRequest requestBody);
 
-        public RestRequest CreateChildBroadcast(Guid contestId, CreateChildBroadcastRequest requestBody);
+        RestRequest CreateChildBroadcast(Guid contestId, CreateChildBroadcastRequest requestBody);
 
-        public RestRequest DeleteContest(Guid contestId);
+        RestRequest DeleteContest(Guid contestId);
 
-        public RestRequest GetContest(Guid contestId);
+        RestRequest GetContest(Guid contestId);
 
-        public RestRequest GetContests();
+        RestRequest GetContests();
     }
 
-    public interface ICountriesEndpoints
+    interface ICountriesEndpoints
     {
-        public RestRequest CreateCountry(CreateCountryRequest requestBody);
+        RestRequest CreateCountry(CreateCountryRequest requestBody);
 
-        public RestRequest DeleteCountry(Guid countryId);
+        RestRequest DeleteCountry(Guid countryId);
 
-        public RestRequest GetCountries();
+        RestRequest GetCountries();
 
-        public RestRequest GetCountry(Guid countryId);
+        RestRequest GetCountry(Guid countryId);
     }
 }

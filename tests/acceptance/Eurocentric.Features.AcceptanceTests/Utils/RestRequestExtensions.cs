@@ -21,7 +21,7 @@ public static class RestRequestExtensions
 
     public static RestRequest AddQueryParameters(this RestRequest request, IReadOnlyDictionary<string, object?> queryParams)
     {
-        foreach (var (key, value) in queryParams)
+        foreach ((string key, object? value) in queryParams)
         {
             switch (value)
             {

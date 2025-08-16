@@ -12,5 +12,5 @@ public interface IContestIdProvider
     ///     according to RFC 9562, following the Version 7 format
     /// </summary>
     /// <returns>A new <see cref="ContestId" /> object.</returns>
-    public ContestId CreateSingle();
+    ContestId CreateSingle();
 }

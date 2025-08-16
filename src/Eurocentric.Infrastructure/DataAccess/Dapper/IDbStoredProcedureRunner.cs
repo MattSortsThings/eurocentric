@@ -22,7 +22,7 @@ public interface IDbStoredProcedureRunner
     ///     A <see cref="Task" /> representing the asynchronous operation. The result of the task contains the ordered
     ///     records returned by the stored procedure.
     /// </returns>
-    public Task<T[]> ExecuteAsync<T>(string storedProcedureName,
+    Task<T[]> ExecuteAsync<T>(string storedProcedureName,
         DynamicParameters parameters,
         CancellationToken cancellationToken = default)
         where T : class;

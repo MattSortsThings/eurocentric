@@ -18,7 +18,7 @@ public interface IWebAppFixtureRestClient
     /// <returns>
     ///     A task that represents the asynchronous request sending operation. The task result contains the response.
     /// </returns>
-    public Task<ProblemOrResponse> SendAsync(RestRequest request, CancellationToken cancellationToken = default);
+    Task<ProblemOrResponse> SendAsync(RestRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Sends the REST request via HTTP to the in-memory web application using a new asynchronous service scope and returns
@@ -32,7 +32,7 @@ public interface IWebAppFixtureRestClient
     /// <returns>
     ///     A task that represents the asynchronous request sending operation. The task result contains the response.
     /// </returns>
-    public Task<ProblemOrResponse<TResponse>> SendAsync<TResponse>(RestRequest request,
+    Task<ProblemOrResponse<TResponse>> SendAsync<TResponse>(RestRequest request,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 }
