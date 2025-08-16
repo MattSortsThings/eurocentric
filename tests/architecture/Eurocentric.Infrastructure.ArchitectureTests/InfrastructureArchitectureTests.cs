@@ -1,9 +1,12 @@
 using ArchUnitNET.Domain;
-using ArchUnitNET.Fluent.Syntax.Elements.Types;
-using ArchUnitNET.Fluent.Syntax.Elements.Types.Classes;
+using ArchUnitNET.Fluent;
 using ArchUnitNET.Loader;
+using Eurocentric.Infrastructure.DataAccess.Dapper;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
+using ClassRule = ArchUnitNET.Fluent.Syntax.Elements.Types.Classes.ClassesShouldConjunction;
+using TypeRule = ArchUnitNET.Fluent.Syntax.Elements.Types.TypesShouldConjunction;
 
 namespace Eurocentric.Infrastructure.ArchitectureTests;
 
@@ -14,39 +17,59 @@ public sealed class InfrastructureArchitectureTests
         .LoadAssembly(typeof(AppDbContext).Assembly)
         .Build();
 
-    private static readonly IObjectProvider<Class> MigrationsNamespaceClasses = Classes()
-        .That().ResideInNamespaceMatching(@"\.Migrations");
+    private static readonly IObjectProvider<IType> TypesInMigrationsNamespace = Types()
+        .That().ResideInNamespaceMatching("DataAccess.EfCore.Migrations");
 
-    private static readonly IObjectProvider<IType> DataAccessPublicTypes = Types()
-        .That().ResideInNamespaceMatching("Eurocentric.Infrastructure.DataAccess.Common.*")
-        .Or().HaveName("AppDbContext")
-        .Or().HaveName("IDbStoredProcedureRunner");
+    private static readonly IObjectProvider<IType> ExpectedPublicTypes = Types()
+        .That().ResideInNamespaceMatching("DataAccess.Common")
+        .Or().Are(typeof(DependencyInjection), typeof(AppDbContext), typeof(IDbStoredProcedureRunner));
 
     [Test]
-    public async Task Public_non_abstract_classes_should_be_sealed()
+    public async Task Non_abstract_classes_should_be_sealed()
     {
         // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().ArePublic()
-            .And().AreNot(MigrationsNamespaceClasses)
-            .And().AreNotAbstract()
+        ClassRule rule = Classes()
+            .That().AreNotAbstract()
+            .And().AreNot(TypesInMigrationsNamespace)
             .Should().BeSealed();
 
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Types_not_in_root_namespace_or_data_access_public_types_should_not_be_public()
+    public async Task Types_except_expected_public_types_should_not_be_public()
     {
         // Arrange
-        TypesShouldConjunction rule = Types()
-            .That().DoNotResideInNamespace("Eurocentric.Infrastructure")
-            .And().AreNot(MigrationsNamespaceClasses)
-            .And().AreNot(DataAccessPublicTypes)
+        TypeRule rule = Types()
+            .That().AreNot(TypesInMigrationsNamespace)
+            .And().AreNot(ExpectedPublicTypes)
             .Should().NotBePublic();
 
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
+
+    [Test]
+    public async Task SaveChangesInterceptor_classes_should_have_name_ending_with_SaveChangesInterceptor()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().AreAssignableTo(typeof(SaveChangesInterceptor))
+            .Should().HaveNameEndingWith("SaveChangesInterceptor");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    private static bool Passed(EvaluationResult result) => result.Passed;
 }

@@ -1,10 +1,12 @@
 using ArchUnitNET.Domain;
-using ArchUnitNET.Fluent.Syntax.Elements.Types;
-using ArchUnitNET.Fluent.Syntax.Elements.Types.Classes;
+using ArchUnitNET.Fluent;
 using ArchUnitNET.Loader;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Features.Shared.Security;
 using SlimMessageBus;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
+using ClassRule = ArchUnitNET.Fluent.Syntax.Elements.Types.Classes.ClassesShouldConjunction;
+using TypeRule = ArchUnitNET.Fluent.Syntax.Elements.Types.TypesShouldConjunction;
 
 namespace Eurocentric.Features.ArchitectureTests;
 
@@ -15,232 +17,819 @@ public sealed class FeaturesArchitectureTests
         .LoadAssembly(typeof(IQuery<>).Assembly)
         .Build();
 
-    private static readonly IObjectProvider<IType> AdminApiV0NamespaceTypes = Types()
-        .That().ResideInNamespaceMatching(@"Eurocentric\.Features\.AdminApi\.V0.*");
+    private static readonly IObjectProvider<Class> RequestClasses = Classes()
+        .That().HaveNameEndingWith("Request")
+        .And().DoNotResideInNamespaceMatching("Common");
 
-    private static readonly IObjectProvider<IType> AdminApiV1NamespaceTypes = Types()
-        .That().ResideInNamespaceMatching(@"Eurocentric\.Features\.AdminApi\.V1.*");
+    private static readonly IObjectProvider<Class> ResponseClasses = Classes()
+        .That().HaveNameEndingWith("Response")
+        .And().DoNotResideInNamespaceMatching("Common");
 
-    private static readonly IObjectProvider<IType> PublicApiV0NamespaceTypes = Types()
-        .That().ResideInNamespaceMatching(@"Eurocentric\.Features\.PublicApi\.V0.*");
+    private static readonly IObjectProvider<Class> FeatureClasses = Classes()
+        .That().HaveNameEndingWith("Feature");
+
+    private static readonly IObjectProvider<Class> CommandClasses = Classes()
+        .That().ImplementInterface(typeof(ICommand<>));
+
+    private static readonly IObjectProvider<Class> QueryClasses = Classes()
+        .That().ImplementInterface(typeof(IQuery<>));
+
+    private static readonly IObjectProvider<Class> CommandHandlerClasses = Classes()
+        .That().ImplementInterface(typeof(ICommandHandler<,>));
+
+    private static readonly IObjectProvider<Class> QueryHandlerClasses = Classes()
+        .That().ImplementInterface(typeof(IQueryHandler<,>));
+
+    private static readonly IObjectProvider<Class> DomainEventHandlerClasses = Classes()
+        .That().ImplementInterface(typeof(IDomainEventHandler<>));
+
+    private static readonly IObjectProvider<IType> AdminApiTypes = Types()
+        .That().ResideInNamespaceMatching(".AdminApi");
+
+    private static readonly IObjectProvider<IType> AdminApiV0Types = Types()
+        .That().ResideInNamespaceMatching(".AdminApi.V0");
+
+    private static readonly IObjectProvider<IType> AdminApiV1Types = Types()
+        .That().ResideInNamespaceMatching(".AdminApi.V1");
+
+    private static readonly IObjectProvider<IType> PublicApiTypes = Types()
+        .That().ResideInNamespaceMatching(".PublicApi");
+
+    private static readonly IObjectProvider<IType> PublicApiV0Types = Types()
+        .That().ResideInNamespaceMatching(".PublicApi.V0");
+
+    private static readonly IObjectProvider<IType> PublicApiV1Types = Types()
+        .That().ResideInNamespaceMatching(".PublicApi.V1");
 
     [Test]
-    public async Task Public_non_abstract_classes_should_be_sealed()
+    public async Task Non_abstract_classes_should_be_sealed()
     {
         // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().ArePublic()
-            .And().AreNotAbstract()
+        ClassRule rule = Classes()
+            .That().AreNotAbstract()
             .Should().BeSealed();
 
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Feature_classes_should_be_abstract_and_internal_and_not_nested()
+    public async Task Public_types_should_not_be_nested()
     {
         // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().HaveNameEndingWith("Feature")
-            .Should().BeAbstract()
-            .AndShould().BeInternal()
-            .AndShould().NotBeNested();
+        TypeRule rule = Types()
+            .That().ArePublic()
+            .Should().NotBeNested();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
 
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Request_classes_should_be_public_sealed_non_nested_immutable_records()
+    public async Task Classes_that_implement_IRequest_should_implement_ICommand_or_IQuery()
     {
         // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().HaveNameEndingWith("Request")
-            .And().AreNotAbstract()
-            .Should().BePublic()
-            .AndShould().BeSealed()
-            .AndShould().NotBeNested()
-            .AndShould().BeRecord()
-            .AndShould().BeImmutable();
-
-        // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
-    }
-
-    [Test]
-    public async Task Response_classes_should_be_public_sealed_non_nested_immutable_records()
-    {
-        // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().HaveNameEndingWith("Response")
-            .Should().BePublic()
-            .AndShould().BeSealed()
-            .AndShould().NotBeNested()
-            .AndShould().BeRecord()
-            .AndShould().BeImmutable();
-
-        // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
-    }
-
-    [Test]
-    public async Task Types_that_implement_IRequest_should_implement_ICommand_or_IQuery()
-    {
-        // Arrange
-        TypesShouldConjunction rule = Types()
-            .That().AreNot(typeof(ICommand<>))
-            .And().AreNot(typeof(IQuery<>))
-            .And().ImplementInterface(typeof(IRequest<>))
+        ClassRule rule = Classes()
+            .That().ImplementInterface(typeof(IRequest<>))
             .Should().ImplementInterface(typeof(ICommand<>))
             .OrShould().ImplementInterface(typeof(IQuery<>));
 
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Classes_that_implement_ICommand_should_be_nested_internal_sealed_immutable_records_named_Command()
+    public async Task Classes_that_implement_IRequestHandler_should_implement_ICommandHandler_or_IQueryHandler()
     {
         // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().ImplementInterface(typeof(ICommand<>))
-            .Should().BeNested()
-            .AndShould().BeInternal()
-            .AndShould().BeSealed()
-            .AndShould().BeImmutable()
-            .AndShould().BeRecord()
-            .AndShould().HaveName("Command");
-
-        // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
-    }
-
-    [Test]
-    public async Task Classes_that_implement_IQuery_should_be_nested_internal_sealed_immutable_records_named_Query()
-    {
-        // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().ImplementInterface(typeof(IQuery<>))
-            .Should().BeNested()
-            .AndShould().BeInternal()
-            .AndShould().BeSealed()
-            .AndShould().BeImmutable()
-            .AndShould().BeRecord()
-            .AndShould().HaveName("Query");
-
-        // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
-    }
-
-    [Test]
-    public async Task Types_that_implement_IRequestHandler_should_implement_ICommandHandler_or_IQueryHandler()
-    {
-        // Arrange
-        TypesShouldConjunction rule = Types()
-            .That().AreNot(typeof(ICommandHandler<,>))
-            .And().AreNot(typeof(IQueryHandler<,>))
-            .And().ImplementInterface(typeof(IRequestHandler<,>))
+        ClassRule rule = Classes()
+            .That().ImplementInterface(typeof(IRequestHandler<,>))
+            .And().AreNot(typeof(ICommandHandler<,>), typeof(IQueryHandler<,>))
             .Should().ImplementInterface(typeof(ICommandHandler<,>))
             .OrShould().ImplementInterface(typeof(IQueryHandler<,>));
 
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Classes_that_implement_ICommandHandler_should_be_nested_internal_sealed_classes_named_CommandHandler()
+    public async Task Classes_that_implement_IConsumer_should_implement_IDomainEventHandler()
     {
         // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().ImplementInterface(typeof(ICommandHandler<,>))
-            .Should().BeNested()
-            .AndShould().BeInternal()
-            .AndShould().BeSealed()
-            .AndShould().HaveName("CommandHandler");
-
-        // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
-    }
-
-    [Test]
-    public async Task Classes_that_implement_IQueryHandler_should_be_nested_internal_sealed_classes_named_QueryHandler()
-    {
-        // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().ImplementInterface(typeof(IQueryHandler<,>))
-            .Should().BeNested()
-            .AndShould().BeInternal()
-            .AndShould().BeSealed()
-            .AndShould().HaveName("QueryHandler");
-
-        // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
-    }
-
-    [Test]
-    public async Task Types_that_implement_IConsumer_should_implement_IDomainEventHandler()
-    {
-        // Arrange
-        TypesShouldConjunction rule = Types()
+        ClassRule rule = Classes()
             .That().ImplementInterface(typeof(IConsumer<>))
             .And().AreNot(typeof(IDomainEventHandler<>))
             .Should().ImplementInterface(typeof(IDomainEventHandler<>));
 
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Classes_that_implement_IDomainEventHandler_should_be_nested_internal_sealed_and_named_DomainEventHandler()
+    public async Task Command_classes_should_be_internal()
     {
         // Arrange
-        ClassesShouldConjunction rule = Classes()
-            .That().ImplementInterface(typeof(IDomainEventHandler<>))
-            .Should().BeNested()
-            .AndShould().BeInternal()
-            .AndShould().BeSealed()
-            .AndShould().HaveName("DomainEventHandler");
+        ClassRule rule = Classes()
+            .That().Are(CommandClasses)
+            .Should().BeInternal();
 
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Types_in_AdminApi_V0_namespace_should_not_depend_on_other_API_version_types()
+    public async Task Command_classes_should_have_name_Command()
     {
         // Arrange
-        TypesShouldConjunction rule = Types()
-            .That().Are(AdminApiV0NamespaceTypes)
-            .Should().NotDependOnAny(AdminApiV1NamespaceTypes)
-            .AndShould().NotDependOnAny(PublicApiV0NamespaceTypes);
+        ClassRule rule = Classes()
+            .That().Are(CommandClasses)
+            .Should().HaveName("Command");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
 
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Types_in_AdminApi_V1_namespace_should_not_depend_on_other_API_version_types()
+    public async Task Command_classes_should_be_immutable_records()
     {
         // Arrange
-        TypesShouldConjunction rule = Types()
-            .That().Are(AdminApiV1NamespaceTypes)
-            .Should().NotDependOnAny(AdminApiV0NamespaceTypes)
-            .AndShould().NotDependOnAny(PublicApiV0NamespaceTypes);
+        ClassRule rule = Classes()
+            .That().Are(CommandClasses)
+            .Should().BeImmutable()
+            .AndShould().BeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
 
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
 
     [Test]
-    public async Task Types_in_PublicApi_V0_namespace_should_not_depend_on_other_API_version_types()
+    public async Task Command_classes_should_not_be_abstract()
     {
         // Arrange
-        TypesShouldConjunction rule = Types()
-            .That().Are(PublicApiV0NamespaceTypes)
-            .Should().NotDependOnAny(AdminApiV0NamespaceTypes)
-            .AndShould().NotDependOnAny(AdminApiV1NamespaceTypes);
+        ClassRule rule = Classes()
+            .That().Are(CommandClasses)
+            .Should().NotBeAbstract();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
 
         // Assert
-        await Assert.That(rule.Evaluate(ArchitectureUnderTest)).ContainsOnly(result => result.Passed);
+        await Assert.That(evaluation).ContainsOnly(Passed);
     }
+
+    [Test]
+    public async Task Command_classes_should_be_nested_in_Feature_class()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(CommandClasses)
+            .Should().BeNestedIn(FeatureClasses);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Query_classes_should_be_internal()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryClasses)
+            .Should().BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Query_classes_should_have_name_Query()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryClasses)
+            .Should().HaveName("Query");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Query_classes_should_be_immutable_records()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryClasses)
+            .Should().BeImmutable()
+            .AndShould().BeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Query_classes_should_not_be_abstract()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryClasses)
+            .Should().NotBeAbstract();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Query_classes_should_be_nested_in_Feature_class()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryClasses)
+            .Should().BeNestedIn(FeatureClasses);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task CommandHandler_classes_should_be_internal()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(CommandHandlerClasses)
+            .Should().BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task CommandHandler_classes_should_not_be_records()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(CommandHandlerClasses)
+            .Should().NotBeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task CommandHandler_classes_should_not_be_abstract()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(CommandHandlerClasses)
+            .Should().NotBeAbstract();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task CommandHandler_classes_should_have_name_CommandHandler()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(CommandHandlerClasses)
+            .Should().HaveName("CommandHandler");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task CommandHandler_classes_should_be_nested_in_Feature_class()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(CommandHandlerClasses)
+            .Should().BeNestedIn(FeatureClasses);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task QueryHandler_classes_should_be_internal()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryHandlerClasses)
+            .Should().BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task QueryHandler_classes_should_not_be_records()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryHandlerClasses)
+            .Should().NotBeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task QueryHandler_classes_should_not_be_abstract()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryHandlerClasses)
+            .Should().NotBeAbstract();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task QueryHandler_classes_should_have_name_QueryHandler()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryHandlerClasses)
+            .Should().HaveName("QueryHandler");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task QueryHandler_classes_should_be_nested_in_Feature_class()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(QueryHandlerClasses)
+            .Should().BeNestedIn(FeatureClasses);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task DomainEventHandler_classes_should_be_internal()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(DomainEventHandlerClasses)
+            .Should().BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task DomainEventHandler_classes_should_not_be_abstract()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(DomainEventHandlerClasses)
+            .Should().NotBeAbstract();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task DomainEventHandler_classes_should_not_be_records()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(DomainEventHandlerClasses)
+            .Should().NotBeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task DomainEventHandler_classes_should_have_name_DomainEventHandler()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(DomainEventHandlerClasses)
+            .Should().HaveName("DomainEventHandler");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task DomainEventHandler_classes_should_be_nested_in_Feature_class()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(DomainEventHandlerClasses)
+            .Should().BeNestedIn(FeatureClasses);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Request_classes_should_be_public()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(RequestClasses)
+            .Should().BePublic();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Request_classes_should_have_name_equal_to_namespace_last_segment_plus_Request()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(RequestClasses)
+            .Should().FollowCustomCondition(cls =>
+                    cls.Name == cls.Namespace.Name.Split('.').Last() + "Request",
+                "have name equal to namespace last segment + 'Request'",
+                "name does not match");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Request_classes_should_be_immutable_records()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(RequestClasses)
+            .Should().BeImmutable()
+            .AndShould().BeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Response_classes_should_be_public()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(ResponseClasses)
+            .Should().BePublic();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Response_classes_should_have_name_equal_to_namespace_last_segment_plus_Response()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(ResponseClasses)
+            .Should().FollowCustomCondition(cls =>
+                    cls.Name == cls.Namespace.Name.Split('.').Last() + "Response",
+                "have name equal to namespace last segment + 'Response'",
+                "name does not match");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Response_classes_should_be_immutable_records()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(ResponseClasses)
+            .Should().BeImmutable()
+            .AndShould().BeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Feature_classes_should_be_internal()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(FeatureClasses)
+            .Should().BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Feature_classes_should_be_abstract()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(FeatureClasses)
+            .Should().BeAbstract();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Feature_classes_should_have_name_equal_to_namespace_last_segment_plus_Feature()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(FeatureClasses)
+            .Should().FollowCustomCondition(cls =>
+                    cls.Name == cls.Namespace.Name.Split('.').Last() + "Feature",
+                "have name equal to namespace last segment + 'Feature'",
+                "name does not match");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task AdminApi_types_should_not_depend_on_PublicApi_types()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().Are(AdminApiTypes)
+            .Should().NotDependOnAny(PublicApiTypes);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task AdminApi_V0_types_should_not_depend_on_AdminApi_V1_types()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().Are(AdminApiV0Types)
+            .Should().NotDependOnAny(AdminApiV1Types);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task AdminApi_V1_types_should_not_depend_on_AdminApi_V0_types()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().Are(AdminApiV1Types)
+            .Should().NotDependOnAny(AdminApiV0Types);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task PublicApi_types_should_not_depend_on_AdminApi_types()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().Are(AdminApiTypes)
+            .Should().NotDependOnAny(PublicApiTypes);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task PublicApi_V0_types_should_not_depend_on_PublicApi_V1_types()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().Are(PublicApiV0Types)
+            .Should().NotDependOnAny(PublicApiV1Types);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task PublicApi_V1_types_should_not_depend_on_PublicApi_V0_types()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().Are(PublicApiV1Types)
+            .Should().NotDependOnAny(PublicApiV0Types);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    [Arguments("AdminApi.V1.Broadcasts.AwardJuryPoints")]
+    [Arguments("AdminApi.V1.Broadcasts.AwardTelevotePoints")]
+    [Arguments("AdminApi.V1.Broadcasts.DeleteBroadcast")]
+    [Arguments("AdminApi.V1.Broadcasts.DisqualifyCompetitor")]
+    [Arguments("AdminApi.V1.Broadcasts.GetBroadcast")]
+    [Arguments("AdminApi.V1.Broadcasts.GetBroadcasts")]
+    [Arguments("AdminApi.V1.Contests.CreateChildBroadcast")]
+    [Arguments("AdminApi.V1.Contests.CreateContest")]
+    [Arguments("AdminApi.V1.Contests.DeleteContest")]
+    [Arguments("AdminApi.V1.Contests.GetContest")]
+    [Arguments("AdminApi.V1.Contests.HandleBroadcastCompleted")]
+    [Arguments("AdminApi.V1.Contests.HandleBroadcastDeleted")]
+    [Arguments("AdminApi.V1.Countries.CreateCountry")]
+    [Arguments("AdminApi.V1.Countries.DeleteCountry")]
+    [Arguments("AdminApi.V1.Countries.GetCountries")]
+    [Arguments("AdminApi.V1.Countries.GetCountry")]
+    [Arguments("AdminApi.V1.Countries.HandleContestCreated")]
+    [Arguments("AdminApi.V1.Countries.HandleContestDeleted")]
+    public async Task AdminApi_V1_feature_types_should_not_depend_on_any_other_AdminApi_V1_feature_namespace(
+        string featureNamespace)
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().ResideInNamespaceMatching(featureNamespace)
+            .Should().NotDependOnAny(Types()
+                .That().Are(AdminApiV1Types)
+                .And().DoNotResideInNamespaceMatching(featureNamespace)
+                .And().DoNotResideInNamespaceMatching(".Common"));
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    [Arguments("PublicApi.V1.Queryables.GetQueryableBroadcasts")]
+    [Arguments("PublicApi.V1.Queryables.GetQueryableContests")]
+    [Arguments("PublicApi.V1.Queryables.GetQueryableContestStages")]
+    [Arguments("PublicApi.V1.Queryables.GetQueryableCountries")]
+    [Arguments("PublicApi.V1.Queryables.GetQueryableVotingMethods")]
+    [Arguments("PublicApi.V1.Rankings.GetCompetingCountryPointsAverageRankings")]
+    public async Task PublicApi_V1_feature_types_should_not_depend_on_any_other_PublicApi_feature_namespace(
+        string featureNamespace)
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().ResideInNamespaceMatching(featureNamespace)
+            .Should().NotDependOnAny(Types()
+                .That().Are(PublicApiV1Types)
+                .And().DoNotResideInNamespaceMatching(featureNamespace)
+                .And().DoNotResideInNamespaceMatching(".Common"));
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Shared_types_should_not_be_public()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().ResideInNamespaceMatching("Shared")
+            .And().AreNot(typeof(ApiKeyConstants), typeof(ApiKeySecurityOptions))
+            .Should().NotBePublic();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluation).ContainsOnly(Passed);
+    }
+
+    private static bool Passed(EvaluationResult result) => result.Passed;
 }
