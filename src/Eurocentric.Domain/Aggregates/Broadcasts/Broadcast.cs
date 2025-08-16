@@ -26,7 +26,7 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
         _televotes = [];
     }
 
-    public Broadcast(BroadcastId id,
+    internal Broadcast(BroadcastId id,
         BroadcastDate broadcastDate,
         ContestId parentContestId,
         ContestStage contestStage,

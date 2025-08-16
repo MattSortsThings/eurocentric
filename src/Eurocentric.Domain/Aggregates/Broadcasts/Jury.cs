@@ -15,7 +15,7 @@ public sealed class Jury : Voter
     {
     }
 
-    public Jury(CountryId votingCountryId) : base(votingCountryId)
+    internal Jury(CountryId votingCountryId) : base(votingCountryId)
     {
     }
 

@@ -15,7 +15,7 @@ public sealed class ChildBroadcast : Entity
     {
     }
 
-    public ChildBroadcast(BroadcastId broadcastId, ContestStage contestStage)
+    internal ChildBroadcast(BroadcastId broadcastId, ContestStage contestStage)
     {
         BroadcastId = broadcastId;
         ContestStage = contestStage;

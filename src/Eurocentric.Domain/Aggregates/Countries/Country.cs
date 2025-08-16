@@ -17,7 +17,7 @@ public sealed class Country : AggregateRoot<CountryId>
     {
     }
 
-    public Country(CountryId id, CountryCode countryCode, CountryName countryName) : base(id)
+    internal Country(CountryId id, CountryCode countryCode, CountryName countryName) : base(id)
     {
         CountryCode = countryCode;
         CountryName = countryName;

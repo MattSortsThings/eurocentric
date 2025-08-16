@@ -24,7 +24,7 @@ public abstract class Contest : AggregateRoot<ContestId>
         _participants = [];
     }
 
-    protected Contest(ContestId id,
+    private protected Contest(ContestId id,
         ContestYear contestYear,
         CityName cityName,
         List<Participant> participants) : base(id)

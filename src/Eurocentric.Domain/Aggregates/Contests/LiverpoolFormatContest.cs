@@ -18,7 +18,7 @@ public sealed class LiverpoolFormatContest : Contest
     {
     }
 
-    public LiverpoolFormatContest(ContestId id,
+    private LiverpoolFormatContest(ContestId id,
         ContestYear contestYear,
         CityName cityName,
         List<Participant> participants) : base(id, contestYear, cityName, participants)

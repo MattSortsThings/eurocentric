@@ -15,7 +15,7 @@ public sealed class Televote : Voter
     {
     }
 
-    public Televote(CountryId votingCountryId) : base(votingCountryId)
+    internal Televote(CountryId votingCountryId) : base(votingCountryId)
     {
     }
 

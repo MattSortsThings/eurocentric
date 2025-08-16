@@ -19,7 +19,7 @@ public sealed class Competitor : Entity
     {
     }
 
-    public Competitor(CountryId competingCountryId, int runningOrderPosition)
+    internal Competitor(CountryId competingCountryId, int runningOrderPosition)
     {
         CompetingCountryId = competingCountryId;
         RunningOrderPosition = runningOrderPosition;

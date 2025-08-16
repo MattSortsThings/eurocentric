@@ -15,7 +15,7 @@ public abstract class Voter : Entity
     {
     }
 
-    protected Voter(CountryId votingCountryId)
+    private protected Voter(CountryId votingCountryId)
     {
         VotingCountryId = votingCountryId;
     }

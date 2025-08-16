@@ -104,6 +104,23 @@ public sealed class DomainArchitectureTests
     }
 
     [Test]
+    public async Task Entity_classes_constructors_should_be_internal_or_private_protected_or_private()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That().Are(EntityClasses)
+            .Should().FollowCustomCondition(AllConstructorsAreInternalOrPrivateProtectedOrPrivate,
+                "all constructors should be internal or private protected or private",
+                "at least one constructor has a wider visibility");
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
     public async Task ValueObject_classes_should_be_public()
     {
         // Arrange
@@ -209,6 +226,10 @@ public sealed class DomainArchitectureTests
         // Assert
         await Assert.That(result).ContainsOnly(Passed);
     }
+
+    private static bool AllConstructorsAreInternalOrPrivateProtectedOrPrivate(Class cls) =>
+        cls.Constructors.All(member =>
+            member.Visibility is Visibility.Internal or Visibility.PrivateProtected or Visibility.Private);
 
     private static bool Passed(EvaluationResult result) => result.Passed;
 }

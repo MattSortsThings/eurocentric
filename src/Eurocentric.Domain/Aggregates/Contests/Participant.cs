@@ -19,7 +19,7 @@ public sealed class Participant : Entity
     {
     }
 
-    public Participant(CountryId participatingCountryId,
+    private Participant(CountryId participatingCountryId,
         ParticipantGroup participantGroup = ParticipantGroup.Zero,
         ActName? actName = null,
         SongTitle? songTitle = null)
