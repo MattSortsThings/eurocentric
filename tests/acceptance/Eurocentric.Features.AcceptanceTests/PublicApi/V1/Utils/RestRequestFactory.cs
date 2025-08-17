@@ -34,6 +34,11 @@ public sealed class RestRequestFactory : IRestRequestFactory,
             .AddUrlSegment("apiVersion", _apiVersion)
             .AddQueryParameters(queryParams);
 
+    public RestRequest GetCompetingCountryPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams) =>
+        GetRequest("/public/api/{apiVersion}/rankings/competing-countries/points-share")
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddQueryParameters(queryParams);
+
     public IRestRequestFactory.IQueryablesEndpoints Queryables => this;
 
     public IRestRequestFactory.IRankingsEndpoints Rankings => this;

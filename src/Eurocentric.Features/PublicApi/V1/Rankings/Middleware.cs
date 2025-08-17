@@ -1,5 +1,6 @@
 using Eurocentric.Features.PublicApi.V1.Common.Constants;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsAverageRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -29,5 +30,14 @@ internal static class Middleware
                              "Returns a page of rankings.")
             .HasApiVersion(1, 0)
             .Produces<GetCompetingCountryPointsAverageRankingsResponse>();
+
+        group.MapGet("competing-countries/points-share", GetCompetingCountryPointsShareRankingsFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Rankings.GetCompetingCountryPointsShareRankings)
+            .WithSummary("Get competing country points share rankings")
+            .WithDescription("Ranks each competing country by descending POINTS SHARE metric, " +
+                             "i.e. the total points it has received as a fraction of the available points. " +
+                             "Returns a page of rankings.")
+            .HasApiVersion(1, 0)
+            .Produces<GetCompetingCountryPointsShareRankingsResponse>();
     }
 }

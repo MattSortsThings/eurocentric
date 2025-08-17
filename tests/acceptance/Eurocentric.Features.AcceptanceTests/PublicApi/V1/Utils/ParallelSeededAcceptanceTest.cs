@@ -1,6 +1,7 @@
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils;
 
 [Category("acceptance")]
+[ParallelLimiter<ParallelLimit>]
 public abstract class ParallelSeededAcceptanceTest
 {
     [ClassDataSource<SeededWebAppFixture>(Shared = SharedType.PerAssembly)]
