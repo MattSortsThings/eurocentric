@@ -18,7 +18,7 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DROP PROCEDURE dbo.usp_get_competing_country_points_average_rankings;");
+            migrationBuilder.Sql("DROP PROCEDURE dbo.usp_get_competing_country_points_share_rankings;");
         }
     }
 }

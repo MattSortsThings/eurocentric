@@ -17,9 +17,9 @@ CREATE PROCEDURE dbo.usp_get_competing_country_points_share_rankings(
 AS
 
 /*
-Procedure Name: dbo.usp_get_competing_country_points_average_rankings
-Description   : Ranks each competing country by descending POINTS SHARE metric, 
-                i.e. the total points it has received as a fraction of the available points. 
+Procedure Name: dbo.usp_get_competing_country_points_share_rankings
+Description   : Ranks each competing country by descending POINTS SHARE metric,
+                i.e. the total points it has received as a fraction of the available points.
                 Returns a page of rankings.
 
 Input Parameters:
