@@ -10,7 +10,9 @@ public sealed record CompetingCountryPointsAverageRanking : IExampleProvider<Com
 
     public string CountryName { get; init; } = string.Empty;
 
-    public double PointsAverage { get; init; }
+    public decimal PointsAverage { get; init; }
+
+    public int TotalPoints { get; init; }
 
     public int PointsAwards { get; init; }
 
@@ -25,7 +27,8 @@ public sealed record CompetingCountryPointsAverageRanking : IExampleProvider<Com
         Rank = 1,
         CountryCode = "AT",
         CountryName = "Austria",
-        PointsAverage = 6.25,
+        PointsAverage = 6.25m,
+        TotalPoints = 1625,
         PointsAwards = 250,
         Broadcasts = 5,
         Contests = 8,

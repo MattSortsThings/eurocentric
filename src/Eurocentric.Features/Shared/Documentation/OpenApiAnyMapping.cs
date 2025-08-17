@@ -21,6 +21,8 @@ internal static class OpenApiAnyMapping
             case int i:
                 return new OpenApiInteger(i);
             case double d:
+                return new OpenApiDouble(d);
+            case decimal d:
                 return new OpenApiDouble(Convert.ToDouble(d));
             case long l:
                 return new OpenApiLong(l);

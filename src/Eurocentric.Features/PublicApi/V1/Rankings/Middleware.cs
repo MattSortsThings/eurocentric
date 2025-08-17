@@ -24,8 +24,9 @@ internal static class Middleware
         group.MapGet("competing-countries/points-average", GetCompetingCountryPointsAverageRankingsFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Rankings.GetCompetingCountryPointsAverageRankings)
             .WithSummary("Get competing country points average rankings")
-            .WithDescription("Ranks each competing country by descending average points value of all the individual points " +
-                             "awards it has received. Returns a page of rankings.")
+            .WithDescription("Ranks each competing country by descending POINTS AVERAGE metric, " +
+                             "i.e. the average value of all the individual points awards it has received. " +
+                             "Returns a page of rankings.")
             .HasApiVersion(1, 0)
             .Produces<GetCompetingCountryPointsAverageRankingsResponse>();
     }
