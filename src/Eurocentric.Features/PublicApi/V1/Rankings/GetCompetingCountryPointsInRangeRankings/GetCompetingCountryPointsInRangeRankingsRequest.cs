@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Eurocentric.Features.PublicApi.V1.Common.Enums;
 using Eurocentric.Features.PublicApi.V1.Rankings.Common.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +8,12 @@ namespace Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsIn
 
 public sealed record GetCompetingCountryPointsInRangeRankingsRequest : PaginatedRequest
 {
+    [Required]
     [FromQuery(Name = "minPoints")]
     [Description("Sets the inclusive minimum points value for the queried data.")]
     public required int MinPoints { get; init; }
 
+    [Required]
     [FromQuery(Name = "maxPoints")]
     [Description("Sets the inclusive maximum points value for the queried data.")]
     public required int MaxPoints { get; init; }

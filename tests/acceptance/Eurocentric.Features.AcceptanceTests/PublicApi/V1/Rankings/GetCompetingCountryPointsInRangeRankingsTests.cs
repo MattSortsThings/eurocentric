@@ -518,6 +518,50 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
 
     [Test]
     [ApiVersion1Point0AndUp]
+    public async Task Endpoint_should_fail_on_missing_minPoints_query_param(string apiVersion)
+    {
+        EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            maxPoints: 0);
+
+        // When
+        await euroFan.When_I_send_my_request();
+
+        // Then
+        await euroFan.Then_my_request_should_FAIL_with_status_code_400_BadRequest();
+        await euroFan.Then_the_response_problem_details_should_match(status: 400,
+            title: "Bad HTTP request",
+            detail: "BadHttpRequestException was thrown while handling the request.");
+        await euroFan.Then_the_response_problem_details_extensions_should_include("exceptionMessage",
+            "Required parameter \"int MinPoints\" was not provided from query string.");
+    }
+
+    [Test]
+    [ApiVersion1Point0AndUp]
+    public async Task Endpoint_should_fail_on_missing_maxPoints_query_param(string apiVersion)
+    {
+        EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 0);
+
+        // When
+        await euroFan.When_I_send_my_request();
+
+        // Then
+        await euroFan.Then_my_request_should_FAIL_with_status_code_400_BadRequest();
+        await euroFan.Then_the_response_problem_details_should_match(status: 400,
+            title: "Bad HTTP request",
+            detail: "BadHttpRequestException was thrown while handling the request.");
+        await euroFan.Then_the_response_problem_details_extensions_should_include("exceptionMessage",
+            "Required parameter \"int MaxPoints\" was not provided from query string.");
+    }
+
+    [Test]
+    [ApiVersion1Point0AndUp]
     public async Task Endpoint_should_fail_on_invalid_pageIndex_query_param(string apiVersion)
     {
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
@@ -621,8 +665,8 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             int? maxYear = null,
             int? minYear = null,
             string? contestStage = null,
-            int minPoints = 0,
-            int maxPoints = 0)
+            int? minPoints = null,
+            int? maxPoints = null)
         {
             Dictionary<string, object?> queryParams = new()
             {
