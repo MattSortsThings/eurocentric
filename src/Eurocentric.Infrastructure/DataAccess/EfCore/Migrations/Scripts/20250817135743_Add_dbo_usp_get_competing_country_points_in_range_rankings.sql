@@ -1,8 +1,10 @@
 /*
-    Creates the stored procedure dbo.usp_get_competing_country_points_share_rankings.
+    Creates the stored procedure dbo.usp_get_competing_country_points_in_range_rankings.
 */
 
-CREATE PROCEDURE dbo.usp_get_competing_country_points_share_rankings(
+CREATE PROCEDURE dbo.usp_get_competing_country_points_in_range_rankings(
+    @min_points INT,
+    @max_points INT,
     @exclude_jury BIT = 0,
     @exclude_televote BIT = 0,
     @min_year INT = NULL,
@@ -17,12 +19,15 @@ CREATE PROCEDURE dbo.usp_get_competing_country_points_share_rankings(
 AS
 
 /*
-Procedure Name: dbo.usp_get_competing_country_points_share_rankings
-Description   : Ranks each competing country by descending POINTS SHARE metric,
-                i.e. the total points it has received as a fraction of the available points.
+Procedure Name: dbo.usp_get_competing_country_points_in_range_rankings
+Description   : Ranks each competing country by descending POINTS IN RANGE metric,
+                i.e. the relative frequency of all the points awards it has received
+                having a value within a specified range.
                 Returns a page of rankings.
 
 Input Parameters:
+    @min_points INT - Sets the inclusive minimum points value for the queried data.
+    @max_points INT - Sets the inclusive maximum points value for the queried data.
     @exclude_jury BIT - Excludes jury awards from the queried data.
     @exclude_televote BIT - Excludes televote awards from the queried data.
     @min_year INT - Filters the queried data by inclusive minimum contest year.
@@ -72,9 +77,7 @@ BEGIN
                       t0.voting_country_id,
                       t1.broadcast_id,
                       t1.contest_id,
-                      ja.points_value,
-                      MAX(ja.points_value)
-                          OVER (PARTITION BY ja.broadcast_id, ja.voting_country_id ) AS max_possible_points
+                      IIF(ja.points_value BETWEEN @min_points AND @max_points, 1, 0) AS points_award_in_range
                FROM dbo.broadcast_competitor_jury_award ja,
                     t0,
                     t1
@@ -86,9 +89,7 @@ BEGIN
                       t0.voting_country_id,
                       t1.broadcast_id,
                       t1.contest_id,
-                      ta.points_value,
-                      MAX(ta.points_value)
-                          OVER (PARTITION BY ta.broadcast_id, ta.voting_country_id ) AS max_possible_points
+                      IIF(ta.points_value BETWEEN @min_points AND @max_points, 1, 0) AS points_award_in_range
                FROM dbo.broadcast_competitor_televote_award ta,
                     t0,
                     t1
@@ -98,8 +99,7 @@ BEGIN
 
         -- Group by and calculate metric
         t3 AS (SELECT t2.competing_country_id,
-                      SUM(t2.points_value)                 AS total_points,
-                      SUM(t2.max_possible_points)          AS available_points,
+                      SUM(t2.points_award_in_range)        AS points_awards_in_range,
                       COUNT(*)                             AS points_awards,
                       COUNT(DISTINCT t2.broadcast_id)      AS broadcasts,
                       COUNT(DISTINCT t2.contest_id)        AS contests,
@@ -108,9 +108,8 @@ BEGIN
                GROUP BY t2.competing_country_id),
 
         t4 AS (SELECT t3.competing_country_id,
-                      CAST(t3.total_points AS FLOAT) / t3.available_points AS points_share,
-                      t3.total_points,
-                      t3.available_points,
+                      CAST(t3.points_awards_in_range AS FLOAT) / t3.points_awards AS points_in_range,
+                      t3.points_awards_in_range,
                       t3.points_awards,
                       t3.broadcasts,
                       t3.contests,
@@ -118,12 +117,11 @@ BEGIN
                FROM t3)
 
 -- Populate #ranking temp table
-    SELECT RANK() OVER (ORDER BY t4.points_share DESC) AS rank,
+    SELECT RANK() OVER (ORDER BY t4.points_in_range DESC) AS rank,
            c.country_code,
            c.country_name,
-           t4.points_share,
-           t4.total_points,
-           t4.available_points,
+           t4.points_in_range,
+           t4.points_awards_in_range,
            t4.points_awards,
            t4.broadcasts,
            t4.contests,
@@ -140,9 +138,8 @@ BEGIN
     SELECT r.rank,
            r.country_code,
            r.country_name,
-           CAST(ROUND(r.points_share, 6) AS DECIMAL(9, 6)) AS points_share,
-           r.total_points,
-           r.available_points,
+           CAST(ROUND(r.points_in_range, 6) AS DECIMAL(9, 6)) AS points_in_range,
+           r.points_awards_in_range,
            r.points_awards,
            r.broadcasts,
            r.contests,

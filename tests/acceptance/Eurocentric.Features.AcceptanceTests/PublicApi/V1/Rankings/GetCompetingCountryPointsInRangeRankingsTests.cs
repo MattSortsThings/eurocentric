@@ -1,14 +1,14 @@
+using Eurocentric.Features.AcceptanceTests.AdminApi.V1.Utils.Attributes;
 using Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils;
-using Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils.Attributes;
 using Eurocentric.Features.AcceptanceTests.Utils;
 using Eurocentric.Features.PublicApi.V1.Common.Enums;
 using Eurocentric.Features.PublicApi.V1.Rankings.Common.Dtos;
-using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsInRangeRankings;
 using TUnit.Assertions.Enums;
 
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V1.Rankings;
 
-public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeededAcceptanceTest
+public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeededAcceptanceTest
 {
     [Test]
     [ApiVersion1Point0AndUp]
@@ -17,7 +17,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings();
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12);
 
         // When
         await euroFan.When_I_send_my_request();
@@ -26,20 +28,22 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName    | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|----------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | SE          | Sweden         | 0.61882     | 1552        | 2508            | 209          | 4          | 2        | 40              |
-            | 2    | UA          | Ukraine        | 0.539661    | 1211        | 2244            | 187          | 3          | 2        | 40              |
-            | 3    | FI          | Finland        | 0.360048    | 903         | 2508            | 209          | 4          | 2        | 40              |
-            | 4    | IL          | Israel         | 0.349873    | 550         | 1572            | 131          | 3          | 2        | 39              |
-            | 5    | IT          | Italy          | 0.34106     | 618         | 1812            | 151          | 2          | 2        | 40              |
-            | 6    | ES          | Spain          | 0.308499    | 559         | 1812            | 151          | 2          | 2        | 40              |
-            | 7    | NO          | Norway         | 0.296341    | 729         | 2460            | 205          | 4          | 2        | 40              |
-            | 8    | GR          | Greece         | 0.275689    | 440         | 1596            | 133          | 3          | 2        | 40              |
-            | 9    | GB          | United Kingdom | 0.270419    | 490         | 1812            | 151          | 2          | 2        | 40              |
-            | 10   | AU          | Australia      | 0.265079    | 668         | 2520            | 210          | 4          | 2        | 40              |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | SE          | Sweden      | 0.937799      | 196                 | 209          | 4          | 2        | 40              |
+            | 2    | UA          | Ukraine     | 0.73262       | 137                 | 187          | 3          | 2        | 40              |
+            | 3    | IT          | Italy       | 0.695364      | 105                 | 151          | 2          | 2        | 40              |
+            | 4    | IL          | Israel      | 0.679389      | 89                  | 131          | 3          | 2        | 39              |
+            | 5    | NO          | Norway      | 0.678049      | 139                 | 205          | 4          | 2        | 40              |
+            | 6    | ES          | Spain       | 0.629139      | 95                  | 151          | 2          | 2        | 40              |
+            | 7    | NL          | Netherlands | 0.590909      | 78                  | 132          | 3          | 2        | 40              |
+            | 8    | FI          | Finland     | 0.588517      | 123                 | 209          | 4          | 2        | 40              |
+            | 9    | AU          | Australia   | 0.514286      | 108                 | 210          | 4          | 2        | 40              |
+            | 10   | EE          | Estonia     | 0.509524      | 107                 | 210          | 4          | 2        | 40              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "Any",
             votingMethod: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -57,7 +61,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             pageIndex: 1,
             pageSize: 3,
             descending: true);
@@ -69,13 +75,15 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 37   | ME          | Montenegro  | 0.06875     | 33          | 480             | 40           | 1          | 1        | 20              |
-            | 36   | SM          | San Marino  | 0.070621    | 50          | 708             | 59           | 2          | 2        | 30              |
-            | 35   | MT          | Malta       | 0.071839    | 50          | 696             | 58           | 2          | 2        | 30              |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 37   | SM          | San Marino  | 0.186441      | 11                  | 59           | 2          | 2        | 30              |
+            | 36   | FR          | France      | 0.238411      | 36                  | 151          | 2          | 2        | 40              |
+            | 35   | RO          | Romania     | 0.270073      | 37                  | 137          | 3          | 2        | 40              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "Any",
             votingMethod: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -93,7 +101,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             pageSize: 5,
             contestStage: "GrandFinal");
 
@@ -104,15 +114,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | SE          | Sweden      | 0.563466    | 1021        | 1812            | 151          | 2          | 2        | 40              |
-            | 2    | UA          | Ukraine     | 0.48234     | 874         | 1812            | 151          | 2          | 2        | 40              |
-            | 3    | IL          | Israel      | 0.413242    | 362         | 876             | 73           | 1          | 1        | 37              |
-            | 4    | IT          | Italy       | 0.34106     | 618         | 1812            | 151          | 2          | 2        | 40              |
-            | 5    | FI          | Finland     | 0.311258    | 564         | 1812            | 151          | 2          | 2        | 40              |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | SE          | Sweden      | 0.913907      | 138                 | 151          | 2          | 2        | 40              |
+            | 2    | IL          | Israel      | 0.753425      | 55                  | 73           | 1          | 1        | 37              |
+            | 3    | IT          | Italy       | 0.695364      | 105                 | 151          | 2          | 2        | 40              |
+            | 4    | UA          | Ukraine     | 0.682119      | 103                 | 151          | 2          | 2        | 40              |
+            | 5    | ES          | Spain       | 0.629139      | 95                  | 151          | 2          | 2        | 40              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "GrandFinal",
             votingMethod: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -130,7 +142,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             pageSize: 5,
             minYear: 2023);
 
@@ -141,15 +155,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | SE          | Sweden      | 0.657509    | 718         | 1092            | 91           | 2          | 1        | 37              |
-            | 2    | FI          | Finland     | 0.643773    | 703         | 1092            | 91           | 2          | 1        | 37              |
-            | 3    | IL          | Israel      | 0.447802    | 489         | 1092            | 91           | 2          | 1        | 37              |
-            | 4    | IT          | Italy       | 0.399543    | 350         | 876             | 73           | 1          | 1        | 37              |
-            | 5    | NO          | Norway      | 0.338828    | 370         | 1092            | 91           | 2          | 1        | 37              |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | SE          | Sweden      | 0.989011      | 90                  | 91           | 2          | 1        | 37              |
+            | 2    | FI          | Finland     | 0.846154      | 77                  | 91           | 2          | 1        | 37              |
+            | 3    | IL          | Israel      | 0.802198      | 73                  | 91           | 2          | 1        | 37              |
+            | 4    | IT          | Italy       | 0.767123      | 56                  | 73           | 1          | 1        | 37              |
+            | 5    | NO          | Norway      | 0.703297      | 64                  | 91           | 2          | 1        | 37              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "Any",
             votingMethod: "Any",
             minYear: 2023);
@@ -168,7 +184,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             pageSize: 5,
             maxYear: 2022);
 
@@ -179,15 +197,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName    | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|----------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | UA          | Ukraine        | 0.707602    | 968         | 1368            | 114          | 2          | 1        | 39              |
-            | 2    | SE          | Sweden         | 0.588983    | 834         | 1416            | 118          | 2          | 1        | 39              |
-            | 3    | GB          | United Kingdom | 0.497863    | 466         | 936             | 78           | 1          | 1        | 39              |
-            | 4    | ES          | Spain          | 0.490385    | 459         | 936             | 78           | 1          | 1        | 39              |
-            | 5    | RS          | Serbia         | 0.387712    | 549         | 1416            | 118          | 2          | 1        | 39              |
+            | Rank | CountryCode | CountryName    | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|----------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | ES          | Spain          | 0.923077      | 72                  | 78           | 1          | 1        | 39              |
+            | 2    | SE          | Sweden         | 0.898305      | 106                 | 118          | 2          | 1        | 39              |
+            | 3    | GB          | United Kingdom | 0.884615      | 69                  | 78           | 1          | 1        | 39              |
+            | 4    | UA          | Ukraine        | 0.868421      | 99                  | 114          | 2          | 1        | 39              |
+            | 5    | RS          | Serbia         | 0.686441      | 81                  | 118          | 2          | 1        | 39              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "Any",
             votingMethod: "Any",
             maxYear: 2022);
@@ -206,7 +226,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             pageSize: 5,
             votingCountryCode: "GB");
 
@@ -217,15 +239,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | SE          | Sweden      | 0.694444    | 50          | 72              | 6            | 3          | 2        | 1               |
-            | 2    | PL          | Poland      | 0.619048    | 52          | 84              | 7            | 4          | 2        | 1               |
-            | 3    | LT          | Lithuania   | 0.616667    | 37          | 60              | 5            | 3          | 2        | 1               |
-            | 4    | IE          | Ireland     | 0.5         | 12          | 24              | 2            | 1          | 1        | 1               |
-            | 5    | ES          | Spain       | 0.416667    | 20          | 48              | 4            | 2          | 2        | 1               |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | SE          | Sweden      | 1             | 6                   | 6            | 3          | 2        | 1               |
+            | 2    | EE          | Estonia     | 0.857143      | 6                   | 7            | 4          | 2        | 1               |
+            | 2    | PL          | Poland      | 0.857143      | 6                   | 7            | 4          | 2        | 1               |
+            | 4    | LT          | Lithuania   | 0.8           | 4                   | 5            | 3          | 2        | 1               |
+            | 5    | ES          | Spain       | 0.75          | 3                   | 4            | 2          | 2        | 1               |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "Any",
             votingMethod: "Any",
             votingCountryCode: "GB");
@@ -244,7 +268,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             pageSize: 5,
             votingMethod: "Any");
 
@@ -255,15 +281,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName    | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|----------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | SE          | Sweden         | 0.61882     | 1552        | 2508            | 209          | 4          | 2        | 40              |
-            | 2    | UA          | Ukraine        | 0.539661    | 1211        | 2244            | 187          | 3          | 2        | 40              |
-            | 3    | FI          | Finland        | 0.360048    | 903         | 2508            | 209          | 4          | 2        | 40              |
-            | 4    | IL          | Israel         | 0.349873    | 550         | 1572            | 131          | 3          | 2        | 39              |
-            | 5    | IT          | Italy          | 0.34106     | 618         | 1812            | 151          | 2          | 2        | 40              |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | SE          | Sweden      | 0.937799      | 196                 | 209          | 4          | 2        | 40              |
+            | 2    | UA          | Ukraine     | 0.73262       | 137                 | 187          | 3          | 2        | 40              |
+            | 3    | IT          | Italy       | 0.695364      | 105                 | 151          | 2          | 2        | 40              |
+            | 4    | IL          | Israel      | 0.679389      | 89                  | 131          | 3          | 2        | 39              |
+            | 5    | NO          | Norway      | 0.678049      | 139                 | 205          | 4          | 2        | 40              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "Any",
             votingMethod: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -281,7 +309,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             pageSize: 5,
             votingMethod: "Jury");
 
@@ -292,15 +322,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | SE          | Sweden      | 0.719298    | 820         | 1140            | 95           | 3          | 2        | 39              |
-            | 2    | GR          | Greece      | 0.451754    | 309         | 684             | 57           | 2          | 1        | 39              |
-            | 3    | NL          | Netherlands | 0.396199    | 271         | 684             | 57           | 2          | 1        | 39              |
-            | 4    | IT          | Italy       | 0.371111    | 334         | 900             | 75           | 2          | 2        | 39              |
-            | 5    | AU          | Australia   | 0.370175    | 422         | 1140            | 95           | 3          | 2        | 39              |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | SE          | Sweden      | 0.936842      | 89                  | 95           | 3          | 2        | 39              |
+            | 2    | GR          | Greece      | 0.77193       | 44                  | 57           | 2          | 1        | 39              |
+            | 3    | NL          | Netherlands | 0.754386      | 43                  | 57           | 2          | 1        | 39              |
+            | 4    | ES          | Spain       | 0.733333      | 55                  | 75           | 2          | 2        | 39              |
+            | 5    | IT          | Italy       | 0.706667      | 53                  | 75           | 2          | 2        | 39              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "Any",
             votingMethod: "Jury");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -318,7 +350,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             pageSize: 5,
             votingMethod: "Televote");
 
@@ -329,15 +363,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | UA          | Ukraine     | 0.735816    | 830         | 1128            | 94           | 3          | 2        | 40              |
-            | 2    | SE          | Sweden      | 0.535088    | 732         | 1368            | 114          | 4          | 2        | 40              |
-            | 3    | FI          | Finland     | 0.495614    | 678         | 1368            | 114          | 4          | 2        | 40              |
-            | 4    | NO          | Norway      | 0.422619    | 568         | 1344            | 112          | 4          | 2        | 40              |
-            | 5    | MD          | Moldova     | 0.415923    | 559         | 1344            | 112          | 4          | 2        | 40              |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | SE          | Sweden      | 0.938596      | 107                 | 114          | 4          | 2        | 40              |
+            | 2    | NO          | Norway      | 0.910714      | 102                 | 112          | 4          | 2        | 40              |
+            | 3    | UA          | Ukraine     | 0.904255      | 85                  | 94           | 3          | 2        | 40              |
+            | 4    | MD          | Moldova     | 0.776786      | 87                  | 112          | 4          | 2        | 40              |
+            | 5    | FI          | Finland     | 0.710526      | 81                  | 114          | 4          | 2        | 40              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             contestStage: "Any",
             votingMethod: "Televote");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -355,7 +391,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 0,
+            maxPoints: 0,
             pageSize: 5,
             minYear: 2016,
             maxYear: 2022,
@@ -369,15 +407,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 1    | UA          | Ukraine     | 0.935185    | 202         | 216             | 18           | 1          | 1        | 18              |
-            | 2    | RS          | Serbia      | 0.725       | 174         | 240             | 20           | 1          | 1        | 20              |
-            | 2    | SE          | Sweden      | 0.725       | 174         | 240             | 20           | 1          | 1        | 20              |
-            | 4    | MD          | Moldova     | 0.625       | 135         | 216             | 18           | 1          | 1        | 18              |
-            | 5    | CZ          | Czechia     | 0.520833    | 125         | 240             | 20           | 1          | 1        | 20              |
+            | Rank | CountryCode | CountryName     | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-----------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 1    | AZ          | Azerbaijan      | 1             | 20                  | 20           | 1          | 1        | 20              |
+            | 2    | SI          | Slovenia        | 0.944444      | 17                  | 18           | 1          | 1        | 18              |
+            | 3    | ME          | Montenegro      | 0.9           | 18                  | 20           | 1          | 1        | 20              |
+            | 4    | MK          | North Macedonia | 0.85          | 17                  | 20           | 1          | 1        | 20              |
+            | 5    | BG          | Bulgaria        | 0.833333      | 15                  | 18           | 1          | 1        | 18              |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 0,
+            maxPoints: 0,
             minYear: 2016,
             maxYear: 2022,
             contestStage: "SemiFinals",
@@ -397,7 +437,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 5,
+            maxPoints: 10,
             pageIndex: 0,
             pageSize: 5,
             descending: true,
@@ -414,15 +456,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_match(
             """
-            | Rank | CountryCode | CountryName | PointsShare | TotalPoints | AvailablePoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|-------------|-------------|-----------------|--------------|------------|----------|-----------------|
-            | 21   | AL          | Albania     | 0           | 0           | 12              | 1            | 1          | 1        | 1               |
-            | 21   | AM          | Armenia     | 0           | 0           | 24              | 2            | 2          | 2        | 1               |
-            | 21   | CY          | Cyprus      | 0           | 0           | 24              | 2            | 2          | 2        | 1               |
-            | 21   | DE          | Germany     | 0           | 0           | 24              | 2            | 2          | 2        | 1               |
-            | 21   | FR          | France      | 0           | 0           | 24              | 2            | 2          | 2        | 1               |
+            | Rank | CountryCode | CountryName | PointsInRange | PointsAwardsInRange | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|---------------------|--------------|------------|----------|-----------------|
+            | 12   | AL          | Albania     | 0             | 0                   | 1            | 1          | 1        | 1               |
+            | 12   | AM          | Armenia     | 0             | 0                   | 2            | 2          | 2        | 1               |
+            | 12   | CH          | Switzerland | 0             | 0                   | 2            | 2          | 2        | 1               |
+            | 12   | CY          | Cyprus      | 0             | 0                   | 2            | 2          | 2        | 1               |
+            | 12   | DE          | Germany     | 0             | 0                   | 2            | 2          | 2        | 1               |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 5,
+            maxPoints: 10,
             minYear: 2016,
             maxYear: 2050,
             contestStage: "Any",
@@ -443,7 +487,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             minYear: 2023,
             maxYear: 2023,
             contestStage: "SemiFinals",
@@ -456,6 +502,8 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_be_empty();
         await euroFan.Then_the_response_filtering_metadata_should_match(
+            minPoints: 1,
+            maxPoints: 12,
             minYear: 2023,
             maxYear: 2023,
             contestStage: "SemiFinals",
@@ -475,7 +523,10 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(pageIndex: -1);
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
+            pageIndex: -1);
 
         // When
         await euroFan.When_I_send_my_request();
@@ -495,7 +546,10 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(pageSize: 0);
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
+            pageSize: 0);
 
         // When
         await euroFan.When_I_send_my_request();
@@ -515,7 +569,11 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(minYear: 2050, maxYear: 2016);
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
+            minYear: 2050,
+            maxYear: 2016);
 
         // When
         await euroFan.When_I_send_my_request();
@@ -536,7 +594,9 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(
+            minPoints: 1,
+            maxPoints: 12,
             votingCountryCode: "NOT_A_COUNTRY_CODE");
 
         // When
@@ -551,16 +611,18 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
     }
 
     private sealed class EuroFanActor(IApiDriver apiDriver)
-        : EuroFanActorWithResponse<GetCompetingCountryPointsShareRankingsResponse>(apiDriver)
+        : EuroFanActorWithResponse<GetCompetingCountryPointsInRangeRankingsResponse>(apiDriver)
     {
-        public void Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(bool? descending = null,
+        public void Given_I_want_to_obtain_a_page_of_competing_country_points_in_range_rankings(bool? descending = null,
             int? pageSize = null,
             int? pageIndex = null,
             string? votingMethod = null,
             string? votingCountryCode = null,
             int? maxYear = null,
             int? minYear = null,
-            string? contestStage = null)
+            string? contestStage = null,
+            int minPoints = 0,
+            int maxPoints = 0)
         {
             Dictionary<string, object?> queryParams = new()
             {
@@ -571,24 +633,26 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
                 [nameof(votingCountryCode)] = votingCountryCode,
                 [nameof(maxYear)] = maxYear,
                 [nameof(minYear)] = minYear,
-                [nameof(contestStage)] = contestStage is not null ? Enum.Parse<QueryableContestStage>(contestStage) : null
+                [nameof(contestStage)] = contestStage is not null ? Enum.Parse<QueryableContestStage>(contestStage) : null,
+                [nameof(minPoints)] = minPoints,
+                [nameof(maxPoints)] = maxPoints
             };
 
-            Request = ApiDriver.RequestFactory.Rankings.GetCompetingCountryPointsShareRankings(queryParams);
+            Request = ApiDriver.RequestFactory.Rankings.GetCompetingCountryPointsInRangeRankings(queryParams);
         }
 
         public async Task Then_the_response_rankings_page_should_match(string page)
         {
-            (CompetingCountryPointsShareRanking[] rankings, _, _) = await Assert.That(ResponseBody).IsNotNull();
+            (CompetingCountryPointsInRangeRanking[] rankings, _, _) = await Assert.That(ResponseBody).IsNotNull();
 
-            CompetingCountryPointsShareRanking[] expected = MarkdownParser.ParseTable(page, MapRowToRanking).ToArray();
+            CompetingCountryPointsInRangeRanking[] expected = MarkdownParser.ParseTable(page, MapRowToRanking).ToArray();
 
             await Assert.That(rankings).IsEquivalentTo(expected, CollectionOrdering.Matching);
         }
 
         public async Task Then_the_response_rankings_page_should_be_empty()
         {
-            (CompetingCountryPointsShareRanking[] rankings, _, _) = await Assert.That(ResponseBody).IsNotNull();
+            (CompetingCountryPointsInRangeRanking[] rankings, _, _) = await Assert.That(ResponseBody).IsNotNull();
 
             await Assert.That(rankings).IsEmpty();
         }
@@ -597,13 +661,17 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
             string? votingCountryCode = null,
             int? maxYear = null,
             int? minYear = null,
-            string contestStage = "")
+            string contestStage = "",
+            int minPoints = 0,
+            int maxPoints = 0)
         {
-            (_, CompetingCountryPointsShareFilteringMetadata filtering, _) = await Assert.That(ResponseBody).IsNotNull();
+            (_, CompetingCountryPointsInRangeFilteringMetadata filtering, _) = await Assert.That(ResponseBody).IsNotNull();
 
-            CompetingCountryPointsShareFilteringMetadata expectedFiltering = new()
+            CompetingCountryPointsInRangeFilteringMetadata expectedFiltering = new()
             {
                 ContestStage = Enum.Parse<QueryableContestStage>(contestStage),
+                MinPoints = minPoints,
+                MaxPoints = maxPoints,
                 MinYear = minYear,
                 MaxYear = maxYear,
                 VotingCountryCode = votingCountryCode,
@@ -633,14 +701,13 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
             await Assert.That(pagination).IsEqualTo(expectedPagination);
         }
 
-        private static CompetingCountryPointsShareRanking MapRowToRanking(Dictionary<string, string> row) => new()
+        private static CompetingCountryPointsInRangeRanking MapRowToRanking(Dictionary<string, string> row) => new()
         {
             Rank = int.Parse(row["Rank"]),
             CountryCode = row["CountryCode"],
             CountryName = row["CountryName"],
-            PointsShare = decimal.Parse(row["PointsShare"]),
-            TotalPoints = int.Parse(row["TotalPoints"]),
-            AvailablePoints = int.Parse(row["AvailablePoints"]),
+            PointsInRange = decimal.Parse(row["PointsInRange"]),
+            PointsAwardsInRange = int.Parse(row["PointsAwardsInRange"]),
             PointsAwards = int.Parse(row["PointsAwards"]),
             Broadcasts = int.Parse(row["Broadcasts"]),
             Contests = int.Parse(row["Contests"]),

@@ -536,7 +536,8 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_average_rankings(votingCountryCode: "San Marino");
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_average_rankings(
+            votingCountryCode: "NOT_A_COUNTRY_CODE");
 
         // When
         await euroFan.When_I_send_my_request();
@@ -546,7 +547,7 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
         await euroFan.Then_the_response_problem_details_should_match(status: 400,
             title: "Invalid voting country code",
             detail: "Query parameter 'votingCountryCode' value must be a string of 2 upper-case letters.");
-        await euroFan.Then_the_response_problem_details_extensions_should_include("votingCountryCode", "San Marino");
+        await euroFan.Then_the_response_problem_details_extensions_should_include("votingCountryCode", "NOT_A_COUNTRY_CODE");
     }
 
     private sealed class EuroFanActor(IApiDriver apiDriver)

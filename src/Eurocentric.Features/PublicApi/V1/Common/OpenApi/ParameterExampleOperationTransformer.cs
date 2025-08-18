@@ -11,6 +11,8 @@ internal sealed class ParameterExampleOperationTransformer : BaseParameterExampl
         {
             ["contestStage"] = QueryParamDefaults.ContestStage.ToOpenApiAny(),
             ["descending"] = QueryParamDefaults.Descending.ToOpenApiAny(),
+            ["minPoints"] = ExampleValues.MinPoints.ToOpenApiAny(),
+            ["maxPoints"] = ExampleValues.MaxPoints.ToOpenApiAny(),
             ["pageIndex"] = QueryParamDefaults.PageIndex.ToOpenApiAny(),
             ["pageSize"] = QueryParamDefaults.PageSize.ToOpenApiAny(),
             ["votingMethod"] = QueryParamDefaults.VotingMethod.ToOpenApiAny()

@@ -46,6 +46,11 @@ internal sealed class StoredProcedureParams : DynamicParameters
             instance.AddPagination(p);
         }
 
+        if (query is IPointsRangeFilteringQuery pr)
+        {
+            instance.AddPointsRangeFiltering(pr);
+        }
+
         if (query is IVotingCountryFilteringQuery vc)
         {
             instance.AddVotingCountryFiltering(vc);
@@ -93,6 +98,12 @@ internal sealed class StoredProcedureParams : DynamicParameters
 
         Add("@descending", query.Descending, DbType.Boolean, ParameterDirection.Input);
         Add("@total_items", null, DbType.Int32, ParameterDirection.Output);
+    }
+
+    private void AddPointsRangeFiltering(IPointsRangeFilteringQuery query)
+    {
+        Add("@min_points", query.MinPoints, DbType.Int32, ParameterDirection.Input);
+        Add("@max_points", query.MaxPoints, DbType.Int32, ParameterDirection.Input);
     }
 
     private void AddVotingCountryFiltering(IVotingCountryFilteringQuery query)
