@@ -1,5 +1,6 @@
 using Eurocentric.Features.PublicApi.V1.Common.Constants;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsAverageRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsConsensusRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsInRangeRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,17 @@ internal static class Middleware
                              "Returns a page of rankings.")
             .HasApiVersion(1, 0)
             .Produces<GetCompetingCountryPointsAverageRankingsResponse>();
+
+        group.MapGet("competing-countries/points-consensus", GetCompetingCountryPointsConsensusRankingsFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Rankings.GetCompetingCountryPointsConsensusRankings)
+            .WithSummary("Get competing country points consensus rankings")
+            .WithDescription("Ranks each competing country by descending POINTS CONSENSUS metric, " +
+                             "i.e. the cosine similarity between all the individual jury points awards it has received " +
+                             "and all the individual televote points it has received, " +
+                             "using each voting country in each broadcast as a vector dimension for comparison. " +
+                             "Returns a page of rankings.")
+            .HasApiVersion(1, 0)
+            .Produces<GetCompetingCountryPointsConsensusRankingsResponse>();
 
         group.MapGet("competing-countries/points-in-range", GetCompetingCountryPointsInRangeRankingsFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Rankings.GetCompetingCountryPointsInRangeRankings)
