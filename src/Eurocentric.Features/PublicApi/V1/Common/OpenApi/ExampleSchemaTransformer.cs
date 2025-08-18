@@ -4,8 +4,10 @@ using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableContests;
 using Eurocentric.Features.PublicApi.V1.Queryables.GetQueryableCountries;
 using Eurocentric.Features.PublicApi.V1.Rankings.Common.Dtos;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsAverageRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsConsensusRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsInRangeRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsAverageRankings;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.OpenApi.Any;
 
@@ -20,6 +22,10 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
                 CompetingCountryPointsAverageFilteringMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsAverageRanking)] =
                 CompetingCountryPointsAverageRanking.CreateExample().ToOpenApiAny(),
+            [typeof(CompetingCountryPointsConsensusFilteringMetadata)] =
+                CompetingCountryPointsConsensusFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(CompetingCountryPointsConsensusRanking)] =
+                CompetingCountryPointsConsensusRanking.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsInRangeFilteringMetadata)] =
                 CompetingCountryPointsInRangeFilteringMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsInRangeRanking)] =
@@ -28,6 +34,9 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
                 CompetingCountryPointsShareFilteringMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsShareRanking)] =
                 CompetingCountryPointsShareRanking.CreateExample().ToOpenApiAny(),
+            [typeof(CompetitorPointsAverageFilteringMetadata)] =
+                CompetitorPointsAverageFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(CompetitorPointsAverageRanking)] = CompetitorPointsAverageRanking.CreateExample().ToOpenApiAny(),
             [typeof(PaginationMetadata)] = PaginationMetadata.CreateExample().ToOpenApiAny(),
             [typeof(QueryableBroadcast)] = QueryableBroadcast.CreateExample().ToOpenApiAny(),
             [typeof(QueryableContestStage[])] = Enum.GetValues<QueryableContestStage>().ToOpenApiAny(),

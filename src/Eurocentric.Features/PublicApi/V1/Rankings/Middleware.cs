@@ -3,6 +3,7 @@ using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsAverag
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsConsensusRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsInRangeRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsAverageRankings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -61,5 +62,14 @@ internal static class Middleware
                              "Returns a page of rankings.")
             .HasApiVersion(1, 0)
             .Produces<GetCompetingCountryPointsShareRankingsResponse>();
+
+        group.MapGet("competitors/points-average", GetCompetitorPointsAverageRankingsFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Rankings.GetCompetitorPointsAverageRankings)
+            .WithSummary("Get competitor points average rankings")
+            .WithDescription("Ranks each competitor in each contest broadcast by descending POINTS AVERAGE metric, " +
+                             "i.e. the average value of all the individual points awards it received. " +
+                             "Returns a page of rankings.")
+            .HasApiVersion(1, 0)
+            .Produces<GetCompetitorPointsAverageRankingsResponse>();
     }
 }

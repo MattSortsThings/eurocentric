@@ -23,6 +23,9 @@ internal static partial class EndpointNames
                 "PublicApi.V1.Rankings.GetCompetingCountryPointsInRangeRankings";
             internal const string GetCompetingCountryPointsShareRankings =
                 "PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings";
+
+            internal const string GetCompetitorPointsAverageRankings =
+                "PublicApi.V1.Rankings.GetCompetitorPointsAverageRankings";
         }
     }
 }
