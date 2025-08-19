@@ -15,10 +15,9 @@ AS
 
 /*
 Procedure Name: dbo.usp_get_competitor_points_consensus_rankings
-Description   : Ranks each competitor in each contest broadcast by descending POINTS CONSENSUS metric,
-                i.e. the cosine similarity between all the individual jury points awards it received 
-                and all the individual televote points it received, 
-                using each voting country in its broadcast as a vector dimension for comparison.
+Description   : Ranks each competitor in each contest broadcast by descending POINTS CONSENSUS metric, i.e. the cosine 
+                similarity between all the individual jury points awards it received and all the individual televote 
+                points it received, using each voting country in its broadcast as a vector dimension for comparison. 
                 Returns a page of rankings.
 
 Input Parameters:

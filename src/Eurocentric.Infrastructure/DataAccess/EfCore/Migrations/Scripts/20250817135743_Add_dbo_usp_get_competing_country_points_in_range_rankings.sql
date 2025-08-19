@@ -10,7 +10,7 @@ CREATE PROCEDURE dbo.usp_get_competing_country_points_in_range_rankings(
     @min_year INT = NULL,
     @max_year INT = NULL,
     @contest_stages dbo.tvp_enum_int_value READONLY,
-    @voting_country_code NVARCHAR(200) = NULL,
+    @voting_country_code NCHAR(2) = NULL,
     @page_index INT = 0,
     @page_size INT = 10,
     @descending BIT = 0,
@@ -20,10 +20,8 @@ AS
 
 /*
 Procedure Name: dbo.usp_get_competing_country_points_in_range_rankings
-Description   : Ranks each competing country by descending POINTS IN RANGE metric,
-                i.e. the relative frequency of all the points awards it has received
-                having a value within a specified range.
-                Returns a page of rankings.
+Description   : Ranks each competing country by descending POINTS IN RANGE metric, i.e. the relative frequency of all 
+                the points awards it has received having a value within a specified range. Returns a page of rankings.
 
 Input Parameters:
     @min_points INT - Sets the inclusive minimum points value for the queried data.
@@ -33,7 +31,7 @@ Input Parameters:
     @min_year INT - Filters the queried data by inclusive minimum contest year.
     @max_year INT - Filters the queried data by inclusive maximum contest year.
     @contest_stages TVP - Filters the queried data by contest stage.
-    @voting_country_code NVARCHAR(MAX) - Filters the queried data by voting country code.
+    @voting_country_code NCHAR(2) - Filters the queried data by voting country code.
 
     @page_index INT - Zero-based pagination page index.
     @page_size INT - Maximum number of records per page for pagination.

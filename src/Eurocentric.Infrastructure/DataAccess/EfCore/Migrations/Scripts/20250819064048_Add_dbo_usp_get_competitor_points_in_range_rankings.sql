@@ -19,10 +19,9 @@ AS
 
 /*
 Procedure Name: dbo.usp_get_competitor_points_in_range_rankings
-Description   : Ranks each competitor in each contest broadcast by descending POINTS IN RANGE metric,
-                i.e. the relative frequency of all the points awards it received
-                having a value within a specified range.
-                Returns a page of rankings.
+Description   : Ranks each competitor in each contest broadcast by descending POINTS IN RANGE metric, i.e. the relative 
+                frequency of all the points awards it received having a value within a specified range. Returns a page 
+                of rankings.
 
 Input Parameters:
     @min_points INT - Sets the inclusive minimum points value for the queried data.

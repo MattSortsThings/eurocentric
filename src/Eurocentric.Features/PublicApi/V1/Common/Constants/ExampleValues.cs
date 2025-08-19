@@ -6,5 +6,6 @@ internal static class ExampleValues
     internal const int MaxPoints = 12;
     internal const int MinYear = 2016;
     internal const int MaxYear = 2050;
+    internal const string CompetingCountryCode = "GB";
     internal const string VotingCountryCode = "GB";
 }

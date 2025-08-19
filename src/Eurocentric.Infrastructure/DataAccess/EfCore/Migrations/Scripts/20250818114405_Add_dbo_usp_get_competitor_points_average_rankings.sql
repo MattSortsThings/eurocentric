@@ -17,9 +17,8 @@ AS
 
 /*
 Procedure Name: dbo.usp_get_competitor_points_average_rankings
-Description   : Ranks each competitor in each contest broadcast by descending POINTS AVERAGE metric,
-                i.e. the average value of all the individual points awards it received.
-                Returns a page of rankings.
+Description   : Ranks each competitor in each contest broadcast by descending POINTS AVERAGE metric, i.e. the average 
+                value of all the individual points awards it received. Returns a page of rankings.
 
 Input Parameters:
     @exclude_jury BIT - Excludes jury awards from the queried data.

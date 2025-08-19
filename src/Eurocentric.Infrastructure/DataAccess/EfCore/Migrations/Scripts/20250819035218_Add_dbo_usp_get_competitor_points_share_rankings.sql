@@ -17,9 +17,8 @@ AS
 
 /*
 Procedure Name: dbo.usp_get_competitor_points_share_rankings
-Description   : Ranks each competitor in each contest broadcast by descending POINTS SHARE metric,
-                i.e. the total points it has received as a fraction of the available points.
-                Returns a page of rankings.
+Description   : Ranks each competitor in each contest broadcast by descending POINTS SHARE metric, i.e. the total 
+                points it has received as a fraction of the available points. Returns a page of rankings.
 
 Input Parameters:
     @exclude_jury BIT - Excludes jury awards from the queried data.

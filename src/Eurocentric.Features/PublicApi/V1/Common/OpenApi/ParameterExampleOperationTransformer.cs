@@ -9,6 +9,7 @@ internal sealed class ParameterExampleOperationTransformer : BaseParameterExampl
     private protected override IReadOnlyDictionary<string, IOpenApiAny> ParameterExamples { get; } =
         new Dictionary<string, IOpenApiAny>
         {
+            ["competingCountryCode"] = ExampleValues.CompetingCountryCode.ToOpenApiAny(),
             ["contestStage"] = QueryParamDefaults.ContestStage.ToOpenApiAny(),
             ["descending"] = QueryParamDefaults.Descending.ToOpenApiAny(),
             ["minPoints"] = ExampleValues.MinPoints.ToOpenApiAny(),

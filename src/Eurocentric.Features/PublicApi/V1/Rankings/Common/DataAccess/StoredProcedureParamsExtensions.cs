@@ -11,6 +11,30 @@ internal static class StoredProcedureParamsExtensions
 {
     private const int FixedCountryCodeLength = 2;
 
+    internal static ErrorOr<StoredProcedureParams> WithCompetingCountryCodeParamFrom(this ErrorOr<StoredProcedureParams> p,
+        ICompetingCountryFilteringQuery query)
+    {
+        if (p.IsError || query.CompetingCountryCode is not { } countryCode)
+        {
+            return p;
+        }
+
+        if (!ValidCountryCodeValue(countryCode))
+        {
+            return QueryParamErrors.InvalidCompetingCountryCode(countryCode);
+        }
+
+        StoredProcedureParams pp = p.Value;
+
+        pp.Add("@competing_country_code",
+            countryCode,
+            DbType.StringFixedLength,
+            size: FixedCountryCodeLength,
+            direction: ParameterDirection.Input);
+
+        return pp;
+    }
+
     internal static ErrorOr<StoredProcedureParams> WithContestStagesParamFrom(this ErrorOr<StoredProcedureParams> p,
         IContestStageFilteringQuery query)
     {

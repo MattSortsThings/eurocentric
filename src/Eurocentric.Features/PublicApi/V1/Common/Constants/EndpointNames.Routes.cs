@@ -31,6 +31,9 @@ internal static partial class EndpointNames
             internal const string GetCompetitorPointsInRangeRankings =
                 "PublicApi.V1.Rankings.GetCompetitorPointsInRangeRankings";
             internal const string GetCompetitorPointsShareRankings = "PublicApi.V1.Rankings.GetCompetitorPointsShareRankings";
+
+            internal const string GetVotingCountryPointsAverageRankings =
+                "PublicApi.V1.Rankings.GetVotingCountryPointsAverageRankings";
         }
     }
 }

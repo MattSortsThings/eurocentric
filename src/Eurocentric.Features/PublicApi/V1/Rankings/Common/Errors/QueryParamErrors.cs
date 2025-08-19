@@ -12,6 +12,11 @@ internal static class QueryParamErrors
         "Query parameter 'pageSize' value must be an integer between 1 and 100.",
         new Dictionary<string, object> { { "pageSize", pageSize } });
 
+    internal static Error InvalidCompetingCountryCode(string competingCountryCode) =>
+        Error.Validation("Invalid competing country code",
+            "Query parameter 'competingCountryCode' value must be a string of 2 upper-case letters.",
+            new Dictionary<string, object> { { "competingCountryCode", competingCountryCode } });
+
     internal static Error InvalidVotingCountryCode(string votingCountryCode) => Error.Validation("Invalid voting country code",
         "Query parameter 'votingCountryCode' value must be a string of 2 upper-case letters.",
         new Dictionary<string, object> { { "votingCountryCode", votingCountryCode } });

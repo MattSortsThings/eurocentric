@@ -11,6 +11,7 @@ using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsAverageRanki
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsConsensusRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsInRangeRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsShareRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetVotingCountryPointsAverageRankings;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.OpenApi.Any;
 
@@ -54,6 +55,9 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(QueryableContestStage[])] = Enum.GetValues<QueryableContestStage>().ToOpenApiAny(),
             [typeof(QueryableContest)] = QueryableContest.CreateExample().ToOpenApiAny(),
             [typeof(QueryableCountry)] = QueryableCountry.CreateExample().ToOpenApiAny(),
-            [typeof(QueryableVotingMethod[])] = Enum.GetValues<QueryableVotingMethod>().ToOpenApiAny()
+            [typeof(QueryableVotingMethod[])] = Enum.GetValues<QueryableVotingMethod>().ToOpenApiAny(),
+            [typeof(VotingCountryPointsAverageFilteringMetadata)] =
+                VotingCountryPointsAverageFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(VotingCountryPointsAverageRanking)] = VotingCountryPointsAverageRanking.CreateExample().ToOpenApiAny()
         };
 }
