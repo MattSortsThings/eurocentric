@@ -444,10 +444,10 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
 
         // Given
         euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(
-            minYear: 2023,
-            maxYear: 2023,
-            contestStage: "SemiFinals",
-            votingMethod: "Jury");
+            minYear: 2050,
+            maxYear: 2016,
+            votingMethod: "Any",
+            contestStage: "Any");
 
         // When
         await euroFan.When_I_send_my_request();
@@ -456,10 +456,10 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_be_empty();
         await euroFan.Then_the_response_filtering_metadata_should_match(
-            minYear: 2023,
-            maxYear: 2023,
-            contestStage: "SemiFinals",
-            votingMethod: "Jury");
+            minYear: 2050,
+            maxYear: 2016,
+            votingMethod: "Any",
+            contestStage: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
             pageIndex: 0,
             pageSize: 10,
@@ -526,27 +526,6 @@ public sealed class GetCompetingCountryPointsShareRankingsTests : ParallelSeeded
             title: "Page size out of range",
             detail: "Query parameter 'pageSize' value must be an integer between 1 and 100.");
         await euroFan.Then_the_response_problem_details_extensions_should_include("pageSize", 101);
-    }
-
-    [Test]
-    [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_fail_on_minYear_query_param_value_greater_than_maxYear_query_param_value(string apiVersion)
-    {
-        EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
-
-        // Given
-        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_share_rankings(minYear: 2050, maxYear: 2016);
-
-        // When
-        await euroFan.When_I_send_my_request();
-
-        // Then
-        await euroFan.Then_my_request_should_FAIL_with_status_code_400_BadRequest();
-        await euroFan.Then_the_response_problem_details_should_match(status: 400,
-            title: "Invalid contest year range",
-            detail: "Query parameter 'minYear' integer value must not be greater than query parameter 'maxYear' integer value.");
-        await euroFan.Then_the_response_problem_details_extensions_should_include("minYear", 2050);
-        await euroFan.Then_the_response_problem_details_extensions_should_include("maxYear", 2016);
     }
 
     [Test]

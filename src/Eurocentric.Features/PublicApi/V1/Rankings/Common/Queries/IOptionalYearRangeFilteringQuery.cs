@@ -1,6 +1,6 @@
 namespace Eurocentric.Features.PublicApi.V1.Rankings.Common.Queries;
 
-internal interface IYearRangeFilteringQuery
+internal interface IOptionalYearRangeFilteringQuery
 {
     int? MinYear { get; }
 

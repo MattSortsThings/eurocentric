@@ -57,11 +57,17 @@ internal static class GetCompetingCountryPointsShareRankingsFeature
     internal sealed record Query : IQuery<GetCompetingCountryPointsShareRankingsResponse>,
         IContestStageFilteringQuery,
         IPaginatedQuery,
-        IVotingCountryFilteringQuery,
+        IOptionalVotingCountryFilteringQuery,
         IVotingMethodFilteringQuery,
-        IYearRangeFilteringQuery
+        IOptionalYearRangeFilteringQuery
     {
         public QueryableContestStage ContestStage { get; init; }
+
+        public string? VotingCountryCode { get; init; }
+
+        public int? MinYear { get; init; }
+
+        public int? MaxYear { get; init; }
 
         public int PageIndex { get; init; }
 
@@ -69,13 +75,7 @@ internal static class GetCompetingCountryPointsShareRankingsFeature
 
         public bool Descending { get; init; }
 
-        public string? VotingCountryCode { get; init; }
-
         public QueryableVotingMethod VotingMethod { get; init; }
-
-        public int? MinYear { get; init; }
-
-        public int? MaxYear { get; init; }
     }
 
     [UsedImplicitly]
@@ -87,7 +87,11 @@ internal static class GetCompetingCountryPointsShareRankingsFeature
         {
             CompetingCountryPointsShareFilteringMetadata filtering = query.GetFilteringMetadata();
 
-            return await StoredProcedureParams.From(query)
+            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+                .WithContestStagesParamFrom(query)
+                .WithOptionalVotingCountryCodeParamFrom(query)
+                .WithOptionalYearRangeParamsFrom(query)
+                .WithVotingMethodParamsFrom(query)
                 .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
                 .Then(tuple => new GetCompetingCountryPointsShareRankingsResponse(tuple.Item1, filtering, tuple.Item2));
         }

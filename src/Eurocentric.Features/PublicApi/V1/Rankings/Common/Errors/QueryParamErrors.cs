@@ -15,8 +15,4 @@ internal static class QueryParamErrors
     internal static Error InvalidVotingCountryCode(string votingCountryCode) => Error.Validation("Invalid voting country code",
         "Query parameter 'votingCountryCode' value must be a string of 2 upper-case letters.",
         new Dictionary<string, object> { { "votingCountryCode", votingCountryCode } });
-
-    internal static Error InvalidContestYearRange(int minYear, int maxYear) => Error.Validation("Invalid contest year range",
-        "Query parameter 'minYear' integer value must not be greater than query parameter 'maxYear' integer value.",
-        new Dictionary<string, object> { { "minYear", minYear }, { "maxYear", maxYear } });
 }

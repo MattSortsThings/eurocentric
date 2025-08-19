@@ -62,11 +62,17 @@ internal static class GetCompetingCountryPointsInRangeRankingsFeature
         IContestStageFilteringQuery,
         IPaginatedQuery,
         IPointsRangeFilteringQuery,
-        IVotingCountryFilteringQuery,
+        IOptionalVotingCountryFilteringQuery,
         IVotingMethodFilteringQuery,
-        IYearRangeFilteringQuery
+        IOptionalYearRangeFilteringQuery
     {
         public QueryableContestStage ContestStage { get; init; }
+
+        public string? VotingCountryCode { get; init; }
+
+        public int? MinYear { get; init; }
+
+        public int? MaxYear { get; init; }
 
         public int PageIndex { get; init; }
 
@@ -78,13 +84,7 @@ internal static class GetCompetingCountryPointsInRangeRankingsFeature
 
         public int MaxPoints { get; init; }
 
-        public string? VotingCountryCode { get; init; }
-
         public QueryableVotingMethod VotingMethod { get; init; }
-
-        public int? MinYear { get; init; }
-
-        public int? MaxYear { get; init; }
     }
 
     [UsedImplicitly]
@@ -96,7 +96,12 @@ internal static class GetCompetingCountryPointsInRangeRankingsFeature
         {
             CompetingCountryPointsInRangeFilteringMetadata filtering = query.GetFilteringMetadata();
 
-            return await StoredProcedureParams.From(query)
+            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+                .WithContestStagesParamFrom(query)
+                .WithOptionalVotingCountryCodeParamFrom(query)
+                .WithOptionalYearRangeParamsFrom(query)
+                .WithPointsRangeParamsFrom(query)
+                .WithVotingMethodParamsFrom(query)
                 .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
                 .Then(tuple => new GetCompetingCountryPointsInRangeRankingsResponse(tuple.Item1, filtering, tuple.Item2));
         }

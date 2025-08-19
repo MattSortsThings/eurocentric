@@ -57,9 +57,13 @@ internal static class GetCompetitorPointsShareRankingsFeature
         IContestStageFilteringQuery,
         IPaginatedQuery,
         IVotingMethodFilteringQuery,
-        IYearRangeFilteringQuery
+        IOptionalYearRangeFilteringQuery
     {
         public QueryableContestStage ContestStage { get; init; }
+
+        public int? MinYear { get; init; }
+
+        public int? MaxYear { get; init; }
 
         public int PageIndex { get; init; }
 
@@ -68,10 +72,6 @@ internal static class GetCompetitorPointsShareRankingsFeature
         public bool Descending { get; init; }
 
         public QueryableVotingMethod VotingMethod { get; init; }
-
-        public int? MinYear { get; init; }
-
-        public int? MaxYear { get; init; }
     }
 
     [UsedImplicitly]
@@ -83,7 +83,10 @@ internal static class GetCompetitorPointsShareRankingsFeature
         {
             CompetitorPointsShareFilteringMetadata filtering = query.GetFilteringMetadata();
 
-            return await StoredProcedureParams.From(query)
+            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+                .WithContestStagesParamFrom(query)
+                .WithOptionalYearRangeParamsFrom(query)
+                .WithVotingMethodParamsFrom(query)
                 .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
                 .Then(tuple => new GetCompetitorPointsShareRankingsResponse(tuple.Item1, filtering, tuple.Item2));
         }

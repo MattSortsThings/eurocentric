@@ -1,6 +1,6 @@
 namespace Eurocentric.Features.PublicApi.V1.Rankings.Common.Queries;
 
-internal interface IVotingCountryFilteringQuery
+internal interface IOptionalVotingCountryFilteringQuery
 {
     string? VotingCountryCode { get; }
 }

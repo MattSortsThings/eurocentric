@@ -53,19 +53,19 @@ internal static class GetCompetitorPointsConsensusRankingsFeature
     internal sealed record Query : IQuery<GetCompetitorPointsConsensusRankingsResponse>,
         IContestStageFilteringQuery,
         IPaginatedQuery,
-        IYearRangeFilteringQuery
+        IOptionalYearRangeFilteringQuery
     {
         public QueryableContestStage ContestStage { get; init; }
+
+        public int? MinYear { get; init; }
+
+        public int? MaxYear { get; init; }
 
         public int PageIndex { get; init; }
 
         public int PageSize { get; init; }
 
         public bool Descending { get; init; }
-
-        public int? MinYear { get; init; }
-
-        public int? MaxYear { get; init; }
     }
 
     [UsedImplicitly]
@@ -77,7 +77,9 @@ internal static class GetCompetitorPointsConsensusRankingsFeature
         {
             CompetitorPointsConsensusFilteringMetadata filtering = query.GetFilteringMetadata();
 
-            return await StoredProcedureParams.From(query)
+            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+                .WithContestStagesParamFrom(query)
+                .WithOptionalYearRangeParamsFrom(query)
                 .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
                 .Then(tuple => new GetCompetitorPointsConsensusRankingsResponse(tuple.Item1, filtering, tuple.Item2));
         }

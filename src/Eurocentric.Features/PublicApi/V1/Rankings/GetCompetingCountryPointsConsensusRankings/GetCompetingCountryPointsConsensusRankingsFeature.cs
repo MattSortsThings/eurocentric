@@ -57,22 +57,22 @@ internal static class GetCompetingCountryPointsConsensusRankingsFeature
     internal sealed record Query : IQuery<GetCompetingCountryPointsConsensusRankingsResponse>,
         IContestStageFilteringQuery,
         IPaginatedQuery,
-        IVotingCountryFilteringQuery,
-        IYearRangeFilteringQuery
+        IOptionalVotingCountryFilteringQuery,
+        IOptionalYearRangeFilteringQuery
     {
         public QueryableContestStage ContestStage { get; init; }
-
-        public int PageIndex { get; init; }
-
-        public int PageSize { get; init; }
-
-        public bool Descending { get; init; }
 
         public string? VotingCountryCode { get; init; }
 
         public int? MinYear { get; init; }
 
         public int? MaxYear { get; init; }
+
+        public int PageIndex { get; init; }
+
+        public int PageSize { get; init; }
+
+        public bool Descending { get; init; }
     }
 
     [UsedImplicitly]
@@ -84,7 +84,10 @@ internal static class GetCompetingCountryPointsConsensusRankingsFeature
         {
             CompetingCountryPointsConsensusFilteringMetadata filtering = query.GetFilteringMetadata();
 
-            return await StoredProcedureParams.From(query)
+            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+                .WithContestStagesParamFrom(query)
+                .WithOptionalVotingCountryCodeParamFrom(query)
+                .WithOptionalYearRangeParamsFrom(query)
                 .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
                 .Then(tuple => new GetCompetingCountryPointsConsensusRankingsResponse(tuple.Item1, filtering, tuple.Item2));
         }
