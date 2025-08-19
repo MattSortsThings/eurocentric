@@ -1,14 +1,13 @@
 /*
-    Creates the stored procedure dbo.usp_get_competing_country_points_share_rankings.
+    Creates the stored procedure dbo.usp_get_competitor_points_share_rankings.
 */
 
-CREATE PROCEDURE dbo.usp_get_competing_country_points_share_rankings(
+CREATE PROCEDURE dbo.usp_get_competitor_points_share_rankings(
     @exclude_jury BIT = 0,
     @exclude_televote BIT = 0,
     @min_year INT = NULL,
     @max_year INT = NULL,
     @contest_stages dbo.tvp_enum_int_value READONLY,
-    @voting_country_code NVARCHAR(200) = NULL,
     @page_index INT = 0,
     @page_size INT = 10,
     @descending BIT = 0,
@@ -17,8 +16,8 @@ CREATE PROCEDURE dbo.usp_get_competing_country_points_share_rankings(
 AS
 
 /*
-Procedure Name: dbo.usp_get_competing_country_points_share_rankings
-Description   : Ranks each competing country by descending POINTS SHARE metric,
+Procedure Name: dbo.usp_get_competitor_points_share_rankings
+Description   : Ranks each competitor in each contest broadcast by descending POINTS SHARE metric,
                 i.e. the total points it has received as a fraction of the available points.
                 Returns a page of rankings.
 
@@ -28,7 +27,6 @@ Input Parameters:
     @min_year INT - Filters the queried data by inclusive minimum contest year.
     @max_year INT - Filters the queried data by inclusive maximum contest year.
     @contest_stages TVP - Filters the queried data by contest stage.
-    @voting_country_code NVARCHAR(MAX) - Filters the queried data by voting country code.
 
     @page_index INT - Zero-based pagination page index.
     @page_size INT - Maximum number of records per page for pagination.
@@ -49,14 +47,8 @@ BEGIN
     SET NOCOUNT ON;
 
     WITH
-        -- Filter by voting country
-        t0 AS (SELECT c.id AS voting_country_id
-               FROM dbo.country c
-               WHERE @voting_country_code IS NULL
-                  OR c.country_code = @voting_country_code),
-
         -- Filter by contest stage and contest year range
-        t1 AS (SELECT b.id AS broadcast_id,
+        t0 AS (SELECT b.id AS broadcast_id,
                       e.id AS contest_id
                FROM dbo.contest e,
                     dbo.broadcast b,
@@ -68,89 +60,99 @@ BEGIN
                  AND b.contest_stage = cs.value),
 
         -- Get queryable data
-        t2 AS (SELECT ja.competing_country_id,
-                      t0.voting_country_id,
-                      t1.broadcast_id,
-                      t1.contest_id,
+        t1 AS (SELECT ja.competing_country_id,
+                      t0.broadcast_id,
+                      t0.contest_id,
                       ja.points_value,
                       MAX(ja.points_value)
                           OVER (PARTITION BY ja.broadcast_id, ja.voting_country_id ) AS max_possible_points
                FROM dbo.broadcast_competitor_jury_award ja,
-                    t0,
-                    t1
+                    t0
                WHERE @exclude_jury = 0
-                 AND ja.voting_country_id = t0.voting_country_id
-                 AND ja.broadcast_id = t1.broadcast_id
+                 AND ja.broadcast_id = t0.broadcast_id
                UNION ALL
                SELECT ta.competing_country_id,
-                      t0.voting_country_id,
-                      t1.broadcast_id,
-                      t1.contest_id,
+                      t0.broadcast_id,
+                      t0.contest_id,
                       ta.points_value,
                       MAX(ta.points_value)
                           OVER (PARTITION BY ta.broadcast_id, ta.voting_country_id ) AS max_possible_points
                FROM dbo.broadcast_competitor_televote_award ta,
-                    t0,
-                    t1
+                    t0
                WHERE @exclude_televote = 0
-                 AND ta.voting_country_id = t0.voting_country_id
-                 AND ta.broadcast_id = t1.broadcast_id),
+                 AND ta.broadcast_id = t0.broadcast_id),
 
         -- Group by and calculate metric
-        t3 AS (SELECT t2.competing_country_id,
-                      SUM(t2.points_value)                 AS total_points,
-                      SUM(t2.max_possible_points)          AS available_points,
-                      COUNT(*)                             AS points_awards,
-                      COUNT(DISTINCT t2.broadcast_id)      AS broadcasts,
-                      COUNT(DISTINCT t2.contest_id)        AS contests,
-                      COUNT(DISTINCT t2.voting_country_id) AS voting_countries
-               FROM t2
-               GROUP BY t2.competing_country_id),
+        t2 AS (SELECT t1.competing_country_id,
+                      t1.broadcast_id,
+                      t1.contest_id,
+                      SUM(t1.points_value)        AS total_points,
+                      SUM(t1.max_possible_points) AS available_points,
+                      COUNT(*)                    AS points_awards
+               FROM t1
+               GROUP BY t1.competing_country_id, t1.broadcast_id, t1.contest_id),
 
-        t4 AS (SELECT t3.competing_country_id,
-                      CAST(t3.total_points AS FLOAT) / t3.available_points AS points_share,
-                      t3.total_points,
-                      t3.available_points,
-                      t3.points_awards,
-                      t3.broadcasts,
-                      t3.contests,
-                      t3.voting_countries
-               FROM t3)
+        t3 AS (SELECT t2.competing_country_id,
+                      t2.broadcast_id,
+                      t2.contest_id,
+                      CAST(t2.total_points AS FLOAT) / t2.available_points AS points_share,
+                      t2.total_points,
+                      t2.available_points,
+                      t2.points_awards
+               FROM t2)
 
     -- Populate #ranking temp table
-    SELECT RANK() OVER (ORDER BY t4.points_share DESC) AS rank,
-           c.country_code,
-           c.country_name,
-           t4.points_share,
-           t4.total_points,
-           t4.available_points,
-           t4.points_awards,
-           t4.broadcasts,
-           t4.contests,
-           t4.voting_countries
+    SELECT RANK() OVER (ORDER BY t3.points_share DESC) AS rank,
+           e.contest_year,
+           b.contest_stage,
+           bc.running_order_position,
+           cc.country_code,
+           cc.country_name,
+           bc.finishing_position,
+           cp.act_name,
+           cp.song_title,
+           t3.points_share,
+           t3.total_points,
+           t3.available_points,
+           t3.points_awards
     INTO #ranking
-    FROM t4,
-         dbo.country c
-    WHERE c.id = t4.competing_country_id;
+    FROM t3,
+         dbo.broadcast b,
+         dbo.contest e,
+         dbo.country cc,
+         dbo.broadcast_competitor bc,
+         dbo.contest_participant cp
+    WHERE b.id = t3.broadcast_id
+      AND e.id = t3.contest_id
+      AND bc.broadcast_id = t3.broadcast_id
+      AND bc.competing_country_id = t3.competing_country_id
+      AND cc.id = t3.competing_country_id
+      AND cp.contest_id = t3.contest_id
+      AND cp.participating_country_id = t3.competing_country_id;
 
     -- Set @total_items output parameter
     SET @total_items = (SELECT COUNT(*) FROM #ranking);
 
     -- Return page of rankings
     SELECT r.rank,
+           r.contest_year,
+           r.contest_stage,
+           r.running_order_position,
            r.country_code,
            r.country_name,
+           r.finishing_position,
+           r.act_name,
+           r.song_title,
            CAST(ROUND(r.points_share, 6) AS DECIMAL(9, 6)) AS points_share,
            r.total_points,
            r.available_points,
-           r.points_awards,
-           r.broadcasts,
-           r.contests,
-           r.voting_countries
+           r.points_awards
     FROM #ranking r
     ORDER BY CASE WHEN @descending = 1 THEN r.rank END DESC,
              CASE WHEN @descending = 0 THEN r.rank END,
-             r.country_code
+             r.contest_year,
+             r.contest_stage,
+             r.running_order_position
     OFFSET (@page_index * @page_size) ROWS FETCH NEXT (@page_size) ROWS ONLY;
 
 END

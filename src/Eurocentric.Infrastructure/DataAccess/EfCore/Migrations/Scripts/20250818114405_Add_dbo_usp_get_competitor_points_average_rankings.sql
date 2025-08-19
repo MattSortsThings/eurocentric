@@ -95,6 +95,7 @@ BEGIN
                       t2.points_awards
                FROM t2)
 
+    -- Populate #ranking temp table
     SELECT RANK() OVER (ORDER BY t3.points_average DESC) AS rank,
            e.contest_year,
            b.contest_stage,
@@ -122,10 +123,10 @@ BEGIN
       AND cp.contest_id = t3.contest_id
       AND cp.participating_country_id = t3.competing_country_id;
 
--- Set @total_items output parameter
+    -- Set @total_items output parameter
     SET @total_items = (SELECT COUNT(*) FROM #ranking);
 
--- Return page of rankings
+    -- Return page of rankings
     SELECT r.rank,
            r.contest_year,
            r.contest_stage,

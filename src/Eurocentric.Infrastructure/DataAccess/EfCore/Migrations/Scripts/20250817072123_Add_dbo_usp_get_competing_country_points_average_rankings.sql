@@ -111,7 +111,7 @@ BEGIN
                       t3.voting_countries
                FROM t3)
 
--- Populate #ranking temp table
+    -- Populate #ranking temp table
     SELECT RANK() OVER (ORDER BY t4.points_average DESC) AS rank,
            c.country_code,
            c.country_name,
@@ -126,10 +126,10 @@ BEGIN
          dbo.country c
     WHERE c.id = t4.competing_country_id;
 
--- Set @total_items output parameter
+    -- Set @total_items output parameter
     SET @total_items = (SELECT COUNT(*) FROM #ranking);
 
--- Return page of rankings
+    -- Return page of rankings
     SELECT r.rank,
            r.country_code,
            r.country_name,

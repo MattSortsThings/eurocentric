@@ -380,7 +380,7 @@ public sealed class GetCompetitorPointsAverageRankingsTests : ParallelSeededAcce
             | 86   | 2022        | GrandFinal   | 13                   | DE          | Germany     | 25                | Malik Harris     | Rockstars         | 0             | 0           | 39           |
             | 85   | 2023        | GrandFinal   | 21                   | DE          | Germany     | 26                | Lord of the Lost | Blood & Glitter   | 0.083333      | 3           | 36           |
             | 84   | 2022        | GrandFinal   | 6                    | FR          | France      | 24                | Alvan & Ahez     | Fulenn            | 0.230769      | 9           | 39           |
-            | 83   | 2022        | GrandFinal   | 18                   | IS          | Iceland     | 23                | Systur           | Með Hækkandi Sól | 0.25641       | 10          | 39           |
+            | 83   | 2022        | GrandFinal   | 18                   | IS          | Iceland     | 23                | Systur           | Með Hækkandi Sól  | 0.25641       | 10          | 39           |
             | 82   | 2023        | GrandFinal   | 25                   | HR          | Croatia     | 13                | Let 3            | Mama ŠČ!          | 0.305556      | 11          | 36           |
             """);
         await euroFan.Then_the_response_filtering_metadata_should_match(
