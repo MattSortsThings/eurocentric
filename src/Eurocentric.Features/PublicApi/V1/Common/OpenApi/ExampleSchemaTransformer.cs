@@ -8,6 +8,7 @@ using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsConsen
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsInRangeRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsAverageRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsInRangeRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsShareRankings;
 using Eurocentric.Features.Shared.Documentation;
 using Microsoft.OpenApi.Any;
@@ -38,6 +39,9 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(CompetitorPointsAverageFilteringMetadata)] =
                 CompetitorPointsAverageFilteringMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsAverageRanking)] = CompetitorPointsAverageRanking.CreateExample().ToOpenApiAny(),
+            [typeof(CompetitorPointsInRangeFilteringMetadata)] =
+                CompetitorPointsInRangeFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(CompetitorPointsInRangeRanking)] = CompetitorPointsInRangeRanking.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsShareFilteringMetadata)] =
                 CompetitorPointsShareFilteringMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsShareRanking)] = CompetitorPointsShareRanking.CreateExample().ToOpenApiAny(),

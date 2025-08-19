@@ -4,6 +4,7 @@ using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsConsen
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsInRangeRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsAverageRankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsInRangeRankings;
 using Eurocentric.Features.PublicApi.V1.Rankings.GetCompetitorPointsShareRankings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -72,6 +73,15 @@ internal static class Middleware
                              "Returns a page of rankings.")
             .HasApiVersion(1, 0)
             .Produces<GetCompetitorPointsAverageRankingsResponse>();
+
+        group.MapGet("competitors/points-in-range", GetCompetitorPointsInRangeRankingsFeature.ExecuteAsync)
+            .WithName(EndpointNames.Routes.Rankings.GetCompetitorPointsInRangeRankings)
+            .WithSummary("Get competitor points in range rankings")
+            .WithDescription("Ranks each competitor in each contest broadcast by descending POINTS IN RANGE metric, " +
+                             "i.e. the relative frequency of all the individual points awards it received having a value " +
+                             "within a specified range. Returns a page of rankings.")
+            .HasApiVersion(1, 0)
+            .Produces<GetCompetitorPointsInRangeRankingsResponse>();
 
         group.MapGet("competitors/points-share", GetCompetitorPointsShareRankingsFeature.ExecuteAsync)
             .WithName(EndpointNames.Routes.Rankings.GetCompetitorPointsShareRankings)
