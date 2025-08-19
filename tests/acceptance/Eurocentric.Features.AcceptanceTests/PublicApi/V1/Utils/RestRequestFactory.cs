@@ -54,6 +54,11 @@ public sealed class RestRequestFactory : IRestRequestFactory,
             .AddUrlSegment("apiVersion", _apiVersion)
             .AddQueryParameters(queryParams);
 
+    public RestRequest GetCompetitorPointsConsensusRankings(IReadOnlyDictionary<string, object?> queryParams) =>
+        GetRequest("/public/api/{apiVersion}/rankings/competitors/points-consensus")
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddQueryParameters(queryParams);
+
     public RestRequest GetCompetitorPointsInRangeRankings(IReadOnlyDictionary<string, object?> queryParams) =>
         GetRequest("/public/api/{apiVersion}/rankings/competitors/points-in-range")
             .AddUrlSegment("apiVersion", _apiVersion)

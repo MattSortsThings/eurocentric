@@ -528,20 +528,19 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             await Assert.That(pagination).IsEqualTo(expectedPagination);
         }
 
-        private static CompetingCountryPointsConsensusRanking MapRowToRanking(Dictionary<string, string> row) =>
-            new()
-            {
-                Rank = int.Parse(row["Rank"]),
-                CountryCode = row["CountryCode"],
-                CountryName = row["CountryName"],
-                PointsConsensus = decimal.Parse(row["PointsConsensus"]),
-                VectorDotProduct = decimal.Parse(row["VectorDotProduct"]),
-                JuryVectorLength = decimal.Parse(row["JuryVectorLength"]),
-                TelevoteVectorLength = decimal.Parse(row["TelevoteVectorLength"]),
-                PointsAwardPairs = int.Parse(row["PointsAwardPairs"]),
-                Broadcasts = int.Parse(row["Broadcasts"]),
-                Contests = int.Parse(row["Contests"]),
-                VotingCountries = int.Parse(row["VotingCountries"])
-            };
+        private static CompetingCountryPointsConsensusRanking MapRowToRanking(Dictionary<string, string> row) => new()
+        {
+            Rank = int.Parse(row["Rank"]),
+            CountryCode = row["CountryCode"],
+            CountryName = row["CountryName"],
+            PointsConsensus = decimal.Parse(row["PointsConsensus"]),
+            VectorDotProduct = decimal.Parse(row["VectorDotProduct"]),
+            JuryVectorLength = decimal.Parse(row["JuryVectorLength"]),
+            TelevoteVectorLength = decimal.Parse(row["TelevoteVectorLength"]),
+            PointsAwardPairs = int.Parse(row["PointsAwardPairs"]),
+            Broadcasts = int.Parse(row["Broadcasts"]),
+            Contests = int.Parse(row["Contests"]),
+            VotingCountries = int.Parse(row["VotingCountries"])
+        };
     }
 }

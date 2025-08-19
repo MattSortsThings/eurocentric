@@ -33,6 +33,8 @@ public interface IRestRequestFactory
 
         RestRequest GetCompetitorPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
 
+        RestRequest GetCompetitorPointsConsensusRankings(IReadOnlyDictionary<string, object?> queryParams);
+
         RestRequest GetCompetitorPointsInRangeRankings(IReadOnlyDictionary<string, object?> queryParams);
 
         RestRequest GetCompetitorPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams);
