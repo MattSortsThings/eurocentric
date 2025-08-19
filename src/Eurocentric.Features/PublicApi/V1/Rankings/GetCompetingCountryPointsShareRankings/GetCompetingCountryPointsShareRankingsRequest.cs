@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Eurocentric.Features.PublicApi.V1.Common.Enums;
 using Eurocentric.Features.PublicApi.V1.Rankings.Common.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ public sealed record GetCompetingCountryPointsShareRankingsRequest : PaginatedRe
     public int? MaxYear { get; init; }
 
     [FromQuery(Name = "votingCountryCode")]
+    [RegularExpression("[A-Z]{2}", ErrorMessage = "Voting country code must be a string of 2 upper-case letters.")]
     [Description("Filters the queried data to points awarded by a specific voting country.")]
     public string? VotingCountryCode { get; init; }
 

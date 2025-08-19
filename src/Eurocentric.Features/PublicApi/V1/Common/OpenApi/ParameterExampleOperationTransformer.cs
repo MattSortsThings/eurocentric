@@ -13,8 +13,11 @@ internal sealed class ParameterExampleOperationTransformer : BaseParameterExampl
             ["descending"] = QueryParamDefaults.Descending.ToOpenApiAny(),
             ["minPoints"] = ExampleValues.MinPoints.ToOpenApiAny(),
             ["maxPoints"] = ExampleValues.MaxPoints.ToOpenApiAny(),
+            ["minYear"] = ExampleValues.MinYear.ToOpenApiAny(),
+            ["maxYear"] = ExampleValues.MaxYear.ToOpenApiAny(),
             ["pageIndex"] = QueryParamDefaults.PageIndex.ToOpenApiAny(),
             ["pageSize"] = QueryParamDefaults.PageSize.ToOpenApiAny(),
+            ["votingCountryCode"] = ExampleValues.VotingCountryCode.ToOpenApiAny(),
             ["votingMethod"] = QueryParamDefaults.VotingMethod.ToOpenApiAny()
         };
 }
