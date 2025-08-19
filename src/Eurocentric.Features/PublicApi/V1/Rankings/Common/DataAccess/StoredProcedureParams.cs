@@ -87,7 +87,7 @@ internal sealed class StoredProcedureParams : DynamicParameters
             Add("@page_index", query.PageIndex, DbType.Int32, ParameterDirection.Input);
         }
 
-        if (query.PageSize < 1)
+        if (query.PageSize is < 1 or > 100)
         {
             _errors.Add(QueryParamErrors.PageSizeOutOfRange(query.PageSize));
         }

@@ -470,7 +470,7 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_fail_on_invalid_pageIndex_query_param(string apiVersion)
+    public async Task Endpoint_should_fail_on_pageIndex_query_param_value_less_than_0(string apiVersion)
     {
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
@@ -484,13 +484,13 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
         await euroFan.Then_my_request_should_FAIL_with_status_code_400_BadRequest();
         await euroFan.Then_the_response_problem_details_should_match(status: 400,
             title: "Page index out of range",
-            detail: "Query parameter 'pageIndex' value must be greater than or equal to 0.");
+            detail: "Query parameter 'pageIndex' value must be an integer greater than or equal to 0.");
         await euroFan.Then_the_response_problem_details_extensions_should_include("pageIndex", -1);
     }
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_fail_on_invalid_pageSize_query_param(string apiVersion)
+    public async Task Endpoint_should_fail_on_pageSize_query_param_value_less_than_1(string apiVersion)
     {
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
@@ -504,13 +504,33 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
         await euroFan.Then_my_request_should_FAIL_with_status_code_400_BadRequest();
         await euroFan.Then_the_response_problem_details_should_match(status: 400,
             title: "Page size out of range",
-            detail: "Query parameter 'pageSize' value must be greater than or equal to 1.");
+            detail: "Query parameter 'pageSize' value must be an integer between 1 and 100.");
         await euroFan.Then_the_response_problem_details_extensions_should_include("pageSize", 0);
     }
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_fail_on_invalid_minYear_and_maxYear_query_params(string apiVersion)
+    public async Task Endpoint_should_fail_on_pageSize_query_param_value_greater_than_100(string apiVersion)
+    {
+        EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        euroFan.Given_I_want_to_obtain_a_page_of_competing_country_points_average_rankings(pageSize: 101);
+
+        // When
+        await euroFan.When_I_send_my_request();
+
+        // Then
+        await euroFan.Then_my_request_should_FAIL_with_status_code_400_BadRequest();
+        await euroFan.Then_the_response_problem_details_should_match(status: 400,
+            title: "Page size out of range",
+            detail: "Query parameter 'pageSize' value must be an integer between 1 and 100.");
+        await euroFan.Then_the_response_problem_details_extensions_should_include("pageSize", 101);
+    }
+
+    [Test]
+    [ApiVersion1Point0AndUp]
+    public async Task Endpoint_should_fail_on_minYear_query_param_value_greater_than_maxYear_query_param_value(string apiVersion)
     {
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
@@ -524,14 +544,15 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
         await euroFan.Then_my_request_should_FAIL_with_status_code_400_BadRequest();
         await euroFan.Then_the_response_problem_details_should_match(status: 400,
             title: "Invalid contest year range",
-            detail: "Query parameter 'minYear' value must be less than or equal to query parameter 'maxYear' value.");
+            detail: "Query parameter 'minYear' integer value must not be greater than query parameter 'maxYear' integer value.");
         await euroFan.Then_the_response_problem_details_extensions_should_include("minYear", 2050);
         await euroFan.Then_the_response_problem_details_extensions_should_include("maxYear", 2016);
     }
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Endpoint_should_fail_on_invalid_votingCountryCode_query_param(string apiVersion)
+    public async Task Endpoint_should_fail_on_votingCountryCode_query_param_value_that_is_not_string_of_2_upper_case_letters(
+        string apiVersion)
     {
         EuroFanActor euroFan = new(ApiDriver.Create(SystemUnderTest, apiVersion));
 
