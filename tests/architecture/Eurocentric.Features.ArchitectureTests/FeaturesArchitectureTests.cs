@@ -796,7 +796,15 @@ public sealed class FeaturesArchitectureTests
     [Arguments("PublicApi.V1.Queryables.GetQueryableContestStages")]
     [Arguments("PublicApi.V1.Queryables.GetQueryableCountries")]
     [Arguments("PublicApi.V1.Queryables.GetQueryableVotingMethods")]
-    [Arguments("PublicApi.V1.Rankings.GetCompetingCountryPointsAverageRankings")]
+    [Arguments("PublicApi.V1.Rankings.CompetingCountries.GetCompetingCountryPointsAverageRankings")]
+    [Arguments("PublicApi.V1.Rankings.CompetingCountries.GetCompetingCountryPointsConsensusRankings")]
+    [Arguments("PublicApi.V1.Rankings.CompetingCountries.GetCompetingCountryPointsInRangeRankings")]
+    [Arguments("PublicApi.V1.Rankings.CompetingCountries.GetCompetingCountryPointsShareRankings")]
+    [Arguments("PublicApi.V1.Rankings.Competitors.GetCompetitorPointsAverageRankings")]
+    [Arguments("PublicApi.V1.Rankings.Competitors.GetCompetitorPointsConsensusRankings")]
+    [Arguments("PublicApi.V1.Rankings.Competitors.GetCompetitorPointsInRangeRankings")]
+    [Arguments("PublicApi.V1.Rankings.Competitors.GetCompetitorPointsShareRankings")]
+    [Arguments("PublicApi.V1.Rankings.VotingCountries.GetVotingCountryPointsAverageRankings")]
     public async Task PublicApi_V1_feature_types_should_not_depend_on_any_other_PublicApi_feature_namespace(
         string featureNamespace)
     {

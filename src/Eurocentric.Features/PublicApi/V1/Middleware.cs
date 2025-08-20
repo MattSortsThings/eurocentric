@@ -1,6 +1,8 @@
 using Eurocentric.Features.PublicApi.V1.Common.Constants;
 using Eurocentric.Features.PublicApi.V1.Queryables;
-using Eurocentric.Features.PublicApi.V1.Rankings;
+using Eurocentric.Features.PublicApi.V1.Rankings.CompetingCountries;
+using Eurocentric.Features.PublicApi.V1.Rankings.Competitors;
+using Eurocentric.Features.PublicApi.V1.Rankings.VotingCountries;
 using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +26,9 @@ internal static class Middleware
             .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole)
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
+        v1Group.MapCompetingCountryRankingsEndpoints();
+        v1Group.MapCompetitorRankingsEndpoints();
         v1Group.MapQueryablesEndpoints();
-        v1Group.MapRankingsEndpoints();
+        v1Group.MapVotingCountryRankingsEndpoints();
     }
 }

@@ -4,16 +4,7 @@ internal static partial class EndpointNames
 {
     internal static class Routes
     {
-        internal static class Queryables
-        {
-            internal const string GetQueryableBroadcasts = "PublicApi.V1.Queryables.GetQueryableBroadcasts";
-            internal const string GetQueryableContestStages = "PublicApi.V1.Queryables.GetQueryableContestStages";
-            internal const string GetQueryableContests = "PublicApi.V1.Queryables.GetQueryableContests";
-            internal const string GetQueryableCountries = "PublicApi.V1.Queryables.GetQueryableCountries";
-            internal const string GetQueryableVotingMethods = "PublicApi.V1.Queryables.GetQueryableVotingMethods";
-        }
-
-        internal static class Rankings
+        internal static class CompetingCountryRankings
         {
             internal const string GetCompetingCountryPointsAverageRankings =
                 "PublicApi.V1.Rankings.GetCompetingCountryPointsAverageRankings";
@@ -23,7 +14,10 @@ internal static partial class EndpointNames
                 "PublicApi.V1.Rankings.GetCompetingCountryPointsInRangeRankings";
             internal const string GetCompetingCountryPointsShareRankings =
                 "PublicApi.V1.Rankings.GetCompetingCountryPointsShareRankings";
+        }
 
+        internal static class CompetitorRankings
+        {
             internal const string GetCompetitorPointsAverageRankings =
                 "PublicApi.V1.Rankings.GetCompetitorPointsAverageRankings";
             internal const string GetCompetitorPointsConsensusRankings =
@@ -31,7 +25,19 @@ internal static partial class EndpointNames
             internal const string GetCompetitorPointsInRangeRankings =
                 "PublicApi.V1.Rankings.GetCompetitorPointsInRangeRankings";
             internal const string GetCompetitorPointsShareRankings = "PublicApi.V1.Rankings.GetCompetitorPointsShareRankings";
+        }
 
+        internal static class Queryables
+        {
+            internal const string GetQueryableBroadcasts = "PublicApi.V1.Queryables.GetQueryableBroadcasts";
+            internal const string GetQueryableContestStages = "PublicApi.V1.Queryables.GetQueryableContestStages";
+            internal const string GetQueryableContests = "PublicApi.V1.Queryables.GetQueryableContests";
+            internal const string GetQueryableCountries = "PublicApi.V1.Queryables.GetQueryableCountries";
+            internal const string GetQueryableVotingMethods = "PublicApi.V1.Queryables.GetQueryableVotingMethods";
+        }
+
+        internal static class VotingCountryRankings
+        {
             internal const string GetVotingCountryPointsAverageRankings =
                 "PublicApi.V1.Rankings.GetVotingCountryPointsAverageRankings";
         }

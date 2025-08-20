@@ -4,9 +4,13 @@ namespace Eurocentric.Features.AcceptanceTests.PublicApi.V1.Utils;
 
 public interface IRestRequestFactory
 {
+    ICompetingCountryRankingsEndpoints CompetingCountryRankings { get; }
+
+    ICompetitorRankingsEndpoints CompetitorRankings { get; }
+
     IQueryablesEndpoints Queryables { get; }
 
-    IRankingsEndpoints Rankings { get; }
+    IVotingCountryRankingsEndpoints VotingCountryRankings { get; }
 
     interface IQueryablesEndpoints
     {
@@ -21,7 +25,7 @@ public interface IRestRequestFactory
         RestRequest GetQueryableVotingMethods();
     }
 
-    interface IRankingsEndpoints
+    interface ICompetingCountryRankingsEndpoints
     {
         RestRequest GetCompetingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
 
@@ -30,7 +34,10 @@ public interface IRestRequestFactory
         RestRequest GetCompetingCountryPointsInRangeRankings(IReadOnlyDictionary<string, object?> queryParams);
 
         RestRequest GetCompetingCountryPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams);
+    }
 
+    interface ICompetitorRankingsEndpoints
+    {
         RestRequest GetCompetitorPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
 
         RestRequest GetCompetitorPointsConsensusRankings(IReadOnlyDictionary<string, object?> queryParams);
@@ -38,7 +45,10 @@ public interface IRestRequestFactory
         RestRequest GetCompetitorPointsInRangeRankings(IReadOnlyDictionary<string, object?> queryParams);
 
         RestRequest GetCompetitorPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams);
+    }
 
+    interface IVotingCountryRankingsEndpoints
+    {
         RestRequest GetVotingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
     }
 }
