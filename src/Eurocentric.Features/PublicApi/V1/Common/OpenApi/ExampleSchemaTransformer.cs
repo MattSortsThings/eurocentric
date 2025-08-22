@@ -34,8 +34,8 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
                 CompetingCountryPointsInRangeQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsInRangeRanking)] =
                 CompetingCountryPointsInRangeRanking.CreateExample().ToOpenApiAny(),
-            [typeof(CompetingCountryPointsShareFilteringMetadata)] =
-                CompetingCountryPointsShareFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(CompetingCountryPointsShareQueryMetadata)] =
+                CompetingCountryPointsShareQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsShareRanking)] =
                 CompetingCountryPointsShareRanking.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsAverageFilteringMetadata)] =
