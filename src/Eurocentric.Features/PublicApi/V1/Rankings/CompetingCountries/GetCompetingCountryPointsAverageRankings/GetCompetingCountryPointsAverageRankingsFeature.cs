@@ -32,7 +32,7 @@ internal static class GetCompetingCountryPointsAverageRankingsFeature
         VotingMethod = queryParams.VotingMethod.GetValueOrDefault(QueryParamDefaults.VotingMethod)
     };
 
-    private static CompetingCountryPointsAverageFilteringMetadata GetFilteringMetadata(this Query query) => new()
+    private static CompetingCountryPointsAverageQueryMetadata ToQueryMetadata(this Query query) => new()
     {
         ContestStage = query.ContestStage,
         MinYear = query.MinYear,
@@ -41,10 +41,10 @@ internal static class GetCompetingCountryPointsAverageRankingsFeature
         VotingMethod = query.VotingMethod
     };
 
-    private static async Task<(CompetingCountryPointsAverageRanking[], PaginationMetadata)>
-        ExecuteStoredProcedure(this IDbStoredProcedureRunner procRunner,
-            StoredProcedureParams procParams,
-            CancellationToken cancellationToken)
+    private static async Task<(CompetingCountryPointsAverageRanking[] rankings, PaginationMetadata pagination)> RunAsync(
+        this IDbStoredProcedureRunner procRunner,
+        StoredProcedureParams procParams,
+        CancellationToken cancellationToken)
     {
         CompetingCountryPointsAverageRanking[] rankings = await procRunner.ExecuteAsync<CompetingCountryPointsAverageRanking>(
             DbStoredProcedures.Dbo.GetCompetingCountryPointsAverageRankings,
@@ -83,17 +83,14 @@ internal static class GetCompetingCountryPointsAverageRankingsFeature
         : IQueryHandler<Query, GetCompetingCountryPointsAverageRankingsResponse>
     {
         public async Task<ErrorOr<GetCompetingCountryPointsAverageRankingsResponse>> OnHandle(Query query,
-            CancellationToken cancellationToken)
-        {
-            CompetingCountryPointsAverageFilteringMetadata filtering = query.GetFilteringMetadata();
-
-            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
-                .WithContestStagesParamFrom(query)
-                .WithOptionalVotingCountryCodeParamFrom(query)
-                .WithOptionalYearRangeParamsFrom(query)
-                .WithVotingMethodParamsFrom(query)
-                .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
-                .Then(tuple => new GetCompetingCountryPointsAverageRankingsResponse(tuple.Item1, filtering, tuple.Item2));
-        }
+            CancellationToken cancellationToken) => await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+            .WithContestStagesParamFrom(query)
+            .WithOptionalVotingCountryCodeParamFrom(query)
+            .WithOptionalYearRangeParamsFrom(query)
+            .WithVotingMethodParamsFrom(query)
+            .ThenAsync(procParams => procRunner.RunAsync(procParams, cancellationToken))
+            .Then(tuple => new GetCompetingCountryPointsAverageRankingsResponse(tuple.rankings,
+                query.ToQueryMetadata(),
+                tuple.pagination));
     }
 }

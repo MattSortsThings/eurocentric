@@ -22,8 +22,8 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
     private protected override IReadOnlyDictionary<Type, IOpenApiAny> SchemaExamples { get; } =
         new Dictionary<Type, IOpenApiAny>
         {
-            [typeof(CompetingCountryPointsAverageFilteringMetadata)] =
-                CompetingCountryPointsAverageFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(CompetingCountryPointsAverageQueryMetadata)] =
+                CompetingCountryPointsAverageQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsAverageRanking)] =
                 CompetingCountryPointsAverageRanking.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsConsensusFilteringMetadata)] =
