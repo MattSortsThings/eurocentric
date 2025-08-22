@@ -4,7 +4,7 @@ using Eurocentric.Features.Shared.Documentation;
 
 namespace Eurocentric.Features.PublicApi.V1.Rankings.Competitors.GetCompetitorPointsAverageRankings;
 
-public sealed record CompetitorPointsAverageFilteringMetadata : IExampleProvider<CompetitorPointsAverageFilteringMetadata>
+public sealed record CompetitorPointsAverageQueryMetadata : IExampleProvider<CompetitorPointsAverageQueryMetadata>
 {
     public required QueryableContestStage ContestStage { get; init; }
 
@@ -14,7 +14,7 @@ public sealed record CompetitorPointsAverageFilteringMetadata : IExampleProvider
 
     public required QueryableVotingMethod VotingMethod { get; init; }
 
-    public static CompetitorPointsAverageFilteringMetadata CreateExample() => new()
+    public static CompetitorPointsAverageQueryMetadata CreateExample() => new()
     {
         ContestStage = QueryParamDefaults.ContestStage,
         MinYear = null,

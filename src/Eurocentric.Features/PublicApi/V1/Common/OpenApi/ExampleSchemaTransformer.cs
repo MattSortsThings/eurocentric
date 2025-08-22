@@ -38,8 +38,8 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
                 CompetingCountryPointsShareQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsShareRanking)] =
                 CompetingCountryPointsShareRanking.CreateExample().ToOpenApiAny(),
-            [typeof(CompetitorPointsAverageFilteringMetadata)] =
-                CompetitorPointsAverageFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(CompetitorPointsAverageQueryMetadata)] =
+                CompetitorPointsAverageQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsAverageRanking)] = CompetitorPointsAverageRanking.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsConsensusFilteringMetadata)] =
                 CompetitorPointsConsensusFilteringMetadata.CreateExample().ToOpenApiAny(),
