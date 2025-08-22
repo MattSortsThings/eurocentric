@@ -4,7 +4,7 @@ using Eurocentric.Features.Shared.Documentation;
 
 namespace Eurocentric.Features.PublicApi.V1.Rankings.Competitors.GetCompetitorPointsConsensusRankings;
 
-public sealed record CompetitorPointsConsensusFilteringMetadata : IExampleProvider<CompetitorPointsConsensusFilteringMetadata>
+public sealed record CompetitorPointsConsensusQueryMetadata : IExampleProvider<CompetitorPointsConsensusQueryMetadata>
 {
     public required QueryableContestStage ContestStage { get; init; }
 
@@ -12,7 +12,7 @@ public sealed record CompetitorPointsConsensusFilteringMetadata : IExampleProvid
 
     public int? MaxYear { get; init; }
 
-    public static CompetitorPointsConsensusFilteringMetadata CreateExample() => new()
+    public static CompetitorPointsConsensusQueryMetadata CreateExample() => new()
     {
         ContestStage = QueryParamDefaults.ContestStage, MinYear = null, MaxYear = null
     };

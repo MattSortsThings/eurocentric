@@ -41,8 +41,8 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(CompetitorPointsAverageQueryMetadata)] =
                 CompetitorPointsAverageQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsAverageRanking)] = CompetitorPointsAverageRanking.CreateExample().ToOpenApiAny(),
-            [typeof(CompetitorPointsConsensusFilteringMetadata)] =
-                CompetitorPointsConsensusFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(CompetitorPointsConsensusQueryMetadata)] =
+                CompetitorPointsConsensusQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsConsensusRanking)] = CompetitorPointsConsensusRanking.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsInRangeFilteringMetadata)] =
                 CompetitorPointsInRangeFilteringMetadata.CreateExample().ToOpenApiAny(),

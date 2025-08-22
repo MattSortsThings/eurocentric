@@ -31,15 +31,15 @@ internal static class GetCompetitorPointsConsensusRankingsFeature
         MaxYear = queryParams.MaxYear
     };
 
-    private static CompetitorPointsConsensusFilteringMetadata GetFilteringMetadata(this Query query) => new()
+    private static CompetitorPointsConsensusQueryMetadata ToQueryMetadata(this Query query) => new()
     {
         ContestStage = query.ContestStage, MinYear = query.MinYear, MaxYear = query.MaxYear
     };
 
-    private static async Task<(CompetitorPointsConsensusRanking[], PaginationMetadata)>
-        ExecuteStoredProcedure(this IDbStoredProcedureRunner procRunner,
-            StoredProcedureParams procParams,
-            CancellationToken cancellationToken)
+    private static async Task<(CompetitorPointsConsensusRanking[] rankings, PaginationMetadata pagination)> RunAsync(
+        this IDbStoredProcedureRunner procRunner,
+        StoredProcedureParams procParams,
+        CancellationToken cancellationToken)
     {
         CompetitorPointsConsensusRanking[] rankings =
             await procRunner.ExecuteAsync<CompetitorPointsConsensusRanking>(
@@ -73,15 +73,12 @@ internal static class GetCompetitorPointsConsensusRankingsFeature
         : IQueryHandler<Query, GetCompetitorPointsConsensusRankingsResponse>
     {
         public async Task<ErrorOr<GetCompetitorPointsConsensusRankingsResponse>> OnHandle(Query query,
-            CancellationToken cancellationToken)
-        {
-            CompetitorPointsConsensusFilteringMetadata filtering = query.GetFilteringMetadata();
-
-            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
-                .WithContestStagesParamFrom(query)
-                .WithOptionalYearRangeParamsFrom(query)
-                .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
-                .Then(tuple => new GetCompetitorPointsConsensusRankingsResponse(tuple.Item1, filtering, tuple.Item2));
-        }
+            CancellationToken cancellationToken) => await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+            .WithContestStagesParamFrom(query)
+            .WithOptionalYearRangeParamsFrom(query)
+            .ThenAsync(procParams => procRunner.RunAsync(procParams, cancellationToken))
+            .Then(tuple => new GetCompetitorPointsConsensusRankingsResponse(tuple.rankings,
+                query.ToQueryMetadata(),
+                tuple.pagination));
     }
 }

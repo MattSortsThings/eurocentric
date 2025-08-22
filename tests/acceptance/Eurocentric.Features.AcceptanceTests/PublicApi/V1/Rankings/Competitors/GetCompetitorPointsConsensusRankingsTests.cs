@@ -39,7 +39,7 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
             | 9    | 2022        | SemiFinal2   | 18                   | CZ          | Czechia     | 4                 | We Are Domi      | Lights Off     | 0.825789        | 44766.666667     | 220.170893       | 246.221445           | 20               |
             | 10   | 2022        | GrandFinal   | 20                   | SE          | Sweden      | 4                 | Cornelia Jakobs  | Hold Me Closer | 0.824282        | 93371.444444     | 397.045198       | 285.297895           | 39               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
             pageIndex: 0,
@@ -74,7 +74,7 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
             | 82   | 2022        | GrandFinal   | 6                    | FR          | France      | 24                | Alvan & Ahez              | Fulenn    | 0.097509        | 171.666667       | 59.813599        | 29.433541            | 39               |
             | 81   | 2023        | GrandFinal   | 10                   | AL          | Albania     | 22                | Albina & Familja Kelmendi | Duje      | 0.101672        | 1382.333333      | 83.108363        | 163.594349           | 36               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
             pageIndex: 1,
@@ -110,7 +110,7 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
             | 4    | 2022        | GrandFinal   | 22                   | GB          | United Kingdom | 2                 | Sam Ryder       | SPACE MAN      | 0.805365        | 98367.666667     | 427.935743       | 285.417822           | 39               |
             | 5    | 2023        | GrandFinal   | 11                   | IT          | Italy          | 4                 | Marco Mengoni   | Due Vite       | 0.789397        | 76076            | 322.977639       | 298.38696            | 36               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "GrandFinal");
         await euroFan.Then_the_response_pagination_metadata_should_match(
             pageIndex: 0,
@@ -146,7 +146,7 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
             | 4    | 2023        | GrandFinal   | 13                   | FI          | Finland     | 2                 | Käärijä       | Cha Cha Cha | 0.744164        | 113416.666667    | 293.234074       | 519.748871           | 36               |
             | 5    | 2023        | GrandFinal   | 24                   | SI          | Slovenia    | 21                | Joker Out     | Carpe Diem  | 0.638793        | 12372            | 132.138395       | 146.571939           | 36               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             minYear: 2023);
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -183,7 +183,7 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
             | 4    | 2022        | SemiFinal1   | 6                    | UA          | Ukraine     | 1                 | Kalush Orchestra | Stefania       | 0.892752        | 104644.444444    | 293.805113       | 398.956973           | 18               |
             | 5    | 2022        | SemiFinal2   | 8                    | AU          | Australia   | 2                 | Sheldon Riley    | Not The Same   | 0.873658        | 47736.111111     | 330.298686       | 165.424034           | 20               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             maxYear: 2022);
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -222,7 +222,7 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
             | 4    | 2022        | SemiFinal1   | 6                    | UA          | Ukraine     | 1                 | Kalush Orchestra | Stefania       | 0.892752        | 104644.444444    | 293.805113       | 398.956973           | 18               |
             | 5    | 2022        | SemiFinal2   | 8                    | AU          | Australia   | 2                 | Sheldon Riley    | Not The Same   | 0.873658        | 47736.111111     | 330.298686       | 165.424034           | 20               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2016,
             maxYear: 2022,
             contestStage: "SemiFinals");
@@ -264,7 +264,7 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
             | 83   | 2022        | SemiFinal2   | 2                    | IL          | Israel      | 13                | Michael Ben David | I.M               | 0.096989        | 1361.555556      | 114.300287       | 122.818746           | 20               |
             | 82   | 2022        | GrandFinal   | 6                    | FR          | France      | 24                | Alvan & Ahez      | Fulenn            | 0.097509        | 171.666667       | 59.813599        | 29.433541            | 39               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2016,
             maxYear: 2050,
             contestStage: "Any");
@@ -294,7 +294,7 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
         // Then
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_be_empty();
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2050,
             maxYear: 2016,
             contestStage: "Any");
@@ -405,19 +405,19 @@ public sealed class GetCompetitorPointsConsensusRankingsTests : ParallelSeededAc
             await Assert.That(rankings).IsEmpty();
         }
 
-        public async Task Then_the_response_filtering_metadata_should_match(
+        public async Task Then_the_response_query_metadata_should_match(
             int? maxYear = null,
             int? minYear = null,
             string contestStage = "")
         {
-            (_, CompetitorPointsConsensusFilteringMetadata filtering, _) = await Assert.That(ResponseBody).IsNotNull();
+            (_, CompetitorPointsConsensusQueryMetadata query, _) = await Assert.That(ResponseBody).IsNotNull();
 
-            CompetitorPointsConsensusFilteringMetadata expectedFiltering = new()
+            CompetitorPointsConsensusQueryMetadata expectedQuery = new()
             {
                 ContestStage = Enum.Parse<QueryableContestStage>(contestStage), MinYear = minYear, MaxYear = maxYear
             };
 
-            await Assert.That(filtering).IsEqualTo(expectedFiltering);
+            await Assert.That(query).IsEqualTo(expectedQuery);
         }
 
         public async Task Then_the_response_pagination_metadata_should_match(int totalPages = 0,
