@@ -18,8 +18,8 @@ internal sealed class TagsDocumentTransformer : BaseTagsDocumentTransformer
             """
             Endpoints for **Competitor Rankings** queries.
 
-            Each endpoint ranks every competitor in every contest broadcast by a named metric calculated from the points awards
-            the competitor received in its broadcast.
+            Each endpoint ranks every single competitor in every contest broadcast by a named metric calculated from the points
+            awards the competitor received in the broadcast in which they competed.
 
             A range of query parameters allows the client to filter the queried data and control the pagination of results.
             """);
