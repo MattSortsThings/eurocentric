@@ -4,5 +4,5 @@ namespace Eurocentric.Features.PublicApi.V1.Rankings.Competitors.GetCompetitorPo
 
 public sealed record GetCompetitorPointsShareRankingsResponse(
     CompetitorPointsShareRanking[] Rankings,
-    CompetitorPointsShareFilteringMetadata Filtering,
+    CompetitorPointsShareQueryMetadata Query,
     PaginationMetadata Pagination);

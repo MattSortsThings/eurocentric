@@ -39,7 +39,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 9    | 2023        | GrandFinal   | 13                   | FI          | Finland     | 2                 | Käärijä          | Cha Cha Cha            | 0.600457    | 526         | 876             | 73           |
             | 10   | 2023        | SemiFinal1   | 9                    | IL          | Israel      | 3                 | Noa Kirel        | Unicorn                | 0.587963    | 127         | 216             | 18           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             votingMethod: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -75,7 +75,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 113  | 2022        | GrandFinal   | 6                    | FR          | France      | 24                | Alvan & Ahez | Fulenn                | 0.018162    | 17          | 936             | 78           |
             | 112  | 2023        | SemiFinal1   | 12                   | AZ          | Azerbaijan  | 14                | TuralTuranX  | Tell Me More          | 0.018519    | 4           | 216             | 18           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             votingMethod: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -112,7 +112,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 4    | 2022        | GrandFinal   | 22                   | GB          | United Kingdom | 2                 | Sam Ryder        | SPACE MAN   | 0.497863    | 466         | 936             | 78           |
             | 5    | 2022        | GrandFinal   | 10                   | ES          | Spain          | 3                 | Chanel           | SloMo       | 0.490385    | 459         | 936             | 78           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "GrandFinal",
             votingMethod: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -149,7 +149,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 4    | 2023        | SemiFinal1   | 11                   | SE          | Sweden      | 2                 | Loreen        | Tattoo                 | 0.625       | 135         | 216             | 18           |
             | 5    | 2023        | SemiFinal2   | 13                   | AT          | Austria     | 2                 | Teya & Salena | Who The Hell Is Edgar? | 0.600877    | 137         | 228             | 19           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             votingMethod: "Any",
             minYear: 2023);
@@ -187,7 +187,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 4    | 2022        | SemiFinal1   | 8                    | NL          | Netherlands | 2                 | S10              | De Diepte      | 0.511574    | 221         | 432             | 36           |
             | 5    | 2022        | SemiFinal2   | 8                    | AU          | Australia   | 2                 | Sheldon Riley    | Not The Same   | 0.50625     | 243         | 480             | 40           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             votingMethod: "Any",
             maxYear: 2022);
@@ -225,7 +225,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 4    | 2022        | GrandFinal   | 12                   | UA          | Ukraine     | 1                 | Kalush Orchestra | Stefania               | 0.674145    | 631         | 936             | 78           |
             | 5    | 2023        | GrandFinal   | 9                    | SE          | Sweden      | 1                 | Loreen           | Tattoo                 | 0.665525    | 583         | 876             | 73           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             votingMethod: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -262,7 +262,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 4    | 2022        | SemiFinal1   | 15                   | GR          | Greece      | 3                 | Amanda Georgiadi Tenfjord | Die Together   | 0.699074    | 151         | 216             | 18           |
             | 5    | 2022        | SemiFinal1   | 8                    | NL          | Netherlands | 2                 | S10                       | De Diepte      | 0.657407    | 142         | 216             | 18           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             votingMethod: "Jury");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -299,7 +299,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 4    | 2023        | SemiFinal1   | 15                   | FI          | Finland     | 1                 | Käärijä          | Cha Cha Cha     | 0.819444    | 177         | 216             | 18           |
             | 5    | 2022        | SemiFinal2   | 3                    | RS          | Serbia      | 3                 | Konstrakta       | In Corpore Sano | 0.725       | 174         | 240             | 20           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             votingMethod: "Televote");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -339,7 +339,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 4    | 2022        | SemiFinal1   | 9                    | MD          | Moldova     | 8                 | Zdob şi Zdub & Advahov Brothers | Trenulețul      | 0.625       | 135         | 216             | 18           |
             | 5    | 2022        | SemiFinal2   | 18                   | CZ          | Czechia     | 4                 | We Are Domi                     | Lights Off      | 0.520833    | 125         | 240             | 20           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2016,
             maxYear: 2022,
             contestStage: "SemiFinals",
@@ -383,7 +383,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             | 83   | 2022        | GrandFinal   | 18                   | IS          | Iceland     | 23                | Systur           | Með Hækkandi Sól  | 0.021368    | 10          | 468             | 39           |
             | 82   | 2023        | GrandFinal   | 25                   | HR          | Croatia     | 13                | Let 3            | Mama ŠČ!          | 0.025463    | 11          | 432             | 36           |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2016,
             maxYear: 2050,
             contestStage: "Any",
@@ -415,7 +415,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
         // Then
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_be_empty();
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2050,
             maxYear: 2016,
             votingMethod: "Any",
@@ -529,14 +529,14 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
             await Assert.That(rankings).IsEmpty();
         }
 
-        public async Task Then_the_response_filtering_metadata_should_match(string votingMethod = "",
+        public async Task Then_the_response_query_metadata_should_match(string votingMethod = "",
             int? maxYear = null,
             int? minYear = null,
             string contestStage = "")
         {
-            (_, CompetitorPointsShareFilteringMetadata filtering, _) = await Assert.That(ResponseBody).IsNotNull();
+            (_, CompetitorPointsShareQueryMetadata query, _) = await Assert.That(ResponseBody).IsNotNull();
 
-            CompetitorPointsShareFilteringMetadata expectedFiltering = new()
+            CompetitorPointsShareQueryMetadata expectedQuery = new()
             {
                 ContestStage = Enum.Parse<QueryableContestStage>(contestStage),
                 MinYear = minYear,
@@ -544,7 +544,7 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
                 VotingMethod = Enum.Parse<QueryableVotingMethod>(votingMethod)
             };
 
-            await Assert.That(filtering).IsEqualTo(expectedFiltering);
+            await Assert.That(query).IsEqualTo(expectedQuery);
         }
 
         public async Task Then_the_response_pagination_metadata_should_match(int totalPages = 0,

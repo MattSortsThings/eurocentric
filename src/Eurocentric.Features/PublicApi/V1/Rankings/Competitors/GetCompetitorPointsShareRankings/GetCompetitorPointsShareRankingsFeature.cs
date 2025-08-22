@@ -32,7 +32,7 @@ internal static class GetCompetitorPointsShareRankingsFeature
         VotingMethod = queryParams.VotingMethod.GetValueOrDefault(QueryParamDefaults.VotingMethod)
     };
 
-    private static CompetitorPointsShareFilteringMetadata GetFilteringMetadata(this Query query) => new()
+    private static CompetitorPointsShareQueryMetadata ToQueryMetadata(this Query query) => new()
     {
         ContestStage = query.ContestStage,
         MinYear = query.MinYear,
@@ -40,10 +40,10 @@ internal static class GetCompetitorPointsShareRankingsFeature
         VotingMethod = query.VotingMethod
     };
 
-    private static async Task<(CompetitorPointsShareRanking[], PaginationMetadata)>
-        ExecuteStoredProcedure(this IDbStoredProcedureRunner procRunner,
-            StoredProcedureParams procParams,
-            CancellationToken cancellationToken)
+    private static async Task<(CompetitorPointsShareRanking[] rankings, PaginationMetadata pagination)> RunAsync(
+        this IDbStoredProcedureRunner procRunner,
+        StoredProcedureParams procParams,
+        CancellationToken cancellationToken)
     {
         CompetitorPointsShareRanking[] rankings = await procRunner.ExecuteAsync<CompetitorPointsShareRanking>(
             DbStoredProcedures.Dbo.GetCompetitorPointsShareRankings,
@@ -79,16 +79,13 @@ internal static class GetCompetitorPointsShareRankingsFeature
         : IQueryHandler<Query, GetCompetitorPointsShareRankingsResponse>
     {
         public async Task<ErrorOr<GetCompetitorPointsShareRankingsResponse>> OnHandle(Query query,
-            CancellationToken cancellationToken)
-        {
-            CompetitorPointsShareFilteringMetadata filtering = query.GetFilteringMetadata();
-
-            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
-                .WithContestStagesParamFrom(query)
-                .WithOptionalYearRangeParamsFrom(query)
-                .WithVotingMethodParamsFrom(query)
-                .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
-                .Then(tuple => new GetCompetitorPointsShareRankingsResponse(tuple.Item1, filtering, tuple.Item2));
-        }
+            CancellationToken cancellationToken) => await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+            .WithContestStagesParamFrom(query)
+            .WithOptionalYearRangeParamsFrom(query)
+            .WithVotingMethodParamsFrom(query)
+            .ThenAsync(procParams => procRunner.RunAsync(procParams, cancellationToken))
+            .Then(tuple => new GetCompetitorPointsShareRankingsResponse(tuple.rankings,
+                query.ToQueryMetadata(),
+                tuple.pagination));
     }
 }

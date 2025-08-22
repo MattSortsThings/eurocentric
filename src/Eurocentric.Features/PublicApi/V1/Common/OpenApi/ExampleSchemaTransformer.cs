@@ -36,8 +36,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
                 CompetingCountryPointsInRangeRanking.CreateExample().ToOpenApiAny(),
             [typeof(CompetingCountryPointsShareQueryMetadata)] =
                 CompetingCountryPointsShareQueryMetadata.CreateExample().ToOpenApiAny(),
-            [typeof(CompetingCountryPointsShareRanking)] =
-                CompetingCountryPointsShareRanking.CreateExample().ToOpenApiAny(),
+            [typeof(CompetingCountryPointsShareRanking)] = CompetingCountryPointsShareRanking.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsAverageQueryMetadata)] =
                 CompetitorPointsAverageQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsAverageRanking)] = CompetitorPointsAverageRanking.CreateExample().ToOpenApiAny(),
@@ -47,8 +46,7 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(CompetitorPointsInRangeQueryMetadata)] =
                 CompetitorPointsInRangeQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsInRangeRanking)] = CompetitorPointsInRangeRanking.CreateExample().ToOpenApiAny(),
-            [typeof(CompetitorPointsShareFilteringMetadata)] =
-                CompetitorPointsShareFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(CompetitorPointsShareQueryMetadata)] = CompetitorPointsShareQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(CompetitorPointsShareRanking)] = CompetitorPointsShareRanking.CreateExample().ToOpenApiAny(),
             [typeof(PaginationMetadata)] = PaginationMetadata.CreateExample().ToOpenApiAny(),
             [typeof(QueryableBroadcast)] = QueryableBroadcast.CreateExample().ToOpenApiAny(),
