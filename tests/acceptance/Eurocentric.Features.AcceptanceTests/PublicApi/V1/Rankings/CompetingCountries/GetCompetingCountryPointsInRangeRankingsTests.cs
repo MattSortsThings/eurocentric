@@ -41,7 +41,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 9    | AU          | Australia   | 0.514286      | 108                 | 210          | 4          | 2        | 40              |
             | 10   | EE          | Estonia     | 0.509524      | 107                 | 210          | 4          | 2        | 40              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "Any",
@@ -81,7 +81,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 36   | FR          | France      | 0.238411      | 36                  | 151          | 2          | 2        | 40              |
             | 35   | RO          | Romania     | 0.270073      | 37                  | 137          | 3          | 2        | 40              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "Any",
@@ -122,7 +122,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 4    | UA          | Ukraine     | 0.682119      | 103                 | 151          | 2          | 2        | 40              |
             | 5    | ES          | Spain       | 0.629139      | 95                  | 151          | 2          | 2        | 40              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "GrandFinal",
@@ -163,7 +163,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 4    | IT          | Italy       | 0.767123      | 56                  | 73           | 1          | 1        | 37              |
             | 5    | NO          | Norway      | 0.703297      | 64                  | 91           | 2          | 1        | 37              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "Any",
@@ -205,7 +205,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 4    | UA          | Ukraine        | 0.868421      | 99                  | 114          | 2          | 1        | 39              |
             | 5    | RS          | Serbia         | 0.686441      | 81                  | 118          | 2          | 1        | 39              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "Any",
@@ -247,7 +247,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 4    | LT          | Lithuania   | 0.8           | 4                   | 5            | 3          | 2        | 1               |
             | 5    | ES          | Spain       | 0.75          | 3                   | 4            | 2          | 2        | 1               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "Any",
@@ -289,7 +289,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 4    | IL          | Israel      | 0.679389      | 89                  | 131          | 3          | 2        | 39              |
             | 5    | NO          | Norway      | 0.678049      | 139                 | 205          | 4          | 2        | 40              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "Any",
@@ -330,7 +330,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 4    | ES          | Spain       | 0.733333      | 55                  | 75           | 2          | 2        | 39              |
             | 5    | IT          | Italy       | 0.706667      | 53                  | 75           | 2          | 2        | 39              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "Any",
@@ -371,7 +371,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 4    | MD          | Moldova     | 0.776786      | 87                  | 112          | 4          | 2        | 40              |
             | 5    | FI          | Finland     | 0.710526      | 81                  | 114          | 4          | 2        | 40              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 1,
             maxPoints: 12,
             contestStage: "Any",
@@ -415,7 +415,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 4    | MK          | North Macedonia | 0.85          | 17                  | 20           | 1          | 1        | 20              |
             | 5    | BG          | Bulgaria        | 0.833333      | 15                  | 18           | 1          | 1        | 18              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 0,
             maxPoints: 0,
             minYear: 2016,
@@ -464,7 +464,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             | 12   | CY          | Cyprus      | 0             | 0                   | 2            | 2          | 2        | 1               |
             | 12   | DE          | Germany     | 0             | 0                   | 2            | 2          | 2        | 1               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 5,
             maxPoints: 10,
             minYear: 2016,
@@ -501,7 +501,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
         // Then
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_be_empty();
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minPoints: 0,
             maxPoints: 12,
             minYear: 2050,
@@ -700,7 +700,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             await Assert.That(rankings).IsEmpty();
         }
 
-        public async Task Then_the_response_filtering_metadata_should_match(string votingMethod = "",
+        public async Task Then_the_response_query_metadata_should_match(string votingMethod = "",
             string? votingCountryCode = null,
             int? maxYear = null,
             int? minYear = null,
@@ -708,9 +708,9 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
             int minPoints = 0,
             int maxPoints = 0)
         {
-            (_, CompetingCountryPointsInRangeFilteringMetadata filtering, _) = await Assert.That(ResponseBody).IsNotNull();
+            (_, CompetingCountryPointsInRangeQueryMetadata query, _) = await Assert.That(ResponseBody).IsNotNull();
 
-            CompetingCountryPointsInRangeFilteringMetadata expectedFiltering = new()
+            CompetingCountryPointsInRangeQueryMetadata expectedQuery = new()
             {
                 ContestStage = Enum.Parse<QueryableContestStage>(contestStage),
                 MinPoints = minPoints,
@@ -721,7 +721,7 @@ public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeed
                 VotingMethod = Enum.Parse<QueryableVotingMethod>(votingMethod)
             };
 
-            await Assert.That(filtering).IsEqualTo(expectedFiltering);
+            await Assert.That(query).IsEqualTo(expectedQuery);
         }
 
         public async Task Then_the_response_pagination_metadata_should_match(int totalPages = 0,
