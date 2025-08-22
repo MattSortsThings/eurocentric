@@ -39,7 +39,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 9    | IL          | Israel            | 5.285714      | 37          | 7            | 4          | 2        |
             | 10   | CZ          | Czechia           | 5.142857      | 36          | 7            | 4          | 2        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             contestStage: "Any",
             votingMethod: "Any");
@@ -77,7 +77,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 35   | GR          | Greece      | 2.5           | 10          | 4            | 2          | 2        |
             | 35   | SI          | Slovenia    | 2.5           | 10          | 4            | 2          | 2        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             contestStage: "Any",
             votingMethod: "Any");
@@ -116,7 +116,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 4    | RS          | Serbia            | 6.25          | 25          | 4            | 2          | 2        |
             | 5    | NO          | Norway            | 6             | 24          | 4            | 2          | 2        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             contestStage: "GrandFinal",
             votingMethod: "Any");
@@ -155,7 +155,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 3    | IS          | Iceland     | 11            | 22          | 2            | 1          | 1        |
             | 5    | IE          | Ireland     | 10.666667     | 32          | 3            | 2          | 1        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             contestStage: "Any",
             votingMethod: "Any",
@@ -195,7 +195,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 4    | MK          | North Macedonia | 3             | 12          | 4            | 2          | 1        |
             | 4    | RS          | Serbia          | 3             | 12          | 4            | 2          | 1        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             contestStage: "Any",
             votingMethod: "Any",
@@ -235,7 +235,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 4    | NO          | Norway            | 7.2           | 36          | 5            | 3          | 2        |
             | 5    | NL          | Netherlands       | 6.4           | 32          | 5            | 3          | 2        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             contestStage: "Any",
             votingMethod: "Any");
@@ -274,7 +274,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 4    | SE          | Sweden      | 5.333333      | 16          | 3            | 3          | 2        |
             | 5    | IS          | Iceland     | 5             | 10          | 2            | 2          | 2        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             contestStage: "Any",
             votingMethod: "Jury");
@@ -313,7 +313,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 4    | LV          | Latvia            | 8.333333      | 25          | 3            | 3          | 2        |
             | 5    | NO          | Norway            | 8             | 24          | 3            | 3          | 2        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             contestStage: "Any",
             votingMethod: "Televote");
@@ -355,7 +355,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 4    | EE          | Estonia     | 8.5           | 17          | 2            | 2          | 2        |
             | 5    | AT          | Austria     | 8             | 8           | 1            | 1          | 1        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "AU",
             minYear: 2016,
             maxYear: 2023,
@@ -401,7 +401,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             | 15   | GB          | United Kingdom | 1.333333      | 4           | 3            | 2          | 1        |
             | 14   | LT          | Lithuania      | 1.4           | 7           | 5            | 3          | 2        |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2016,
             maxYear: 2050,
             contestStage: "Any",
@@ -435,7 +435,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
         // Then
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_be_empty();
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             competingCountryCode: "FI",
             minYear: 2050,
             maxYear: 2016,
@@ -601,15 +601,15 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
             await Assert.That(rankings).IsEmpty();
         }
 
-        public async Task Then_the_response_filtering_metadata_should_match(string votingMethod = "",
+        public async Task Then_the_response_query_metadata_should_match(string votingMethod = "",
             string competingCountryCode = "",
             int? maxYear = null,
             int? minYear = null,
             string contestStage = "")
         {
-            (_, VotingCountryPointsAverageFilteringMetadata filtering, _) = await Assert.That(ResponseBody).IsNotNull();
+            (_, VotingCountryPointsAverageQueryMetadata query, _) = await Assert.That(ResponseBody).IsNotNull();
 
-            VotingCountryPointsAverageFilteringMetadata expectedFiltering = new()
+            VotingCountryPointsAverageQueryMetadata expectedQuery = new()
             {
                 ContestStage = Enum.Parse<QueryableContestStage>(contestStage),
                 MinYear = minYear,
@@ -618,7 +618,7 @@ public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededA
                 VotingMethod = Enum.Parse<QueryableVotingMethod>(votingMethod)
             };
 
-            await Assert.That(filtering).IsEqualTo(expectedFiltering);
+            await Assert.That(query).IsEqualTo(expectedQuery);
         }
 
         public async Task Then_the_response_pagination_metadata_should_match(int totalPages = 0,

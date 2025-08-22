@@ -4,5 +4,5 @@ namespace Eurocentric.Features.PublicApi.V1.Rankings.VotingCountries.GetVotingCo
 
 public sealed record GetVotingCountryPointsAverageRankingsResponse(
     VotingCountryPointsAverageRanking[] Rankings,
-    VotingCountryPointsAverageFilteringMetadata Filtering,
+    VotingCountryPointsAverageQueryMetadata Query,
     PaginationMetadata Pagination);

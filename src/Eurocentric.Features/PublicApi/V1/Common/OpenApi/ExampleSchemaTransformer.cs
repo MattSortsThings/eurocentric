@@ -56,8 +56,8 @@ internal sealed class ExampleSchemaTransformer : BaseExampleSchemaTransformer
             [typeof(QueryableContest)] = QueryableContest.CreateExample().ToOpenApiAny(),
             [typeof(QueryableCountry)] = QueryableCountry.CreateExample().ToOpenApiAny(),
             [typeof(QueryableVotingMethod[])] = Enum.GetValues<QueryableVotingMethod>().ToOpenApiAny(),
-            [typeof(VotingCountryPointsAverageFilteringMetadata)] =
-                VotingCountryPointsAverageFilteringMetadata.CreateExample().ToOpenApiAny(),
+            [typeof(VotingCountryPointsAverageQueryMetadata)] =
+                VotingCountryPointsAverageQueryMetadata.CreateExample().ToOpenApiAny(),
             [typeof(VotingCountryPointsAverageRanking)] = VotingCountryPointsAverageRanking.CreateExample().ToOpenApiAny()
         };
 }
