@@ -32,7 +32,7 @@ internal static class GetCompetingCountryPointsConsensusRankingsFeature
         VotingCountryCode = queryParams.VotingCountryCode
     };
 
-    private static CompetingCountryPointsConsensusFilteringMetadata GetFilteringMetadata(this Query query) => new()
+    private static CompetingCountryPointsConsensusQueryMetadata ToQueryMetadata(this Query query) => new()
     {
         ContestStage = query.ContestStage,
         MinYear = query.MinYear,
@@ -40,10 +40,10 @@ internal static class GetCompetingCountryPointsConsensusRankingsFeature
         VotingCountryCode = query.VotingCountryCode
     };
 
-    private static async Task<(CompetingCountryPointsConsensusRanking[], PaginationMetadata)>
-        ExecuteStoredProcedure(this IDbStoredProcedureRunner procRunner,
-            StoredProcedureParams procParams,
-            CancellationToken cancellationToken)
+    private static async Task<(CompetingCountryPointsConsensusRanking[] rankings, PaginationMetadata pagination)> RunAsync(
+        this IDbStoredProcedureRunner procRunner,
+        StoredProcedureParams procParams,
+        CancellationToken cancellationToken)
     {
         CompetingCountryPointsConsensusRanking[] rankings =
             await procRunner.ExecuteAsync<CompetingCountryPointsConsensusRanking>(
@@ -80,16 +80,13 @@ internal static class GetCompetingCountryPointsConsensusRankingsFeature
         : IQueryHandler<Query, GetCompetingCountryPointsConsensusRankingsResponse>
     {
         public async Task<ErrorOr<GetCompetingCountryPointsConsensusRankingsResponse>> OnHandle(Query query,
-            CancellationToken cancellationToken)
-        {
-            CompetingCountryPointsConsensusFilteringMetadata filtering = query.GetFilteringMetadata();
-
-            return await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
-                .WithContestStagesParamFrom(query)
-                .WithOptionalVotingCountryCodeParamFrom(query)
-                .WithOptionalYearRangeParamsFrom(query)
-                .ThenAsync(procParams => procRunner.ExecuteStoredProcedure(procParams, cancellationToken))
-                .Then(tuple => new GetCompetingCountryPointsConsensusRankingsResponse(tuple.Item1, filtering, tuple.Item2));
-        }
+            CancellationToken cancellationToken) => await StoredProcedureParams.CreateWithPaginationParamsFrom(query)
+            .WithContestStagesParamFrom(query)
+            .WithOptionalVotingCountryCodeParamFrom(query)
+            .WithOptionalYearRangeParamsFrom(query)
+            .ThenAsync(procParams => procRunner.RunAsync(procParams, cancellationToken))
+            .Then(tuple => new GetCompetingCountryPointsConsensusRankingsResponse(tuple.rankings,
+                query.ToQueryMetadata(),
+                tuple.pagination));
     }
 }

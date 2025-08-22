@@ -4,8 +4,8 @@ using Eurocentric.Features.Shared.Documentation;
 
 namespace Eurocentric.Features.PublicApi.V1.Rankings.CompetingCountries.GetCompetingCountryPointsConsensusRankings;
 
-public sealed record CompetingCountryPointsConsensusFilteringMetadata :
-    IExampleProvider<CompetingCountryPointsConsensusFilteringMetadata>
+public sealed record
+    CompetingCountryPointsConsensusQueryMetadata : IExampleProvider<CompetingCountryPointsConsensusQueryMetadata>
 {
     public required QueryableContestStage ContestStage { get; init; }
 
@@ -16,7 +16,7 @@ public sealed record CompetingCountryPointsConsensusFilteringMetadata :
     public string? VotingCountryCode { get; init; }
 
 
-    public static CompetingCountryPointsConsensusFilteringMetadata CreateExample() => new()
+    public static CompetingCountryPointsConsensusQueryMetadata CreateExample() => new()
     {
         ContestStage = QueryParamDefaults.ContestStage, MinYear = null, MaxYear = null, VotingCountryCode = null
     };

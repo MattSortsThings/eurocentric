@@ -39,7 +39,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             | 9    | IL          | Israel         | 0.695694        | 79058.222222     | 348.138702       | 326.419634           | 56               | 2          | 2        | 38              |
             | 10   | AM          | Armenia        | 0.681803        | 60028.333333     | 296.47803        | 296.964644           | 93               | 3          | 2        | 39              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
             pageIndex: 0,
@@ -74,7 +74,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             | 36   | BG          | Bulgaria    | 0.173814        | 1584.444444      | 83.844433        | 108.722378           | 18               | 1          | 1        | 18              |
             | 35   | AZ          | Azerbaijan  | 0.205138        | 1704.333333      | 317.905122       | 26.134269            | 59               | 2          | 1        | 39              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any");
         await euroFan.Then_the_response_pagination_metadata_should_match(
             pageIndex: 1,
@@ -110,7 +110,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             | 4    | ES          | Spain          | 0.750112        | 109341           | 422.812015       | 344.75418            | 75               | 2          | 2        | 39              |
             | 5    | IT          | Italy          | 0.739763        | 118607.222222    | 440.195411       | 364.227798           | 75               | 2          | 2        | 39              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "GrandFinal");
         await euroFan.Then_the_response_pagination_metadata_should_match(
             pageIndex: 0,
@@ -146,7 +146,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             | 4    | FI          | Finland     | 0.744164        | 113416.666667    | 293.234074       | 519.748871           | 36               | 1          | 1        | 36              |
             | 5    | SI          | Slovenia    | 0.638793        | 12372            | 132.138395       | 146.571939           | 36               | 1          | 1        | 36              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             minYear: 2023);
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -183,7 +183,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             | 4    | ES          | Spain       | 0.827551        | 106534.333333    | 374.450709       | 343.795643           | 39               | 1          | 1        | 39              |
             | 5    | UA          | Ukraine     | 0.809696        | 258875           | 449.012497       | 712.049078           | 57               | 2          | 1        | 39              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             maxYear: 2022);
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -220,7 +220,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             | 1    | HR          | Croatia     | 1               | 1                | 1                | 1                    | 1                | 1          | 1        | 1               |
             | 1    | IE          | Ireland     | 1               | 100              | 1                | 100                  | 1                | 1          | 1        | 1               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             contestStage: "Any",
             votingCountryCode: "GB");
         await euroFan.Then_the_response_pagination_metadata_should_match(
@@ -259,7 +259,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             | 4    | UA          | Ukraine     | 0.892752        | 104644.444444    | 293.805113       | 398.956973           | 18               | 1          | 1        | 18              |
             | 5    | AU          | Australia   | 0.873658        | 47736.111111     | 330.298686       | 165.424034           | 20               | 1          | 1        | 20              |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2016,
             maxYear: 2022,
             contestStage: "SemiFinals");
@@ -302,7 +302,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             | 33   | CH          | Switzerland | 0.786318        | 9.333333         | 8.393119         | 1.414214             | 2                | 2          | 2        | 1               |
             | 32   | RO          | Romania     | 0.789352        | 75               | 1.414214         | 67.185481            | 2                | 2          | 1        | 1               |
             """);
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2016,
             maxYear: 2050,
             contestStage: "Any",
@@ -333,7 +333,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
         // Then
         await euroFan.Then_my_request_should_SUCCEED_with_status_code_200_OK();
         await euroFan.Then_the_response_rankings_page_should_be_empty();
-        await euroFan.Then_the_response_filtering_metadata_should_match(
+        await euroFan.Then_the_response_query_metadata_should_match(
             minYear: 2050,
             maxYear: 2016,
             contestStage: "Any");
@@ -468,15 +468,15 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
             await Assert.That(rankings).IsEmpty();
         }
 
-        public async Task Then_the_response_filtering_metadata_should_match(
+        public async Task Then_the_response_query_metadata_should_match(
             string? votingCountryCode = null,
             int? maxYear = null,
             int? minYear = null,
             string contestStage = "")
         {
-            (_, CompetingCountryPointsConsensusFilteringMetadata filtering, _) = await Assert.That(ResponseBody).IsNotNull();
+            (_, CompetingCountryPointsConsensusQueryMetadata query, _) = await Assert.That(ResponseBody).IsNotNull();
 
-            CompetingCountryPointsConsensusFilteringMetadata expectedFiltering = new()
+            CompetingCountryPointsConsensusQueryMetadata expectedQuery = new()
             {
                 ContestStage = Enum.Parse<QueryableContestStage>(contestStage),
                 MinYear = minYear,
@@ -484,7 +484,7 @@ public sealed class GetCompetingCountryPointsConsensusRankingsTests : ParallelSe
                 VotingCountryCode = votingCountryCode
             };
 
-            await Assert.That(filtering).IsEqualTo(expectedFiltering);
+            await Assert.That(query).IsEqualTo(expectedQuery);
         }
 
         public async Task Then_the_response_pagination_metadata_should_match(int totalPages = 0,

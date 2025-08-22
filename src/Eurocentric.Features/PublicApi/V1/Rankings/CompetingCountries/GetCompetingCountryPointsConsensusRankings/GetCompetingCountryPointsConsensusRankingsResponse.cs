@@ -4,5 +4,5 @@ namespace Eurocentric.Features.PublicApi.V1.Rankings.CompetingCountries.GetCompe
 
 public sealed record GetCompetingCountryPointsConsensusRankingsResponse(
     CompetingCountryPointsConsensusRanking[] Rankings,
-    CompetingCountryPointsConsensusFilteringMetadata Filtering,
+    CompetingCountryPointsConsensusQueryMetadata Query,
     PaginationMetadata Pagination);
