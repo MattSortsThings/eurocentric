@@ -14,7 +14,7 @@ public abstract record PaginatedRequest
     public int? PageIndex { get; init; }
 
     [FromQuery(Name = "pageSize")]
-    [Description("Sets the zero-based pagination page size.")]
+    [Description("Sets the pagination page size.")]
     [Range(1, 100, ErrorMessage = "Page size must be between 1 and 100.")]
     [DefaultValue(QueryParamDefaults.PageSize)]
     public int? PageSize { get; init; }

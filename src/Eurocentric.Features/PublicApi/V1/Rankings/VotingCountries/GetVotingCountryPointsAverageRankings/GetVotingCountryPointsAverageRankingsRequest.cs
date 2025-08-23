@@ -11,24 +11,24 @@ public sealed record GetVotingCountryPointsAverageRankingsRequest : PaginatedReq
     [Required]
     [FromQuery(Name = "competingCountryCode")]
     [RegularExpression("[A-Z]{2}", ErrorMessage = "Competing country code must be a string of 2 upper-case letters.")]
-    [Description("Sets the competing country for the queried data.")]
+    [Description("Sets the competing country code.")]
     public required string CompetingCountryCode { get; init; }
 
     [FromQuery(Name = "contestStage")]
-    [Description("Filters the queried data to points awarded in a specific contest stage.")]
+    [Description("Filters voting data by contest stage.")]
     [DefaultValue(typeof(QueryableContestStage), nameof(QueryableContestStage.Any))]
     public QueryableContestStage? ContestStage { get; init; }
 
     [FromQuery(Name = "minYear")]
-    [Description("Filters the queried data to points awarded in or after a specific contest year.")]
+    [Description("Filters voting data by inclusive minimum contest year.")]
     public int? MinYear { get; init; }
 
     [FromQuery(Name = "maxYear")]
-    [Description("Filters the queried data to points awarded in or before a specific contest year.")]
+    [Description("Filters voting data by inclusive maximum contest year.")]
     public int? MaxYear { get; init; }
 
     [FromQuery(Name = "votingMethod")]
-    [Description("Filters the queried data to points awarded using a specific voting method.")]
+    [Description("Filters voting data by voting method.")]
     [DefaultValue(typeof(QueryableVotingMethod), nameof(QueryableVotingMethod.Any))]
     public QueryableVotingMethod? VotingMethod { get; init; }
 }

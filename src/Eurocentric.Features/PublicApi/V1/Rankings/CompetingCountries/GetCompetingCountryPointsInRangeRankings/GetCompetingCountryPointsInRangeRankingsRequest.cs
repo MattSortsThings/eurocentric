@@ -10,34 +10,34 @@ public sealed record GetCompetingCountryPointsInRangeRankingsRequest : Paginated
 {
     [Required]
     [FromQuery(Name = "minPoints")]
-    [Description("Sets the inclusive minimum points value for the queried data.")]
+    [Description("Sets the inclusive points range minimum..")]
     public required int MinPoints { get; init; }
 
     [Required]
     [FromQuery(Name = "maxPoints")]
-    [Description("Sets the inclusive maximum points value for the queried data.")]
+    [Description("Sets the inclusive points range maximum.")]
     public required int MaxPoints { get; init; }
 
     [FromQuery(Name = "contestStage")]
-    [Description("Filters the queried data to points awarded in a specific contest stage.")]
+    [Description("Filters voting data by contest stage.")]
     [DefaultValue(typeof(QueryableContestStage), nameof(QueryableContestStage.Any))]
     public QueryableContestStage? ContestStage { get; init; }
 
     [FromQuery(Name = "minYear")]
-    [Description("Filters the queried data to points awarded in or after a specific contest year.")]
+    [Description("Filters voting data by inclusive minimum contest year.")]
     public int? MinYear { get; init; }
 
     [FromQuery(Name = "maxYear")]
-    [Description("Filters the queried data to points awarded in or before a specific contest year.")]
+    [Description("Filters voting data by inclusive maximum contest year.")]
     public int? MaxYear { get; init; }
 
     [FromQuery(Name = "votingCountryCode")]
     [RegularExpression("[A-Z]{2}", ErrorMessage = "Voting country code must be a string of 2 upper-case letters.")]
-    [Description("Filters the queried data to points awarded by a specific voting country.")]
+    [Description("Filters voting data by voting country code.")]
     public string? VotingCountryCode { get; init; }
 
     [FromQuery(Name = "votingMethod")]
-    [Description("Filters the queried data to points awarded using a specific voting method.")]
+    [Description("Filters voting data by voting method.")]
     [DefaultValue(typeof(QueryableVotingMethod), nameof(QueryableVotingMethod.Any))]
     public QueryableVotingMethod? VotingMethod { get; init; }
 }
