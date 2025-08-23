@@ -5,9 +5,9 @@
 namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_dbo_usp_get_competing_country_points_consensus_rankings : Migration
+    public partial class Add_dbo_usp_get_competitor_points_share_rankings : Migration
     {
-        private const string UpScript = "20250818051024_Add_dbo_usp_get_competing_country_points_consensus_rankings.sql";
+        private const string UpScript = "20250823160435_Add_dbo_usp_get_competitor_points_share_rankings.sql";
 
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DROP PROCEDURE dbo.usp_get_competing_country_points_consensus_rankings");
+            migrationBuilder.Sql("DROP PROCEDURE dbo.usp_get_competitor_points_share_rankings;");
         }
     }
 }

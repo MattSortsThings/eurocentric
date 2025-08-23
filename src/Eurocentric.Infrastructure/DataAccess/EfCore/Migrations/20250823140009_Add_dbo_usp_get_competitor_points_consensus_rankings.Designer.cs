@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250819075844_Add_dbo_usp_get_competitor_points_consensus_rankings")]
+    [Migration("20250823140009_Add_dbo_usp_get_competitor_points_consensus_rankings")]
     partial class Add_dbo_usp_get_competitor_points_consensus_rankings
     {
         /// <inheritdoc />

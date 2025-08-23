@@ -7,7 +7,7 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
     /// <inheritdoc />
     public partial class Add_dbo_usp_get_competing_country_points_average_rankings : Migration
     {
-        private const string UpScript = "20250817072123_Add_dbo_usp_get_competing_country_points_average_rankings.sql";
+        private const string UpScript = "20250822122535_Add_dbo_usp_get_competing_country_points_average_rankings.sql";
 
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
