@@ -15,7 +15,6 @@ public sealed record
 
     public string? VotingCountryCode { get; init; }
 
-
     public static CompetingCountryPointsConsensusQueryMetadata CreateExample() => new()
     {
         ContestStage = QueryParamDefaults.ContestStage, MinYear = null, MaxYear = null, VotingCountryCode = null
