@@ -9,4 +9,9 @@ public sealed partial class RestRequestFactory : IRestRequestFactory.IVotingCoun
         GetRequest("public/api/{apiVersion}/rankings/voting-countries/points-average")
             .AddUrlSegment("apiVersion", _apiVersion)
             .AddQueryParameters(queryParams);
+
+    public RestRequest GetVotingCountryPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams) =>
+        GetRequest("public/api/{apiVersion}/rankings/voting-countries/points-share")
+            .AddUrlSegment("apiVersion", _apiVersion)
+            .AddQueryParameters(queryParams);
 }
