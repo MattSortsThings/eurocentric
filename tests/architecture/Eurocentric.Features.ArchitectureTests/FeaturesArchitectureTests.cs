@@ -805,6 +805,8 @@ public sealed class FeaturesArchitectureTests
     [Arguments("PublicApi.V1.Rankings.Competitors.GetCompetitorPointsInRangeRankings")]
     [Arguments("PublicApi.V1.Rankings.Competitors.GetCompetitorPointsShareRankings")]
     [Arguments("PublicApi.V1.Rankings.VotingCountries.GetVotingCountryPointsAverageRankings")]
+    [Arguments("PublicApi.V1.Rankings.VotingCountries.GetVotingCountryPointsInRangeRankings")]
+    [Arguments("PublicApi.V1.Rankings.VotingCountries.GetVotingCountryPointsShareRankings")]
     public async Task PublicApi_V1_feature_types_should_not_depend_on_any_other_PublicApi_feature_namespace(
         string featureNamespace)
     {

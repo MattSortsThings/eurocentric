@@ -40,6 +40,8 @@ internal static partial class EndpointNames
         {
             internal const string GetVotingCountryPointsAverageRankings =
                 "PublicApi.V1.Rankings.GetVotingCountryPointsAverageRankings";
+            internal const string GetVotingCountryPointsInRangeRankings =
+                "PublicApi.V1.Rankings.GetVotingCountryPointsInRageRankings";
             internal const string GetVotingCountryPointsShareRankings =
                 "PublicApi.V1.Rankings.GetVotingCountryPointsShareRankings";
         }

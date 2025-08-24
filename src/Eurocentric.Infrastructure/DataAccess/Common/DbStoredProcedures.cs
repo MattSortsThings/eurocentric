@@ -14,6 +14,7 @@ public static class DbStoredProcedures
         public const string GetCompetitorPointsInRangeRankings = "dbo.usp_get_competitor_points_in_range_rankings";
         public const string GetCompetitorPointsShareRankings = "dbo.usp_get_competitor_points_share_rankings";
         public const string GetVotingCountryPointsAverageRankings = "dbo.usp_get_voting_country_points_average_rankings";
+        public const string GetVotingCountryPointsInRangeRankings = "dbo.usp_get_voting_country_points_in_range_rankings";
         public const string GetVotingCountryPointsShareRankings = "dbo.usp_get_voting_country_points_share_rankings";
     }
 
