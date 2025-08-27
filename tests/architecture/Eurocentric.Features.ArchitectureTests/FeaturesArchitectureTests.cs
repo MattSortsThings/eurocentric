@@ -46,9 +46,6 @@ public sealed class FeaturesArchitectureTests
     private static readonly IObjectProvider<IType> AdminApiTypes = Types()
         .That().ResideInNamespaceMatching(".AdminApi");
 
-    private static readonly IObjectProvider<IType> AdminApiV0Types = Types()
-        .That().ResideInNamespaceMatching(".AdminApi.V0");
-
     private static readonly IObjectProvider<IType> AdminApiV1Types = Types()
         .That().ResideInNamespaceMatching(".AdminApi.V1");
 
@@ -667,36 +664,6 @@ public sealed class FeaturesArchitectureTests
         TypeRule rule = Types()
             .That().Are(AdminApiTypes)
             .Should().NotDependOnAny(PublicApiTypes);
-
-        // Act
-        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
-
-        // Assert
-        await Assert.That(evaluation).ContainsOnly(Passed);
-    }
-
-    [Test]
-    public async Task AdminApi_V0_types_should_not_depend_on_AdminApi_V1_types()
-    {
-        // Arrange
-        TypeRule rule = Types()
-            .That().Are(AdminApiV0Types)
-            .Should().NotDependOnAny(AdminApiV1Types);
-
-        // Act
-        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
-
-        // Assert
-        await Assert.That(evaluation).ContainsOnly(Passed);
-    }
-
-    [Test]
-    public async Task AdminApi_V1_types_should_not_depend_on_AdminApi_V0_types()
-    {
-        // Arrange
-        TypeRule rule = Types()
-            .That().Are(AdminApiV1Types)
-            .Should().NotDependOnAny(AdminApiV0Types);
 
         // Act
         IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);

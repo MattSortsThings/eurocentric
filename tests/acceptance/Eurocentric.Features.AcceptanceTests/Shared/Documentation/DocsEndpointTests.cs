@@ -8,11 +8,7 @@ namespace Eurocentric.Features.AcceptanceTests.Shared.Documentation;
 public sealed class DocsEndpointTests : ParallelCleanAcceptanceTest
 {
     [Test]
-    [Arguments("admin-api-v0.1")]
-    [Arguments("admin-api-v0.2")]
     [Arguments("admin-api-v1.0")]
-    [Arguments("public-api-v0.1")]
-    [Arguments("public-api-v0.2")]
     [Arguments("public-api-v1.0")]
     public async Task Endpoint_should_serve_requested_API_documentation_page_to_anonymous_client(string docName)
     {

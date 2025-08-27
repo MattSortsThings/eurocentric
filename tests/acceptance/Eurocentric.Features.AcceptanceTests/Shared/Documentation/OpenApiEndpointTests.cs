@@ -59,7 +59,8 @@ public sealed class OpenApiEndpointTests : ParallelCleanAcceptanceTest
 
     [Test]
     [Arguments("admin-api-v0")]
-    [Arguments("admin-api-v0.3")]
+    [Arguments("admin-api-v0.1")]
+    [Arguments("admin-api-v0.2")]
     [Arguments("admin-api-v1")]
     [Arguments("admin-api-v1.1")]
     [Arguments("public-api-v0")]
