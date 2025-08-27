@@ -23,7 +23,7 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.8"/>
     <PackageVersion Include="OneOf" Version="3.0.271"/>
     <PackageVersion Include="RestSharp" Version="112.1.0"/>
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.7.0"/>
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.7.2"/>
     <PackageVersion Include="SlimMessageBus" Version="3.0.0"/>
     <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.0"/>
     <PackageVersion Include="Testcontainers.MsSql" Version="4.6.0"/>
