@@ -29,6 +29,7 @@ internal static class DependencyInjection
             .AddOperationTransformer<ParameterExampleOperationTransformer>()
             .AddOperationTransformer<ProblemDetailsResponseExampleOperationTransformer>()
             .AddDocumentTransformer(new InfoDocumentTransformer("v1.0"))
-            .AddDocumentTransformer<TagsDocumentTransformer>();
+            .AddDocumentTransformer<TagsDocumentTransformer>()
+            .AddDocumentTransformer(new ApiReleaseDocumentTransformer("/public/api/v1.0"));
     }
 }

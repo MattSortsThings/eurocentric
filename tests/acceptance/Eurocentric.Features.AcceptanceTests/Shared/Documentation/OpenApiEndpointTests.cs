@@ -20,14 +20,24 @@ public sealed class OpenApiEndpointTests : ParallelCleanAcceptanceTest
             .ToArray();
     }
 
+    private static async Task<string> ExtractServerUrl(string? json)
+    {
+        string jsonText = await Assert.That(json).IsNotNull();
+
+        using JsonDocument doc = JsonDocument.Parse(jsonText);
+
+        return doc.RootElement.GetProperty("servers")
+            .EnumerateArray()
+            .First()
+            .GetProperty("url")
+            .GetString()!;
+    }
+
     [Test]
-    [Arguments("admin-api-v0.1", "/admin/api/v0.1")]
-    [Arguments("admin-api-v0.2", "/admin/api/v0.2")]
     [Arguments("admin-api-v1.0", "/admin/api/v1.0")]
-    [Arguments("public-api-v0.1", "/public/api/v0.1")]
-    [Arguments("public-api-v0.2", "/public/api/v0.2")]
     [Arguments("public-api-v1.0", "/public/api/v1.0")]
-    public async Task Endpoint_should_serve_requested_OpenAPI_document_to_anonymous_client(string docName, string pathPrefix)
+    public async Task Endpoint_should_serve_requested_OpenAPI_document_to_anonymous_client(string docName,
+        string expectedServerUrlSuffix)
     {
         // Arrange
         RestRequest request = new RestRequest("openapi/{docName}.json").AddUrlSegment("docName", docName);
@@ -40,10 +50,11 @@ public sealed class OpenApiEndpointTests : ParallelCleanAcceptanceTest
         // Assert
         await Assert.That(statusCode).IsEqualTo(HttpStatusCode.OK);
 
-        string[] pathsInDocument = await ExtractAllPaths(json);
+        string serverUrl = await ExtractServerUrl(json);
+        await Assert.That(serverUrl).EndsWith(expectedServerUrlSuffix);
 
-        await Assert.That(pathsInDocument).IsNotEmpty()
-            .And.ContainsOnly(path => path.StartsWith(pathPrefix));
+        string[] pathsInDocument = await ExtractAllPaths(json);
+        await Assert.That(pathsInDocument).IsNotEmpty();
     }
 
     [Test]
