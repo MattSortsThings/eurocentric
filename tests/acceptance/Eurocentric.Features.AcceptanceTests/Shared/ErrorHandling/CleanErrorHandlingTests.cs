@@ -147,7 +147,7 @@ public sealed class CleanErrorHandlingTests : ParallelCleanAcceptanceTest
     public async Task GET_endpoint_should_return_400_with_ProblemDetails_on_missing_required_query_param()
     {
         // Arrange
-        const string route = "/public/api/v0.2/rankings/competing-countries/points-in-range";
+        const string route = "public/api/v1.0/rankings/competing-countries/points-in-range";
 
         RestRequest request = new RestRequest(route).AddQueryParameter("maxPoints", 1).UseSecretApiKey();
 
@@ -165,7 +165,7 @@ public sealed class CleanErrorHandlingTests : ParallelCleanAcceptanceTest
             .And.HasStatus(400)
             .And.HasTitle("Bad HTTP request")
             .And.HasDetail("BadHttpRequestException was thrown while handling the request.")
-            .And.HasInstance("GET /public/api/v0.2/rankings/competing-countries/points-in-range?maxPoints=1")
+            .And.HasInstance("GET /public/api/v1.0/rankings/competing-countries/points-in-range?maxPoints=1")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.1")
             .And.HasExtension("exceptionMessage", expectedExceptionMessage);
     }
@@ -174,7 +174,7 @@ public sealed class CleanErrorHandlingTests : ParallelCleanAcceptanceTest
     public async Task GET_endpoint_should_return_400_with_ProblemDetails_on_invalid_enum_query_param_string_value()
     {
         // Arrange
-        const string route = "/public/api/v0.2/rankings/competing-countries/points-average";
+        const string route = "/public/api/v1.0/rankings/competing-countries/points-average";
 
         RestRequest request = new RestRequest(route).AddQueryParameter("votingMethod", "INVALID").UseSecretApiKey();
 
@@ -193,7 +193,7 @@ public sealed class CleanErrorHandlingTests : ParallelCleanAcceptanceTest
             .And.HasStatus(400)
             .And.HasTitle("Bad HTTP request")
             .And.HasDetail("BadHttpRequestException was thrown while handling the request.")
-            .And.HasInstance("GET /public/api/v0.2/rankings/competing-countries/points-average?votingMethod=INVALID")
+            .And.HasInstance("GET /public/api/v1.0/rankings/competing-countries/points-average?votingMethod=INVALID")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.1")
             .And.HasExtension("exceptionMessage", expectedExceptionMessage);
     }
@@ -202,7 +202,7 @@ public sealed class CleanErrorHandlingTests : ParallelCleanAcceptanceTest
     public async Task GET_endpoint_should_return_400_with_ProblemDetails_on_invalid_enum_query_param_int_value()
     {
         // Arrange
-        const string route = "/public/api/v0.2/rankings/competing-countries/points-average";
+        const string route = "/public/api/v1.0/rankings/competing-countries/points-average";
 
         RestRequest request = new RestRequest(route).AddQueryParameter("votingMethod", 999999).UseSecretApiKey();
 
@@ -221,7 +221,7 @@ public sealed class CleanErrorHandlingTests : ParallelCleanAcceptanceTest
             .And.HasStatus(400)
             .And.HasTitle("Invalid enum argument")
             .And.HasDetail("InvalidEnumArgumentException was thrown while handling the request.")
-            .And.HasInstance("GET /public/api/v0.2/rankings/competing-countries/points-average?votingMethod=999999")
+            .And.HasInstance("GET /public/api/v1.0/rankings/competing-countries/points-average?votingMethod=999999")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.1")
             .And.HasExtension("exceptionMessage", expectedExceptionMessage);
     }

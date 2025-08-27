@@ -1,4 +1,3 @@
-using Eurocentric.Features.PublicApi.V0;
 using Eurocentric.Features.PublicApi.V1;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +15,6 @@ internal static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     internal static IServiceCollection AddPublicApiOpenApiDocuments(this IServiceCollection services)
     {
-        services.AddV0OpenApiDocuments();
         services.AddV1OpenApiDocuments();
 
         return services;

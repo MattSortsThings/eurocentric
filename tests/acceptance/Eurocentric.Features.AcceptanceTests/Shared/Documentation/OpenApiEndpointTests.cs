@@ -63,7 +63,8 @@ public sealed class OpenApiEndpointTests : ParallelCleanAcceptanceTest
     [Arguments("admin-api-v1")]
     [Arguments("admin-api-v1.1")]
     [Arguments("public-api-v0")]
-    [Arguments("public-api-v0.3")]
+    [Arguments("public-api-v0.1")]
+    [Arguments("public-api-v0.2")]
     [Arguments("public-api-v1")]
     [Arguments("public-api-v1.1")]
     public async Task Endpoint_should_fail_on_non_existent_OpenAPI_document_requested(string docName)

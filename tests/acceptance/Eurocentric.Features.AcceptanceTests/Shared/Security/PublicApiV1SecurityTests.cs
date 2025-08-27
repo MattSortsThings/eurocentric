@@ -5,12 +5,12 @@ using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.Security;
 
-public sealed class PublicApiV0SecurityTests : ParallelCleanAcceptanceTest
+public sealed class PublicApiV1SecurityTests : ParallelCleanAcceptanceTest
 {
-    private const string GetQueryableContestStagesRoute = "/public/api/v0.2/queryables/contest-stages";
+    private const string GetQueryableContestStagesRoute = "/public/api/v1.0/queryables/contest-stages";
 
     [Test]
-    public async Task PublicApi_V0_should_authenticate_and_authorize_request_using_secret_API_key()
+    public async Task PublicApi_V1_should_authenticate_and_authorize_request_using_secret_API_key()
     {
         // Arrange
         RestRequest request = new RestRequest(GetQueryableContestStagesRoute)
@@ -26,7 +26,7 @@ public sealed class PublicApiV0SecurityTests : ParallelCleanAcceptanceTest
     }
 
     [Test]
-    public async Task PublicApi_V0_should_authenticate_and_authorize_request_using_demo_API_key()
+    public async Task PublicApi_V1_should_authenticate_and_authorize_request_using_demo_API_key()
     {
         // Arrange
         RestRequest request = new RestRequest(GetQueryableContestStagesRoute)
@@ -42,7 +42,7 @@ public sealed class PublicApiV0SecurityTests : ParallelCleanAcceptanceTest
     }
 
     [Test]
-    public async Task PublicApi_V0_should_not_authenticate_request_using_unrecognized_API_key()
+    public async Task PublicApi_V1_should_not_authenticate_request_using_unrecognized_API_key()
     {
         // Arrange
         RestRequest request = new RestRequest(GetQueryableContestStagesRoute)
@@ -58,7 +58,7 @@ public sealed class PublicApiV0SecurityTests : ParallelCleanAcceptanceTest
     }
 
     [Test]
-    public async Task PublicApi_V0_should_not_authenticate_request_using_no_API_key()
+    public async Task PublicApi_V1_should_not_authenticate_request_using_no_API_key()
     {
         // Arrange
         RestRequest request = new(GetQueryableContestStagesRoute);

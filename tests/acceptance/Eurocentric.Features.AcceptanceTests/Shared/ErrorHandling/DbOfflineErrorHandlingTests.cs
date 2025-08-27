@@ -40,7 +40,7 @@ public sealed class DbOfflineErrorHandlingTests : ParallelDbOfflineAcceptanceTes
     public async Task Endpoint_using_Dapper_should_return_503_with_ProblemDetails_when_database_offline()
     {
         // Arrange
-        const string route = "/public/api/v0.2/rankings/competing-countries/points-average";
+        const string route = "/public/api/v1.0/rankings/competing-countries/points-average";
 
         RestRequest request = new RestRequest(route).UseSecretApiKey();
 
@@ -59,7 +59,7 @@ public sealed class DbOfflineErrorHandlingTests : ParallelDbOfflineAcceptanceTes
             .And.HasTitle("Database timeout")
             .And.HasDetail("SqlException was thrown while handling the request because the database connection " +
                            "or operation timed out. Please retry after c.120 seconds.")
-            .And.HasInstance("GET /public/api/v0.2/rankings/competing-countries/points-average")
+            .And.HasInstance("GET /public/api/v1.0/rankings/competing-countries/points-average")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.6.4");
     }
 }

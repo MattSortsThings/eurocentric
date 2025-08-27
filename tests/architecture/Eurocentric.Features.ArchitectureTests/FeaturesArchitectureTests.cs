@@ -55,9 +55,6 @@ public sealed class FeaturesArchitectureTests
     private static readonly IObjectProvider<IType> PublicApiTypes = Types()
         .That().ResideInNamespaceMatching(".PublicApi");
 
-    private static readonly IObjectProvider<IType> PublicApiV0Types = Types()
-        .That().ResideInNamespaceMatching(".PublicApi.V0");
-
     private static readonly IObjectProvider<IType> PublicApiV1Types = Types()
         .That().ResideInNamespaceMatching(".PublicApi.V1");
 
@@ -715,36 +712,6 @@ public sealed class FeaturesArchitectureTests
         TypeRule rule = Types()
             .That().Are(AdminApiTypes)
             .Should().NotDependOnAny(PublicApiTypes);
-
-        // Act
-        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
-
-        // Assert
-        await Assert.That(evaluation).ContainsOnly(Passed);
-    }
-
-    [Test]
-    public async Task PublicApi_V0_types_should_not_depend_on_PublicApi_V1_types()
-    {
-        // Arrange
-        TypeRule rule = Types()
-            .That().Are(PublicApiV0Types)
-            .Should().NotDependOnAny(PublicApiV1Types);
-
-        // Act
-        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
-
-        // Assert
-        await Assert.That(evaluation).ContainsOnly(Passed);
-    }
-
-    [Test]
-    public async Task PublicApi_V1_types_should_not_depend_on_PublicApi_V0_types()
-    {
-        // Arrange
-        TypeRule rule = Types()
-            .That().Are(PublicApiV1Types)
-            .Should().NotDependOnAny(PublicApiV0Types);
 
         // Act
         IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
