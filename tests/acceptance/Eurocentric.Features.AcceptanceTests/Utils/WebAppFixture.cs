@@ -115,9 +115,6 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
         await dbContext.Broadcasts.ExecuteDeleteAsync();
         await dbContext.Contests.ExecuteDeleteAsync();
         await dbContext.Countries.ExecuteDeleteAsync();
-        await dbContext.V0Broadcasts.ExecuteDeleteAsync();
-        await dbContext.V0Contests.ExecuteDeleteAsync();
-        await dbContext.V0Countries.ExecuteDeleteAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
