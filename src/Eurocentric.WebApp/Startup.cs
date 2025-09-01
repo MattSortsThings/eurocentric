@@ -1,3 +1,6 @@
+using Eurocentric.Features;
+using Eurocentric.Infrastructure;
+
 namespace Eurocentric.WebApp;
 
 /// <summary>
@@ -12,7 +15,8 @@ internal static class Startup
     /// <returns>The same <see cref="WebApplicationBuilder" /> instance, so that method invocations can be chained.</returns>
     internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        _ = builder.Services;
+        builder.Services.AddFeaturesAssemblyServices()
+            .AddInfrastructureAssemblyServices();
 
         return builder;
     }
@@ -26,8 +30,7 @@ internal static class Startup
     {
         app.UseHttpsRedirection();
 
-        app.MapGet("placeholder", () => TypedResults.Ok("You don't have to tell me twice! But during the Stone Age..."))
-            .AllowAnonymous();
+        app.UseVersionedApiEndpoints();
 
         return app;
     }
