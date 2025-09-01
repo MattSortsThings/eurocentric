@@ -1,5 +1,5 @@
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
-using Eurocentric.Features.PublicApi.V0.Common.Versioning;
+using Eurocentric.Features.PublicApi.V0.Queryables;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +22,6 @@ internal static class Middleware
             .AllowAnonymous()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        v0Group.MapGet("placeholder", () => TypedResults.Ok($"Public API zapped to the extreme at {DateTime.UtcNow}!"))
-            .IntroducedInVersion0Point(1);
+        v0Group.MapQueryablesEndpoints();
     }
 }
