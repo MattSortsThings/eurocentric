@@ -4,6 +4,14 @@
     <RootNamespace>Eurocentric.Infrastructure</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions"/>
+    <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"/>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
   </ItemGroup>
   <ItemGroup>

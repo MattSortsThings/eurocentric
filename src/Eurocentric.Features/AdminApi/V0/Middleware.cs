@@ -1,5 +1,5 @@
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
-using Eurocentric.Features.AdminApi.V0.Common.Versioning;
+using Eurocentric.Features.AdminApi.V0.Countries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -23,7 +23,6 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
-        v0Group.MapGet("placeholder", () => TypedResults.Ok($"Admin API zapped to the extreme at {DateTime.UtcNow}!"))
-            .IntroducedInVersion0Point(1);
+        v0Group.MapCountriesEndpoints();
     }
 }

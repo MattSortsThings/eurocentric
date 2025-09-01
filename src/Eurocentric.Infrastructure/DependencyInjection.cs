@@ -1,3 +1,4 @@
+using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Infrastructure;
@@ -15,7 +16,7 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddInfrastructureAssemblyServices(this IServiceCollection services)
     {
-        _ = services;
+        services.AddEfCoreDataAccess();
 
         return services;
     }

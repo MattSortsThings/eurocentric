@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer"/>
+    <PackageReference Include="JetBrains.Annotations"/>
     <PackageReference Include="SlimMessageBus.Host.Memory"/>
   </ItemGroup>
   <ItemGroup>
