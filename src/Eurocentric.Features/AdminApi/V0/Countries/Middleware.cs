@@ -1,6 +1,7 @@
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Common.Versioning;
 using Eurocentric.Features.AdminApi.V0.Countries.CreateCountry;
+using Eurocentric.Features.AdminApi.V0.Countries.GetCountries;
 using Eurocentric.Features.AdminApi.V0.Countries.GetCountry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +33,13 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
+
+        endpointGroup.MapGet("/", GetCountriesFeature.ExecuteAsync)
+            .WithName(EndpointNames.Countries.GetCountries)
+            .WithSummary("Get all countries")
+            .WithDescription("Retrieves all existing countries from the system, ordered by country code.")
+            .IntroducedInVersion0Point(2)
+            .Produces<GetCountryResponse>();
 
         endpointGroup.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
             .WithName(EndpointNames.Countries.GetCountry)
