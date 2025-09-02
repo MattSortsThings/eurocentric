@@ -1,5 +1,5 @@
 namespace Eurocentric.Features.PublicApi.V0.CompetingCountryRankings.GetCompetingCountryPointsInRangeRankings;
 
-public record GetCompetingCountryPointsInRangeRankingsResponse(
+public sealed record GetCompetingCountryPointsInRangeRankingsResponse(
     CompetingCountryPointsInRangeRanking[] Rankings,
     CompetingCountryPointsInRangeMetadata Metadata);
