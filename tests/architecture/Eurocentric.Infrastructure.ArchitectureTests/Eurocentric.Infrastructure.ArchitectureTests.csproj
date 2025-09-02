@@ -7,6 +7,7 @@
     <ProjectReference Include="..\..\..\src\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations"/>
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport"/>
     <PackageReference Include="TngTech.ArchUnitNET"/>
     <PackageReference Include="TUnit"/>

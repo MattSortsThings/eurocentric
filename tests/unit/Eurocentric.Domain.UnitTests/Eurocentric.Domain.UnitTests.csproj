@@ -4,6 +4,7 @@
     <RootNamespace>Eurocentric.Domain.UnitTests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations"/>
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport"/>
     <PackageReference Include="TUnit"/>
   </ItemGroup>

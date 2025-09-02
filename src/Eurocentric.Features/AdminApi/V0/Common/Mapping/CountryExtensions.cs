@@ -9,7 +9,7 @@ internal static class CountryExtensions
     {
         Id = country.Id,
         CountryCode = country.CountryCode,
-        CityName = country.CountryName,
+        CountryName = country.CountryName,
         ParticipatingContestIds = country.ParticipatingContestIds.ToArray()
     };
 }

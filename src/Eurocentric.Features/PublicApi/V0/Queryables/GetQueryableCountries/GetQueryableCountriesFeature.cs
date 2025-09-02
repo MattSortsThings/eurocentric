@@ -29,10 +29,11 @@ internal static class GetQueryableCountriesFeature
         public async Task<ErrorOr<GetQueryableCountriesResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
             IQueryable<Guid> queryableContestIdQuery = dbContext.V0Contests.AsNoTracking()
+                .Where(contest => contest.Completed)
                 .Select(contest => contest.Id);
 
             IQueryable<QueryableCountry> queryableCountryQuery = dbContext.V0Countries.AsNoTracking()
-                .Where(country => queryableContestIdQuery.Intersect(queryableContestIdQuery).Any())
+                .Where(country => queryableContestIdQuery.Intersect(country.ParticipatingContestIds).Any())
                 .OrderBy(country => country.CountryCode)
                 .Select(country => new QueryableCountry
                 {

@@ -5,17 +5,17 @@ namespace Eurocentric.Features.PublicApi.V0.CompetingCountryRankings.GetCompetin
 
 public sealed record CompetingCountryPointsInRangeMetadata : PaginatedMetadata
 {
-    public required int MinPoints { get; init; }
+    public int MinPoints { get; init; }
 
-    public required int MaxPoints { get; init; }
+    public int MaxPoints { get; init; }
 
-    public required int? MinYear { get; init; }
+    public int? MinYear { get; init; }
 
-    public required int? MaxYear { get; init; }
+    public int? MaxYear { get; init; }
 
-    public required QueryableContestStage? ContestStage { get; init; }
+    public QueryableContestStage? ContestStage { get; init; }
 
-    public required QueryableVotingMethod? VotingMethod { get; init; }
+    public QueryableVotingMethod? VotingMethod { get; init; }
 
-    public required string? VotingCountryCode { get; init; }
+    public string? VotingCountryCode { get; init; }
 }
