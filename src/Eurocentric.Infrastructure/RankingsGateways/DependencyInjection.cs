@@ -1,0 +1,22 @@
+using Eurocentric.Domain.V0.Rankings.CompetingCountries;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Eurocentric.Infrastructure.RankingsGateways;
+
+/// <summary>
+///     Extension methods to be invoked at the application composition root.
+/// </summary>
+internal static class DependencyInjection
+{
+    /// <summary>
+    ///     Adds all the rankings gateway services to the application service descriptor collection.
+    /// </summary>
+    /// <param name="services">Contains service descriptors for the application.</param>
+    /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
+    internal static IServiceCollection AddRankingsGateways(this IServiceCollection services)
+    {
+        services.AddScoped<ICompetingCountryRankingsGateway, V0CompetingCountryRankingsGateway>();
+
+        return services;
+    }
+}

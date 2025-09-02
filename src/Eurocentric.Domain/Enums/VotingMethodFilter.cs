@@ -1,9 +1,9 @@
-namespace Eurocentric.Features.PublicApi.V0.Common.Enums;
+namespace Eurocentric.Domain.Enums;
 
 /// <summary>
 ///     Filters the voting data by voting method.
 /// </summary>
-public enum QueryableVotingMethod
+public enum VotingMethodFilter
 {
     /// <summary>
     ///     Any voting method (i.e. no filter applied).

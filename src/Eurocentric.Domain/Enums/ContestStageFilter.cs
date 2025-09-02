@@ -1,9 +1,9 @@
-namespace Eurocentric.Features.PublicApi.V0.Common.Enums;
+namespace Eurocentric.Domain.Enums;
 
 /// <summary>
 ///     Filters the voting data by contest stage.
 /// </summary>
-public enum QueryableContestStage
+public enum ContestStageFilter
 {
     /// <summary>
     ///     Any contest stage (i.e. no filter applied).

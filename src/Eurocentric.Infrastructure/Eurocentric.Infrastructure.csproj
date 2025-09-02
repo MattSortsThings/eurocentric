@@ -4,6 +4,10 @@
     <RootNamespace>Eurocentric.Infrastructure</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DataAccess\EfCore\Migrations\Scripts\*.sql"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper"/>
     <PackageReference Include="EFCore.NamingConventions"/>
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore"/>

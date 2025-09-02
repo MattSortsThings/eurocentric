@@ -1,4 +1,5 @@
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
+using Eurocentric.Features.PublicApi.V0.CompetingCountryRankings;
 using Eurocentric.Features.PublicApi.V0.Queryables;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +23,7 @@ internal static class Middleware
             .AllowAnonymous()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
+        v0Group.MapCompetingCountryRankingsEndpoints();
         v0Group.MapQueryablesEndpoints();
     }
 }
