@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Eurocentric.Domain.UnitTests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport"/>
+    <PackageReference Include="TUnit"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Eurocentric.Domain\Eurocentric.Domain.csproj"/>
+  </ItemGroup>
+</Project>

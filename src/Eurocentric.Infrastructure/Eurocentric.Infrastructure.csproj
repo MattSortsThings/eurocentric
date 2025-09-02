@@ -7,6 +7,9 @@
     <EmbeddedResource Include="DataAccess\EfCore\Migrations\Scripts\*.sql"/>
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Dapper"/>
     <PackageReference Include="EFCore.NamingConventions"/>
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer"/>
