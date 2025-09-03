@@ -59,4 +59,4 @@ jobs:
         if: always()
         with:
           files: |
-            '${{ runner.temp }}/TestResults/*.trx'
+            *.trx
