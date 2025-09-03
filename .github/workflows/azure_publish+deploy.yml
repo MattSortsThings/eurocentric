@@ -47,7 +47,7 @@ jobs:
       - name: Run all tests in solution
         run: dotnet test --configuration Release -- --report-trx --verbosity minimal
 
-      - name: Upload test result files
+      - name: Upload test results artifact
         uses: actions/upload-artifact@v4
         with:
           name: test-results
@@ -63,6 +63,13 @@ jobs:
 
       - name: Publish web app
         run: dotnet publish ${{ env.WEB_APP_PROJECT_PATH }} --configuration Release --no-restore --no-build --property:PublishDir=${{ env.PUBLISH_DIR }}
-        
+
+      - name: Upload publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          retention-days: 2
+
             
         
