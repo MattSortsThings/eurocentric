@@ -40,6 +40,8 @@ internal static class Startup
 
         app.UseVersionedApiEndpoints();
 
+        app.UseDocumentationEndpoints();
+
         return app;
     }
 }

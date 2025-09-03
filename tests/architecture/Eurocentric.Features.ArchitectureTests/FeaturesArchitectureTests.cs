@@ -2,6 +2,7 @@ using ArchUnitNET.Domain;
 using ArchUnitNET.Fluent;
 using ArchUnitNET.Loader;
 using Eurocentric.Features.Shared.Messaging;
+using Microsoft.AspNetCore.OpenApi;
 using SlimMessageBus;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
 using ClassRule = ArchUnitNET.Fluent.Syntax.Elements.Types.Classes.ClassesShouldConjunction;
@@ -53,6 +54,9 @@ public sealed class FeaturesArchitectureTests
 
     private static readonly IObjectProvider<IType> DomainAssemblyTypes = Types()
         .That().ResideInNamespaceMatching("Eurocentric.Domain");
+
+    private static readonly IObjectProvider<Class> DocumentTransformerClasses = Classes()
+        .That().ImplementInterface(typeof(IOpenApiDocumentTransformer));
 
     [Test]
     public async Task Non_abstract_classes_should_be_sealed()
@@ -660,6 +664,36 @@ public sealed class FeaturesArchitectureTests
                 .That().Are(PublicApiV0Types)
                 .And().DoNotResideInNamespaceMatching(featureNamespace)
                 .And().DoNotResideInNamespaceMatching(".Common"));
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task OpenAPI_document_transformer_classes_should_be_internal()
+    {
+        // Arrange
+        ClassRule rule = Classes().That().Are(DocumentTransformerClasses)
+            .Should()
+            .BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task OpenAPI_document_transformer_classes_should_have_name_ending_DocumentTransformer()
+    {
+        // Arrange
+        ClassRule rule = Classes().That().Are(DocumentTransformerClasses)
+            .Should()
+            .HaveNameEndingWith("DocumentTransformer");
 
         // Act
         IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
