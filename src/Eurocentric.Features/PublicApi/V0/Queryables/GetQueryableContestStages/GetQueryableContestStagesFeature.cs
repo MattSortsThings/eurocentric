@@ -12,13 +12,8 @@ internal static class GetQueryableContestStagesFeature
 {
     internal static async Task<IResult> ExecuteAsync(
         [FromServices] IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetQueryableContestStagesResponse> errorsOrResponse =
-            await bus.Send(new Query(), cancellationToken: cancellationToken);
-
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+        CancellationToken cancellationToken = default) =>
+        await bus.SendWithResponseMapperAsync(new Query(), TypedResults.Ok, cancellationToken);
 
     internal sealed record Query : IQuery<GetQueryableContestStagesResponse>;
 

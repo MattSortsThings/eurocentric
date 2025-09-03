@@ -16,13 +16,8 @@ internal static class GetCountryFeature
     internal static async Task<IResult> ExecuteAsync(
         [FromRoute(Name = "countryId")] Guid countryId,
         [FromServices] IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetCountryResponse> errorsOrResponse =
-            await bus.Send(new Query(countryId), cancellationToken: cancellationToken);
-
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+        CancellationToken cancellationToken = default) =>
+        await bus.SendWithResponseMapperAsync(new Query(countryId), TypedResults.Ok, cancellationToken);
 
     internal sealed record Query(Guid CountryId) : IQuery<GetCountryResponse>;
 

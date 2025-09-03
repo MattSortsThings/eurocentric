@@ -21,13 +21,8 @@ internal static class CreateCountryFeature
     internal static async Task<IResult> ExecuteAsync(
         [FromBody] CreateCountryRequest requestBody,
         [FromServices] IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<CreateCountryResponse> errorsOrResponse =
-            await bus.Send(requestBody.ToCommand(), cancellationToken: cancellationToken);
-
-        return MapToCreatedAtRoute(errorsOrResponse.Value);
-    }
+        CancellationToken cancellationToken = default) =>
+        await bus.SendWithResponseMapperAsync(requestBody.ToCommand(), MapToCreatedAtRoute, cancellationToken);
 
     private static Command ToCommand(this CreateCountryRequest requestBody) =>
         new(requestBody.CountryCode, requestBody.CountryName, requestBody.CountryType);
@@ -51,7 +46,8 @@ internal static class CreateCountryFeature
             await GetFactoryFunction(command.CountryType)
                 .Invoke(command.CountryCode, command.CountryName)
                 .FailIf(country => dbContext.V0Countries.AsNoTracking()
-                    .Any(existingCountry => existingCountry.CountryCode == country.CountryCode), Error.Conflict())
+                        .Any(existingCountry => existingCountry.CountryCode == country.CountryCode),
+                    CountryCodeConflict(command.CountryCode))
                 .ThenDo(country => dbContext.V0Countries.Add(country))
                 .ThenDoAsync(_ => dbContext.SaveChangesAsync(cancellationToken))
                 .Then(country => new CreateCountryResponse(country.ToCountryDto()));

@@ -15,13 +15,8 @@ internal static class GetCompetingCountryPointsInRangeRankingsFeature
     internal static async Task<IResult> ExecuteAsync(
         [AsParameters] GetCompetingCountryPointsInRangeRankingsRequest request,
         [FromServices] IRequestResponseBus bus,
-        CancellationToken cancellationToken = default)
-    {
-        ErrorOr<GetCompetingCountryPointsInRangeRankingsResponse> errorsOrResponse =
-            await bus.Send(request.ToQuery(), cancellationToken: cancellationToken);
-
-        return TypedResults.Ok(errorsOrResponse.Value);
-    }
+        CancellationToken cancellationToken = default) =>
+        await bus.SendWithResponseMapperAsync(request.ToQuery(), TypedResults.Ok, cancellationToken);
 
     private static Query ToQuery(this GetCompetingCountryPointsInRangeRankingsRequest request) => new()
     {
