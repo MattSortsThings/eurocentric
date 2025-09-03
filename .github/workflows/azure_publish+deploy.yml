@@ -43,11 +43,11 @@ jobs:
         run: dotnet build ${{ env.SOLUTION_PATH }} -c Release --no-restore
 
       - name: Run tests with dotnet
-        run: dotnet test --configuration Release -- --report-trx --results-directory ${{ env.RUNNER_TEMP }}/test_results --verbosity minimal
+        run: dotnet test --configuration Release -- --report-trx --results-directory $RUNNER_TEMP --verbosity minimal
 
       - name: Upload test result files
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: ${{ env.RUNNER_TEMP }}/test_results
+          path: $RUNNER_TEMP
           retention-days: 5
