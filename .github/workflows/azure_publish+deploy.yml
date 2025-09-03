@@ -44,3 +44,10 @@ jobs:
 
       - name: Run tests with dotnet
         run: dotnet test --configuration Release -- --report-trx --results-directory $RUNNER_TEMP --verbosity minimal
+
+      - name: Upload test result files
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: $RUNNER_TEMP/*.trx
+          retention-days: 5
