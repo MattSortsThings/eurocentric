@@ -25,7 +25,9 @@ internal static class DependencyInjection
 
             options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()
                 .AddDocumentTransformer<V0Point1ApiReleaseDocumentTransformer>()
-                .AddDocumentTransformer<V0Point1ApiInfoDocumentTransformer>();
+                .AddDocumentTransformer<V0Point1ApiInfoDocumentTransformer>()
+                .AddOperationTransformer<ProblemDetailsExampleOperationTransformer>()
+                .AddSchemaTransformer<V0ExampleSchemaTransformer>();
         });
 
         services.AddOpenApi("public-api-v0.2", options =>
@@ -36,7 +38,9 @@ internal static class DependencyInjection
 
             options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()
                 .AddDocumentTransformer<V0Point2ApiReleaseDocumentTransformer>()
-                .AddDocumentTransformer<V0Point2ApiInfoDocumentTransformer>();
+                .AddDocumentTransformer<V0Point2ApiInfoDocumentTransformer>()
+                .AddOperationTransformer<ProblemDetailsExampleOperationTransformer>()
+                .AddSchemaTransformer<V0ExampleSchemaTransformer>();
         });
     }
 }

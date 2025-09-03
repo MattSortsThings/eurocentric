@@ -58,6 +58,12 @@ public sealed class FeaturesArchitectureTests
     private static readonly IObjectProvider<Class> DocumentTransformerClasses = Classes()
         .That().ImplementInterface(typeof(IOpenApiDocumentTransformer));
 
+    private static readonly IObjectProvider<Class> OperationTransformerClasses = Classes()
+        .That().ImplementInterface(typeof(IOpenApiOperationTransformer));
+
+    private static readonly IObjectProvider<Class> SchemaTransformerClasses = Classes()
+        .That().ImplementInterface(typeof(IOpenApiSchemaTransformer));
+
     [Test]
     public async Task Non_abstract_classes_should_be_sealed()
     {
@@ -694,6 +700,66 @@ public sealed class FeaturesArchitectureTests
         ClassRule rule = Classes().That().Are(DocumentTransformerClasses)
             .Should()
             .HaveNameEndingWith("DocumentTransformer");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task OpenAPI_operation_transformer_classes_should_be_internal()
+    {
+        // Arrange
+        ClassRule rule = Classes().That().Are(OperationTransformerClasses)
+            .Should()
+            .BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task OpenAPI_operation_transformer_classes_should_have_name_ending_OperationTransformer()
+    {
+        // Arrange
+        ClassRule rule = Classes().That().Are(OperationTransformerClasses)
+            .Should()
+            .HaveNameEndingWith("OperationTransformer");
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task OpenAPI_schema_transformer_classes_should_be_internal()
+    {
+        // Arrange
+        ClassRule rule = Classes().That().Are(SchemaTransformerClasses)
+            .Should()
+            .BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task OpenAPI_schema_transformer_classes_should_have_name_ending_SchemaTransformer()
+    {
+        // Arrange
+        ClassRule rule = Classes().That().Are(SchemaTransformerClasses)
+            .Should()
+            .HaveNameEndingWith("SchemaTransformer");
 
         // Act
         IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);

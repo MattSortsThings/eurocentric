@@ -39,7 +39,7 @@ internal static class Middleware
             .WithSummary("Get all countries")
             .WithDescription("Retrieves all existing countries from the system, ordered by country code.")
             .IntroducedInVersion0Point(2)
-            .Produces<GetCountryResponse>();
+            .Produces<GetCountriesResponse>();
 
         endpointGroup.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
             .WithName(EndpointNames.Countries.GetCountry)
