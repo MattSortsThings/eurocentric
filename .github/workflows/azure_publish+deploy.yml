@@ -7,6 +7,7 @@ env:
   SOLUTION_PATH: 'Eurocentric.sln'
   API_PROJECT_PATH: './src/Eurocentric.WebApp'
   PUBLISH_DIR: './publish'
+  TEST_RESULTS_DIR: './test_results'
 
 on:
   push:
@@ -43,4 +44,4 @@ jobs:
         run: dotnet build ${{ env.SOLUTION_PATH }} -c Release --no-restore
 
       - name: Run tests with dotnet
-        run: dotnet test --configuration Release --report-trx --results-directory $(Agent.TempDirectory) -- --verbosity minimal
+        run: dotnet test --configuration Release --report-trx
