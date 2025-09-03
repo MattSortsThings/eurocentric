@@ -15,4 +15,12 @@ public sealed class PlaceholderDomainUnitTests : UnitTest
         // Assert
         await Assert.That(result).HasCount(11);
     }
+
+    [Test]
+    public async Task Should_always_fail()
+    {
+        await Task.Delay(200);
+
+        Assert.Fail("This test automatically fails.");
+    }
 }
