@@ -20,7 +20,7 @@ internal static class Middleware
     internal static void MapV0Endpoints(this IEndpointRouteBuilder builder)
     {
         RouteGroupBuilder v0Group = builder.MapGroup("v{version:apiVersion}")
-            .WithGroupName(EndpointNames.Group)
+            .WithGroupName(Endpoints.Group)
             .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole)
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 

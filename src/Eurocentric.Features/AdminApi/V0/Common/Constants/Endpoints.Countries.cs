@@ -1,6 +1,6 @@
 namespace Eurocentric.Features.AdminApi.V0.Common.Constants;
 
-internal static partial class EndpointNames
+internal static partial class Endpoints
 {
     internal static class Countries
     {

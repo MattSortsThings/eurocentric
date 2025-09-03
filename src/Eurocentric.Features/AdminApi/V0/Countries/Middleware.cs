@@ -21,11 +21,11 @@ internal static class Middleware
     internal static void MapCountriesEndpoints(this IEndpointRouteBuilder builder)
     {
         RouteGroupBuilder endpointGroup = builder.MapGroup("countries")
-            .WithTags(EndpointNames.Countries.Tag)
+            .WithTags(Endpoints.Countries.Tag)
             .WithDescription("Operations on the Country resource.");
 
         endpointGroup.MapPost("/", CreateCountryFeature.ExecuteAsync)
-            .WithName(EndpointNames.Countries.CreateCountry)
+            .WithName(Endpoints.Countries.CreateCountry)
             .WithSummary("Create a country")
             .WithDescription("Creates a new country in the system.")
             .IntroducedInVersion0Point(1)
@@ -35,14 +35,14 @@ internal static class Middleware
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
 
         endpointGroup.MapGet("/", GetCountriesFeature.ExecuteAsync)
-            .WithName(EndpointNames.Countries.GetCountries)
+            .WithName(Endpoints.Countries.GetCountries)
             .WithSummary("Get all countries")
             .WithDescription("Retrieves all existing countries from the system, ordered by country code.")
             .IntroducedInVersion0Point(2)
             .Produces<GetCountriesResponse>();
 
         endpointGroup.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
-            .WithName(EndpointNames.Countries.GetCountry)
+            .WithName(Endpoints.Countries.GetCountry)
             .WithSummary("Get a country")
             .WithDescription("Retrieves a single country from the system.")
             .IntroducedInVersion0Point(1)

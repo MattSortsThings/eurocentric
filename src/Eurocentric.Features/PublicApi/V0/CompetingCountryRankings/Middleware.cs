@@ -19,12 +19,12 @@ internal static class Middleware
     internal static void MapCompetingCountryRankingsEndpoints(this IEndpointRouteBuilder builder)
     {
         RouteGroupBuilder endpointGroup = builder.MapGroup("rankings/competing-countries")
-            .WithTags(EndpointNames.CompetingCountryRankings.Tag)
+            .WithTags(Endpoints.CompetingCountryRankings.Tag)
             .WithDescription("Endpoints that rank competing countries using metrics " +
                              "calculated from the points they received across broadcasts.");
 
         endpointGroup.MapGet("points-in-range", GetCompetingCountryPointsInRangeRankingsFeature.ExecuteAsync)
-            .WithName(EndpointNames.CompetingCountryRankings.GetCompetingCountryPointsInRangeRankings)
+            .WithName(Endpoints.CompetingCountryRankings.GetCompetingCountryPointsInRangeRankings)
             .WithSummary("Get competing country points in range rankings")
             .WithDescription(
                 """

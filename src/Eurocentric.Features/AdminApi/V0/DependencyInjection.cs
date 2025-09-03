@@ -20,7 +20,7 @@ internal static class DependencyInjection
         services.AddOpenApi("admin-api-v0.1", options =>
         {
             options.ShouldInclude = description =>
-                description.GroupName == EndpointNames.Group
+                description.GroupName == Endpoints.Group
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 1 };
 
             options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()
@@ -33,7 +33,7 @@ internal static class DependencyInjection
         services.AddOpenApi("admin-api-v0.2", options =>
         {
             options.ShouldInclude = description =>
-                description.GroupName == EndpointNames.Group
+                description.GroupName == Endpoints.Group
                 && description.GetApiVersion() is { MajorVersion: 0, MinorVersion: 2 };
 
             options.AddDocumentTransformer<ApiKeySecurityDocumentTransformer>()

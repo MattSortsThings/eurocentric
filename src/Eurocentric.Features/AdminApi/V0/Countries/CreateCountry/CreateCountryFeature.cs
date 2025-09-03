@@ -32,7 +32,7 @@ internal static class CreateCountryFeature
         Guid countryId = responseBody.Country.Id;
 
         return TypedResults.CreatedAtRoute(responseBody,
-            EndpointNames.Countries.GetCountry,
+            Endpoints.Countries.GetCountry,
             new RouteValueDictionary { { nameof(countryId), countryId } });
     }
 
