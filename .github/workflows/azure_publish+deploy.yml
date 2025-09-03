@@ -7,6 +7,7 @@ env:
   SOLUTION_PATH: 'Eurocentric.sln'
   API_PROJECT_PATH: './src/Eurocentric.WebApp'
   PUBLISH_DIR: './publish'
+  TEST_RESULTS_DIR: '$RUNNER_TEMP/test_results'
 
 on:
   push:
@@ -43,11 +44,11 @@ jobs:
         run: dotnet build ${{ env.SOLUTION_PATH }} -c Release --no-restore
 
       - name: Run tests with dotnet
-        run: dotnet test --configuration Release -- --report-trx --results-directory $RUNNER_TEMP --verbosity minimal
+        run: dotnet test --configuration Release -- --report-trx --results-directory $${{ env.TEST_RESULTS_DIR }} --verbosity minimal
 
       - name: Upload test result files
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: $RUNNER_TEMP/*.trx
+          path: ${{ env.TEST_RESULTS_DIR }}
           retention-days: 5
