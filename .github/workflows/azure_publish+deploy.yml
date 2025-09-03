@@ -43,4 +43,4 @@ jobs:
         run: dotnet build ${{ env.SOLUTION_PATH }} -c Release --no-restore
 
       - name: Run tests with dotnet
-        run: dotnet test --configuration Release -- --report-trx --results-directory $RUNNER_TEMP
+        run: dotnet test --configuration Release -- --report-trx --results-directory $RUNNER_TEMP --verbosity minimal
