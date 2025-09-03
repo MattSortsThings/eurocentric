@@ -1,6 +1,7 @@
 using Eurocentric.Features.PublicApi.V0.Common.Constants;
 using Eurocentric.Features.PublicApi.V0.CompetingCountryRankings;
 using Eurocentric.Features.PublicApi.V0.Queryables;
+using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -20,7 +21,7 @@ internal static class Middleware
     {
         RouteGroupBuilder v0Group = builder.MapGroup("v{version:apiVersion}")
             .WithGroupName(EndpointNames.Group)
-            .AllowAnonymous()
+            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole)
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
         v0Group.MapCompetingCountryRankingsEndpoints();

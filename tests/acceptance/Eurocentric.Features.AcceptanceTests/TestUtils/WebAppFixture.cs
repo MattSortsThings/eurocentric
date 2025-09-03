@@ -68,11 +68,12 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        ReplacedDbConnectionSettings(builder);
+        ReplaceApiKeySecuritySettings(builder);
         builder.ConfigureServices(ConfigureRestClient);
-        ModifyDbConnectionSettings(builder);
     }
 
-    private void ModifyDbConnectionSettings(IWebHostBuilder builder) =>
+    private void ReplacedDbConnectionSettings(IWebHostBuilder builder) =>
         builder.UseSetting("ConnectionStrings:AzureSql", DbContainerFixture.GetConnectionString());
 
     private void EnsureServerStarted() => _ = Server;
@@ -95,4 +96,10 @@ public abstract class WebAppFixture : WebApplicationFactory<IWebAppAssemblyLocat
             configureRestClient: options => options.Timeout = TimeSpan.FromSeconds(10),
             configureSerialization: config => config.UseSystemTextJson(jsonOptions.Value.SerializerOptions));
     });
+
+    private static void ReplaceApiKeySecuritySettings(IWebHostBuilder builder)
+    {
+        builder.UseSetting("ApiKeySecurity:DemoApiKey", TestApiKeys.Demo);
+        builder.UseSetting("ApiKeySecurity:SecretApiKey", TestApiKeys.Secret);
+    }
 }

@@ -1,5 +1,6 @@
 using Eurocentric.Features.AdminApi.V0.Common.Constants;
 using Eurocentric.Features.AdminApi.V0.Countries;
+using Eurocentric.Features.Shared.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -19,7 +20,7 @@ internal static class Middleware
     {
         RouteGroupBuilder v0Group = builder.MapGroup("v{version:apiVersion}")
             .WithGroupName(EndpointNames.Group)
-            .AllowAnonymous()
+            .RequireAuthorization(AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole)
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 

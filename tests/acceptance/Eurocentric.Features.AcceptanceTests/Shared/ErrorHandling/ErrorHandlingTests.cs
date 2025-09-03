@@ -22,7 +22,7 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
         // Arrange
         object requestBodyMissingCountryCode = new { CountryName = "CountryName", CountryType = "Real" };
 
-        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBodyMissingCountryCode);
+        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBodyMissingCountryCode).UseSecretApiKey();
 
         const string expectedInstance = "POST " + CreateCountryRoute;
 
@@ -55,7 +55,7 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
             CountryCode = "AA", CountryName = "CountryName", CountryType = "NOT_A_COUNTRY_TYPE"
         };
 
-        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBodyInvalidCountryType);
+        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBodyInvalidCountryType).UseSecretApiKey();
 
         const string expectedInstance = "POST " + CreateCountryRoute;
 
@@ -85,7 +85,7 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
         // Arrange
         object requestBodyInvalidCountryType = new { CountryCode = "AA", CountryName = "CountryName", CountryType = 999 };
 
-        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBodyInvalidCountryType);
+        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBodyInvalidCountryType).UseSecretApiKey();
 
         const string expectedInstance = "POST " + CreateCountryRoute;
 
@@ -114,7 +114,8 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
         // Arrange
         const string queryStringMissingMaxPoints = "?minPoints=0";
 
-        RestRequest request = GetRequest(GetCompetingCountryPointsInRangeRankingsRoute + queryStringMissingMaxPoints);
+        RestRequest request = GetRequest(GetCompetingCountryPointsInRangeRankingsRoute + queryStringMissingMaxPoints)
+            .UseSecretApiKey();
 
         const string expectedInstance = "GET " + GetCompetingCountryPointsInRangeRankingsRoute + queryStringMissingMaxPoints;
 
@@ -144,7 +145,8 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
         // Arrange
         const string queryStringInvalidVotingMethod = "?minPoints=0&maxPoints=0&votingMethod=NOT_A_VOTING_METHOD";
 
-        RestRequest request = GetRequest(GetCompetingCountryPointsInRangeRankingsRoute + queryStringInvalidVotingMethod);
+        RestRequest request = GetRequest(GetCompetingCountryPointsInRangeRankingsRoute + queryStringInvalidVotingMethod)
+            .UseSecretApiKey();
 
         const string expectedInstance = "GET " + GetCompetingCountryPointsInRangeRankingsRoute + queryStringInvalidVotingMethod;
 
@@ -174,10 +176,8 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
         // Arrange
         const string queryStringInvalidVotingMethod = "?minPoints=0&maxPoints=0&votingMethod=999";
 
-        const string getCompetingCountryPointsInRangeRoute = "/public/api/v0.2/rankings/competing-countries/points-in-range"
-                                                             + queryStringInvalidVotingMethod;
-
-        RestRequest request = GetRequest(getCompetingCountryPointsInRangeRoute);
+        RestRequest request = GetRequest(GetCompetingCountryPointsInRangeRankingsRoute + queryStringInvalidVotingMethod)
+            .UseSecretApiKey();
 
         const string expectedInstance = "GET " + GetCompetingCountryPointsInRangeRankingsRoute + queryStringInvalidVotingMethod;
 
@@ -208,7 +208,7 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
 
         string getCountryRoute = $"/admin/api/v0.2/countries/{nonExistentCountryId}";
 
-        RestRequest request = GetRequest(getCountryRoute);
+        RestRequest request = GetRequest(getCountryRoute).UseSecretApiKey();
 
         string expectedInstance = "GET " + getCountryRoute;
 
@@ -242,7 +242,7 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
             CountryCode = nonUniqueCountryCode, CountryName = "CountryName", CountryType = CountryType.Real
         };
 
-        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBody);
+        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBody).UseSecretApiKey();
 
         string expectedInstance = "POST " + CreateCountryRoute;
 
@@ -276,7 +276,7 @@ public sealed class ErrorHandlingTests : SeededParallelAcceptanceTest
             CountryCode = illegalCountryCode, CountryName = "CountryName", CountryType = CountryType.Real
         };
 
-        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBody);
+        RestRequest request = PostRequest(CreateCountryRoute).AddJsonBody(requestBody).UseSecretApiKey();
 
         const string expectedInstance = "POST " + CreateCountryRoute;
 

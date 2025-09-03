@@ -1,3 +1,4 @@
+using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V0.Countries.CreateCountry;
 using RestSharp;
 
@@ -26,7 +27,7 @@ public sealed class RestRequestFactory : IRestRequestFactory,
 
     public IRestRequestFactory.ICountriesEndpoints Countries => this;
 
-    private static RestRequest GetRequest(string route) => new(route);
+    private static RestRequest GetRequest(string route) => new RestRequest(route).UseSecretApiKey();
 
-    private static RestRequest PostRequest(string route) => new(route, Method.Post);
+    private static RestRequest PostRequest(string route) => new RestRequest(route, Method.Post).UseSecretApiKey();
 }

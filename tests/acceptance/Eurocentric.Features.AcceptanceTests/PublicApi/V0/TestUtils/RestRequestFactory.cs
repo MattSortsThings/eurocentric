@@ -28,10 +28,10 @@ public sealed class RestRequestFactory : IRestRequestFactory,
     public RestRequest GetQueryableVotingMethods() => GetRequest("public/api/{apiVersion}/queryables/voting-methods")
         .AddUrlSegment("apiVersion", _apiVersion);
 
-
     public IRestRequestFactory.ICompetingCountryRankingsEndpoints CompetingCountryRankings => this;
 
     public IRestRequestFactory.IQueryablesEndpoints Queryables => this;
 
-    private static RestRequest GetRequest(string route) => new(route);
+
+    private static RestRequest GetRequest(string route) => new RestRequest(route).UseDemoApiKey();
 }

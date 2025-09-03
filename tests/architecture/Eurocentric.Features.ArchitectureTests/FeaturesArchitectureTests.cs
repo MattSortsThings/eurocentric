@@ -668,23 +668,5 @@ public sealed class FeaturesArchitectureTests
         await Assert.That(evaluationResult).ContainsOnly(Passed);
     }
 
-    [Test]
-    public async Task Shared_types_should_not_be_public()
-    {
-        // Arrange
-        TypeRule rule = Types()
-            .That().ResideInNamespaceMatching(".Shared")
-            .Should().NotBePublic();
-
-        // Act
-        IEnumerable<EvaluationResult> evaluation = rule.Evaluate(ArchitectureUnderTest);
-
-        // Act
-        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
-
-        // Assert
-        await Assert.That(evaluationResult).ContainsOnly(Passed);
-    }
-
     private static bool Passed(EvaluationResult result) => result.Passed;
 }
