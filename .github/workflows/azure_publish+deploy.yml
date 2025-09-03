@@ -82,9 +82,9 @@ jobs:
           name: webapp
           path: ${{ env.WEB_APP_PACKAGE_PATH }}
 
-      - name: Deploy to Azure Web App Service
+      - name: Deploy to Azure Web App service
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEB_APP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEB_APP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEB_APP_PACKAGE_PATH }}
+          package: ${{ env.WEB_APP_PACKAGE_PATH }}
