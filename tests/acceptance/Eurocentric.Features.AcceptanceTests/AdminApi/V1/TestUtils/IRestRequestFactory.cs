@@ -5,7 +5,14 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils;
 
 public interface IRestRequestFactory
 {
+    IContestsEndpoints Contests { get; }
+
     ICountriesEndpoints Countries { get; }
+
+    interface IContestsEndpoints
+    {
+        RestRequest GetContest(Guid contestId);
+    }
 
     interface ICountriesEndpoints
     {

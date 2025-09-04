@@ -674,6 +674,7 @@ public sealed class FeaturesArchitectureTests
     }
 
     [Test]
+    [Arguments("AdminApi.V1.Contests.GetContest")]
     [Arguments("AdminApi.V1.Countries.CreateCountry")]
     [Arguments("AdminApi.V1.Countries.GetCountries")]
     [Arguments("AdminApi.V1.Countries.GetCountry")]

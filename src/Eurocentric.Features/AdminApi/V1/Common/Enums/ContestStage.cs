@@ -1,0 +1,22 @@
+namespace Eurocentric.Features.AdminApi.V1.Common.Enums;
+
+/// <summary>
+///     Specifies a broadcast's stage in its parent contest.
+/// </summary>
+public enum ContestStage
+{
+    /// <summary>
+    ///     The First Semi-Final contest stage.
+    /// </summary>
+    SemiFinal1 = 0,
+
+    /// <summary>
+    ///     The Second Semi-Final contest stage.
+    /// </summary>
+    SemiFinal2 = 1,
+
+    /// <summary>
+    ///     The Grand Final contest stage.
+    /// </summary>
+    GrandFinal = 2
+}

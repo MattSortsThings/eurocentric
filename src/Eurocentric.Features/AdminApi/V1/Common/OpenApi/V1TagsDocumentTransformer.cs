@@ -7,6 +7,14 @@ internal sealed class V1TagsDocumentTransformer : TagsDocumentTransformer
 {
     private protected override IEnumerable<TagDatum> GetTagData()
     {
+        yield return new TagDatum(Endpoints.Contests.Tag,
+            """
+            Endpoints using the **Contest** resource.
+
+            A Contest resource represents a single year's edition of the Eurovision Song Contest. Use the Contest endpoints to
+            create a new contest using countries that exist in the system, and to initialize the contest's child broadcasts.
+            """);
+
         yield return new TagDatum(Endpoints.Countries.Tag,
             """
             Endpoints using the **Country** resource.

@@ -30,7 +30,7 @@ public sealed record Country : IExampleProvider<Country>
 
     public static Country CreateExample() => new()
     {
-        Id = ExampleValues.CountryId,
+        Id = ExampleValues.CountryId1Of2,
         CountryCode = ExampleValues.CountryCode,
         CountryName = ExampleValues.CountryName,
         ParticipatingContestIds = [ExampleValues.ContestId]
