@@ -6,6 +6,7 @@ internal static partial class Endpoints
     {
         internal const string Tag = "Countries";
 
+        internal const string GetCountries = "AdminApi.V1.Countries.GetCountries";
         internal const string GetCountry = "AdminApi.V1.Countries.GetCountry";
     }
 }

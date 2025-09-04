@@ -1,5 +1,6 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.Versioning;
+using Eurocentric.Features.AdminApi.V1.Countries.GetCountries;
 using Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,13 @@ internal static class Middleware
         RouteGroupBuilder endpointGroup = builder.MapGroup("countries")
             .WithTags(Endpoints.Countries.Tag)
             .WithDescription("Operations on the Country resource.");
+
+        endpointGroup.MapGet("/", GetCountriesFeature.ExecuteAsync)
+            .WithName(Endpoints.Countries.GetCountries)
+            .WithSummary("Get all countries")
+            .WithDescription("Retrieves all existing countries from the system, ordered by country code.")
+            .IntroducedInVersion1Point0()
+            .Produces<GetCountriesResponse>();
 
         endpointGroup.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
             .WithName(Endpoints.Countries.GetCountry)

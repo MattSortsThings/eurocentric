@@ -674,6 +674,7 @@ public sealed class FeaturesArchitectureTests
     }
 
     [Test]
+    [Arguments("AdminApi.V1.Countries.GetCountries")]
     [Arguments("AdminApi.V1.Countries.GetCountry")]
     public async Task AdminApi_V1_feature_types_should_not_depend_on_any_other_AdminApi_V1_feature_namespace(
         string featureNamespace)

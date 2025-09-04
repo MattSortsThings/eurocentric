@@ -13,6 +13,9 @@ public sealed class RestRequestFactory : IRestRequestFactory,
         _apiVersion = apiVersion;
     }
 
+    public RestRequest GetCountries() => GetRequest("/admin/api/{apiVersion}/countries")
+        .AddUrlSegment("apiVersion", _apiVersion);
+
     public RestRequest GetCountry(Guid countryId) => GetRequest("/admin/api/{apiVersion}/countries/{countryId}")
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddUrlSegment("countryId", countryId);
