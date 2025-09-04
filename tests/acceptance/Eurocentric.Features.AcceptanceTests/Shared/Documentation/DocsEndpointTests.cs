@@ -1,10 +1,9 @@
-using Eurocentric.Features.AcceptanceTests.Shared.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.Documentation;
 
-public sealed class DocsEndpointTests : SeededParallelAcceptanceTest
+public sealed class DocsEndpointTests : ParallelSeededAcceptanceTest
 {
     [Test]
     [Arguments("admin-api-v0.1")]
@@ -14,7 +13,7 @@ public sealed class DocsEndpointTests : SeededParallelAcceptanceTest
     public async Task Endpoint_should_serve_requested_documentation_page_for_anonymous_client(string docName)
     {
         // Arrange
-        RestRequest request = GetRequest("/docs/{docName}")
+        RestRequest request = new RestRequest("/docs/{docName}")
             .AddUrlSegment("docName", docName)
             .AddHeader("Accept", "text/html");
 

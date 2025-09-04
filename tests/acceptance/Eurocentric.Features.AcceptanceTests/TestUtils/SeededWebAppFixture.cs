@@ -1,9 +1,8 @@
-using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.TestUtils;
+namespace Eurocentric.Features.AcceptanceTests.TestUtils;
 
 public sealed class SeededWebAppFixture : WebAppFixture
 {
@@ -30,10 +29,10 @@ public sealed class SeededWebAppFixture : WebAppFixture
 
     private static IEnumerable<string> GetSeedingScriptPaths()
     {
-        const string scriptsDirectory = "Eurocentric.Features.AcceptanceTests.PublicApi.V0.TestUtils.Scripts";
+        const string scriptsDirectory = "Eurocentric.Features.AcceptanceTests.TestUtils.Scripts";
 
-        yield return scriptsDirectory + ".seeding_1_of_3_add_50_countries.sql";
-        yield return scriptsDirectory + ".seeding_2_of_3_add_2022_contest.sql";
-        yield return scriptsDirectory + ".seeding_3_of_3_add_2023_contest.sql";
+        yield return scriptsDirectory + ".seeding_v0_1_add_50_countries.sql";
+        yield return scriptsDirectory + ".seeding_v0_2_add_2022_contest.sql";
+        yield return scriptsDirectory + ".seeding_v0_3_add_2023_contest.sql";
     }
 }

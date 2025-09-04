@@ -7,7 +7,7 @@ using TUnit.Assertions.Enums;
 
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.CompetingCountryRankings;
 
-public sealed class GetCompetingCountryPointsInRangeRankingsTests : SeededParallelAcceptanceTest
+public sealed class GetCompetingCountryPointsInRangeRankingsTests : ParallelSeededAcceptanceTest
 {
     [Test]
     [PublicApiV0Point2AndUp]

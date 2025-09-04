@@ -1,6 +1,4 @@
-using Eurocentric.Features.AcceptanceTests.TestUtils;
-
-namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.TestUtils;
+namespace Eurocentric.Features.AcceptanceTests.TestUtils;
 
 public sealed class CleanWebAppFixture : WebAppFixture
 {

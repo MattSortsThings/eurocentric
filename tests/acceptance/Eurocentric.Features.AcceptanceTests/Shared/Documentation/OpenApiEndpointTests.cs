@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text.Json;
-using Eurocentric.Features.AcceptanceTests.Shared.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
@@ -8,7 +7,7 @@ using TUnit.Assertions.Enums;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.Documentation;
 
-public sealed class OpenApiEndpointTests : SeededParallelAcceptanceTest
+public sealed class OpenApiEndpointTests : ParallelSeededAcceptanceTest
 {
     [Test]
     [Arguments("admin-api-v0.1")]
@@ -18,7 +17,7 @@ public sealed class OpenApiEndpointTests : SeededParallelAcceptanceTest
     public async Task Endpoint_should_retrieve_requested_OpenAPI_document_for_anonymous_client(string docName)
     {
         // Arrange
-        RestRequest request = GetRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
+        RestRequest request = new RestRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
 
         // Act
         BiRestResponse response = await SystemUnderTest.SendAsync(request, TestContext.Current!.CancellationToken);
@@ -37,7 +36,7 @@ public sealed class OpenApiEndpointTests : SeededParallelAcceptanceTest
         string expectedServerUrlSuffix)
     {
         // Arrange
-        RestRequest request = GetRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
+        RestRequest request = new RestRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
 
         // Act
         BiRestResponse response = await SystemUnderTest.SendAsync(request, TestContext.Current!.CancellationToken);
@@ -55,7 +54,7 @@ public sealed class OpenApiEndpointTests : SeededParallelAcceptanceTest
     public async Task OpenAPI_document_should_have_expected_paths(string docName, string[] expectedPaths)
     {
         // Arrange
-        RestRequest request = GetRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
+        RestRequest request = new RestRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
 
         // Act
         BiRestResponse response = await SystemUnderTest.SendAsync(request, TestContext.Current!.CancellationToken);
@@ -78,7 +77,7 @@ public sealed class OpenApiEndpointTests : SeededParallelAcceptanceTest
     public async Task Endpoint_should_fail_on_non_existent_OpenAPI_document_requested(string docName)
     {
         // Arrange
-        RestRequest request = GetRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
+        RestRequest request = new RestRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
 
         // Act
         BiRestResponse response = await SystemUnderTest.SendAsync(request, TestContext.Current!.CancellationToken);

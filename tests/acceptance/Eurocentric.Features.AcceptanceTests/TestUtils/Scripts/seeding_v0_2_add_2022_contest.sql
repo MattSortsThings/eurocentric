@@ -1,8 +1,8 @@
 /*
 -- =============================================
--- Procedure:   Seeding 2 of 3: Add 2022 contest
+-- Procedure:   Seeding v0 2: Add 2022 contest
 -- Author:      Matt Tantony
--- Create date: 2025-09-02
+-- Create date: 2025-09-04
 --
 -- Description:
 --  Populates tables in the 'v0' schema with all the data for the Turin 2022 Eurovision Song Contest.

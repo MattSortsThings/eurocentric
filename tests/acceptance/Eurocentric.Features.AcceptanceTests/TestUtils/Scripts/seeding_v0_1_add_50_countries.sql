@@ -1,8 +1,8 @@
 /*
 -- =============================================
--- Procedure:   Seeding 1 of 3: Add 50 countries
+-- Procedure:   Seeding v0 1: Add 50 countries
 -- Author:      Matt Tantony
--- Create date: 2025-09-02
+-- Create date: 2025-09-04
 --
 -- Description:
 --  Populates tables in the 'v0' schema with data for 50 countries.

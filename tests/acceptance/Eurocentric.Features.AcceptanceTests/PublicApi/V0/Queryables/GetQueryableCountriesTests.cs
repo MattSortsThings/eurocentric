@@ -1,10 +1,11 @@
 using Eurocentric.Features.AcceptanceTests.PublicApi.V0.TestUtils;
 using Eurocentric.Features.AcceptanceTests.PublicApi.V0.TestUtils.DataSourceGenerators;
+using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.PublicApi.V0.Queryables.GetQueryableCountries;
 
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Queryables;
 
-public sealed class GetQueryableCountriesTests : SeededParallelAcceptanceTest
+public sealed class GetQueryableCountriesTests : ParallelSeededAcceptanceTest
 {
     [Test]
     [PublicApiV0Point1AndUp]

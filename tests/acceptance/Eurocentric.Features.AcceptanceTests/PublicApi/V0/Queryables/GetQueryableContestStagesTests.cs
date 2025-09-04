@@ -1,12 +1,13 @@
 using Eurocentric.Features.AcceptanceTests.PublicApi.V0.TestUtils;
 using Eurocentric.Features.AcceptanceTests.PublicApi.V0.TestUtils.DataSourceGenerators;
+using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.PublicApi.V0.Common.Enums;
 using Eurocentric.Features.PublicApi.V0.Queryables.GetQueryableContestStages;
 using TUnit.Assertions.Enums;
 
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Queryables;
 
-public sealed class GetQueryableContestStagesTests : SeededParallelAcceptanceTest
+public sealed class GetQueryableContestStagesTests : ParallelSeededAcceptanceTest
 {
     [Test]
     [PublicApiV0Point1AndUp]

@@ -1,12 +1,13 @@
 using Eurocentric.Features.AcceptanceTests.AdminApi.V0.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V0.TestUtils.DataSourceGenerators;
+using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V0.Common.Dtos;
 using Eurocentric.Features.AdminApi.V0.Common.Enums;
 using Eurocentric.Features.AdminApi.V0.Countries.CreateCountry;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Countries;
 
-public sealed class CreateCountryTests : CleanSerialAcceptanceTest
+public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 {
     [Test]
     [AdminApiV0Point1AndUp]

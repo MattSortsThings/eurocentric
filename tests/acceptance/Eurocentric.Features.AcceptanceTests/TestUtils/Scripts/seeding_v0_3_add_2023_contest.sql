@@ -1,8 +1,8 @@
 /*
 -- =============================================
--- Procedure:   Seeding 3 of 3: Add 2023 contest
+-- Procedure:   Seeding v0 3: Add 2023 contest
 -- Author:      Matt Tantony
--- Create date: 2025-09-02
+-- Create date: 2025-09-04
 --
 -- Description:
 --  Populates tables in the 'v0' schema with all the data for the Liverpool 2023 Eurovision Song Contest.

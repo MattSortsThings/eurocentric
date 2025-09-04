@@ -1,12 +1,11 @@
 using System.Net;
-using Eurocentric.Features.AcceptanceTests.Shared.TestUtils;
 using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
 namespace Eurocentric.Features.AcceptanceTests.Shared.Security;
 
-public sealed class PublicApiV0ApiKeySecurityTests : SeededParallelAcceptanceTest
+public sealed class PublicApiV0ApiKeySecurityTests : ParallelSeededAcceptanceTest
 {
     private const string GetQueryableVotingMethodsRoute = "/public/api/v0.2/queryables/voting-methods";
 
@@ -14,7 +13,7 @@ public sealed class PublicApiV0ApiKeySecurityTests : SeededParallelAcceptanceTes
     public async Task PublicApi_V0_endpoint_should_authenticate_and_authorize_client_using_secret_API_key()
     {
         // Arrange
-        RestRequest request = GetRequest(GetQueryableVotingMethodsRoute).AddHeader("X-Api-Key", TestApiKeys.Secret);
+        RestRequest request = new RestRequest(GetQueryableVotingMethodsRoute).AddHeader("X-Api-Key", TestApiKeys.Secret);
 
         // Act
         BiRestResponse response = await SystemUnderTest.SendAsync(request, TestContext.Current!.CancellationToken);
@@ -27,7 +26,7 @@ public sealed class PublicApiV0ApiKeySecurityTests : SeededParallelAcceptanceTes
     public async Task PublicApi_V0_endpoint_should_authenticate_and_authorize_client_using_demo_API_key()
     {
         // Arrange
-        RestRequest request = GetRequest(GetQueryableVotingMethodsRoute).AddHeader("X-Api-Key", TestApiKeys.Demo);
+        RestRequest request = new RestRequest(GetQueryableVotingMethodsRoute).AddHeader("X-Api-Key", TestApiKeys.Demo);
 
         // Act
         BiRestResponse response = await SystemUnderTest.SendAsync(request, TestContext.Current!.CancellationToken);
@@ -40,7 +39,7 @@ public sealed class PublicApiV0ApiKeySecurityTests : SeededParallelAcceptanceTes
     public async Task PublicApi_V0_endpoint_should_not_authenticate_client_using_unrecognized_API_key()
     {
         // Arrange
-        RestRequest request = GetRequest(GetQueryableVotingMethodsRoute).AddHeader("X-Api-Key", "NOT_AN_API_KEY");
+        RestRequest request = new RestRequest(GetQueryableVotingMethodsRoute).AddHeader("X-Api-Key", "NOT_AN_API_KEY");
 
         // Act
         BiRestResponse response = await SystemUnderTest.SendAsync(request, TestContext.Current!.CancellationToken);
@@ -55,7 +54,7 @@ public sealed class PublicApiV0ApiKeySecurityTests : SeededParallelAcceptanceTes
     public async Task PublicApi_V0_endpoint_should_not_authenticate_client_using_no_API_key()
     {
         // Arrange
-        RestRequest request = GetRequest(GetQueryableVotingMethodsRoute);
+        RestRequest request = new(GetQueryableVotingMethodsRoute);
 
         // Act
         BiRestResponse response = await SystemUnderTest.SendAsync(request, TestContext.Current!.CancellationToken);

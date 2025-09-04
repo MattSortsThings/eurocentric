@@ -2,13 +2,14 @@ using Eurocentric.Features.AcceptanceTests.AdminApi.V0.TestUtils;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V0.TestUtils.Comparers;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V0.TestUtils.DataSourceGenerators;
 using Eurocentric.Features.AcceptanceTests.AdminApi.V0.TestUtils.Helpers.Countries;
+using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.AdminApi.V0.Common.Dtos;
 using Eurocentric.Features.AdminApi.V0.Countries.GetCountries;
 using TUnit.Assertions.Enums;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V0.Countries;
 
-public sealed class GetCountriesTests : CleanSerialAcceptanceTest
+public sealed class GetCountriesTests : SerialCleanAcceptanceTest
 {
     [Test]
     [AdminApiV0Point2AndUp]

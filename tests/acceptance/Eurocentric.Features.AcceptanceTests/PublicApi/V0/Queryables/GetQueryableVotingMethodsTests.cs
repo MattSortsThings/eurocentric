@@ -1,12 +1,13 @@
 using Eurocentric.Features.AcceptanceTests.PublicApi.V0.TestUtils;
 using Eurocentric.Features.AcceptanceTests.PublicApi.V0.TestUtils.DataSourceGenerators;
+using Eurocentric.Features.AcceptanceTests.TestUtils;
 using Eurocentric.Features.PublicApi.V0.Common.Enums;
 using Eurocentric.Features.PublicApi.V0.Queryables.GetQueryableVotingMethods;
 using TUnit.Assertions.Enums;
 
 namespace Eurocentric.Features.AcceptanceTests.PublicApi.V0.Queryables;
 
-public sealed class GetQueryableVotingMethodsTests : SeededParallelAcceptanceTest
+public sealed class GetQueryableVotingMethodsTests : ParallelSeededAcceptanceTest
 {
     [Test]
     [PublicApiV0Point1AndUp]
