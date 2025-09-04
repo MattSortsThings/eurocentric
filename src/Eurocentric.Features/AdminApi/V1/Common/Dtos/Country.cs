@@ -14,7 +14,7 @@ public sealed record Country : IExampleProvider<Country>
     public Guid Id { get; init; }
 
     /// <summary>
-    ///     The country's ISO 3166 alpha-2 country code.
+    ///     The country's ISO 3166-1 alpha-2 country code.
     /// </summary>
     public string CountryCode { get; init; } = string.Empty;
 

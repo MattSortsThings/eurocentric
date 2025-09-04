@@ -1,10 +1,11 @@
 using ErrorOr;
-using Eurocentric.Features.AdminApi.V1.Common.Dtos;
+using Eurocentric.Features.AdminApi.V1.Common.Mapping;
 using Eurocentric.Features.Shared.Messaging;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SlimMessageBus;
+using Country = Eurocentric.Domain.Aggregates.Countries.Country;
 
 namespace Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
 
@@ -25,9 +26,9 @@ internal static class GetCountryFeature
         {
             await Task.CompletedTask;
 
-            Country dummyCountry = Country.CreateExample() with { Id = query.CountryId };
+            Country dummyCountry = Country.CreateDummyCountry(query.CountryId);
 
-            return new GetCountryResponse(dummyCountry);
+            return new GetCountryResponse(dummyCountry.ToCountryDto());
         }
     }
 }
