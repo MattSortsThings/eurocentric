@@ -10,6 +10,8 @@ public static class BackdoorOperations
     {
         await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
 
+        await dbContext.Countries.ExecuteDeleteAsync();
+
         await dbContext.V0Broadcasts.ExecuteDeleteAsync();
         await dbContext.V0Contests.ExecuteDeleteAsync();
         await dbContext.V0Countries.ExecuteDeleteAsync();
