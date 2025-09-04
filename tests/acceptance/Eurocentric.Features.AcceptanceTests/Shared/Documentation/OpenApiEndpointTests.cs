@@ -12,6 +12,7 @@ public sealed class OpenApiEndpointTests : ParallelSeededAcceptanceTest
     [Test]
     [Arguments("admin-api-v0.1")]
     [Arguments("admin-api-v0.2")]
+    [Arguments("admin-api-v1.0")]
     [Arguments("public-api-v0.1")]
     [Arguments("public-api-v0.2")]
     public async Task Endpoint_should_retrieve_requested_OpenAPI_document_for_anonymous_client(string docName)
@@ -29,6 +30,7 @@ public sealed class OpenApiEndpointTests : ParallelSeededAcceptanceTest
     [Test]
     [Arguments("admin-api-v0.1", "/admin/api/v0.1")]
     [Arguments("admin-api-v0.2", "/admin/api/v0.2")]
+    [Arguments("admin-api-v1.0", "/admin/api/v1.0")]
     [Arguments("public-api-v0.1", "/public/api/v0.1")]
     [Arguments("public-api-v0.2", "/public/api/v0.2")]
     public async Task OpenAPI_document_should_have_server_with_expected_url_suffix(
@@ -70,7 +72,8 @@ public sealed class OpenApiEndpointTests : ParallelSeededAcceptanceTest
     [Test]
     [Arguments("admin-api-v0")]
     [Arguments("admin-api-v0.3")]
-    [Arguments("admin-api-v1.0")]
+    [Arguments("admin-api-v1")]
+    [Arguments("admin-api-v1.1")]
     [Arguments("public-api-v0")]
     [Arguments("public-api-v0.3")]
     [Arguments("public-api-v1.0")]
@@ -97,6 +100,10 @@ public sealed class OpenApiEndpointTests : ParallelSeededAcceptanceTest
 
         yield return () => ("admin-api-v0.2", [
             "/countries",
+            "/countries/{countryId}"
+        ]);
+
+        yield return () => ("admin-api-v1.0", [
             "/countries/{countryId}"
         ]);
 
