@@ -22,27 +22,27 @@ internal static class Middleware
     {
         RouteGroupBuilder endpointGroup = builder.MapGroup("queryables")
             .WithTags(Endpoints.Queryables.Tag)
-            .WithDescription("Endpoints for accessing lists of queryable data.");
+            .WithDescription("Endpoints for accessing lists of queryable data for rankings queries.");
 
         endpointGroup.MapGet("contest-stages", GetQueryableContestStagesFeature.ExecuteAsync)
             .WithName(Endpoints.Queryables.GetQueryableContestStages)
             .WithSummary("Get queryable contest stages")
-            .WithDescription("Retrieves all the `QueryableContestStage` enum values.")
-            .IntroducedInVersion0Point(1)
+            .WithDescription("Retrieves all the 'QueryableContestStage' enum values.")
+            .IntroducedInVersion0Point1()
             .Produces<GetQueryableContestStagesResponse>();
 
         endpointGroup.MapGet("countries", GetQueryableCountriesFeature.ExecuteAsync)
             .WithName(Endpoints.Queryables.GetQueryableCountries)
             .WithSummary("Get queryable countries")
             .WithDescription("Retrieves all the queryable countries, ordered by country code.")
-            .IntroducedInVersion0Point(1)
+            .IntroducedInVersion0Point1()
             .Produces<GetQueryableCountriesResponse>();
 
         endpointGroup.MapGet("voting-methods", GetQueryableVotingMethodsFeature.ExecuteAsync)
             .WithName(Endpoints.Queryables.GetQueryableVotingMethods)
             .WithSummary("Get queryable voting methods")
-            .WithDescription("Retrieves all the `QueryableVotingMethod` enum values.")
-            .IntroducedInVersion0Point(1)
+            .WithDescription("Retrieves all the 'QueryableVotingMethod' enum values.")
+            .IntroducedInVersion0Point1()
             .Produces<GetQueryableVotingMethodsResponse>();
     }
 }

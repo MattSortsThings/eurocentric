@@ -28,7 +28,7 @@ internal static class Middleware
             .WithName(Endpoints.Countries.CreateCountry)
             .WithSummary("Create a country")
             .WithDescription("Creates a new country in the system.")
-            .IntroducedInVersion0Point(1)
+            .IntroducedInVersion0Point1()
             .Produces<CreateCountryResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -38,14 +38,14 @@ internal static class Middleware
             .WithName(Endpoints.Countries.GetCountries)
             .WithSummary("Get all countries")
             .WithDescription("Retrieves all existing countries from the system, ordered by country code.")
-            .IntroducedInVersion0Point(2)
+            .IntroducedInVersion0Point2()
             .Produces<GetCountriesResponse>();
 
         endpointGroup.MapGet("/{countryId:guid}", GetCountryFeature.ExecuteAsync)
             .WithName(Endpoints.Countries.GetCountry)
             .WithSummary("Get a country")
             .WithDescription("Retrieves a single country from the system.")
-            .IntroducedInVersion0Point(1)
+            .IntroducedInVersion0Point1()
             .Produces<GetCountryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);
     }

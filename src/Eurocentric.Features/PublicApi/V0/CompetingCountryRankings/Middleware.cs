@@ -41,7 +41,7 @@ internal static class Middleware
                 - Sorting by rank (ascending or descending) and country code.
                 - Applying pagination.
                 """)
-            .IntroducedInVersion0Point(2)
+            .IntroducedInVersion0Point2()
             .Produces<GetCompetingCountryPointsInRangeRankingsResponse>();
     }
 }
