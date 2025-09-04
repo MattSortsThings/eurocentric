@@ -42,4 +42,9 @@ public abstract class Actor
             .And.HasDetail(detail)
             .And.HasTitle(title)
             .And.HasStatus(status);
+
+    public async Task Then_the_response_problem_details_extensions_should_include(string value = "", string key = "") =>
+        await Assert.That(ResponseProblemDetails)
+            .IsNotNull()
+            .And.HasExtension(key, value);
 }

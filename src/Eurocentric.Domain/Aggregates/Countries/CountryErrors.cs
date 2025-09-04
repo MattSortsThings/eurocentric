@@ -16,4 +16,30 @@ public static class CountryErrors
     public static Error CountryNotFound(CountryId countryId) => Error.NotFound("Country not found",
         "No country exists with the provided country ID.",
         new Dictionary<string, object> { { nameof(countryId), countryId.Value } });
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to create a country aggregate
+    ///     with a non-unique country code.
+    /// </summary>
+    /// <param name="countryCode">The country code.</param>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error CountryCodeConflict(CountryCode countryCode) => Error.Conflict("Country code conflict",
+        "A country already exists with the provided country code.",
+        new Dictionary<string, object> { { "countryCode", countryCode.Value } });
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to build a country without
+    ///     setting the country code.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error CountryCodeNotSet() => Error.Unexpected("Country code not set",
+        "Country builder invoked without setting country code.");
+
+    /// <summary>
+    ///     Creates and returns an <see cref="Error" /> indicating that the client has attempted to build a country without
+    ///     setting the country name.
+    /// </summary>
+    /// <returns>A new <see cref="Error" /> instance.</returns>
+    public static Error CountryNameNotSet() => Error.Unexpected("Country name not set",
+        "Country builder invoked without setting country name.");
 }

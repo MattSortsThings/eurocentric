@@ -16,7 +16,7 @@ public sealed class Country : AggregateRoot<CountryId>
     {
     }
 
-    public Country(CountryId id, CountryCode countryCode, CountryName countryName) : base(id)
+    internal Country(CountryId id, CountryCode countryCode, CountryName countryName) : base(id)
     {
         CountryCode = countryCode;
         CountryName = countryName;
@@ -43,12 +43,9 @@ public sealed class Country : AggregateRoot<CountryId>
         .ToArray()
         .AsReadOnly();
 
-    public static Country CreateDummyCountry(Guid countryId)
-    {
-        CountryId id = CountryId.FromValue(countryId);
-        CountryCode countryCode = CountryCode.FromValue("AT").Value;
-        CountryName countryName = CountryName.FromValue("Austria").Value;
-
-        return new Country(id, countryCode, countryName);
-    }
+    /// <summary>
+    ///     Starts the process of creating a new <see cref="Country" /> instance using the fluent builder.
+    /// </summary>
+    /// <returns>A new <see cref="CountryBuilder" /> instance.</returns>
+    public static CountryBuilder Create() => new();
 }

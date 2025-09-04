@@ -19,6 +19,6 @@ public sealed class ApiDriver : IApiDriver
 
     public IRestRequestFactory RequestFactory => _requestFactory;
 
-    public static ApiDriver Create(CleanWebAppFixture webAppFixture, string apiVersion = "v0.x") =>
+    public static ApiDriver Create(CleanWebAppFixture webAppFixture, string apiVersion = "v1.x") =>
         new(webAppFixture, new RestRequestFactory(apiVersion));
 }

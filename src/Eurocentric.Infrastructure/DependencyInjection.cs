@@ -1,6 +1,8 @@
 using Eurocentric.Infrastructure.DataAccess.Dapper;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
+using Eurocentric.Infrastructure.IdGeneration;
 using Eurocentric.Infrastructure.RankingsGateways;
+using Eurocentric.Infrastructure.Timing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Infrastructure;
@@ -20,7 +22,9 @@ public static class DependencyInjection
     {
         services.AddDapperDataAccess()
             .AddEfCoreDataAccess()
-            .AddRankingsGateways();
+            .AddIdGeneration()
+            .AddRankingsGateways()
+            .AddTiming();
 
         return services;
     }

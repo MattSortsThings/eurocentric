@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 
 namespace Eurocentric.Features.AcceptanceTests.TestUtils;
 
+[Category("acceptance")]
 [NotInParallel(nameof(SerialCleanAcceptanceTest))]
 public abstract class SerialCleanAcceptanceTest
 {

@@ -1,5 +1,9 @@
 using Eurocentric.Domain.ValueObjects;
-using CountryAggregate = Eurocentric.Domain.Aggregates.Countries.Country;
+using Eurocentric.Features.AcceptanceTests.TestUtils;
+using Eurocentric.Features.AdminApi.V1.Countries.CreateCountry;
+using Eurocentric.Features.AdminApi.V1.Countries.GetCountries;
+using Eurocentric.Features.AdminApi.V1.Countries.GetCountry;
+using RestSharp;
 using CountryDto = Eurocentric.Features.AdminApi.V1.Common.Dtos.Country;
 
 namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils.Helpers.Countries;
@@ -11,19 +15,16 @@ public static class ApiDriverExtensions
         string countryName = "",
         string countryCode = "")
     {
-        CountryAggregate country = new(CountryId.FromValue(Guid.NewGuid()),
-            CountryCode.FromValue(countryCode).Value,
-            CountryName.FromValue(countryName).Value);
+        CreateCountryRequest requestBody = new() { CountryCode = countryCode, CountryName = countryName };
 
-        await apiDriver.BackDoor.ExecuteScopedAsync(BackDoorOperations.PersistCountryAsync(country));
+        RestRequest request = apiDriver.RequestFactory.Countries.CreateCountry(requestBody);
 
-        return new CountryDto
-        {
-            Id = country.Id.Value,
-            CountryCode = country.CountryCode.Value,
-            CountryName = country.CountryName.Value,
-            ParticipatingContestIds = country.ParticipatingContestIds.Select(contestId => contestId.Value).ToArray()
-        };
+        BiRestResponse<CreateCountryResponse> response = await apiDriver.RestClient.SendAsync<CreateCountryResponse>(request,
+            TestContext.Current!.CancellationToken);
+
+        CreateCountryResponse responseBody = await Assert.That(response.AsSuccessful.Data).IsNotNull();
+
+        return responseBody.Country;
     }
 
     public static async Task DeleteSingleCountryAsync(this IApiDriver apiDriver, Guid countryId)
@@ -31,5 +32,29 @@ public static class ApiDriverExtensions
         CountryId countryIdToDelete = CountryId.FromValue(countryId);
 
         await apiDriver.BackDoor.ExecuteScopedAsync(BackDoorOperations.DeleteCountryAsync(countryIdToDelete));
+    }
+
+    public static async Task<CountryDto> GetSingleCountryAsync(this IApiDriver apiDriver, Guid countryId)
+    {
+        RestRequest request = apiDriver.RequestFactory.Countries.GetCountry(countryId);
+
+        BiRestResponse<GetCountryResponse> response = await apiDriver.RestClient.SendAsync<GetCountryResponse>(request,
+            TestContext.Current!.CancellationToken);
+
+        GetCountryResponse responseBody = await Assert.That(response.AsSuccessful.Data).IsNotNull();
+
+        return responseBody.Country;
+    }
+
+    public static async Task<CountryDto[]> GetAllCountriesAsync(this IApiDriver apiDriver)
+    {
+        RestRequest request = apiDriver.RequestFactory.Countries.GetCountries();
+
+        BiRestResponse<GetCountriesResponse> response = await apiDriver.RestClient.SendAsync<GetCountriesResponse>(request,
+            TestContext.Current!.CancellationToken);
+
+        GetCountriesResponse responseBody = await Assert.That(response.AsSuccessful.Data).IsNotNull();
+
+        return responseBody.Countries;
     }
 }
