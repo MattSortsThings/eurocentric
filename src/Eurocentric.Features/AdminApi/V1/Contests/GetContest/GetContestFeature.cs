@@ -1,10 +1,12 @@
 using ErrorOr;
-using Eurocentric.Features.AdminApi.V1.Common.Dtos;
+using Eurocentric.Domain.Aggregates.Contests;
+using Eurocentric.Features.AdminApi.V1.Common.Mapping;
 using Eurocentric.Features.Shared.Messaging;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SlimMessageBus;
+using Contest = Eurocentric.Features.AdminApi.V1.Common.Dtos.Contest;
 
 namespace Eurocentric.Features.AdminApi.V1.Contests.GetContest;
 
@@ -25,7 +27,7 @@ internal static class GetContestFeature
         {
             await Task.CompletedTask;
 
-            Contest dummyContest = Contest.CreateExample() with { Id = request.ContestId };
+            Contest dummyContest = LiverpoolFormatContest.CreateDummyContest(request.ContestId).ToContestDto();
 
             return new GetContestResponse(dummyContest);
         }

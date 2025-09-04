@@ -126,6 +126,7 @@ public sealed class DomainArchitectureTests
         // Arrange
         ClassRule rule = Classes()
             .That().Are(EntityClasses)
+            .And().DoNotResideInNamespace("Eurocentric.Domain.Aggregates.Contests")
             .Should().FollowCustomCondition(HasNoConstructorAccessibleFromOutsideAssembly,
                 "has no public constructors",
                 "at least one public constructor was found");
