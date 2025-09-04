@@ -46,6 +46,9 @@ public sealed class FeaturesArchitectureTests
     private static readonly IObjectProvider<IType> AdminApiV0Types = Types()
         .That().ResideInNamespaceMatching(".AdminApi.V0");
 
+    private static readonly IObjectProvider<IType> AdminApiV1Types = Types()
+        .That().ResideInNamespaceMatching(".AdminApi.V1");
+
     private static readonly IObjectProvider<IType> PublicApiTypes = Types()
         .That().ResideInNamespaceMatching(".PublicApi");
 
@@ -604,7 +607,7 @@ public sealed class FeaturesArchitectureTests
     }
 
     [Test]
-    public async Task AdminApi_types_should_not_depend_on_PublicApi_types()
+    public async Task AdminApi_types_should_not_depend_on_any_PublicApi_types()
     {
         // Arrange
         TypeRule rule = Types()
@@ -619,10 +622,25 @@ public sealed class FeaturesArchitectureTests
     }
 
     [Test]
+    public async Task AdminApi_V0_types_should_not_depend_on_any_AdminApi_V1_types()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().Are(AdminApiV0Types)
+            .Should().NotDependOnAny(AdminApiV1Types);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
     [Arguments("AdminApi.V0.Countries.CreateCountry")]
     [Arguments("AdminApi.V0.Countries.GetCountries")]
     [Arguments("AdminApi.V0.Countries.GetCountry")]
-    public async Task AdminApi_V1_feature_types_should_not_depend_on_any_other_AdminApi_V1_feature_namespace(
+    public async Task AdminApi_V0_feature_types_should_not_depend_on_any_other_AdminApi_V0_feature_namespace(
         string featureNamespace)
     {
         // Arrange
@@ -641,7 +659,42 @@ public sealed class FeaturesArchitectureTests
     }
 
     [Test]
-    public async Task PublicApi_types_should_not_depend_on_AdminApi_types()
+    public async Task AdminApi_V1_types_should_not_depend_on_any_AdminApi_V0_types()
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().Are(AdminApiV1Types)
+            .Should().NotDependOnAny(AdminApiV0Types);
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
+    [Arguments("AdminApi.V1.Countries.GetCountry")]
+    public async Task AdminApi_V1_feature_types_should_not_depend_on_any_other_AdminApi_V1_feature_namespace(
+        string featureNamespace)
+    {
+        // Arrange
+        TypeRule rule = Types()
+            .That().ResideInNamespaceMatching(featureNamespace)
+            .Should().NotDependOnAny(Types()
+                .That().Are(AdminApiV1Types)
+                .And().DoNotResideInNamespaceMatching(featureNamespace)
+                .And().DoNotResideInNamespaceMatching(".Common"));
+
+        // Act
+        IEnumerable<EvaluationResult> evaluationResult = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(evaluationResult).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task PublicApi_types_should_not_depend_on_any_AdminApi_types()
     {
         // Arrange
         TypeRule rule = Types()
