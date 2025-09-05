@@ -19,7 +19,7 @@
     <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.8.4"/>
     <PackageVersion Include="RestSharp" Version="112.1.0"/>
     <PackageVersion Include="Scalar.AspNetCore" Version="2.7.2"/>
-    <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.1"/>
+    <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.2"/>
     <PackageVersion Include="Testcontainers.MsSql" Version="4.7.0"/>
     <PackageVersion Include="TngTech.ArchUnitNET" Version="0.12.1"/>
     <PackageVersion Include="TUnit" Version="0.57.24"/>
