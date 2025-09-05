@@ -11,11 +11,12 @@ namespace Eurocentric.Domain.Aggregates.Contests;
 public abstract class Contest : AggregateRoot<ContestId>
 {
     private readonly List<ChildBroadcast> _childBroadcasts = [];
+    private readonly List<Participant> _participants;
 
     [UsedImplicitly(Reason = "EF Core")]
     private protected Contest()
     {
-        ParticipantsList = [];
+        _participants = [];
     }
 
     protected Contest(ContestId id,
@@ -27,7 +28,7 @@ public abstract class Contest : AggregateRoot<ContestId>
         ContestYear = contestYear;
         CityName = cityName;
         GlobalTelevote = globalTelevote;
-        ParticipantsList = participants;
+        _participants = participants;
     }
 
     /// <summary>
@@ -68,12 +69,10 @@ public abstract class Contest : AggregateRoot<ContestId>
     ///     This property creates and returns a new collection every time it is accessed. No assumptions should be made
     ///     about the ordering of items.
     /// </remarks>
-    public IReadOnlyList<Participant> Participants => ParticipantsList.ToArray().AsReadOnly();
+    public IReadOnlyList<Participant> Participants => _participants.ToArray().AsReadOnly();
 
     /// <summary>
     ///     Gets the contest's global televote, if present.
     /// </summary>
     public GlobalTelevote? GlobalTelevote { get; private init; }
-
-    private protected List<Participant> ParticipantsList { get; }
 }

@@ -12,6 +12,7 @@ public sealed class StockholmFormatContest : Contest
     [UsedImplicitly(Reason = "EF Core")]
     private StockholmFormatContest()
     {
+        ContestFormat = ContestFormat.Stockholm;
     }
 
     public StockholmFormatContest(ContestId id,
@@ -19,8 +20,9 @@ public sealed class StockholmFormatContest : Contest
         CityName cityName,
         List<Participant> participants) : base(id, contestYear, cityName, participants)
     {
+        ContestFormat = ContestFormat.Stockholm;
     }
 
     /// <inheritdoc />
-    public override ContestFormat ContestFormat { get; private protected init; } = ContestFormat.Stockholm;
+    public override ContestFormat ContestFormat { get; private protected init; }
 }

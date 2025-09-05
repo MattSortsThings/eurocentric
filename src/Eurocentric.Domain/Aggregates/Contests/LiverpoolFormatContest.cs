@@ -12,6 +12,7 @@ public sealed class LiverpoolFormatContest : Contest
     [UsedImplicitly(Reason = "EF Core")]
     private LiverpoolFormatContest()
     {
+        ContestFormat = ContestFormat.Liverpool;
     }
 
     public LiverpoolFormatContest(ContestId id,
@@ -20,10 +21,11 @@ public sealed class LiverpoolFormatContest : Contest
         List<Participant> participants,
         GlobalTelevote globalTelevote) : base(id, contestYear, cityName, participants, globalTelevote)
     {
+        ContestFormat = ContestFormat.Liverpool;
     }
 
     /// <inheritdoc />
-    public override ContestFormat ContestFormat { get; private protected init; } = ContestFormat.Liverpool;
+    public override ContestFormat ContestFormat { get; private protected init; }
 
     public static LiverpoolFormatContest CreateDummyContest(Guid contestId)
     {
