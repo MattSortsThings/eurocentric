@@ -10,9 +10,26 @@ namespace Eurocentric.Features.AcceptanceTests.AdminApi.V1.TestUtils.Helpers.Cou
 
 public static class ApiDriverExtensions
 {
+    public static async IAsyncEnumerable<CountryDto> CreateMultipleCountriesAsync(
+        this IApiDriver apiDriver,
+        params string[] countryCodes)
+    {
+        foreach (CreateCountryRequest requestBody in countryCodes.Select(MapToRequestBody))
+        {
+            RestRequest request = apiDriver.RequestFactory.Countries.CreateCountry(requestBody);
+
+            BiRestResponse<CreateCountryResponse> response = await apiDriver.RestClient.SendAsync<CreateCountryResponse>(request,
+                TestContext.Current!.CancellationToken);
+
+            CreateCountryResponse responseBody = await Assert.That(response.AsSuccessful.Data).IsNotNull();
+
+            yield return responseBody.Country;
+        }
+    }
+
     public static async Task<CountryDto> CreateSingleCountryAsync(
         this IApiDriver apiDriver,
-        string countryName = "",
+        string countryName = TestDefaults.CountryName,
         string countryCode = "")
     {
         CreateCountryRequest requestBody = new() { CountryCode = countryCode, CountryName = countryName };
@@ -57,4 +74,9 @@ public static class ApiDriverExtensions
 
         return responseBody.Countries;
     }
+
+    private static CreateCountryRequest MapToRequestBody(string countryCode) => new()
+    {
+        CountryCode = countryCode, CountryName = TestDefaults.CountryName
+    };
 }

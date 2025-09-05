@@ -1,10 +1,13 @@
 using ErrorOr;
 using Eurocentric.Domain.Aggregates.Contests;
+using Eurocentric.Domain.ValueObjects;
 using Eurocentric.Features.AdminApi.V1.Common.Mapping;
 using Eurocentric.Features.Shared.Messaging;
+using Eurocentric.Infrastructure.DataAccess.EfCore;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 using Contest = Eurocentric.Features.AdminApi.V1.Common.Dtos.Contest;
 
@@ -21,15 +24,18 @@ internal static class GetContestFeature
     internal sealed record Query(Guid ContestId) : IQuery<GetContestResponse>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, GetContestResponse>
+    internal sealed class QueryHandler(AppDbContext dbContext) : IQueryHandler<Query, GetContestResponse>
     {
-        public async Task<ErrorOr<GetContestResponse>> OnHandle(Query request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<GetContestResponse>> OnHandle(Query query, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            ContestId contestId = ContestId.FromValue(query.ContestId);
 
-            Contest dummyContest = LiverpoolFormatContest.CreateDummyContest(request.ContestId).ToContestDto();
+            Contest? contest = await dbContext.Contests.AsNoTracking()
+                .Where(contest => contest.Id == contestId)
+                .Select(contest => contest.ToContestDto())
+                .FirstOrDefaultAsync(cancellationToken);
 
-            return new GetContestResponse(dummyContest);
+            return contest is null ? ContestErrors.ContestNotFound(contestId) : new GetContestResponse(contest);
         }
     }
 }

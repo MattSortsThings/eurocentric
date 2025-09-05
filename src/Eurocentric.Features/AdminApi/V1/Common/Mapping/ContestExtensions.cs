@@ -19,13 +19,13 @@ internal static class ContestExtensions
         CityName = contest.CityName.Value,
         ContestFormat = (ContestFormat)(int)contest.ContestFormat,
         Completed = contest.Completed,
-        ChildBroadcasts = contest.ChildBroadcasts.Select(broadcast => broadcast.ToChildBroadcastDto()).ToArray(),
-        Participants = contest.Participants.Select(participant => participant.ToParticipantDto()).ToArray(),
+        ChildBroadcasts = contest.ChildBroadcasts.Select(MapToChildBroadcastDto).ToArray(),
+        Participants = contest.Participants.Select(MapToParticipantDto).ToArray(),
         GlobalTelevote = contest.GlobalTelevote?.ToGlobalTelevoteDto()
     };
 
 
-    internal static ParticipantDto ToParticipantDto(this Participant participant) => new()
+    private static ParticipantDto MapToParticipantDto(Participant participant) => new()
     {
         ParticipatingCountryId = participant.ParticipatingCountryId.Value,
         SemiFinalDraw = (SemiFinalDraw)(int)participant.SemiFinalDraw,
@@ -33,13 +33,13 @@ internal static class ContestExtensions
         SongTitle = participant.SongTitle.Value
     };
 
-    internal static ChildBroadcastDto ToChildBroadcastDto(this ChildBroadcast childBroadcast) => new()
+    private static ChildBroadcastDto MapToChildBroadcastDto(ChildBroadcast childBroadcast) => new()
     {
         BroadcastId = childBroadcast.BroadcastId.Value,
         ContestStage = (ContestStage)(int)childBroadcast.ContestStage,
         Completed = childBroadcast.Completed
     };
 
-    internal static GlobalTelevoteDto ToGlobalTelevoteDto(this GlobalTelevote televote) =>
+    private static GlobalTelevoteDto ToGlobalTelevoteDto(this GlobalTelevote televote) =>
         new() { ParticipatingCountryId = televote.ParticipatingCountryId.Value };
 }
