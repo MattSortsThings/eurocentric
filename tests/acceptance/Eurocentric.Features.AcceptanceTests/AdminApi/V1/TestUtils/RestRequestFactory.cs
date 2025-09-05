@@ -19,6 +19,9 @@ public sealed class RestRequestFactory : IRestRequestFactory,
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddUrlSegment("contestId", contestId);
 
+    public RestRequest GetContests() => GetRequest("/admin/api/{apiVersion}/contests")
+        .AddUrlSegment("apiVersion", _apiVersion);
+
     public RestRequest CreateCountry(CreateCountryRequest requestBody) => PostRequest("/admin/api/{apiVersion}/countries")
         .AddUrlSegment("apiVersion", _apiVersion)
         .AddJsonBody(requestBody);

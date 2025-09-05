@@ -12,6 +12,8 @@ public interface IRestRequestFactory
     interface IContestsEndpoints
     {
         RestRequest GetContest(Guid contestId);
+
+        RestRequest GetContests();
     }
 
     interface ICountriesEndpoints

@@ -1,6 +1,7 @@
 using Eurocentric.Features.AdminApi.V1.Common.Constants;
 using Eurocentric.Features.AdminApi.V1.Common.Versioning;
 using Eurocentric.Features.AdminApi.V1.Contests.GetContest;
+using Eurocentric.Features.AdminApi.V1.Contests.GetContests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -21,6 +22,13 @@ internal static class Middleware
         RouteGroupBuilder endpointGroup = builder.MapGroup("contests")
             .WithTags(Endpoints.Contests.Tag)
             .WithDescription("Operations on the Contest resource.");
+
+        endpointGroup.MapGet("/", GetContestsFeature.ExecuteAsync)
+            .WithName(Endpoints.Contests.GetContests)
+            .WithSummary("Get all contests")
+            .WithDescription("Retrieves all existing contests from the system, ordered by contest year.")
+            .IntroducedInVersion1Point0()
+            .Produces<GetContestsResponse>();
 
         endpointGroup.MapGet("/{contestId:guid}", GetContestFeature.ExecuteAsync)
             .WithName(Endpoints.Contests.GetContest)

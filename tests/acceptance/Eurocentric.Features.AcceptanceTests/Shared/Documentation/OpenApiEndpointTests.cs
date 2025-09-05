@@ -104,6 +104,7 @@ public sealed class OpenApiEndpointTests : ParallelSeededAcceptanceTest
         ]);
 
         yield return () => ("admin-api-v1.0", [
+            "/contests",
             "/contests/{contestId}",
             "/countries",
             "/countries/{countryId}"

@@ -7,5 +7,6 @@ internal static partial class Endpoints
         internal const string Tag = "Contests";
 
         internal const string GetContest = "AdminApi.V1.Contests.GetContest";
+        internal const string GetContests = "AdminApi.V1.Contests.GetContests";
     }
 }
