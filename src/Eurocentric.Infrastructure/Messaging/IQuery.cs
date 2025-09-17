@@ -1,0 +1,11 @@
+using ErrorOr;
+using SlimMessageBus;
+
+namespace Eurocentric.Infrastructure.Messaging;
+
+/// <summary>
+///     An application query that <i>EITHER</i> fails and returns a list of <see cref="Error" /> objects
+///     <i>OR</i> succeeds and returns a response of type <typeparamref name="TResponse" />.
+/// </summary>
+/// <typeparam name="TResponse">The successful response type.</typeparam>
+public interface IQuery<TResponse> : IRequest<ErrorOr<TResponse>>;

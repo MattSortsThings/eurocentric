@@ -6,4 +6,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets"/>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.Apis.Admin\Eurocentric.Apis.Admin.csproj"/>
+    <ProjectReference Include="..\Eurocentric.Apis.Public\Eurocentric.Apis.Public.csproj"/>
+  </ItemGroup>
 </Project>
