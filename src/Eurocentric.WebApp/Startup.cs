@@ -3,6 +3,8 @@ using Eurocentric.Apis.Public;
 using Eurocentric.Infrastructure.DataAccess;
 using Eurocentric.Infrastructure.HttpJson;
 using Eurocentric.Infrastructure.Messaging;
+using AdminApiMiddleware = Eurocentric.Apis.Admin.Middleware;
+using PublicApiMiddleware = Eurocentric.Apis.Public.Middleware;
 
 namespace Eurocentric.WebApp;
 
@@ -20,7 +22,7 @@ internal static class Startup
     {
         builder.Services.AddDataAccess(builder.Configuration)
             .AddHttpJsonConfiguration()
-            .AddMessaging(typeof(IAdminApiAssemblyMarker).Assembly, typeof(IPublicApiAssemblyMarker).Assembly);
+            .AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly);
 
         return builder;
     }
