@@ -12,6 +12,13 @@ internal static class Middleware
     ///     Maps the v0.x endpoints to the route builder.
     /// </summary>
     /// <param name="builder">The route builder.</param>
-    internal static void MapV0Endpoints(this IEndpointRouteBuilder builder) => builder.MapCreateCountryV0Point1()
-        .MapGetCountryV0Point1();
+    internal static void MapV0Endpoints(this IEndpointRouteBuilder builder)
+    {
+        builder.MapCreateCountryV0Point1()
+            .MapGetCountryV0Point1();
+
+        builder.MapCreateCountryV0Point2()
+            .MapGetCountriesV0Point2()
+            .MapGetCountryV0Point2();
+    }
 }

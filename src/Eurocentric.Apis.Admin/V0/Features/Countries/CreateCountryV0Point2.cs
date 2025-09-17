@@ -17,12 +17,12 @@ using CountryDto = Eurocentric.Apis.Admin.V0.Dtos.Country;
 
 namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
-public static class CreateCountryV0Point1
+public static class CreateCountryV0Point2
 {
-    internal static IEndpointRouteBuilder MapCreateCountryV0Point1(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapCreateCountryV0Point2(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("v0.1/countries", ExecuteAsync)
-            .WithName("AdminApi.V0.1.CreateCountry")
+        builder.MapPost("v0.2/countries", ExecuteAsync)
+            .WithName("AdminApi.V0.2.CreateCountry")
             .WithTags(V0Group.Countries.Tag)
             .Produces<Response>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -47,7 +47,7 @@ public static class CreateCountryV0Point1
         Guid countryId = response.Country.Id;
 
         return TypedResults.CreatedAtRoute(response,
-            "AdminApi.V0.1.GetCountry",
+            "AdminApi.V0.2.GetCountry",
             new RouteValueDictionary { { nameof(countryId), countryId } });
     }
 

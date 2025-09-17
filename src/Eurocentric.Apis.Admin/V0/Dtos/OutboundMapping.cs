@@ -7,7 +7,7 @@ namespace Eurocentric.Apis.Admin.V0.Dtos;
 
 internal static class OutboundMapping
 {
-    internal static Expression<Func<CountryEntity, CountryDto>> CountryToCountryDto() => country => new CountryDto
+    internal static readonly Expression<Func<CountryEntity, CountryDto>> CountryToCountryDto = country => new CountryDto
     {
         Id = country.Id,
         CountryCode = country.CountryCode,

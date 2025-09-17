@@ -12,12 +12,12 @@ using SlimMessageBus;
 
 namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
-public static class GetCountryV0Point1
+public static class GetCountryV0Point2
 {
-    internal static IEndpointRouteBuilder MapGetCountryV0Point1(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapGetCountryV0Point2(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("v0.1/countries/{countryId:guid}", ExecuteAsync)
-            .WithName("AdminApi.V0.1.GetCountry")
+        builder.MapGet("v0.2/countries/{countryId:guid}", ExecuteAsync)
+            .WithName("AdminApi.V0.2.GetCountry")
             .WithTags(V0Group.Countries.Tag)
             .Produces<Response>()
             .ProducesProblem(StatusCodes.Status404NotFound);
