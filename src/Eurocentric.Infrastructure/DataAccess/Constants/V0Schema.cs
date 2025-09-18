@@ -18,4 +18,10 @@ internal static class V0Schema
         internal const string Televote = "televote";
         internal const string TelevoteAward = "televote_award";
     }
+
+    internal static class Sprocs
+    {
+        internal const string GetCompetingCountryPointsInRangeRankings = "v0.usp_get_competing_country_points_in_range_rankings";
+        internal const string GetScoreboardRows = "v0.usp_get_scoreboard_rows";
+    }
 }

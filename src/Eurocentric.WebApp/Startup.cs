@@ -1,5 +1,6 @@
 using Eurocentric.Apis.Admin;
 using Eurocentric.Apis.Public;
+using Eurocentric.Infrastructure.AnalyticsGateways;
 using Eurocentric.Infrastructure.DataAccess;
 using Eurocentric.Infrastructure.HttpJson;
 using Eurocentric.Infrastructure.Messaging;
@@ -20,7 +21,8 @@ internal static class Startup
     /// <returns>The same <see cref="WebApplicationBuilder" /> instance, so that method invocations can be chained.</returns>
     internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDataAccess(builder.Configuration)
+        builder.Services.AddAnalyticsGateways()
+            .AddDataAccess(builder.Configuration)
             .AddHttpJsonConfiguration()
             .AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly);
 

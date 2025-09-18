@@ -8,4 +8,14 @@ internal static class V0Group
     {
         internal const string Tag = "Queryables";
     }
+
+    internal static class CompetingCountryRankings
+    {
+        internal const string Tag = "Competing Country Rankings";
+    }
+
+    internal static class Scoreboards
+    {
+        internal const string Tag = "Scoreboards";
+    }
 }
