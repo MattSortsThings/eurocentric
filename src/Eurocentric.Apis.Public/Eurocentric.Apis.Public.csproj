@@ -10,7 +10,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj"/>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations"/>
-  </ItemGroup>
 </Project>
