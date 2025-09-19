@@ -4,6 +4,7 @@
     <RootNamespace>Eurocentric.Apis.Public</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).ArchitectureTests"/>
     <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
   </ItemGroup>
   <ItemGroup>

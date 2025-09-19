@@ -10,6 +10,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App"/>
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).ArchitectureTests"/>
     <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
   </ItemGroup>
   <ItemGroup>
