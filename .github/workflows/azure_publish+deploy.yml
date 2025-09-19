@@ -1,0 +1,50 @@
+name: Publish and deploy ASP.Net Core app to Azure Web App service
+
+env:
+  AZURE_WEBAPP_NAME: eurocentric
+  AZURE_WEBAPP_PACKAGE_PATH: './src/Eurocentric.WebApp/publish'
+  DOTNET_VERSION: '9.x'
+  SOLUTION_PATH: 'Eurocentric.sln'
+  API_PROJECT_PATH: './src/Eurocentric.WebApp'
+  PUBLISH_DIR: './publish'
+
+on:
+  push:
+    branches: [ 'main' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore with dotnet
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: Build with dotnet
+        run: dotnet build ${{ env.SOLUTION_PATH }} -c Release --no-restore
+
+      - name: Test with dotnet
+        run: dotnet test ${{ env.SOLUTION_PATH }} -c Release --no-restore --no-build --verbosity minimal
+
+      - name: Publish with dotnet
+        run: dotnet publish ${{ env.API_PROJECT_PATH }} -c Release --no-restore --no-build --property:PublishDir=${{ env.PUBLISH_DIR }}
+
