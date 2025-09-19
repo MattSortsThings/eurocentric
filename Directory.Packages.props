@@ -15,6 +15,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.9"/>
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.9"/>
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9"/>
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.8.4"/>
     <PackageVersion Include="RestSharp" Version="112.1.0"/>
     <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.2"/>
     <PackageVersion Include="Testcontainers.MsSql" Version="4.7.0"/>

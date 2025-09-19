@@ -4,6 +4,7 @@
     <RootNamespace>Eurocentric.Apis.Public.ArchitectureTests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport"/>
     <PackageReference Include="TngTech.ArchUnitNET"/>
     <PackageReference Include="TUnit"/>
   </ItemGroup>
