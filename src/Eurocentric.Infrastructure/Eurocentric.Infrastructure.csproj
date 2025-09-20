@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Eurocentric.Domain\Eurocentric.Domain.csproj"/>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer"/>
     <PackageReference Include="Dapper"/>
     <PackageReference Include="EFCore.NamingConventions"/>
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer"/>

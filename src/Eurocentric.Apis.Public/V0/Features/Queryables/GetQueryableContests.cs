@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using ErrorOr;
 using Eurocentric.Apis.Public.V0.Constants;
 using Eurocentric.Apis.Public.V0.Dtos.Queryables;
+using Eurocentric.Apis.Public.V0.Versioning;
 using Eurocentric.Domain.V0Entities;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Eurocentric.Infrastructure.Messaging;
@@ -15,7 +16,7 @@ using SlimMessageBus;
 
 namespace Eurocentric.Apis.Public.V0.Features.Queryables;
 
-public static class GetQueryableContestsV0Point1
+public static class GetQueryableContests
 {
     private static readonly Expression<Func<Contest, QueryableContest>> MapContestToQueryableContest =
         contest => new QueryableContest
@@ -26,10 +27,11 @@ public static class GetQueryableContestsV0Point1
             HasGlobalTelevote = contest.GlobalTelevote != null
         };
 
-    internal static IEndpointRouteBuilder MapGetQueryableContestsV0Point1(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapGetQueryableContests(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("v0.1/queryables/contests", ExecuteAsync)
-            .WithName("PublicApi.V0.1.Queryables.GetQueryableContests")
+        builder.MapGet("/queryables/contests", ExecuteAsync)
+            .WithName(V0Group.Queryables.Endpoints.GetQueryableContests)
+            .IntroducedInV0Point1()
             .WithTags(V0Group.Queryables.Tag);
 
         return builder;

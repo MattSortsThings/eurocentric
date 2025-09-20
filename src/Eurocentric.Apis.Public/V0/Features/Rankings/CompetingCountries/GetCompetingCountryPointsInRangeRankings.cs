@@ -3,6 +3,7 @@ using ErrorOr;
 using Eurocentric.Apis.Public.V0.Constants;
 using Eurocentric.Apis.Public.V0.Dtos.Rankings.Common;
 using Eurocentric.Apis.Public.V0.Enums;
+using Eurocentric.Apis.Public.V0.Versioning;
 using Eurocentric.Domain.V0Analytics.Rankings.CompetingCountries;
 using Eurocentric.Infrastructure.Messaging;
 using JetBrains.Annotations;
@@ -16,12 +17,13 @@ using MetadataDto = Eurocentric.Apis.Public.V0.Dtos.Rankings.CompetingCountries.
 
 namespace Eurocentric.Apis.Public.V0.Features.Rankings.CompetingCountries;
 
-public static class GetCompetingCountryPointsInRangeRankingsV0Point2
+public static class GetCompetingCountryPointsInRangeRankings
 {
-    internal static IEndpointRouteBuilder MapGetCompetingCountryPointsInRangeRankingsV0Point2(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapGetCompetingCountryPointsInRangeRankings(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("v0.2/rankings/competing-countries/points-in-range", ExecuteAsync)
-            .WithName("PublicApi.V0.2.CompetingCountryRankings.GetCompetingCountryPointsInRangeRankings")
+        builder.MapGet("/rankings/competing-countries/points-in-range", ExecuteAsync)
+            .WithName(V0Group.CompetingCountryRankings.Endpoints.GetCompetingCountryPointsInRangeRankings)
+            .IntroducedInV0Point2()
             .WithTags(V0Group.CompetingCountryRankings.Tag)
             .Produces<Response>()
             .ProducesProblem(StatusCodes.Status400BadRequest)

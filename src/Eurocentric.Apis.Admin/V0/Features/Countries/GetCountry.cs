@@ -1,6 +1,7 @@
 using ErrorOr;
 using Eurocentric.Apis.Admin.V0.Constants;
 using Eurocentric.Apis.Admin.V0.Dtos;
+using Eurocentric.Apis.Admin.V0.Versioning;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Eurocentric.Infrastructure.Messaging;
 using JetBrains.Annotations;
@@ -12,12 +13,13 @@ using SlimMessageBus;
 
 namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
-public static class GetCountryV0Point1
+public static class GetCountry
 {
-    internal static IEndpointRouteBuilder MapGetCountryV0Point1(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapGetCountry(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("v0.1/countries/{countryId:guid}", ExecuteAsync)
-            .WithName("AdminApi.V0.1.GetCountry")
+        builder.MapGet("/countries/{countryId:guid}", ExecuteAsync)
+            .WithName(V0Group.Countries.Endpoints.GetCountry)
+            .IntroducedInV0Point1()
             .WithTags(V0Group.Countries.Tag)
             .Produces<Response>()
             .ProducesProblem(StatusCodes.Status404NotFound);

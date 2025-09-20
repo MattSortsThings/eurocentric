@@ -1,4 +1,4 @@
-using Eurocentric.Apis.Admin.V0.Features;
+using Eurocentric.Apis.Admin.V0;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -15,8 +15,9 @@ public static class Middleware
     /// <param name="app">The web application.</param>
     public static void UseAdminApiEndpoints(this IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder group = app.MapGroup("admin/api");
+        RouteGroupBuilder apiGroup = app.NewVersionedApi("AdminApi")
+            .MapGroup("admin/api");
 
-        group.MapV0Endpoints();
+        apiGroup.MapV0Endpoints();
     }
 }

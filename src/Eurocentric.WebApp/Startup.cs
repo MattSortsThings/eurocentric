@@ -4,6 +4,7 @@ using Eurocentric.Infrastructure.AnalyticsGateways;
 using Eurocentric.Infrastructure.DataAccess;
 using Eurocentric.Infrastructure.HttpJson;
 using Eurocentric.Infrastructure.Messaging;
+using Eurocentric.Infrastructure.Versioning;
 using AdminApiMiddleware = Eurocentric.Apis.Admin.Middleware;
 using PublicApiMiddleware = Eurocentric.Apis.Public.Middleware;
 
@@ -24,7 +25,8 @@ internal static class Startup
         builder.Services.AddAnalyticsGateways()
             .AddDataAccess(builder.Configuration)
             .AddHttpJsonConfiguration()
-            .AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly);
+            .AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly)
+            .AddVersioning();
 
         return builder;
     }

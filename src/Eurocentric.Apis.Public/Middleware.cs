@@ -15,8 +15,9 @@ public static class Middleware
     /// <param name="app">The web application.</param>
     public static void UsePublicApiEndpoints(this IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder group = app.MapGroup("public/api");
+        RouteGroupBuilder apiGroup = app.NewVersionedApi("PublicApi")
+            .MapGroup("public/api");
 
-        group.MapV0Endpoints();
+        apiGroup.MapV0Endpoints();
     }
 }

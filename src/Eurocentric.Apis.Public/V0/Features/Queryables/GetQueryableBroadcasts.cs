@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using ErrorOr;
 using Eurocentric.Apis.Public.V0.Constants;
 using Eurocentric.Apis.Public.V0.Dtos.Queryables;
+using Eurocentric.Apis.Public.V0.Versioning;
 using Eurocentric.Domain.V0Entities;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Eurocentric.Infrastructure.Messaging;
@@ -16,7 +17,7 @@ using ContestStage = Eurocentric.Apis.Public.V0.Enums.ContestStage;
 
 namespace Eurocentric.Apis.Public.V0.Features.Queryables;
 
-public static class GetQueryableBroadcastsV0Point1
+public static class GetQueryableBroadcasts
 {
     private static readonly Expression<Func<Broadcast, QueryableBroadcast>> MapBroadcastToQueryableBroadcast =
         broadcast => new QueryableBroadcast
@@ -30,10 +31,11 @@ public static class GetQueryableBroadcastsV0Point1
         };
 
 
-    internal static IEndpointRouteBuilder MapGetQueryableBroadcastsV0Point1(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapGetQueryableBroadcasts(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("v0.1/queryables/broadcasts", ExecuteAsync)
-            .WithName("PublicApi.V0.1.Queryables.GetQueryableBroadcasts")
+        builder.MapGet("/queryables/broadcasts", ExecuteAsync)
+            .WithName(V0Group.Queryables.Endpoints.GetQueryableBroadcasts)
+            .IntroducedInV0Point1()
             .WithTags(V0Group.Queryables.Tag);
 
         return builder;

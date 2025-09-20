@@ -1,7 +1,9 @@
+using Eurocentric.Apis.Admin.V0.Constants;
 using Eurocentric.Apis.Admin.V0.Features.Countries;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
-namespace Eurocentric.Apis.Admin.V0.Features;
+namespace Eurocentric.Apis.Admin.V0;
 
 /// <summary>
 ///     Extension methods to be invoked when configuring HTTP request pipeline middleware.
@@ -14,11 +16,11 @@ internal static class Middleware
     /// <param name="builder">The route builder.</param>
     internal static void MapV0Endpoints(this IEndpointRouteBuilder builder)
     {
-        builder.MapCreateCountryV0Point1()
-            .MapGetCountryV0Point1();
+        RouteGroupBuilder v0Group = builder.MapGroup("v{version:apiVersion}")
+            .WithGroupName(V0Group.Name);
 
-        builder.MapCreateCountryV0Point2()
-            .MapGetCountriesV0Point2()
-            .MapGetCountryV0Point2();
+        v0Group.MapCreateCountry()
+            .MapGetCountries()
+            .MapGetCountry();
     }
 }

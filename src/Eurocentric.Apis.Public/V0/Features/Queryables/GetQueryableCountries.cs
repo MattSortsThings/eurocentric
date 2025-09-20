@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using ErrorOr;
 using Eurocentric.Apis.Public.V0.Constants;
 using Eurocentric.Apis.Public.V0.Dtos.Queryables;
+using Eurocentric.Apis.Public.V0.Versioning;
 using Eurocentric.Domain.V0Entities;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Eurocentric.Infrastructure.Messaging;
@@ -15,21 +16,16 @@ using SlimMessageBus;
 
 namespace Eurocentric.Apis.Public.V0.Features.Queryables;
 
-public static class GetQueryableContestsV0Point2
+public static class GetQueryableCountries
 {
-    private static readonly Expression<Func<Contest, QueryableContest>> MapContestToQueryableContest =
-        contest => new QueryableContest
-        {
-            ContestYear = contest.ContestYear,
-            CityName = contest.CityName,
-            ParticipatingCountries = contest.Participants.Count,
-            HasGlobalTelevote = contest.GlobalTelevote != null
-        };
+    private static readonly Expression<Func<Country, QueryableCountry>> MapCountryToQueryableCountry = country =>
+        new QueryableCountry { CountryCode = country.CountryCode, CountryName = country.CountryName };
 
-    internal static IEndpointRouteBuilder MapGetQueryableContestsV0Point2(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapGetQueryableCountries(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("v0.2/queryables/contests", ExecuteAsync)
-            .WithName("PublicApi.V0.2.Queryables.GetQueryableContests")
+        builder.MapGet("/queryables/countries", ExecuteAsync)
+            .WithName(V0Group.Queryables.Endpoints.GetQueryableCountries)
+            .IntroducedInV0Point1()
             .WithTags(V0Group.Queryables.Tag);
 
         return builder;
@@ -44,7 +40,7 @@ public static class GetQueryableContestsV0Point2
         return TypedResults.Ok(errorsOrResponse.Value);
     }
 
-    public sealed record Response(QueryableContest[] QueryableContests);
+    public sealed record Response(QueryableCountry[] QueryableCountries);
 
     internal sealed record Query : IQuery<Response>;
 
@@ -53,14 +49,18 @@ public static class GetQueryableContestsV0Point2
     {
         public async Task<ErrorOr<Response>> OnHandle(Query _, CancellationToken cancellationToken)
         {
-            IQueryable<QueryableContest> contests = dbContext.V0Contests.AsNoTracking()
+            IQueryable<Guid> contestIds = dbContext.V0Contests.AsNoTracking()
                 .Where(contest => contest.Queryable)
-                .OrderBy(contest => contest.ContestYear)
-                .Select(MapContestToQueryableContest);
+                .Select(contest => contest.Id);
 
-            QueryableContest[] queryableContests = await contests.ToArrayAsync(cancellationToken);
+            IQueryable<QueryableCountry> countries = dbContext.V0Countries.AsNoTracking()
+                .Where(country => country.ContestRoles.Any(role => contestIds.Contains(role.ContestId)))
+                .OrderBy(country => country.CountryCode)
+                .Select(MapCountryToQueryableCountry);
 
-            return new Response(queryableContests);
+            QueryableCountry[] queryableCountries = await countries.ToArrayAsync(cancellationToken);
+
+            return new Response(queryableCountries);
         }
     }
 }

@@ -1,6 +1,8 @@
+using Eurocentric.Apis.Public.V0.Constants;
 using Eurocentric.Apis.Public.V0.Features.Queryables;
 using Eurocentric.Apis.Public.V0.Features.Rankings.CompetingCountries;
 using Eurocentric.Apis.Public.V0.Features.Scoreboards;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Apis.Public.V0;
@@ -16,16 +18,15 @@ internal static class Middleware
     /// <param name="builder">The route builder.</param>
     internal static void MapV0Endpoints(this IEndpointRouteBuilder builder)
     {
-        builder.MapGetQueryableBroadcastsV0Point1()
-            .MapGetQueryableContestsV0Point1()
-            .MapGetQueryableCountriesV0Point1();
+        RouteGroupBuilder v0Group = builder.MapGroup("v{version:apiVersion}")
+            .WithName(V0Group.Name);
 
-        builder.MapGetQueryableBroadcastsV0Point2()
-            .MapGetQueryableContestsV0Point2()
-            .MapGetQueryableCountriesV0Point2();
+        v0Group.MapGetQueryableBroadcasts()
+            .MapGetQueryableContests()
+            .MapGetQueryableCountries();
 
-        builder.MapGetCompetingCountryPointsInRangeRankingsV0Point2();
+        v0Group.MapGetCompetingCountryPointsInRangeRankings();
 
-        builder.MapGetScoreboardV0Point2();
+        v0Group.MapGetScoreboard();
     }
 }

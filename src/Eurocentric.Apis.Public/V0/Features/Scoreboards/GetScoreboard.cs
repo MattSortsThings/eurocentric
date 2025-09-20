@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using ErrorOr;
 using Eurocentric.Apis.Public.V0.Constants;
 using Eurocentric.Apis.Public.V0.Enums;
+using Eurocentric.Apis.Public.V0.Versioning;
 using Eurocentric.Domain.V0Analytics.Scoreboard;
 using Eurocentric.Infrastructure.Messaging;
 using JetBrains.Annotations;
@@ -17,12 +18,13 @@ using ScoreboardRowDto = Eurocentric.Apis.Public.V0.Dtos.Scoreboards.ScoreboardR
 
 namespace Eurocentric.Apis.Public.V0.Features.Scoreboards;
 
-public static class GetScoreboardV0Point2
+public static class GetScoreboard
 {
-    internal static IEndpointRouteBuilder MapGetScoreboardV0Point2(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapGetScoreboard(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("v0.2/scoreboards", ExecuteAsync)
-            .WithName("PublicApi.V0.2.Scoreboards.GetScoreboard")
+        builder.MapGet("/scoreboards", ExecuteAsync)
+            .WithName(V0Group.Scoreboards.Endpoints.GetScoreboard)
+            .IntroducedInV0Point2()
             .WithTags(V0Group.Scoreboards.Tag)
             .Produces<Response>()
             .ProducesProblem(StatusCodes.Status400BadRequest)

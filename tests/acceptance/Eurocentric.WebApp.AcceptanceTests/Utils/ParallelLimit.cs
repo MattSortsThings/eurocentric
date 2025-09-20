@@ -1,6 +1,6 @@
 using TUnit.Core.Interfaces;
 
-namespace Eurocentric.WebApp.AcceptanceTests;
+namespace Eurocentric.WebApp.AcceptanceTests.Utils;
 
 public sealed class ParallelLimit : IParallelLimit
 {

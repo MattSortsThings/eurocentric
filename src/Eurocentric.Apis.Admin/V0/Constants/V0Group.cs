@@ -7,5 +7,12 @@ internal static class V0Group
     internal static class Countries
     {
         internal const string Tag = "Countries";
+
+        internal static class Endpoints
+        {
+            internal const string CreateCountry = "AdminApi.V0.Countries.CreateCountry";
+            internal const string GetCountries = "AdminApi.V0.Countries.GetCountries";
+            internal const string GetCountry = "AdminApi.V0.Countries.GetCountry";
+        }
     }
 }

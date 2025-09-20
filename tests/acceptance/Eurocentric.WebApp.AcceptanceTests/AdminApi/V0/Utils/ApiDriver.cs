@@ -37,5 +37,7 @@ public sealed partial class ApiDriver : IApiDriver
         public IRestRequestFactory.ICountriesEndpoints Countries => this;
 
         private static RestRequest GetRequest(string route) => new(route);
+
+        private static RestRequest PostRequest(string route) => new(route, Method.Post);
     }
 }

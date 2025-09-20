@@ -31,7 +31,11 @@ public sealed partial class ApiDriver : IApiDriver
             _apiVersion = apiVersion;
         }
 
+        public IRestRequestFactory.ICompetingCountryRankingsEndpoints CompetingCountryRankings => this;
+
         public IRestRequestFactory.IQueryablesEndpoints Queryables => this;
+
+        public IRestRequestFactory.IScoreboardsEndpoints Scoreboards => this;
 
         private static RestRequest GetRequest(string route) => new(route);
     }

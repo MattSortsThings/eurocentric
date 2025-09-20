@@ -3,6 +3,7 @@ using ErrorOr;
 using Eurocentric.Apis.Admin.V0.Constants;
 using Eurocentric.Apis.Admin.V0.Dtos;
 using Eurocentric.Apis.Admin.V0.Enums;
+using Eurocentric.Apis.Admin.V0.Versioning;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Eurocentric.Infrastructure.Messaging;
 using JetBrains.Annotations;
@@ -17,12 +18,13 @@ using CountryDto = Eurocentric.Apis.Admin.V0.Dtos.Country;
 
 namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
-public static class CreateCountryV0Point2
+public static class CreateCountry
 {
-    internal static IEndpointRouteBuilder MapCreateCountryV0Point2(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapCreateCountry(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("v0.2/countries", ExecuteAsync)
-            .WithName("AdminApi.V0.2.CreateCountry")
+        builder.MapPost("/countries", ExecuteAsync)
+            .WithName(V0Group.Countries.Endpoints.CreateCountry)
+            .IntroducedInV0Point1()
             .WithTags(V0Group.Countries.Tag)
             .Produces<Response>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -47,7 +49,7 @@ public static class CreateCountryV0Point2
         Guid countryId = response.Country.Id;
 
         return TypedResults.CreatedAtRoute(response,
-            "AdminApi.V0.2.GetCountry",
+            V0Group.Countries.Endpoints.GetCountry,
             new RouteValueDictionary { { nameof(countryId), countryId } });
     }
 
