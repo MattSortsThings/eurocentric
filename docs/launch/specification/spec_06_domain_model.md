@@ -52,8 +52,8 @@ A *ContestRules* value specifies a contest's voting rules.
 
 ```cs
 {
-  Liverpool = 0,
-  Stockholm = 1
+  Liverpool,
+  Stockholm
 }
 ```
 
@@ -63,18 +63,8 @@ A *ContestRoleType* value specifies a country's role in a contest.
 
 ```cs
 {
-  Participant = 0,
-  GlobalTelevote = 1
-}
-```
-
-A *ContestStage* value specifies a broadcast's stage in its parent contest.
-
-```cs
-{
-  SemiFinal1 = 0,
-  SemiFinal2 = 1,
-  GrandFinal = 2
+  Participant,
+  GlobalTelevote
 }
 ```
 
@@ -84,9 +74,9 @@ A *ContestStage* value specifies a broadcast's stage in its parent contest.
 
 ```cs
 {
-  SemiFinal1 = 0,
-  SemiFinal2 = 1,
-  GrandFinal = 2
+  SemiFinal1,
+  SemiFinal2,
+  GrandFinal
 }
 ```
 
@@ -96,8 +86,8 @@ A *SemiFinalDraw* value specifies a contest participant's drawn Semi-Final.
 
 ```cs
 {
-  SemiFinal1 = 0,
-  SemiFinal2 = 1
+  SemiFinal1,
+  SemiFinal2
 }
 ```
 
