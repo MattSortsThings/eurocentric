@@ -16,10 +16,16 @@ public static class DependencyInjection
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <param name="assemblies">The assemblies to scan for messaging service implementations.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
-    public static IServiceCollection AddMessaging(this IServiceCollection services, params Assembly[] assemblies)
+    public static IServiceCollection AddMessaging(
+        this IServiceCollection services,
+        params Assembly[] assemblies
+    )
     {
-        services.AddSlimMessageBus(builder => builder.WithProviderMemory()
-            .AutoDeclareFrom(assemblies, messageTypeToTopicConverter: type => type.FullName));
+        services.AddSlimMessageBus(builder =>
+            builder
+                .WithProviderMemory()
+                .AutoDeclareFrom(assemblies, messageTypeToTopicConverter: type => type.FullName)
+        );
 
         return services;
     }

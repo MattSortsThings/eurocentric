@@ -9,5 +9,6 @@ namespace Eurocentric.Infrastructure.Messaging;
 /// </summary>
 /// <typeparam name="TCommand">The command type.</typeparam>
 /// <typeparam name="TResponse">The successful response type.</typeparam>
-public interface ICommandHandler<in TCommand, TResponse> : IRequestHandler<TCommand, ErrorOr<TResponse>>
+public interface ICommandHandler<in TCommand, TResponse>
+    : IRequestHandler<TCommand, ErrorOr<TResponse>>
     where TCommand : ICommand<TResponse>;

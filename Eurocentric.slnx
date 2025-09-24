@@ -1,19 +1,19 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Eurocentric.Apis.Admin/Eurocentric.Apis.Admin.csproj" />
-    <Project Path="src/Eurocentric.Apis.Public/Eurocentric.Apis.Public.csproj" />
-    <Project Path="src/Eurocentric.Domain/Eurocentric.Domain.csproj" />
-    <Project Path="src/Eurocentric.Infrastructure/Eurocentric.Infrastructure.csproj" />
-    <Project Path="src/Eurocentric.WebApp/Eurocentric.WebApp.csproj" />
-  </Folder>
-  <Folder Name="/_sln/">
-    <File Path=".editorconfig" />
-    <File Path=".gitattributes" />
-    <File Path=".gitignore" />
-    <File Path="Directory.Build.props" />
-    <File Path="Directory.Packages.props" />
-    <File Path="exclusion.dic" />
-    <File Path="README.md" />
-    <File Path="global.json" />
-  </Folder>
+    <Folder Name="/src/">
+        <Project Path="src/Eurocentric.Apis.Admin/Eurocentric.Apis.Admin.csproj" />
+        <Project Path="src/Eurocentric.Apis.Public/Eurocentric.Apis.Public.csproj" />
+        <Project Path="src/Eurocentric.Domain/Eurocentric.Domain.csproj" />
+        <Project Path="src/Eurocentric.Infrastructure/Eurocentric.Infrastructure.csproj" />
+        <Project Path="src/Eurocentric.WebApp/Eurocentric.WebApp.csproj" />
+    </Folder>
+    <Folder Name="/_sln/">
+        <File Path=".editorconfig" />
+        <File Path=".gitattributes" />
+        <File Path=".gitignore" />
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Packages.props" />
+        <File Path="exclusion.dic" />
+        <File Path="README.md" />
+        <File Path="global.json" />
+    </Folder>
 </Solution>
