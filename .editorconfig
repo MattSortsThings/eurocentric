@@ -38,6 +38,7 @@ indent_size = 2
 
 [*.xml]
 indent_size = 2
+resharper_space_before_self_closing = true
 
 ################
 # CSPROJ files #
@@ -52,6 +53,7 @@ indent_size = 2
 
 [*.props]
 indent_size = 2
+resharper_space_before_self_closing = true
 
 ############
 # C# files #

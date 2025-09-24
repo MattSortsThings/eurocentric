@@ -3,6 +3,8 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="ErrorOr" Version="2.0.1" />
     <PackageVersion Include="JetBrains.Annotations" Version="2025.2.2" />
+    <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.3" />
   </ItemGroup>
 </Project>
