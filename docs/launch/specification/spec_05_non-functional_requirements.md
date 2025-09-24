@@ -12,8 +12,8 @@ This document is part of the [launch specification](../README.md#launch-specific
     - [no01: OpenAPI documents](#no01-openapi-documents)
     - [no02: Documentation web pages](#no02-documentation-web-pages)
   - [*security* feature scope](#security-feature-scope)
-    - [ns01: Admin API authorization](#ns01-admin-api-authorization)
-    - [ns02: Public API authorization](#ns02-public-api-authorization)
+    - [ns01: Admin API security](#ns01-admin-api-security)
+    - [ns02: Public API security](#ns02-public-api-security)
   - [*versioning* feature scope](#versioning-feature-scope)
     - [nv01: API versioning](#nv01-api-versioning)
 
@@ -50,13 +50,13 @@ This document is part of the [launch specification](../README.md#launch-specific
 
 ## *security* feature scope
 
-### ns01: Admin API authorization
+### ns01: Admin API security
 
 - An HTTP request to the Admin API using the SECRET_API_KEY as a request header is authenticated and authorized.
 - An HTTP request using the DEMO_API_KEY is authenticated but not authorized.
 - An HTTP request using an unrecognized API key or no API key is not authenticated.
 
-### ns02: Public API authorization
+### ns02: Public API security
 
 - An HTTP request to the Public API using the SECRET_API_KEY as a request header is authenticated and authorized.
 - An HTTP request using the DEMO_API_KEY is authenticated and authorized.
