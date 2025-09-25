@@ -1,5 +1,5 @@
+using Eurocentric.Apis.Admin.V0;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Apis.Admin;
@@ -17,8 +17,6 @@ public static class Middleware
     {
         RouteGroupBuilder apiGroup = builder.MapGroup("/admin/api");
 
-        apiGroup
-            .MapGet("placeholders", () => TypedResults.Ok("Admin API zapped to the extreme!"))
-            .AllowAnonymous();
+        apiGroup.MapV0Endpoints();
     }
 }
