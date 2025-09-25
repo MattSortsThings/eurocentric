@@ -1,4 +1,4 @@
-namespace Eurocentric.Apis.Admin.V0.Contracts.Dtos;
+namespace Eurocentric.Apis.Admin.V0.Dtos.Countries;
 
 /// <summary>
 ///     Represents a country aggregate.

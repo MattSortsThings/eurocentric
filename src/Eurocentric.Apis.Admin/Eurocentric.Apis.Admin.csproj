@@ -6,4 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Infrastructure\Eurocentric.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="V0\Mappings\Outbound\" />
+  </ItemGroup>
 </Project>

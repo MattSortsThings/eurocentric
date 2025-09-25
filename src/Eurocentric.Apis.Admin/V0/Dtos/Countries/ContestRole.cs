@@ -1,4 +1,6 @@
-namespace Eurocentric.Apis.Admin.V0.Contracts.Dtos;
+using Eurocentric.Apis.Admin.V0.Enums;
+
+namespace Eurocentric.Apis.Admin.V0.Dtos.Countries;
 
 /// <summary>
 ///     Represent's a country's role in a contest.

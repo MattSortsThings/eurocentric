@@ -1,8 +1,7 @@
 using ErrorOr;
 using Eurocentric.Apis.Admin.V0.Constants;
 using Eurocentric.Apis.Admin.V0.Contracts.Countries;
-using Eurocentric.Apis.Admin.V0.Contracts.Mapping;
-using Eurocentric.Domain.V0.Aggregates.Countries;
+using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Eurocentric.Infrastructure.Messaging;
 using JetBrains.Annotations;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
+using Country = Eurocentric.Domain.V0.Aggregates.Countries.Country;
 
 namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
@@ -50,7 +50,7 @@ internal static class CreateCountryV0Point2
 
     private static CreatedAtRoute<CreateCountryResponse> MapToCreatedAtRoute(in Result result)
     {
-        CreateCountryResponse response = new(result.Country.ToCountryDto());
+        CreateCountryResponse response = new(result.Country.ToDto());
 
         Guid countryId = response.Country.Id;
 

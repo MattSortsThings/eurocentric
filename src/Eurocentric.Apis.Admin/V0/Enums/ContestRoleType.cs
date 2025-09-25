@@ -1,4 +1,4 @@
-namespace Eurocentric.Apis.Admin.V0.Contracts.Dtos;
+namespace Eurocentric.Apis.Admin.V0.Enums;
 
 /// <summary>
 ///     Specifies a country's role type in a contest.

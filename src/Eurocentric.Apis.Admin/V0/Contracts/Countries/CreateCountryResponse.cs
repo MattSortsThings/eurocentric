@@ -1,4 +1,4 @@
-using Eurocentric.Apis.Admin.V0.Contracts.Dtos;
+using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 
 namespace Eurocentric.Apis.Admin.V0.Contracts.Countries;
 
