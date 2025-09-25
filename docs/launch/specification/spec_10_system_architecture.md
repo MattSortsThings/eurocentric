@@ -88,7 +88,7 @@ A GET endpoint feature uses the following types:
   - is public.
   - is part of the API contract.
   - is composed of API DTO types and native .NET types only.
-- A `Result` class, which:
+- A `Result` readonly record struct type, which:
   - is the result of the successfully handled `Query`.
   - is internal.
   - is composed of domain types and native .NET types only.
@@ -140,7 +140,7 @@ A POST endpoint feature uses the following types:
   - is public.
   - is part of the API contract.
   - is composed of API DTO types and native .NET types only.
-- A `Result` class, which:
+- A `Result` readonly record struct type, which:
   - is the result of the successfully handled `Command`.
   - is internal.
   - is composed of domain types and native .NET types only.
