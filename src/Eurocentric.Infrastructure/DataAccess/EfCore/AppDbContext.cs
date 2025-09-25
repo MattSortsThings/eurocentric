@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using V0Broadcast = Eurocentric.Domain.V0.Aggregates.Broadcasts.Broadcast;
 using V0Contest = Eurocentric.Domain.V0.Aggregates.Contests.Contest;
 using V0Country = Eurocentric.Domain.V0.Aggregates.Countries.Country;
+using V0QueryableBroadcast = Eurocentric.Domain.V0.Views.QueryableBroadcast;
+using V0QueryableContest = Eurocentric.Domain.V0.Views.QueryableContest;
+using V0QueryableCountry = Eurocentric.Domain.V0.Views.QueryableCountry;
 
 namespace Eurocentric.Infrastructure.DataAccess.EfCore;
 
@@ -18,6 +21,12 @@ public sealed class AppDbContext : DbContext
     public DbSet<V0Contest> Contests => Set<V0Contest>();
 
     public DbSet<V0Country> Countries => Set<V0Country>();
+
+    public DbSet<V0QueryableBroadcast> QueryableBroadcasts => Set<V0QueryableBroadcast>();
+
+    public DbSet<V0QueryableContest> QueryableContests => Set<V0QueryableContest>();
+
+    public DbSet<V0QueryableCountry> QueryableCountries => Set<V0QueryableCountry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

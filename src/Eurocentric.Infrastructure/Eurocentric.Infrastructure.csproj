@@ -4,6 +4,9 @@
     <RootNamespace>Eurocentric.Infrastructure</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DataAccess\Scripts\*.sql" />
+  </ItemGroup>
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>

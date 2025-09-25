@@ -1,5 +1,5 @@
+using Eurocentric.Apis.Public.V0;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Apis.Public;
@@ -17,8 +17,6 @@ public static class Middleware
     {
         RouteGroupBuilder apiGroup = builder.MapGroup("/public/api");
 
-        apiGroup
-            .MapGet("placeholders", () => TypedResults.Ok("Public API zapped to the extreme!"))
-            .AllowAnonymous();
+        apiGroup.MapV0Endpoints();
     }
 }

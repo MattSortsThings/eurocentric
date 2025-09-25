@@ -4,6 +4,7 @@ using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250925084756_add_v0_vw_queryable_contest")]
+    partial class add_v0_vw_queryable_contest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,31 +152,6 @@ namespace Eurocentric.Infrastructure.DataAccess.EfCore.Migrations
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasAlternateKey("CountryCode"), false);
 
                     b.ToTable("country", "v0");
-                });
-
-            modelBuilder.Entity("Eurocentric.Domain.V0.Views.QueryableContest", b =>
-                {
-                    b.Property<string>("CityName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("city_name");
-
-                    b.Property<int>("ContestYear")
-                        .HasColumnType("int")
-                        .HasColumnName("contest_year");
-
-                    b.Property<int>("Participants")
-                        .HasColumnType("int")
-                        .HasColumnName("participants");
-
-                    b.Property<bool>("UsesRestOfWorldTelevote")
-                        .HasColumnType("bit")
-                        .HasColumnName("uses_rest_of_world_televote");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("vw_queryable_contest", "v0");
                 });
 
             modelBuilder.Entity("Eurocentric.Domain.V0.Views.QueryableCountry", b =>
