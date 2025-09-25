@@ -3,8 +3,8 @@ using DomainContestRoleType = Eurocentric.Domain.Enums.ContestRoleType;
 
 namespace Eurocentric.Apis.Admin.V0.Enums;
 
-internal static class ContestRoleTypeExtensions
+internal static class OutboundMapping
 {
     internal static ApiContestRoleType ToApiContestRoleType(this DomainContestRoleType roleType) =>
-        Enum.Parse<ApiContestRoleType>(roleType.ToString());
+        (ApiContestRoleType)(int)roleType;
 }

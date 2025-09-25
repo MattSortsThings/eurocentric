@@ -4,16 +4,16 @@ using CountryDto = Eurocentric.Apis.Admin.V0.Dtos.Countries.Country;
 
 namespace Eurocentric.Apis.Admin.V0.Dtos.Countries;
 
-internal static class CountryExtensions
+internal static class OutboundMapping
 {
-    internal static CountryDto ToDto(this CountryAggregate country)
+    internal static CountryDto ToDto(this CountryAggregate aggregate)
     {
         return new CountryDto
         {
-            Id = country.Id,
-            CountryCode = country.CountryCode,
-            CountryName = country.CountryName,
-            ContestRoles = country
+            Id = aggregate.Id,
+            CountryCode = aggregate.CountryCode,
+            CountryName = aggregate.CountryName,
+            ContestRoles = aggregate
                 .ContestRoles.Select(role => new ContestRole
                 {
                     ContestId = role.ContestId,

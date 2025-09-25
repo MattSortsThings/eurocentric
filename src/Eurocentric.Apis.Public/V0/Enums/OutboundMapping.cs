@@ -6,5 +6,5 @@ namespace Eurocentric.Apis.Public.V0.Enums;
 internal static class OutboundMapping
 {
     internal static ApiContestStage ToApiContestStage(this DomainContestStage contestStage) =>
-        Enum.Parse<ApiContestStage>(contestStage.ToString());
+        (ApiContestStage)(int)contestStage;
 }
