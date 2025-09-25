@@ -14,15 +14,15 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 
-namespace Eurocentric.Apis.Admin.V0.Features;
+namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
-internal static class GetCountryV0Point2
+internal static class GetCountryV0Point1
 {
-    internal static IEndpointRouteBuilder MapGetCountryV0Point2(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapGetCountryV0Point1(this IEndpointRouteBuilder builder)
     {
         builder
-            .MapGet("v0.2/countries/{countryId:guid}", ExecuteAsync)
-            .WithName("AdminApi.V0.Countries.GetCountryV0Point2")
+            .MapGet("v0.1/countries/{countryId:guid}", ExecuteAsync)
+            .WithName("AdminApi.V0.Countries.GetCountryV0Point1")
             .WithTags(V0Group.Countries.Tag)
             .Produces<GetCountryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound);

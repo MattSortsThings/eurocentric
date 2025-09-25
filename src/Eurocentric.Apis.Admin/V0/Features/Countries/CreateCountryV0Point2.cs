@@ -14,17 +14,17 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 
-namespace Eurocentric.Apis.Admin.V0.Features;
+namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
-internal static class CreateCountryV0Point1
+internal static class CreateCountryV0Point2
 {
-    internal static IEndpointRouteBuilder MapCreateCountryV0Point1(
+    internal static IEndpointRouteBuilder MapCreateCountryV0Point2(
         this IEndpointRouteBuilder builder
     )
     {
         builder
-            .MapPost("v0.1/countries", ExecuteAsync)
-            .WithName("AdminApi.V0.Countries.CreateCountryV0Point1")
+            .MapPost("v0.2/countries", ExecuteAsync)
+            .WithName("AdminApi.V0.Countries.CreateCountryV0Point2")
             .WithTags(V0Group.Countries.Tag)
             .Produces<CreateCountryResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -56,7 +56,7 @@ internal static class CreateCountryV0Point1
 
         return TypedResults.CreatedAtRoute(
             response,
-            "AdminApi.V0.Countries.GetCountryV0Point1",
+            "AdminApi.V0.Countries.GetCountryV0Point2",
             new RouteValueDictionary { { nameof(countryId), countryId } }
         );
     }

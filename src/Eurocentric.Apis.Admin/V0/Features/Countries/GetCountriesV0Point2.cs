@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
 
-namespace Eurocentric.Apis.Admin.V0.Features;
+namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
 internal static class GetCountriesV0Point2
 {
