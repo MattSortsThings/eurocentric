@@ -1,7 +1,7 @@
 using ErrorOr;
 using Eurocentric.Apis.Public.V0.Constants;
 using Eurocentric.Apis.Public.V0.Contracts.Queryables;
-using Eurocentric.Domain.V0.Views;
+using Eurocentric.Apis.Public.V0.Dtos.Queryables;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Eurocentric.Infrastructure.Messaging;
 using JetBrains.Annotations;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SlimMessageBus;
-using OutboundMapping = Eurocentric.Apis.Public.V0.Contracts.Queryables.Dtos.OutboundMapping;
+using QueryableBroadcast = Eurocentric.Domain.V0.Views.QueryableBroadcast;
 
 namespace Eurocentric.Apis.Public.V0.Features.Queryables;
 
@@ -47,7 +47,7 @@ internal static class GetQueryableBroadcastsV0Point1
     private static Ok<GetQueryableBroadcastsResponse> MapToOk(in Result result)
     {
         GetQueryableBroadcastsResponse response = new(
-            result.QueryableBroadcasts.Select(OutboundMapping.ToQueryableBroadcastDto).ToArray()
+            result.QueryableBroadcasts.Select(broadcast => broadcast.ToDto()).ToArray()
         );
 
         return TypedResults.Ok(response);

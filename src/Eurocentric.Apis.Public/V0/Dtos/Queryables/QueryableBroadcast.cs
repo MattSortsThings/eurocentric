@@ -1,6 +1,6 @@
-using Eurocentric.Apis.Public.V0.Contracts.Dtos;
+using Eurocentric.Apis.Public.V0.Enums;
 
-namespace Eurocentric.Apis.Public.V0.Contracts.Queryables.Dtos;
+namespace Eurocentric.Apis.Public.V0.Dtos.Queryables;
 
 public sealed record QueryableBroadcast
 {

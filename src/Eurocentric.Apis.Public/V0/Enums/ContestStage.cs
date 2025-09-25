@@ -1,4 +1,4 @@
-namespace Eurocentric.Apis.Public.V0.Contracts.Dtos;
+namespace Eurocentric.Apis.Public.V0.Enums;
 
 /// <summary>
 ///     Specifies a broadcast's stage in its contest.
