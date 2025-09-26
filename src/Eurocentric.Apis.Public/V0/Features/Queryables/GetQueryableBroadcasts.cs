@@ -1,6 +1,5 @@
 using ErrorOr;
 using Eurocentric.Apis.Public.V0.Constants;
-using Eurocentric.Apis.Public.V0.Contracts.Queryables;
 using Eurocentric.Apis.Public.V0.Dtos.Queryables;
 using Eurocentric.Infrastructure.DataAccess.EfCore;
 using Eurocentric.Infrastructure.Messaging;
