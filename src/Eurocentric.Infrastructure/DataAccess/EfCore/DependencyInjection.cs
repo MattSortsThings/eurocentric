@@ -1,7 +1,6 @@
+using EntityFramework.Exceptions.SqlServer;
 using Eurocentric.Infrastructure.DataAccess.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -22,37 +21,36 @@ internal static class DependencyInjection
         services.AddDbContext<AppDbContext>(
             (serviceProvider, dbOptionsBuilder) =>
             {
-                string? connString = serviceProvider
-                    .GetRequiredService<IConfiguration>()
-                    .GetConnectionString(DbConnectionStringKeys.AzureSql);
-
-                Action<AzureSqlDbContextOptionsBuilder> azureConfig = CreateAzureConfig(
-                    serviceProvider
+                Action<DbContextOptionsBuilder> configurator = CreateDbContextOptionsConfigurator(
+                    serviceProvider.GetRequiredService<IOptionsSnapshot<AzureSqlDbOptions>>()
                 );
 
-                dbOptionsBuilder
-                    .UseAzureSql(connString, azureConfig)
-                    .UseSnakeCaseNamingConvention();
+                configurator(dbOptionsBuilder);
             }
         );
 
         return services;
     }
 
-    private static Action<AzureSqlDbContextOptionsBuilder> CreateAzureConfig(
-        IServiceProvider serviceProvider
+    private static Action<DbContextOptionsBuilder> CreateDbContextOptionsConfigurator(
+        IOptionsSnapshot<AzureSqlDbOptions> options
     )
     {
-        IOptionsSnapshot<AzureSqlDbOptions> options = serviceProvider.GetRequiredService<
-            IOptionsSnapshot<AzureSqlDbOptions>
-        >();
-
-        return azureOptionsBuilder =>
+        return builder =>
         {
-            azureOptionsBuilder
-                .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-                .EnableRetryOnFailure(options.Value.MaxRetryCount)
-                .CommandTimeout(options.Value.CommandTimeoutInSeconds);
+            builder
+                .UseAzureSql(
+                    options.Value.ConnectionString,
+                    azureOptions =>
+                    {
+                        azureOptions
+                            .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                            .EnableRetryOnFailure(options.Value.MaxRetryCount)
+                            .CommandTimeout(options.Value.CommandTimeoutInSeconds);
+                    }
+                )
+                .UseSnakeCaseNamingConvention()
+                .UseExceptionProcessor();
         };
     }
 }
