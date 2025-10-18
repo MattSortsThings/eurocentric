@@ -59,7 +59,7 @@ Unit tests are written for all four class libraries.
 
 ### Architecture tests
 
-Architecture tests are written for all four class libraries, using ArchUnitNET.
+Architecture tests are written for all four class libraries and the web API assembly, using ArchUnitNET.
 
 ## Continuous integration
 
