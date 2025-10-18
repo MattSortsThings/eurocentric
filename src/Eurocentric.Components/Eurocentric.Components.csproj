@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Eurocentric.Components</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SlimMessageBus.Host.Memory" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.Domain\Eurocentric.Domain.csproj" />
+  </ItemGroup>
+</Project>
