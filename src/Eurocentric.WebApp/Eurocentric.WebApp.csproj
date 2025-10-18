@@ -2,9 +2,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>Eurocentric.WebApp</RootNamespace>
+    <UserSecretsId>6f63f8de-071f-4843-90a5-6d7a5050ff82</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Apis.Admin\Eurocentric.Apis.Admin.csproj" />
     <ProjectReference Include="..\Eurocentric.Apis.Public\Eurocentric.Apis.Public.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>
