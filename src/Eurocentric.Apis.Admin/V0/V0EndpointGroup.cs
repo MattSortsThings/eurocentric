@@ -20,5 +20,11 @@ internal static class V0EndpointGroup
             .Map<DeleteCountryV0Point1.EndpointMapper>()
             .Map<GetCountriesV0Point1.EndpointMapper>()
             .Map<GetCountryV0Point1.EndpointMapper>();
+
+        v0Group
+            .Map<CreateCountryV0Point2.EndpointMapper>()
+            .Map<DeleteCountryV0Point2.EndpointMapper>()
+            .Map<GetCountriesV0Point2.EndpointMapper>()
+            .Map<GetCountryV0Point2.EndpointMapper>();
     }
 }
