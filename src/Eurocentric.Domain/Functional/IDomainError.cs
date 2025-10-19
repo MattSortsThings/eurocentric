@@ -1,0 +1,22 @@
+namespace Eurocentric.Domain.Functional;
+
+/// <summary>
+///     An error that occurs in the domain.
+/// </summary>
+public interface IDomainError
+{
+    /// <summary>
+    ///     Gets the error's unique title.
+    /// </summary>
+    string Title { get; }
+
+    /// <summary>
+    ///     Gets the error's detail.
+    /// </summary>
+    string Detail { get; }
+
+    /// <summary>
+    ///     Gets the error's optional metadata.
+    /// </summary>
+    IReadOnlyDictionary<string, object?>? Metadata { get; }
+}
