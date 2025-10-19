@@ -9,6 +9,7 @@ public sealed class PlaceholderUnitTests : UnitTest
     [Arguments(2, 3)]
     [Arguments(3, 4)]
     [Arguments(4, 5)]
+    [Arguments(5, 6)]
     public async Task Should_always_pass(int x, int y)
     {
         // Act
