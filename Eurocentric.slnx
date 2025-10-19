@@ -8,6 +8,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Eurocentric.UnitTests/Eurocentric.UnitTests.csproj" />
+    <Project Path="tests\Eurocentric.ArchitectureTests\Eurocentric.ArchitectureTests.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/_sln/">
     <File Path=".editorconfig" />

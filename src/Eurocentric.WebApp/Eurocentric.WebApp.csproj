@@ -5,6 +5,9 @@
     <UserSecretsId>6f63f8de-071f-4843-90a5-6d7a5050ff82</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.ArchitectureTests" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Apis.Admin\Eurocentric.Apis.Admin.csproj" />
     <ProjectReference Include="..\Eurocentric.Apis.Public\Eurocentric.Apis.Public.csproj" />
   </ItemGroup>
