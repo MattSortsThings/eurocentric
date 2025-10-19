@@ -10,6 +10,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.UnitTests" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Dapper" />
     <PackageReference Include="EFCore.CheckConstraints" />
     <PackageReference Include="EFCore.NamingConventions" />

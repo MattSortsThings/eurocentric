@@ -15,5 +15,6 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0-rc.2.25502.107" />
     <PackageVersion Include="SlimMessageBus" Version="3.0.0" />
     <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.4" />
+    <PackageVersion Include="TUnit" Version="0.73.19" />
   </ItemGroup>
 </Project>
