@@ -1,0 +1,51 @@
+name: Publish and deploy Eurocentric web app to Azure Web App service
+
+env:
+  AZURE_WEB_APP_NAME: 'eurocentric'
+  DOTNET_VERSION: '10.x.x'
+  SOLUTION_PATH: 'Eurocentric.slnx'
+  WEB_APP_PROJECT_PATH: './src/Eurocentric.WebApp'
+  WEB_APP_PUBLISHED_PACKAGE_PATH: './src/Eurocentric.WebApp/publish'
+
+on:
+  push:
+    branches: [ 'main' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  publish_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup dependency caching for faster builds
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore solution
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: Build solution
+        run: dotnet build ${{ env.SOLUTION_PATH }} -c Debug --no-restore
+
+      - name: Test solution
+        run: dotnet test --solution ${{ env.SOLUTION_PATH }} -c Debug --no-restore --no-build
+
+      - name: Publish web app
+        run: dotnet publish ${{ env.WEB_APP_PROJECT_PATH }} -c Release --property:PublishDir='./publish'
