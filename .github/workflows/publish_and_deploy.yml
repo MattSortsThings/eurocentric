@@ -49,3 +49,10 @@ jobs:
 
       - name: Publish web app
         run: dotnet publish ${{ env.WEB_APP_PROJECT_PATH }} -c Release --property:PublishDir='./publish'
+
+      - name: Deploy web app to Azure Web App service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEB_APP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEB_APP_PUBLISH_PROFILE }}
+          package: ${{ env.WEB_APP_PUBLISHED_PACKAGE_PATH }}
