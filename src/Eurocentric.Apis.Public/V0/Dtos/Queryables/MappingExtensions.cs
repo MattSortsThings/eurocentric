@@ -1,6 +1,8 @@
 using Eurocentric.Apis.Public.V0.Enums;
 using QueryableBroadcastDto = Eurocentric.Apis.Public.V0.Dtos.Queryables.QueryableBroadcast;
 using QueryableBroadcastRecord = Eurocentric.Domain.V0.Queries.Queryables.QueryableBroadcast;
+using QueryableContestDto = Eurocentric.Apis.Public.V0.Dtos.Queryables.QueryableContest;
+using QueryableContestRecord = Eurocentric.Domain.V0.Queries.Queryables.QueryableContest;
 using QueryableCountryDto = Eurocentric.Apis.Public.V0.Dtos.Queryables.QueryableCountry;
 using QueryableCountryRecord = Eurocentric.Domain.V0.Queries.Queryables.QueryableCountry;
 
@@ -19,6 +21,17 @@ internal static class MappingExtensions
             Competitors = record.Competitors,
             Juries = record.Juries,
             Televotes = record.Televotes,
+        };
+    }
+
+    internal static QueryableContestDto ToDto(this QueryableContestRecord record)
+    {
+        return new QueryableContestDto
+        {
+            ContestYear = record.ContestYear,
+            CityName = record.CityName,
+            Participants = record.Participants,
+            UsesRestOfWorldTelevote = record.UsesRestOfWorldTelevote,
         };
     }
 

@@ -1,4 +1,5 @@
 using Eurocentric.Components.DataAccess.Common;
+using Eurocentric.Components.DataAccess.Dapper;
 using Eurocentric.Components.DataAccess.EfCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +17,7 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddDataAccess(this IServiceCollection services)
     {
-        services.AddEfCoreDataAccess().ConfigureOptions<ConfigureAzureSqlDbOptions>();
+        services.AddDapperDataAccess().AddEfCoreDataAccess().ConfigureOptions<ConfigureAzureSqlDbOptions>();
 
         return services;
     }

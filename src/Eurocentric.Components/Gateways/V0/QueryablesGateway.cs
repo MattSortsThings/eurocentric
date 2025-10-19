@@ -35,6 +35,24 @@ internal sealed class QueryablesGateway(AppDbContext dbContext) : IQueryablesGat
             .ToArrayAsync(cancellationToken);
     }
 
+    public async Task<QueryableContest[]> GetQueryableContestsAsync(CancellationToken cancellationToken = default)
+    {
+        IOrderedQueryable<Contest> queryableContests = dbContext
+            .V0Contests.AsNoTracking()
+            .Where(contest => contest.Queryable)
+            .OrderBy(contest => contest.ContestYear);
+
+        return await queryableContests
+            .Select(contest => new QueryableContest
+            {
+                ContestYear = contest.ContestYear,
+                CityName = contest.CityName,
+                Participants = contest.Participants.Count(),
+                UsesRestOfWorldTelevote = contest.GlobalTelevote != null,
+            })
+            .ToArrayAsync(cancellationToken);
+    }
+
     public async Task<QueryableCountry[]> GetQueryableCountriesAsync(CancellationToken cancellationToken = default)
     {
         IQueryable<Guid> queryableContestIds = dbContext

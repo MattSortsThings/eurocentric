@@ -4,9 +4,13 @@
     <RootNamespace>Eurocentric.Components</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DataAccess\Scripts\*.sql" />
+  </ItemGroup>
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Dapper" />
     <PackageReference Include="EFCore.CheckConstraints" />
     <PackageReference Include="EFCore.NamingConventions" />
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" />
