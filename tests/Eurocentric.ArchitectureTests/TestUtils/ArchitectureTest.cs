@@ -15,12 +15,28 @@ public abstract class ArchitectureTest
         )
         .Build();
 
-    private protected static readonly IObjectProvider<IType> IgnoredTypes = Types()
+    private protected static readonly IObjectProvider<IType> AlwaysIgnoredTypes = Types()
         .That()
         .ResideInNamespaceMatching(".EfCore.Migrations")
         .Or()
         .HaveName("Program")
         .As("Ignored Types");
+
+    private protected static readonly IObjectProvider<IType> AdminApiAssemblyTypes = Types()
+        .That()
+        .ResideInAssemblyMatching("Eurocentric.Apis.Admin");
+
+    private protected static readonly IObjectProvider<IType> PublicApiAssemblyTypes = Types()
+        .That()
+        .ResideInAssemblyMatching("Eurocentric.Apis.Public");
+
+    private protected static readonly IObjectProvider<IType> ComponentsAssemblyTypes = Types()
+        .That()
+        .ResideInAssemblyMatching("Eurocentric.Components");
+
+    private protected static readonly IObjectProvider<IType> DomainAssemblyTypes = Types()
+        .That()
+        .ResideInAssemblyMatching("Eurocentric.Domain");
 
     private protected static bool Passed(EvaluationResult result) => result.Passed;
 }
