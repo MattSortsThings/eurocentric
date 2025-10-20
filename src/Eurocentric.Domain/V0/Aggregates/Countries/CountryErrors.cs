@@ -12,11 +12,11 @@ public static class CountryErrors
             Metadata = new Dictionary<string, object?> { { nameof(countryId), countryId } },
         };
 
-    public static ConflictError CountryCannotBeDeleted(Guid countryId)
+    public static ConflictError CountryDeletionNotAllowed(Guid countryId)
     {
         return new ConflictError
         {
-            Title = "Country cannot be deleted",
+            Title = "Country deletion not allowed",
             Detail = "The country with the provided country ID has a role in one or more contests.",
             Metadata = new Dictionary<string, object?> { { nameof(countryId), countryId } },
         };

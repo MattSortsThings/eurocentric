@@ -7,7 +7,7 @@ public static class CountryRules
 {
     public static UnitResult<IDomainError> CanBeDeleted(Country country) =>
         country.ContestRoles.Count > 0
-            ? CountryErrors.CountryCannotBeDeleted(country.Id)
+            ? CountryErrors.CountryDeletionNotAllowed(country.Id)
             : UnitResult.Success<IDomainError>();
 
     public static Func<Country, UnitResult<IDomainError>> HasUniqueCountryCode(IQueryable<Country> existingCountries)

@@ -13,7 +13,15 @@ using HttpJsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 namespace Eurocentric.AcceptanceTests.TestUtils;
 
-public abstract class WebAppFixture : WebApplicationFactory<Program>, IAsyncInitializer
+/// <summary>
+///     Abstract base class for an in-memory web application that uses a SQL Server database running inside a test
+///     container.
+/// </summary>
+public abstract class WebAppFixture
+    : WebApplicationFactory<Program>,
+        IAsyncInitializer,
+        IWebAppFixtureBackDoor,
+        IWebAppFixtureRestClient
 {
     [ClassDataSource<DbContainerFixture>(Shared = SharedType.PerClass)]
     public required DbContainerFixture DbContainer { get; init; }
@@ -29,19 +37,44 @@ public abstract class WebAppFixture : WebApplicationFactory<Program>, IAsyncInit
         await SeedDbAsync();
     }
 
+    /// <inheritdoc />
     public async Task ExecuteScopedAsync(Func<IServiceProvider, Task> func)
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
 
-        await func(scope.ServiceProvider).ConfigureAwait(false);
+        await func(scope.ServiceProvider);
     }
 
-    public async Task<RestResponse> SendAsync(RestRequest request, CancellationToken cancellationToken = default)
+    /// <inheritdoc />
+    public async Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> func)
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
-        IRestClient client = scope.ServiceProvider.GetRequiredService<IRestClient>();
 
-        return await client.ExecuteAsync(request, cancellationToken);
+        return await func(scope.ServiceProvider);
+    }
+
+    /// <inheritdoc />
+    public async Task<ProblemOrResponse> SendAsync(RestRequest request, CancellationToken cancellationToken = default)
+    {
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+
+        IRestClient restClient = scope.ServiceProvider.GetRequiredService<IRestClient>();
+
+        return await restClient.SendAsync(request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ProblemOrResponse<T>> SendAsync<T>(
+        RestRequest request,
+        CancellationToken cancellationToken = default
+    )
+        where T : class
+    {
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+
+        IRestClient restClient = scope.ServiceProvider.GetRequiredService<IRestClient>();
+
+        return await restClient.SendAsync<T>(request, cancellationToken);
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

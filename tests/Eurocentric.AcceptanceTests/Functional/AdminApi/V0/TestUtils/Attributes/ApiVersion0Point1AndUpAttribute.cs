@@ -1,0 +1,10 @@
+namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Attributes;
+
+public sealed class ApiVersion0Point1AndUpAttribute : DataSourceGeneratorAttribute<string>
+{
+    protected override IEnumerable<Func<string>> GenerateDataSources(DataGeneratorMetadata dataGeneratorMetadata)
+    {
+        yield return () => "v0.1";
+        yield return () => "v0.2";
+    }
+}

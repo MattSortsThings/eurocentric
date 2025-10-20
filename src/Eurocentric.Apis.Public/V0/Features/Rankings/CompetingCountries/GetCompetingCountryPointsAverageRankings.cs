@@ -63,7 +63,7 @@ internal static class GetCompetingCountryPointsAverageRankingsV0Point2
         public void MapEndpoint(RouteGroupBuilder routeBuilder)
         {
             routeBuilder
-                .MapGet("v0.2/rankings/competing-countries/points-average", ExecuteAsync)
+                .MapGet("v0.2/competing-country-rankings/points-average", ExecuteAsync)
                 .WithName("PublicApi.V0.2.GetCompetingCountryPointsAverageRankings")
                 .WithSummary("Get competing country points average rankings")
                 .WithDescription(
