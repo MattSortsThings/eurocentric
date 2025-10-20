@@ -15,7 +15,7 @@ public static class Middleware
     /// <param name="app">The web application.</param>
     public static void UsePublicApiVersionedEndpoints(this WebApplication app)
     {
-        RouteGroupBuilder apiGroup = app.MapGroup("public/api").AllowAnonymous();
+        RouteGroupBuilder apiGroup = app.NewVersionedApi("PublicApi").MapGroup("public/api");
 
         apiGroup.MapV0EndpointGroup();
     }

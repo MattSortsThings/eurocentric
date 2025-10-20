@@ -20,7 +20,7 @@ using MetadataRecord = Eurocentric.Domain.V0.Queries.Listings.BroadcastResultMet
 
 namespace Eurocentric.Apis.Public.V0.Features.Listings;
 
-internal static class GetBroadcastResultListingsV0Point2
+internal static class GetBroadcastResultListings
 {
     private static Query ToQuery(this GetBroadcastResultListingsRequest request)
     {
@@ -59,8 +59,9 @@ internal static class GetBroadcastResultListingsV0Point2
         public void MapEndpoint(RouteGroupBuilder routeBuilder)
         {
             routeBuilder
-                .MapGet("v0.2/listings/broadcast-result", ExecuteAsync)
-                .WithName("PublicApi.V0.2.GetBroadcastResultListings")
+                .MapGet("listings/broadcast-result", ExecuteAsync)
+                .WithName("PublicApi.V0.GetBroadcastResultListings")
+                .AddedInVersion0Point2()
                 .WithSummary("Get broadcast result listings")
                 .WithDescription("Retrieves the results from the specified broadcast, ordered by finishing position.")
                 .WithTags(EndpointConstants.Tags.Listings)

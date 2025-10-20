@@ -17,7 +17,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
-internal static class GetCountriesV0Point1
+internal static class GetCountries
 {
     private static Ok<GetCountriesResponse> MapToOk(CountryAggregate[] countries)
     {
@@ -43,53 +43,9 @@ internal static class GetCountriesV0Point1
         public void MapEndpoint(RouteGroupBuilder routeBuilder)
         {
             routeBuilder
-                .MapGet("v0.1/countries", ExecuteAsync)
-                .WithName("AdminApi.V0.1.GetCountries")
-                .WithSummary("Get all countries")
-                .WithDescription("Retrieves all the countries in the system, ordered by country code.")
-                .WithTags(EndpointConstants.Tags.Countries)
-                .Produces<GetCountriesResponse>();
-        }
-    }
-
-    internal sealed record Query : IQuery<CountryAggregate[]>;
-
-    [UsedImplicitly]
-    internal sealed class QueryHandler(ICountryReadRepository readRepository) : IQueryHandler<Query, CountryAggregate[]>
-    {
-        public async Task<Result<CountryAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct) =>
-            await readRepository.GetAllAsync(ct);
-    }
-}
-
-internal static class GetCountriesV0Point2
-{
-    private static Ok<GetCountriesResponse> MapToOk(CountryAggregate[] countries)
-    {
-        CountryDto[] countryDtos = countries.Select(country => country.ToDto()).ToArray();
-
-        return TypedResults.Ok(new GetCountriesResponse(countryDtos));
-    }
-
-    private static async Task<IResult> ExecuteAsync(
-        [FromServices] IRequestResponseBus bus,
-        CancellationToken ct = default
-    )
-    {
-        Result<CountryAggregate[], IDomainError> result = await bus.Send(new Query(), cancellationToken: ct);
-
-        return result.IsSuccess
-            ? MapToOk(result.GetValueOrDefault())
-            : throw new InvalidOperationException("Query failed.");
-    }
-
-    internal sealed class EndpointMapper : IEndpointMapper
-    {
-        public void MapEndpoint(RouteGroupBuilder routeBuilder)
-        {
-            routeBuilder
-                .MapGet("v0.2/countries", ExecuteAsync)
-                .WithName("AdminApi.V0.2.GetCountries")
+                .MapGet("countries", ExecuteAsync)
+                .WithName("AdminApi.V0.GetCountries")
+                .AddedInVersion0Point1()
                 .WithSummary("Get all countries")
                 .WithDescription("Retrieves all the countries in the system, ordered by country code.")
                 .WithTags(EndpointConstants.Tags.Countries)

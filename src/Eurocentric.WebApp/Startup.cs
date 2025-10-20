@@ -5,6 +5,7 @@ using Eurocentric.Components.Gateways;
 using Eurocentric.Components.HttpJson;
 using Eurocentric.Components.Messaging;
 using Eurocentric.Components.Repositories;
+using Eurocentric.Components.Versioning;
 using AdminApiMiddleware = Eurocentric.Apis.Admin.Middleware;
 using PublicApiMiddleware = Eurocentric.Apis.Public.Middleware;
 
@@ -29,6 +30,7 @@ internal static class Startup
             .AddGateways()
             .AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly)
             .AddRepositories()
+            .AddVersioning()
             .ConfigureHttpJsonOptions();
 
         return builder;

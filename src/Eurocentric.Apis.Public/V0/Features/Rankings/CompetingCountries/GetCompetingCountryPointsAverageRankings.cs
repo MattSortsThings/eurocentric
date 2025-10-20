@@ -16,7 +16,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Public.V0.Features.Rankings.CompetingCountries;
 
-internal static class GetCompetingCountryPointsAverageRankingsV0Point2
+internal static class GetCompetingCountryPointsAverageRankings
 {
     private static Query ToQuery(this GetCompetingCountryPointsAverageRankingsRequest request)
     {
@@ -63,8 +63,9 @@ internal static class GetCompetingCountryPointsAverageRankingsV0Point2
         public void MapEndpoint(RouteGroupBuilder routeBuilder)
         {
             routeBuilder
-                .MapGet("v0.2/competing-country-rankings/points-average", ExecuteAsync)
-                .WithName("PublicApi.V0.2.GetCompetingCountryPointsAverageRankings")
+                .MapGet("competing-country-rankings/points-average", ExecuteAsync)
+                .WithName("PublicApi.V0.GetCompetingCountryPointsAverageRankings")
+                .AddedInVersion0Point2()
                 .WithSummary("Get competing country points average rankings")
                 .WithDescription(
                     """

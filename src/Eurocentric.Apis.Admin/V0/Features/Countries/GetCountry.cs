@@ -17,7 +17,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
-internal static class GetCountryV0Point1
+internal static class GetCountry
 {
     private static Ok<GetCountryResponse> MapToOk(CountryAggregate country)
     {
@@ -44,55 +44,9 @@ internal static class GetCountryV0Point1
         public void MapEndpoint(RouteGroupBuilder routeBuilder)
         {
             routeBuilder
-                .MapGet("v0.1/countries/{countryId:guid}", ExecuteAsync)
-                .WithName("AdminApi.V0.1.GetCountry")
-                .WithSummary("Get a country")
-                .WithDescription("Retrieves a single country in the system, specified by its ID.")
-                .WithTags(EndpointConstants.Tags.Countries)
-                .Produces<GetCountryResponse>()
-                .ProducesProblem(StatusCodes.Status404NotFound);
-        }
-    }
-
-    internal sealed record Query(Guid CountryId) : IQuery<CountryAggregate>;
-
-    [UsedImplicitly]
-    internal sealed class QueryHandler(ICountryReadRepository readRepository) : IQueryHandler<Query, CountryAggregate>
-    {
-        public async Task<Result<CountryAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct) =>
-            await readRepository.GetByIdAsync(query.CountryId, ct);
-    }
-}
-
-internal static class GetCountryV0Point2
-{
-    private static Ok<GetCountryResponse> MapToOk(CountryAggregate country)
-    {
-        CountryDto countryDto = country.ToDto();
-
-        return TypedResults.Ok(new GetCountryResponse(countryDto));
-    }
-
-    private static async Task<IResult> ExecuteAsync(
-        [FromRoute(Name = "countryId")] Guid countryId,
-        [FromServices] IRequestResponseBus bus,
-        CancellationToken ct = default
-    )
-    {
-        Result<CountryAggregate, IDomainError> result = await bus.Send(new Query(countryId), cancellationToken: ct);
-
-        return result.IsSuccess
-            ? MapToOk(result.GetValueOrDefault())
-            : throw new InvalidOperationException("Query failed.");
-    }
-
-    internal sealed class EndpointMapper : IEndpointMapper
-    {
-        public void MapEndpoint(RouteGroupBuilder routeBuilder)
-        {
-            routeBuilder
-                .MapGet("v0.2/countries/{countryId:guid}", ExecuteAsync)
-                .WithName("AdminApi.V0.2.GetCountry")
+                .MapGet("countries/{countryId:guid}", ExecuteAsync)
+                .WithName("AdminApi.V0.GetCountry")
+                .AddedInVersion0Point1()
                 .WithSummary("Get a country")
                 .WithDescription("Retrieves a single country in the system, specified by its ID.")
                 .WithTags(EndpointConstants.Tags.Countries)

@@ -17,7 +17,7 @@ using QueryableContestRecord = Eurocentric.Domain.V0.Queries.Queryables.Queryabl
 
 namespace Eurocentric.Apis.Public.V0.Features.Queryables;
 
-internal static class GetQueryableContestsV0Point2
+internal static class GetQueryableContests
 {
     private static Ok<GetQueryableContestsResponse> MapToOk(QueryableContestRecord[] records)
     {
@@ -43,8 +43,9 @@ internal static class GetQueryableContestsV0Point2
         public void MapEndpoint(RouteGroupBuilder routeBuilder)
         {
             routeBuilder
-                .MapGet("v0.2/queryables/contests", ExecuteAsync)
-                .WithName("PublicApi.V0.2.GetQueryableContests")
+                .MapGet("queryables/contests", ExecuteAsync)
+                .WithName("PublicApi.V0.GetQueryableContests")
+                .AddedInVersion0Point2()
                 .WithSummary("Get all queryable contests")
                 .WithDescription("Retrieves all the queryable contests, ordered by contest year.")
                 .WithTags(EndpointConstants.Tags.Queryables)

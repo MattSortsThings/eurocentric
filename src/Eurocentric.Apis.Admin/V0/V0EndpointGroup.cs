@@ -11,20 +11,14 @@ internal static class V0EndpointGroup
     internal static void MapV0EndpointGroup(this IEndpointRouteBuilder routeBuilder)
     {
         RouteGroupBuilder v0Group = routeBuilder
-            .MapGroup("/")
+            .MapGroup("v{version:apiVersion}")
             .WithGroupName(EndpointConstants.GroupName)
             .AllowAnonymous();
 
         v0Group
-            .Map<CreateCountryV0Point1.EndpointMapper>()
-            .Map<DeleteCountryV0Point1.EndpointMapper>()
-            .Map<GetCountriesV0Point1.EndpointMapper>()
-            .Map<GetCountryV0Point1.EndpointMapper>();
-
-        v0Group
-            .Map<CreateCountryV0Point2.EndpointMapper>()
-            .Map<DeleteCountryV0Point2.EndpointMapper>()
-            .Map<GetCountriesV0Point2.EndpointMapper>()
-            .Map<GetCountryV0Point2.EndpointMapper>();
+            .Map<CreateCountry.EndpointMapper>()
+            .Map<DeleteCountry.EndpointMapper>()
+            .Map<GetCountries.EndpointMapper>()
+            .Map<GetCountry.EndpointMapper>();
     }
 }
