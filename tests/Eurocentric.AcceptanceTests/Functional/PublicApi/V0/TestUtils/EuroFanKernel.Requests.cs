@@ -14,6 +14,7 @@ public sealed partial class EuroFanKernel
         public RestRequest GetCompetingCountryPointsAverageRankings(IDictionary<string, object?> queryParameters)
         {
             return GetRequest("/public/api/{apiVersion}/competing-country-rankings/points-average")
+                .UseDemoApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddQueryParameters(queryParameters);
         }
@@ -21,18 +22,25 @@ public sealed partial class EuroFanKernel
         public RestRequest GetBroadcastResultListings(IDictionary<string, object?> queryParameters)
         {
             return GetRequest("/public/api/{apiVersion}/listings/broadcast-result")
+                .UseDemoApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddQueryParameters(queryParameters);
         }
 
         public RestRequest GetQueryableBroadcasts() =>
-            GetRequest("/public/api/{apiVersion}/queryables/broadcasts").AddUrlSegment("apiVersion", apiVersion);
+            GetRequest("/public/api/{apiVersion}/queryables/broadcasts")
+                .UseDemoApiKey()
+                .AddUrlSegment("apiVersion", apiVersion);
 
         public RestRequest GetQueryableContests() =>
-            GetRequest("/public/api/{apiVersion}/queryables/contests").AddUrlSegment("apiVersion", apiVersion);
+            GetRequest("/public/api/{apiVersion}/queryables/contests")
+                .UseDemoApiKey()
+                .AddUrlSegment("apiVersion", apiVersion);
 
         public RestRequest GetQueryableCountries() =>
-            GetRequest("/public/api/{apiVersion}/queryables/countries").AddUrlSegment("apiVersion", apiVersion);
+            GetRequest("/public/api/{apiVersion}/queryables/countries")
+                .UseDemoApiKey()
+                .AddUrlSegment("apiVersion", apiVersion);
 
         public IRestRequestFactory.ICompetingCountryRankingsEndpoints CompetingCountryRankings => this;
 

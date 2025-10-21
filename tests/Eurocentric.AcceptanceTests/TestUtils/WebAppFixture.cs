@@ -91,6 +91,14 @@ public abstract class WebAppFixture
                         { "AzureSqlDb:HttpRetryAfterSeconds", "120" },
                     }
                 );
+
+                configBuilder.AddInMemoryCollection(
+                    new Dictionary<string, string?>
+                    {
+                        { "ApiKeys:DemoApiKey", TestApiKeys.Demo },
+                        { "ApiKeys:SecretApiKey", TestApiKeys.Secret },
+                    }
+                );
             }
         );
 

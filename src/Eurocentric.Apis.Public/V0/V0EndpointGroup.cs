@@ -3,6 +3,7 @@ using Eurocentric.Apis.Public.V0.Features.Listings;
 using Eurocentric.Apis.Public.V0.Features.Queryables;
 using Eurocentric.Apis.Public.V0.Features.Rankings.CompetingCountries;
 using Eurocentric.Components.EndpointMapping;
+using Eurocentric.Components.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -15,7 +16,7 @@ internal static class V0EndpointGroup
         RouteGroupBuilder v0Group = routeBuilder
             .MapGroup("v{version:apiVersion}")
             .WithGroupName(EndpointConstants.GroupName)
-            .AllowAnonymous();
+            .RequiresAuthenticatedClient();
 
         v0Group.Map<GetCompetingCountryPointsAverageRankings.EndpointMapper>();
 

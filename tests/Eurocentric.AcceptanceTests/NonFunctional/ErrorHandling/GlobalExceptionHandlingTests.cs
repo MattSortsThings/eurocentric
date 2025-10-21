@@ -16,6 +16,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     {
         // Arrange
         RestRequest createCountryRequest = PostRequest("/admin/api/v0.1/countries")
+            .UseSecretApiKey()
             .AddJsonBody("""{ "countryType": "Real", "countryName": "CountryName" }""");
 
         // Act
@@ -48,6 +49,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     {
         // Arrange
         RestRequest createCountryRequest = PostRequest("/admin/api/v0.1/countries")
+            .UseSecretApiKey()
             .AddJsonBody("""{ "countryType": "INVALID", "countryCode": "AA", "countryName": "CountryName" }""");
 
         // Act
@@ -80,6 +82,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     {
         // Arrange
         RestRequest createCountryRequest = PostRequest("/admin/api/v0.1/countries")
+            .UseSecretApiKey()
             .AddJsonBody("""{ "countryType": 999999, "countryCode": "AA", "countryName": "CountryName" }""");
 
         // Act
@@ -109,6 +112,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     {
         // Arrange
         RestRequest getListingsRequest = GetRequest("/public/api/v0.2/listings/broadcast-result")
+            .UseSecretApiKey()
             .AddQueryParameter("contestStage", "SemiFinal1");
 
         // Act
@@ -141,6 +145,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     {
         // Arrange
         RestRequest getListingsRequest = GetRequest("/public/api/v0.2/listings/broadcast-result")
+            .UseSecretApiKey()
             .AddQueryParameter("contestYear", 2023)
             .AddQueryParameter("contestStage", "INVALID");
 
@@ -174,6 +179,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     {
         // Arrange
         RestRequest getListingsRequest = GetRequest("/public/api/v0.2/listings/broadcast-result")
+            .UseSecretApiKey()
             .AddQueryParameter("contestYear", 2023)
             .AddQueryParameter("contestStage", 999999);
 

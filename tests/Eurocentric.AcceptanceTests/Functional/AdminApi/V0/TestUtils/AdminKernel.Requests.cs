@@ -1,3 +1,4 @@
+using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V0.Features.Countries;
 using RestSharp;
 
@@ -11,19 +12,22 @@ public sealed partial class AdminKernel
     {
         public RestRequest CreateCountry(CreateCountryRequest requestBody) =>
             PostRequest("/admin/api/{apiVersion}/countries")
+                .UseSecretApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddJsonBody(requestBody);
 
         public RestRequest DeleteCountry(Guid countryId) =>
             DeleteRequest("/admin/api/{apiVersion}/countries/{countryId}")
+                .UseSecretApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddUrlSegment("countryId", countryId);
 
         public RestRequest GetCountries() =>
-            GetRequest("/admin/api/{apiVersion}/countries").AddUrlSegment("apiVersion", apiVersion);
+            GetRequest("/admin/api/{apiVersion}/countries").UseSecretApiKey().AddUrlSegment("apiVersion", apiVersion);
 
         public RestRequest GetCountry(Guid countryId) =>
             GetRequest("/admin/api/{apiVersion}/countries/{countryId}")
+                .UseSecretApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddUrlSegment("countryId", countryId);
 

@@ -17,7 +17,8 @@ public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
         // Arrange
         await SystemUnderTest.ExecuteScopedAsync(BackDoorOperations.PauseDbAsync);
 
-        RestRequest getRankingsRequest = GetRequest("/public/api/v0.2/competing-country-rankings/points-average");
+        RestRequest getRankingsRequest = GetRequest("/public/api/v0.2/competing-country-rankings/points-average")
+            .UseSecretApiKey();
 
         // Act
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
@@ -52,7 +53,7 @@ public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
         // Arrange
         await SystemUnderTest.ExecuteScopedAsync(BackDoorOperations.PauseDbAsync);
 
-        RestRequest getCountriesRequest = GetRequest("/admin/api/v0.2/countries");
+        RestRequest getCountriesRequest = GetRequest("/admin/api/v0.2/countries").UseSecretApiKey();
 
         // Act
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(

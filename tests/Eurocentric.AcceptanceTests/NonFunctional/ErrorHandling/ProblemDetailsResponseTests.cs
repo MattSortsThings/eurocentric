@@ -18,6 +18,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
         Guid nonExistentCountryId = Guid.Parse("01234567-abcd-abcd-abcd-000000000000");
 
         RestRequest getCountryRequest = GetRequest("/admin/api/v0.1/countries/{countryId}")
+            .UseSecretApiKey()
             .AddUrlSegment("countryId", nonExistentCountryId);
 
         // Act
@@ -49,6 +50,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
         Guid countryWithContestRolesId = Guid.Parse("01979615-1e4c-7ba1-868b-018ce12e1c0c");
 
         RestRequest deleteCountryRequest = DeleteRequest("/admin/api/v0.1/countries/{countryId}")
+            .UseSecretApiKey()
             .AddUrlSegment("countryId", countryWithContestRolesId);
 
         // Act
@@ -80,6 +82,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
         const int illegalPageSizeValue = 999999;
 
         RestRequest getRankingsRequest = GetRequest("/public/api/v0.2/competing-country-rankings/points-average")
+            .UseSecretApiKey()
             .AddQueryParameter("pageSize", illegalPageSizeValue);
 
         // Act

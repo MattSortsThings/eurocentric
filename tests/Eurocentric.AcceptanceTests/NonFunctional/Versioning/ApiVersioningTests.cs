@@ -11,7 +11,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
     public async Task Admin_API_v0_1_response_should_report_all_Admin_API_versions()
     {
         // Arrange
-        RestRequest request = GetRequest("/admin/api/v0.1/countries");
+        RestRequest request = GetRequest("/admin/api/v0.1/countries").UseSecretApiKey();
 
         // Act
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
@@ -27,7 +27,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
     public async Task Admin_API_v0_2_response_should_report_all_Admin_API_versions()
     {
         // Arrange
-        RestRequest request = GetRequest("/admin/api/v0.2/countries");
+        RestRequest request = GetRequest("/admin/api/v0.2/countries").UseSecretApiKey();
 
         // Act
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
@@ -43,7 +43,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
     public async Task Public_API_v0_1_response_should_report_all_Public_API_versions()
     {
         // Arrange
-        RestRequest request = GetRequest("/public/api/v0.1/queryables/countries");
+        RestRequest request = GetRequest("/public/api/v0.1/queryables/countries").UseSecretApiKey();
 
         // Act
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
@@ -59,7 +59,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
     public async Task Public_API_v0_2_response_should_report_all_Public_API_versions()
     {
         // Arrange
-        RestRequest request = GetRequest("/public/api/v0.2/queryables/countries");
+        RestRequest request = GetRequest("/public/api/v0.2/queryables/countries").UseSecretApiKey();
 
         // Act
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(

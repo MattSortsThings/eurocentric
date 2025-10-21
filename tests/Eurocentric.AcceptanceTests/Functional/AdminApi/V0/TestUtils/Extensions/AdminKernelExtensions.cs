@@ -30,6 +30,22 @@ public static class AdminKernelExtensions
         return problemOrResponse.AsResponse.Data!.Country;
     }
 
+    public static async Task<Country> GetACountryAsync(
+        this AdminKernel kernel,
+        Guid countryId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        RestRequest request = kernel.Requests.Countries.GetCountry(countryId);
+
+        ProblemOrResponse<GetCountryResponse> problemOrResponse = await kernel.Client.SendAsync<GetCountryResponse>(
+            request,
+            cancellationToken
+        );
+
+        return problemOrResponse.AsResponse.Data!.Country;
+    }
+
     public static async Task<Country[]> GetAllCountriesAsync(
         this AdminKernel kernel,
         CancellationToken cancellationToken = default

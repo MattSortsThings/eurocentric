@@ -6,7 +6,6 @@ using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 using Eurocentric.Apis.Admin.V0.Enums;
 using Eurocentric.Apis.Admin.V0.Features.Countries;
-using RestSharp;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.Countries;
 
@@ -254,21 +253,9 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
         private async Task<Country> RetrieveCountryAsync(string location, CancellationToken cancellationToken)
         {
-            RestRequest getCountryRequest = MapToGetRequest(location);
+            Guid countryId = Guid.Parse(location.Split('/').Last());
 
-            ProblemOrResponse<GetCountryResponse> getCountryResponse =
-                await Kernel.Client.SendAsync<GetCountryResponse>(getCountryRequest, cancellationToken);
-
-            Country retrievedCountry = await Assert.That(getCountryResponse.AsResponse.Data?.Country).IsNotNull();
-
-            return retrievedCountry;
-        }
-
-        private static RestRequest MapToGetRequest(string location)
-        {
-            string route = location.Replace("http://localhost/", "/");
-
-            return new RestRequest(route);
+            return await Kernel.GetACountryAsync(countryId, cancellationToken);
         }
     }
 }
