@@ -1,3 +1,4 @@
+using DotNet.Testcontainers.Containers;
 using Testcontainers.MsSql;
 using TUnit.Core.Interfaces;
 
@@ -32,5 +33,21 @@ public sealed class DbContainerFixture : IAsyncInitializer, IAsyncDisposable
     {
         await _dbContainer.StartAsync();
         ConnectionString = _dbContainer.GetConnectionString().TrimEnd(';') + ";Command Timeout=1";
+    }
+
+    /// <summary>
+    ///     Asynchronously pauses the test container.
+    /// </summary>
+    public async Task PauseAsync() => await _dbContainer.PauseAsync();
+
+    /// <summary>
+    ///     Asynchronously unpauses the test container if it is currently paused.
+    /// </summary>
+    public async Task EnsureUnpausedAsync()
+    {
+        if (_dbContainer.State == TestcontainersStates.Paused)
+        {
+            await _dbContainer.UnpauseAsync();
+        }
     }
 }

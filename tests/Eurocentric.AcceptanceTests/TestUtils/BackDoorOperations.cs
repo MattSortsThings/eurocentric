@@ -7,8 +7,18 @@ namespace Eurocentric.AcceptanceTests.TestUtils;
 
 public static class BackDoorOperations
 {
-    public static async Task EraseAllDataAsync(IServiceProvider serviceProvider)
+    public static async Task PauseDbAsync(IServiceProvider serviceProvider)
     {
+        DbContainerFixtureSwitcher switcher = serviceProvider.GetRequiredService<DbContainerFixtureSwitcher>();
+
+        await switcher.PauseAsync();
+    }
+
+    public static async Task ResetDbAsync(IServiceProvider serviceProvider)
+    {
+        DbContainerFixtureSwitcher switcher = serviceProvider.GetRequiredService<DbContainerFixtureSwitcher>();
+        await switcher.EnsureUnpausedAsync();
+
         await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
 
         await dbContext.V0Broadcasts.ExecuteDeleteAsync();

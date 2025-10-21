@@ -94,7 +94,11 @@ public abstract class WebAppFixture
             }
         );
 
-        builder.ConfigureTestServices(AddRestClient);
+        builder.ConfigureTestServices(services =>
+        {
+            AddDbContainerSwitcher(services);
+            AddRestClient(services);
+        });
     }
 
     /// <summary>
@@ -125,4 +129,11 @@ public abstract class WebAppFixture
                 configureSerialization: config => config.UseSystemTextJson(jsonOptions.Value.SerializerOptions)
             );
         });
+
+    private void AddDbContainerSwitcher(IServiceCollection services)
+    {
+        DbContainerFixtureSwitcher switcher = new(DbContainer);
+
+        services.AddSingleton(switcher);
+    }
 }

@@ -7,9 +7,11 @@ using RestSharp;
 
 namespace Eurocentric.AcceptanceTests.NonFunctional.ErrorHandling;
 
+[Category("error-handling")]
 public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
 {
     [Test]
+    [Category("clear-box")]
     public async Task Should_return_400_with_problem_details_on_missing_required_request_body_property()
     {
         // Arrange
@@ -41,6 +43,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     }
 
     [Test]
+    [Category("clear-box")]
     public async Task Should_return_400_with_problem_details_on_request_body_enum_property_with_invalid_string_value()
     {
         // Arrange
@@ -72,6 +75,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     }
 
     [Test]
+    [Category("clear-box")]
     public async Task Should_return_400_with_problem_details_on_request_body_enum_property_with_invalid_integer_value()
     {
         // Arrange
@@ -100,6 +104,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     }
 
     [Test]
+    [Category("clear-box")]
     public async Task Should_return_400_with_problem_details_on_missing_required_query_param()
     {
         // Arrange
@@ -131,6 +136,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     }
 
     [Test]
+    [Category("clear-box")]
     public async Task Should_return_400_with_problem_details_on_enum_query_param_with_invalid_string_value()
     {
         // Arrange
@@ -163,6 +169,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
     }
 
     [Test]
+    [Category("clear-box")]
     public async Task Should_return_400_with_problem_details_on_enum_query_param_with_invalid_int_value()
     {
         // Arrange

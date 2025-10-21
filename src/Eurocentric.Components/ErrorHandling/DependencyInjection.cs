@@ -18,6 +18,7 @@ public static class DependencyInjection
         services
             .AddExceptionHandler<BadHttpRequestExceptionHandler>()
             .AddExceptionHandler<InvalidEnumArgumentExceptionHandler>()
+            .AddExceptionHandler<DbTimeoutSqlExceptionHandler>()
             .AddExceptionHandler<FallbackExceptionHandler>()
             .AddProblemDetails(static options => options.CustomizeProblemDetails = CustomizeInstance);
 

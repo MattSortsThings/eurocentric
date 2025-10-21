@@ -9,7 +9,7 @@ public abstract class SerialCleanAcceptanceTest
     public required WebAppFixture SystemUnderTest { get; init; }
 
     [After(Test)]
-    public async Task TeardownAsync() => await SystemUnderTest.ExecuteScopedAsync(BackDoorOperations.EraseAllDataAsync);
+    public async Task TeardownAsync() => await SystemUnderTest.ExecuteScopedAsync(BackDoorOperations.ResetDbAsync);
 
     public sealed class CleanWebAppFixture : WebAppFixture
     {
