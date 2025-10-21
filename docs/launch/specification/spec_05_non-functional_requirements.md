@@ -32,7 +32,7 @@ This document is part of the [launch specification](../README.md#launch-specific
 
 ### ne03: Database timeout handling
 
-- If an HTTP request is unsuccessful due to a db connection/command timeout, a custom `DbTimeoutException` is thrown.
+- If an HTTP request is unsuccessful due to a db connection/command timeout, a `SqlException` is thrown with a message containing `"Timeout"` or `"timeout"`.
 - This is caught by the exception handler, and returned as an unsuccessful HTTP response with status code `503` and a serialized `ProblemDetails` object.
 - The `ProblemDetails` includes a `"Retry-After"` header with a value of `120`.
 
