@@ -15,7 +15,11 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddErrorHandling(this IServiceCollection services)
     {
-        services.AddProblemDetails(static options => options.CustomizeProblemDetails = CustomizeInstance);
+        services
+            .AddExceptionHandler<BadHttpRequestExceptionHandler>()
+            .AddExceptionHandler<InvalidEnumArgumentExceptionHandler>()
+            .AddExceptionHandler<FallbackExceptionHandler>()
+            .AddProblemDetails(static options => options.CustomizeProblemDetails = CustomizeInstance);
 
         return services;
     }

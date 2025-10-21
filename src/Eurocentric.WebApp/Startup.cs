@@ -49,6 +49,8 @@ internal static class Startup
 
         app.UseStatusCodePages();
 
+        app.UseExceptionHandler();
+
         app.UseAdminApiVersionedEndpoints();
         app.UsePublicApiVersionedEndpoints();
 
