@@ -26,18 +26,9 @@ public static class DependencyInjection
 
         services
             .AddAuthorizationBuilder()
-            .AddPolicy(
-                nameof(AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole),
-                AuthorizationPolicies.RequireAuthenticatedClientWithAdministratorRole
-            )
-            .AddPolicy(
-                nameof(AuthorizationPolicies.RequireAuthenticatedClientWithUserRole),
-                AuthorizationPolicies.RequireAuthenticatedClientWithUserRole
-            )
-            .AddFallbackPolicy(
-                nameof(AuthorizationPolicies.RequireAuthenticatedClient),
-                AuthorizationPolicies.RequireAuthenticatedClient
-            );
+            .AddPolicy(nameof(AuthorizationPolicies.AdministratorRole), AuthorizationPolicies.AdministratorRole)
+            .AddPolicy(nameof(AuthorizationPolicies.UserRole), AuthorizationPolicies.UserRole)
+            .AddPolicy(nameof(AuthorizationPolicies.Authenticated), AuthorizationPolicies.Authenticated);
 
         return services;
     }
