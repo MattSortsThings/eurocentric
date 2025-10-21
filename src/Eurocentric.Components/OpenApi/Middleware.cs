@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Scalar.AspNetCore;
 
 namespace Eurocentric.Components.OpenApi;
 
@@ -11,5 +12,10 @@ public static class Middleware
     ///     Configures the web application to use OpenAPI endpoints, which do not authenticate requests.
     /// </summary>
     /// <param name="app">The web application.</param>
-    public static void UseOpenApiEndpoints(this WebApplication app) => app.MapOpenApi().AllowAnonymous();
+    public static void UseOpenApiEndpoints(this WebApplication app)
+    {
+        app.MapOpenApi().AllowAnonymous();
+
+        app.MapScalarApiReference("docs").AllowAnonymous();
+    }
 }

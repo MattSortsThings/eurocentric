@@ -21,6 +21,8 @@ public static class DependencyInjection
         params Action<IServiceCollection>[] registrars
     )
     {
+        services.ConfigureOptions<ConfigureScalarOptions>();
+
         foreach (Action<IServiceCollection> registrar in registrars)
         {
             registrar(services);
