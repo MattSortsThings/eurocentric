@@ -14,7 +14,8 @@ internal static class V0EndpointGroup
         RouteGroupBuilder v0Group = routeBuilder
             .MapGroup("v{version:apiVersion}")
             .WithGroupName(EndpointConstants.GroupName)
-            .RequiresAuthenticatedClient();
+            .RequiresAuthenticatedClient()
+            .RequiresAdministratorRole();
 
         v0Group
             .Map<CreateCountry.EndpointMapper>()

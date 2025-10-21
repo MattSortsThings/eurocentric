@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -17,6 +16,18 @@ public static class RouteGroupBuilderExtensions
     public static RouteGroupBuilder RequiresAuthenticatedClient(this RouteGroupBuilder builder)
     {
         builder.RequireAuthorization(nameof(AuthorizationPolicies.Authenticated));
+
+        return builder;
+    }
+
+    /// <summary>
+    ///     Adds an authorization policy for the endpoint group: the client must have the "Administrator" role.
+    /// </summary>
+    /// <param name="builder">The endpoint route group builder.</param>
+    /// <returns>The same <see cref="RouteGroupBuilder" /> instance, so that method invocations can be chained.</returns>
+    public static RouteGroupBuilder RequiresAdministratorRole(this RouteGroupBuilder builder)
+    {
+        builder.RequireAuthorization(nameof(AuthorizationPolicies.AdministratorRole));
 
         return builder;
     }

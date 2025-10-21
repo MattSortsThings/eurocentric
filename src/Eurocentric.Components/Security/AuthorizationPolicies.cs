@@ -1,5 +1,3 @@
-using System.ClientModel.Primitives;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Eurocentric.Components.Security;

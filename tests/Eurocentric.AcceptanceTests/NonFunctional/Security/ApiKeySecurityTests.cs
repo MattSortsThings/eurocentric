@@ -36,7 +36,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
     [Test]
     [Arguments("v0.1")]
     [Arguments("v0.2")]
-    public async Task Admin_API_v0_x_should_authenticate_client_using_DEMO_API_KEY(string apiVersion)
+    public async Task Admin_API_v0_x_should_authenticate_but_not_authorize_client_using_DEMO_API_KEY(string apiVersion)
     {
         // Arrange
         RestRequest getCountriesRequest = GetRequest("/admin/api/{apiVersion}/countries")
@@ -50,9 +50,9 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
         );
 
         // Assert
-        RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
+        RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
 
-        await Assert.That(response.StatusCode).IsEqualTo(HttpStatusCode.OK);
+        await Assert.That(problem.StatusCode).IsEqualTo(HttpStatusCode.Forbidden);
     }
 
     [Test]
