@@ -5,11 +5,14 @@ using Eurocentric.Components.ErrorHandling;
 using Eurocentric.Components.Gateways;
 using Eurocentric.Components.HttpJson;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Components.OpenApi;
 using Eurocentric.Components.Repositories;
 using Eurocentric.Components.Security;
 using Eurocentric.Components.Versioning;
 using AdminApiMiddleware = Eurocentric.Apis.Admin.Middleware;
+using AdminApiOpenApiDocuments = Eurocentric.Apis.Admin.OpenApiDocuments;
 using PublicApiMiddleware = Eurocentric.Apis.Public.Middleware;
+using PublicApiOpenApiDocuments = Eurocentric.Apis.Public.OpenApiDocuments;
 
 namespace Eurocentric.WebApp;
 
@@ -32,6 +35,7 @@ internal static class Startup
             .AddErrorHandling()
             .AddGateways()
             .AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly)
+            .AddOpenApiDocumentation(AdminApiOpenApiDocuments.RegisterAll, PublicApiOpenApiDocuments.RegisterAll)
             .AddRepositories()
             .AddSecurity()
             .AddVersioning()
@@ -59,6 +63,8 @@ internal static class Startup
 
         app.UseAdminApiVersionedEndpoints();
         app.UsePublicApiVersionedEndpoints();
+
+        app.UseOpenApiEndpoints();
 
         return app;
     }
