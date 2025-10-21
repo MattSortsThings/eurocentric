@@ -1,5 +1,6 @@
 using System.Net;
 using Eurocentric.AcceptanceTests.TestUtils;
+using Eurocentric.AcceptanceTests.TestUtils.Assertions;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
@@ -45,6 +46,20 @@ public abstract class AdminActor : IActor
             .That(FailureResponse)
             .IsNotNull()
             .And.Member(response => response.StatusCode, assertion => assertion.IsEqualTo(expectedStatusCode));
+    }
+
+    public async Task Then_the_response_problem_details_should_match(
+        string detail = "",
+        string title = "",
+        int status = 0
+    )
+    {
+        await Assert
+            .That(FailureResponse?.Data)
+            .IsNotNull()
+            .And.HasTitle(title)
+            .And.HasDetail(detail)
+            .And.HasStatus(status);
     }
 
     private void OnProblem(RestResponse<ProblemDetails> problem) => FailureResponse = problem;

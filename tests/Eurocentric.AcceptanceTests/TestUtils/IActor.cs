@@ -25,4 +25,6 @@ public interface IActor
     Task Then_my_request_should_SUCCEED_with_status_code(int statusCode);
 
     Task Then_my_request_should_FAIL_with_status_code(int statusCode);
+
+    Task Then_the_response_problem_details_should_match(string detail = "", string title = "", int status = 0);
 }

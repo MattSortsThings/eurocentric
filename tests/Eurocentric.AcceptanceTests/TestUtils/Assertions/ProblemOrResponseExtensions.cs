@@ -4,10 +4,17 @@ namespace Eurocentric.AcceptanceTests.TestUtils.Assertions;
 
 public static class ProblemOrResponseExtensions
 {
-    public static IsResponseAssertion IsResponse(this IAssertionSource<ProblemOrResponse> source)
+    public static ProblemOrResponseIsProblemAssertion IsProblem(this IAssertionSource<ProblemOrResponse> source)
+    {
+        source.Context.ExpressionBuilder.Append(".IsProblem()");
+
+        return new ProblemOrResponseIsProblemAssertion(source.Context);
+    }
+
+    public static ProblemOrResponseIsResponseAssertion IsResponse(this IAssertionSource<ProblemOrResponse> source)
     {
         source.Context.ExpressionBuilder.Append(".IsResponse()");
 
-        return new IsResponseAssertion(source.Context);
+        return new ProblemOrResponseIsResponseAssertion(source.Context);
     }
 }

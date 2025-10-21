@@ -3,9 +3,9 @@ using TUnit.Assertions.Core;
 
 namespace Eurocentric.AcceptanceTests.TestUtils.Assertions;
 
-public sealed class IsResponseAssertion : Assertion<RestResponse>
+public sealed class ProblemOrResponseIsResponseAssertion : Assertion<RestResponse>
 {
-    public IsResponseAssertion(AssertionContext<ProblemOrResponse> context)
+    public ProblemOrResponseIsResponseAssertion(AssertionContext<ProblemOrResponse> context)
         : base(context.Map<RestResponse>(r => r!.AsResponse)) { }
 
     protected override string GetExpectation() => "to be Response";

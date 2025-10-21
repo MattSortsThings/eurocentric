@@ -1,6 +1,7 @@
 using CSharpFunctionalExtensions;
 using Eurocentric.Apis.Admin.V0.Config;
 using Eurocentric.Components.EndpointMapping;
+using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Functional;
 using Eurocentric.Domain.V0.Aggregates.Countries;
 using JetBrains.Annotations;
@@ -19,14 +20,7 @@ internal static class DeleteCountry
         [FromRoute(Name = "countryId")] Guid countryId,
         [FromServices] IRequestResponseBus bus,
         CancellationToken ct = default
-    )
-    {
-        UnitResult<IDomainError> result = await bus.Send(new UnitCommand(countryId), cancellationToken: ct);
-
-        return result.IsSuccess
-            ? TypedResults.NoContent()
-            : throw new InvalidOperationException("Unit command failed.");
-    }
+    ) => await bus.DispatchAsync(new UnitCommand(countryId), ct);
 
     internal sealed class EndpointMapper : IEndpointMapper
     {

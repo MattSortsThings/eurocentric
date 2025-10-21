@@ -4,6 +4,7 @@ using Eurocentric.Apis.Admin.V0.Config;
 using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 using Eurocentric.Apis.Admin.V0.Enums;
 using Eurocentric.Components.EndpointMapping;
+using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Functional;
 using Eurocentric.Domain.V0.Aggregates.Countries;
 using JetBrains.Annotations;
@@ -21,6 +22,12 @@ namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
 internal static class CreateCountry
 {
+    private static async Task<IResult> ExecuteAsync(
+        [FromBody] CreateCountryRequest request,
+        [FromServices] IRequestResponseBus bus,
+        CancellationToken ct = default
+    ) => await bus.DispatchAsync(request.ToCommand(), MapToCreatedAtRoute, ct);
+
     private static Command ToCommand(this CreateCountryRequest request)
     {
         return request.CountryType switch
@@ -41,19 +48,6 @@ internal static class CreateCountry
             "AdminApi.V0.GetCountry",
             new RouteValueDictionary { { nameof(countryId), countryId } }
         );
-    }
-
-    private static async Task<IResult> ExecuteAsync(
-        [FromBody] CreateCountryRequest request,
-        [FromServices] IRequestResponseBus bus,
-        CancellationToken ct = default
-    )
-    {
-        Result<CountryAggregate, IDomainError> result = await bus.Send(request.ToCommand(), cancellationToken: ct);
-
-        return result.IsSuccess
-            ? MapToCreatedAtRoute(result.GetValueOrDefault())
-            : throw new InvalidOperationException("Command failed.");
     }
 
     internal sealed class EndpointMapper : IEndpointMapper

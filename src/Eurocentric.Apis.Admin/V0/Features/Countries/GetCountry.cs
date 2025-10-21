@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using Eurocentric.Apis.Admin.V0.Config;
 using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 using Eurocentric.Components.EndpointMapping;
+using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Functional;
 using Eurocentric.Domain.V0.Aggregates.Countries;
 using JetBrains.Annotations;
@@ -19,24 +20,17 @@ namespace Eurocentric.Apis.Admin.V0.Features.Countries;
 
 internal static class GetCountry
 {
+    private static async Task<IResult> ExecuteAsync(
+        [FromRoute(Name = "countryId")] Guid countryId,
+        [FromServices] IRequestResponseBus bus,
+        CancellationToken ct = default
+    ) => await bus.DispatchAsync(new Query(countryId), MapToOk, ct);
+
     private static Ok<GetCountryResponse> MapToOk(CountryAggregate country)
     {
         CountryDto countryDto = country.ToDto();
 
         return TypedResults.Ok(new GetCountryResponse(countryDto));
-    }
-
-    private static async Task<IResult> ExecuteAsync(
-        [FromRoute(Name = "countryId")] Guid countryId,
-        [FromServices] IRequestResponseBus bus,
-        CancellationToken ct = default
-    )
-    {
-        Result<CountryAggregate, IDomainError> result = await bus.Send(new Query(countryId), cancellationToken: ct);
-
-        return result.IsSuccess
-            ? MapToOk(result.GetValueOrDefault())
-            : throw new InvalidOperationException("Query failed.");
     }
 
     internal sealed class EndpointMapper : IEndpointMapper

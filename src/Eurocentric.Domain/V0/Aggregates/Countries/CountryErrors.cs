@@ -8,7 +8,7 @@ public static class CountryErrors
         new()
         {
             Title = "Country not found",
-            Detail = "No country exists with the provided country ID.",
+            Detail = "The requested country does not exist.",
             Metadata = new Dictionary<string, object?> { { nameof(countryId), countryId } },
         };
 
@@ -17,7 +17,7 @@ public static class CountryErrors
         return new ConflictError
         {
             Title = "Country deletion not allowed",
-            Detail = "The country with the provided country ID has a role in one or more contests.",
+            Detail = "The requested country has a role in one or more contests.",
             Metadata = new Dictionary<string, object?> { { nameof(countryId), countryId } },
         };
     }

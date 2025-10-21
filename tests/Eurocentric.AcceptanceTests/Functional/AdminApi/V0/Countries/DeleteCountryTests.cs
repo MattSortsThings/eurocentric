@@ -3,6 +3,7 @@ using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Attributes;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Extensions;
 using Eurocentric.AcceptanceTests.TestUtils;
+using Eurocentric.AcceptanceTests.TestUtils.Assertions;
 using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.Countries;
@@ -44,7 +45,13 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_FAIL_with_status_code(500);
+        await admin.Then_my_request_should_FAIL_with_status_code(404);
+        await admin.Then_the_response_problem_details_should_match(
+            status: 404,
+            title: "Country not found",
+            detail: "The requested country does not exist."
+        );
+        await admin.Then_the_response_problem_details_should_include_the_deleted_country_ID();
     }
 
     [Test]
@@ -63,7 +70,13 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_FAIL_with_status_code(500);
+        await admin.Then_my_request_should_FAIL_with_status_code(409);
+        await admin.Then_the_response_problem_details_should_match(
+            status: 409,
+            title: "Country deletion not allowed",
+            detail: "The requested country has a role in one or more contests."
+        );
+        await admin.Then_the_response_problem_details_should_include_my_existing_country_ID();
         await admin.Then_my_existing_country_should_be_the_only_existing_country_in_the_system();
     }
 
@@ -134,6 +147,20 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
                 .That(existingCountries)
                 .HasSingleItem()
                 .And.ContainsOnly(country => country.Id == expectedCountryId);
+        }
+
+        public async Task Then_the_response_problem_details_should_include_my_existing_country_ID()
+        {
+            Guid existingCountryId = await Assert.That(ExistingCountryId).IsNotNull();
+
+            await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension("countryId", existingCountryId);
+        }
+
+        public async Task Then_the_response_problem_details_should_include_the_deleted_country_ID()
+        {
+            Guid deletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
+
+            await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension("countryId", deletedCountryId);
         }
     }
 }

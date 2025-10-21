@@ -83,7 +83,13 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_FAIL_with_status_code(500);
+        await admin.Then_my_request_should_FAIL_with_status_code(422);
+        await admin.Then_the_response_problem_details_should_match(
+            status: 422,
+            title: "Illegal country code value",
+            detail: "Country code value must be a string of 2 upper-case letters."
+        );
+        await admin.Then_the_response_problem_details_extensions_should_include(key: "countryCode", value: "!");
         await admin.Then_no_countries_should_exist_in_the_system();
     }
 
@@ -100,7 +106,13 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_FAIL_with_status_code(500);
+        await admin.Then_my_request_should_FAIL_with_status_code(422);
+        await admin.Then_the_response_problem_details_should_match(
+            status: 422,
+            title: "Illegal country name value",
+            detail: "Country name value must be a non-empty, non-whitespace string of no more than 200 characters."
+        );
+        await admin.Then_the_response_problem_details_extensions_should_include(key: "countryName", value: " ");
         await admin.Then_no_countries_should_exist_in_the_system();
     }
 
@@ -119,7 +131,13 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_FAIL_with_status_code(500);
+        await admin.Then_my_request_should_FAIL_with_status_code(409);
+        await admin.Then_the_response_problem_details_should_match(
+            status: 409,
+            title: "Country code conflict",
+            detail: "A country already exists with the provided country code."
+        );
+        await admin.Then_the_response_problem_details_extensions_should_include(key: "countryCode", value: "GB");
         await admin.Then_my_existing_country_should_be_the_only_existing_country_in_the_system();
     }
 

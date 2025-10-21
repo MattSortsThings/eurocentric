@@ -2,6 +2,7 @@ using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Attributes;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Extensions;
 using Eurocentric.AcceptanceTests.TestUtils;
+using Eurocentric.AcceptanceTests.TestUtils.Assertions;
 using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 using Eurocentric.Apis.Admin.V0.Features.Countries;
 
@@ -44,7 +45,13 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
         await admin.When_I_send_my_request();
 
         // Then
-        await admin.Then_my_request_should_FAIL_with_status_code(500);
+        await admin.Then_my_request_should_FAIL_with_status_code(404);
+        await admin.Then_the_response_problem_details_should_match(
+            status: 404,
+            title: "Country not found",
+            detail: "The requested country does not exist."
+        );
+        await admin.Then_the_response_problem_details_should_include_the_deleted_country_ID();
     }
 
     private sealed class Admin(AdminKernel kernel) : AdminActor<GetCountryResponse>
@@ -88,6 +95,13 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
             Guid deletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
 
             Request = Kernel.Requests.Countries.GetCountry(deletedCountryId);
+        }
+
+        public async Task Then_the_response_problem_details_should_include_the_deleted_country_ID()
+        {
+            Guid deletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
+
+            await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension("countryId", deletedCountryId);
         }
     }
 }

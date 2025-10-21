@@ -133,7 +133,13 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
         await euroFan.When_I_send_my_request();
 
         // Then
-        await euroFan.Then_my_request_should_FAIL_with_status_code(500);
+        await euroFan.Then_my_request_should_FAIL_with_status_code(422);
+        await euroFan.Then_the_response_problem_details_should_match(
+            status: 422,
+            title: "Illegal page index value",
+            detail: "Page index value must be a non-negative integer."
+        );
+        await euroFan.Then_the_response_problem_details_extensions_should_include(key: "pageIndex", value: -1);
     }
 
     [Test]
@@ -149,7 +155,13 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
         await euroFan.When_I_send_my_request();
 
         // Then
-        await euroFan.Then_my_request_should_FAIL_with_status_code(500);
+        await euroFan.Then_my_request_should_FAIL_with_status_code(422);
+        await euroFan.Then_the_response_problem_details_should_match(
+            status: 422,
+            title: "Illegal page size value",
+            detail: "Page size value must be an integer between 1 and 100."
+        );
+        await euroFan.Then_the_response_problem_details_extensions_should_include(key: "pageSize", value: 0);
     }
 
     [Test]
@@ -165,7 +177,13 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
         await euroFan.When_I_send_my_request();
 
         // Then
-        await euroFan.Then_my_request_should_FAIL_with_status_code(500);
+        await euroFan.Then_my_request_should_FAIL_with_status_code(422);
+        await euroFan.Then_the_response_problem_details_should_match(
+            status: 422,
+            title: "Illegal page size value",
+            detail: "Page size value must be an integer between 1 and 100."
+        );
+        await euroFan.Then_the_response_problem_details_extensions_should_include(key: "pageSize", value: 101);
     }
 
     [Test]
@@ -184,7 +202,14 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
         await euroFan.When_I_send_my_request();
 
         // Then
-        await euroFan.Then_my_request_should_FAIL_with_status_code(500);
+        await euroFan.Then_my_request_should_FAIL_with_status_code(422);
+        await euroFan.Then_the_response_problem_details_should_match(
+            status: 422,
+            title: "Illegal contest year range",
+            detail: "Maximum contest year must be greater than or equal to minimum contest year."
+        );
+        await euroFan.Then_the_response_problem_details_extensions_should_include(key: "minYear", value: 2023);
+        await euroFan.Then_the_response_problem_details_extensions_should_include(key: "maxYear", value: 2022);
     }
 
     [Test]
@@ -194,13 +219,19 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
         EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_retrieve_a_page_of_competing_country_points_average_rankings(votingCountryCode: "X");
+        euroFan.Given_I_want_to_retrieve_a_page_of_competing_country_points_average_rankings(votingCountryCode: "!");
 
         // When
         await euroFan.When_I_send_my_request();
 
         // Then
-        await euroFan.Then_my_request_should_FAIL_with_status_code(500);
+        await euroFan.Then_my_request_should_FAIL_with_status_code(422);
+        await euroFan.Then_the_response_problem_details_should_match(
+            status: 422,
+            title: "Illegal voting country code value",
+            detail: "Voting country code value must be a string of 2 upper-case letters."
+        );
+        await euroFan.Then_the_response_problem_details_extensions_should_include(key: "votingCountryCode", value: "!");
     }
 
     private sealed class EuroFan(EuroFanKernel kernel) : EuroFanActor<GetCompetingCountryPointsAverageRankingsResponse>

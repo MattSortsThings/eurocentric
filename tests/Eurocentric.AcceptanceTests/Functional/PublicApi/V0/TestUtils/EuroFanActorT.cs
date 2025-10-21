@@ -1,5 +1,6 @@
 using System.Net;
 using Eurocentric.AcceptanceTests.TestUtils;
+using Eurocentric.AcceptanceTests.TestUtils.Assertions;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
@@ -53,6 +54,26 @@ public abstract class EuroFanActor<T> : IActor<T>
             .IsNotNull()
             .And.Member(response => response.StatusCode, assertion => assertion.IsEqualTo(expectedStatusCode));
     }
+
+    public async Task Then_the_response_problem_details_should_match(
+        string detail = "",
+        string title = "",
+        int status = 0
+    )
+    {
+        await Assert
+            .That(FailureResponse?.Data)
+            .IsNotNull()
+            .And.HasTitle(title)
+            .And.HasDetail(detail)
+            .And.HasStatus(status);
+    }
+
+    public async Task Then_the_response_problem_details_extensions_should_include(int value = 0, string key = "") =>
+        await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension(key, value);
+
+    public async Task Then_the_response_problem_details_extensions_should_include(string value = "", string key = "") =>
+        await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension(key, value);
 
     private void OnProblem(RestResponse<ProblemDetails> problem) => FailureResponse = problem;
 

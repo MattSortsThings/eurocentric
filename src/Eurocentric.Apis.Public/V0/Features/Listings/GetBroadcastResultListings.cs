@@ -3,6 +3,7 @@ using Eurocentric.Apis.Public.V0.Config;
 using Eurocentric.Apis.Public.V0.Dtos.Listings;
 using Eurocentric.Apis.Public.V0.Enums;
 using Eurocentric.Components.EndpointMapping;
+using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Functional;
 using Eurocentric.Domain.V0.Queries.Listings;
 using JetBrains.Annotations;
@@ -22,6 +23,12 @@ namespace Eurocentric.Apis.Public.V0.Features.Listings;
 
 internal static class GetBroadcastResultListings
 {
+    private static async Task<IResult> ExecuteAsync(
+        [AsParameters] GetBroadcastResultListingsRequest request,
+        [FromServices] IRequestResponseBus bus,
+        CancellationToken ct = default
+    ) => await bus.DispatchAsync(request.ToQuery(), MapToOk, ct);
+
     private static Query ToQuery(this GetBroadcastResultListingsRequest request)
     {
         return new Query
@@ -39,19 +46,6 @@ internal static class GetBroadcastResultListings
         MetadataDto metadataDto = metadata.ToDto();
 
         return TypedResults.Ok(new GetBroadcastResultListingsResponse(listingDtos, metadataDto));
-    }
-
-    private static async Task<IResult> ExecuteAsync(
-        [AsParameters] GetBroadcastResultListingsRequest request,
-        [FromServices] IRequestResponseBus bus,
-        CancellationToken ct = default
-    )
-    {
-        Result<BroadcastResultListings, IDomainError> result = await bus.Send(request.ToQuery(), cancellationToken: ct);
-
-        return result.IsSuccess
-            ? MapToOk(result.GetValueOrDefault())
-            : throw new InvalidOperationException("Query failed.");
     }
 
     internal sealed class EndpointMapper : IEndpointMapper

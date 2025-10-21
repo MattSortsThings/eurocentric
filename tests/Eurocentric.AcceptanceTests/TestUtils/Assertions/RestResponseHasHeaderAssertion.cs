@@ -3,13 +3,13 @@ using TUnit.Assertions.Core;
 
 namespace Eurocentric.AcceptanceTests.TestUtils.Assertions;
 
-public sealed class HasHeaderAssertion<T> : Assertion<T>
+public sealed class RestResponseHasHeaderAssertion<T> : Assertion<T>
     where T : RestResponseBase
 {
     private readonly string _expectedName;
     private readonly string _expectedValue;
 
-    public HasHeaderAssertion(AssertionContext<T> context, string expectedName, string expectedValue)
+    public RestResponseHasHeaderAssertion(AssertionContext<T> context, string expectedName, string expectedValue)
         : base(context)
     {
         _expectedName = expectedName ?? throw new ArgumentNullException(nameof(expectedName));

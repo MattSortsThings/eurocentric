@@ -6,7 +6,7 @@ namespace Eurocentric.AcceptanceTests.TestUtils.Assertions;
 
 public static class RestResponseBaseExtensions
 {
-    public static HasHeaderAssertion<T> HasHeader<T>(
+    public static RestResponseHasHeaderAssertion<T> HasHeader<T>(
         this IAssertionSource<T> source,
         string expectedName,
         string expectedValue,
@@ -17,6 +17,6 @@ public static class RestResponseBaseExtensions
     {
         source.Context.ExpressionBuilder.Append($".HasHeader({nameExpression}, {valueExpression})");
 
-        return new HasHeaderAssertion<T>(source.Context, expectedName, expectedValue);
+        return new RestResponseHasHeaderAssertion<T>(source.Context, expectedName, expectedValue);
     }
 }
