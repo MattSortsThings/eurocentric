@@ -7,6 +7,7 @@ using RestSharp;
 
 namespace Eurocentric.AcceptanceTests.NonFunctional.ErrorHandling;
 
+[Category("slow")]
 [Category("error-handling")]
 public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
 {
