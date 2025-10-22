@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Apis.Public.V0;
 
-internal static class V0EndpointGroup
+internal static class EndpointRouteBuilderExtensions
 {
     internal static void MapV0EndpointGroup(this IEndpointRouteBuilder routeBuilder)
     {
