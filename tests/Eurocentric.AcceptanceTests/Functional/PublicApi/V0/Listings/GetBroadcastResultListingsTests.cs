@@ -130,7 +130,7 @@ public sealed class GetBroadcastResultListingsTests : ParallelSeededAcceptanceTe
         }
 
         public async Task Then_the_response_listings_should_be_an_empty_list() =>
-            await Assert.That(SuccessResponse?.Data?.Listings).IsNotNull().And.IsEmpty();
+            await Assert.That(SuccessResponse?.Data?.Listings).IsEmpty();
 
         public async Task Then_the_response_metadata_should_match(string contestStage = "", int contestYear = 0)
         {

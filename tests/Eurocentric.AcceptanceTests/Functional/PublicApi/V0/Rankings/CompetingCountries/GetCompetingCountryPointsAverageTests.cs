@@ -276,7 +276,7 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
         }
 
         public async Task Then_the_response_rankings_should_be_an_empty_list() =>
-            await Assert.That(SuccessResponse?.Data?.Rankings).IsNotNull().And.IsEmpty();
+            await Assert.That(SuccessResponse?.Data?.Rankings).IsEmpty();
 
         public async Task Then_the_response_metadata_should_match(
             int totalPages = 0,
