@@ -38,11 +38,11 @@ internal static class GetQueryableBroadcasts
         {
             routeBuilder
                 .MapGet("queryables/broadcasts", ExecuteAsync)
-                .WithName("PublicApi.V0.GetQueryableBroadcasts")
+                .WithName(V0EndpointNames.Queryables.GetQueryableBroadcasts)
                 .AddedInVersion0Point1()
                 .WithSummary("Get all queryable broadcasts")
                 .WithDescription("Retrieves all the queryable broadcasts, ordered by broadcast date.")
-                .WithTags(EndpointConstants.Tags.Queryables)
+                .WithTags(V0Tags.Queryables)
                 .Produces<GetQueryableBroadcastsResponse>();
         }
     }

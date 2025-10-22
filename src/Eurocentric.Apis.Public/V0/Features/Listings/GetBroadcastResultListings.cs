@@ -54,11 +54,11 @@ internal static class GetBroadcastResultListings
         {
             routeBuilder
                 .MapGet("listings/broadcast-result", ExecuteAsync)
-                .WithName("PublicApi.V0.GetBroadcastResultListings")
+                .WithName(V0EndpointNames.Listings.GetBroadcastResultListings)
                 .AddedInVersion0Point2()
                 .WithSummary("Get broadcast result listings")
                 .WithDescription("Retrieves the results from the specified broadcast, ordered by finishing position.")
-                .WithTags(EndpointConstants.Tags.Listings)
+                .WithTags(V0Tags.Listings)
                 .Produces<GetBroadcastResultListingsResponse>()
                 .ProducesProblem(StatusCodes.Status400BadRequest);
         }

@@ -38,11 +38,11 @@ internal static class GetQueryableCountries
         {
             routeBuilder
                 .MapGet("queryables/countries", ExecuteAsync)
-                .WithName("PublicApi.V0.GetQueryableCountries")
+                .WithName(V0EndpointNames.Queryables.GetQueryableCountries)
                 .AddedInVersion0Point1()
                 .WithSummary("Get all queryable countries")
                 .WithDescription("Retrieves all the queryable countries, ordered by country code.")
-                .WithTags(EndpointConstants.Tags.Queryables)
+                .WithTags(V0Tags.Queryables)
                 .Produces<GetQueryableCountriesResponse>();
         }
     }

@@ -58,7 +58,7 @@ internal static class GetCompetingCountryPointsAverageRankings
         {
             routeBuilder
                 .MapGet("competing-country-rankings/points-average", ExecuteAsync)
-                .WithName("PublicApi.V0.GetCompetingCountryPointsAverageRankings")
+                .WithName(V0EndpointNames.CompetingCountryRankings.GetCompetingCountryPointsAverageRankings)
                 .AddedInVersion0Point2()
                 .WithSummary("Get competing country points average rankings")
                 .WithDescription(
@@ -77,7 +77,7 @@ internal static class GetCompetingCountryPointsAverageRankings
                     - Applying pagination.
                     """
                 )
-                .WithTags(EndpointConstants.Tags.CompetingCountryRankings)
+                .WithTags(V0Tags.CompetingCountryRankings)
                 .Produces<GetCompetingCountryPointsAverageRankingsResponse>()
                 .ProducesProblem(StatusCodes.Status400BadRequest)
                 .ProducesProblem(StatusCodes.Status422UnprocessableEntity);

@@ -38,11 +38,11 @@ internal static class GetQueryableContests
         {
             routeBuilder
                 .MapGet("queryables/contests", ExecuteAsync)
-                .WithName("PublicApi.V0.GetQueryableContests")
+                .WithName(V0EndpointNames.Queryables.GetQueryableContests)
                 .AddedInVersion0Point2()
                 .WithSummary("Get all queryable contests")
                 .WithDescription("Retrieves all the queryable contests, ordered by contest year.")
-                .WithTags(EndpointConstants.Tags.Queryables)
+                .WithTags(V0Tags.Queryables)
                 .Produces<GetQueryableContestsResponse>();
         }
     }
