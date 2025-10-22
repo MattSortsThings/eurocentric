@@ -19,7 +19,8 @@ public sealed class V0Point1DocumentRegistrar : IOpenApiDocumentRegistrar
             .AddDocumentTransformer<ApiKeySecurityTransformer>()
             .AddDocumentTransformer<InfoTransformer>()
             .AddDocumentTransformer<ServerAndPathsTransformer>()
-            .AddOperationTransformer<ProblemDetailsResponseExampleTransformer>();
+            .AddOperationTransformer<ProblemDetailsResponseExampleTransformer>()
+            .AddSchemaTransformer<SchemaExampleTransformer>();
     }
 
     private sealed class InfoTransformer : InfoTransformerBase
