@@ -17,6 +17,6 @@ internal static class EndpointRouteBuilderExtensions
             .RequiresAuthenticatedClient()
             .RequiresAdministratorRole();
 
-        v0Group.Map<GetCountries.EndpointMapper>();
+        v0Group.Map<GetCountries.EndpointMapper>().Map<GetCountry.EndpointMapper>();
     }
 }

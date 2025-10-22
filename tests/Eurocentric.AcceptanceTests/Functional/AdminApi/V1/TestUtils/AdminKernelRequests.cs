@@ -12,6 +12,12 @@ public sealed partial class AdminKernel
         public RestRequest GetCountries() =>
             GetRequest("/admin/api/{apiVersion}/countries").UseSecretApiKey().AddUrlSegment("apiVersion", apiVersion);
 
+        public RestRequest GetCountry(Guid countryId) =>
+            GetRequest("/admin/api/{apiVersion}/countries/{countryId}")
+                .UseSecretApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddUrlSegment("countryId", countryId);
+
         public IRestRequestFactory.ICountriesEndpoints Countries => this;
 
         private static RestRequest GetRequest(string route) => new(route);
