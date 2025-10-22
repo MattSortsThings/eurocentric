@@ -13,7 +13,7 @@ internal static class V0EndpointGroup
     {
         RouteGroupBuilder v0Group = routeBuilder
             .MapGroup("v{version:apiVersion}")
-            .WithGroupName(EndpointConstants.GroupName)
+            .WithGroupName(V0Group.Name)
             .RequiresAuthenticatedClient()
             .RequiresAdministratorRole();
 

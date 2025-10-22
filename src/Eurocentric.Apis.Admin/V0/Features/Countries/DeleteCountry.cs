@@ -28,11 +28,11 @@ internal static class DeleteCountry
         {
             routeBuilder
                 .MapDelete("countries/{countryId:guid}", ExecuteAsync)
-                .WithName("AdminApi.V0.DeleteCountry")
+                .WithName(V0EndpointNames.Countries.DeleteCountry)
                 .AddedInVersion0Point1()
                 .WithSummary("Delete a country")
                 .WithDescription("Deletes a single country from the system, specified by its ID.")
-                .WithTags(EndpointConstants.Tags.Countries)
+                .WithTags(V0Tags.Countries)
                 .Produces(StatusCodes.Status204NoContent)
                 .ProducesProblem(StatusCodes.Status404NotFound)
                 .ProducesProblem(StatusCodes.Status409Conflict);

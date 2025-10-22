@@ -39,11 +39,11 @@ internal static class GetCountry
         {
             routeBuilder
                 .MapGet("countries/{countryId:guid}", ExecuteAsync)
-                .WithName("AdminApi.V0.GetCountry")
+                .WithName(V0EndpointNames.Countries.GetCountry)
                 .AddedInVersion0Point1()
                 .WithSummary("Get a country")
                 .WithDescription("Retrieves a single country in the system, specified by its ID.")
-                .WithTags(EndpointConstants.Tags.Countries)
+                .WithTags(V0Tags.Countries)
                 .Produces<GetCountryResponse>()
                 .ProducesProblem(StatusCodes.Status404NotFound);
         }

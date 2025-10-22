@@ -38,11 +38,11 @@ internal static class GetCountries
         {
             routeBuilder
                 .MapGet("countries", ExecuteAsync)
-                .WithName("AdminApi.V0.GetCountries")
+                .WithName(V0EndpointNames.Countries.GetCountries)
                 .AddedInVersion0Point1()
                 .WithSummary("Get all countries")
                 .WithDescription("Retrieves all the countries in the system, ordered by country code.")
-                .WithTags(EndpointConstants.Tags.Countries)
+                .WithTags(V0Tags.Countries)
                 .Produces<GetCountriesResponse>();
         }
     }

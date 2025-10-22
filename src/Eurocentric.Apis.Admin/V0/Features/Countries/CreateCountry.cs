@@ -45,7 +45,7 @@ internal static class CreateCountry
 
         return TypedResults.CreatedAtRoute(
             new CreateCountryResponse(countryDto),
-            "AdminApi.V0.GetCountry",
+            V0EndpointNames.Countries.GetCountry,
             new RouteValueDictionary { { nameof(countryId), countryId } }
         );
     }
@@ -56,11 +56,11 @@ internal static class CreateCountry
         {
             routeBuilder
                 .MapPost("countries", ExecuteAsync)
-                .WithName("AdminApi.V0.CreateCountry")
+                .WithName(V0EndpointNames.Countries.CreateCountry)
                 .AddedInVersion0Point1()
                 .WithSummary("Create a country")
                 .WithDescription("Creates a new country in the system.")
-                .WithTags(EndpointConstants.Tags.Countries)
+                .WithTags(V0Tags.Countries)
                 .Produces<CreateCountryResponse>(StatusCodes.Status201Created)
                 .ProducesProblem(StatusCodes.Status400BadRequest)
                 .ProducesProblem(StatusCodes.Status409Conflict)

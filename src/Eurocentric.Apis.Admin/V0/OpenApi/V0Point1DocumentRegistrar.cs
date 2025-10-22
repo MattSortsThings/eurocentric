@@ -12,7 +12,7 @@ public sealed class V0Point1DocumentRegistrar : IOpenApiDocumentRegistrar
     public void Configure(OpenApiOptions options)
     {
         options.ShouldInclude = static apiDescription =>
-            apiDescription.GroupName == EndpointConstants.GroupName
+            apiDescription.GroupName == V0Group.Name
             && apiDescription.GetApiVersion() is { MajorVersion: 0, MinorVersion: 1 };
 
         options
