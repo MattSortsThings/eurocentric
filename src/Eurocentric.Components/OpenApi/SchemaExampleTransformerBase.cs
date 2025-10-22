@@ -9,7 +9,7 @@ using Microsoft.OpenApi;
 namespace Eurocentric.Components.OpenApi;
 
 /// <summary>
-///     Adds an example for any schema type that implements <see cref="ISchemaExampleProvider" />.
+///     Adds an example for any schema type that implements <see cref="ISchemaExampleProvider{T}" />.
 /// </summary>
 /// <param name="jsonOptions">Contains JSON serialization options.</param>
 public abstract class SchemaExampleTransformerBase(IOptions<JsonOptions> jsonOptions) : IOpenApiSchemaTransformer
@@ -22,7 +22,7 @@ public abstract class SchemaExampleTransformerBase(IOptions<JsonOptions> jsonOpt
     {
         if (schema.Example is null && TryGetExample(context.JsonTypeInfo.Type, out object? example))
         {
-            schema.Example = JsonSerializer.SerializeToNode(example, _jsonSerializerOptions)?.AsObject();
+            schema.Example = JsonSerializer.SerializeToNode(example, _jsonSerializerOptions);
         }
 
         return Task.CompletedTask;
