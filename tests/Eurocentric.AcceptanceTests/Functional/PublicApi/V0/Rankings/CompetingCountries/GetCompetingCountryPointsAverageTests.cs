@@ -61,8 +61,9 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
             maxYear: 2022,
             contestStage: "Any",
             votingMethod: "Jury",
+            pageIndex: 1,
             pageSize: 2,
-            pageIndex: 1
+            descending: true
         );
 
         // When
@@ -72,10 +73,10 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
         await euroFan.Then_my_request_should_SUCCEED_with_status_code(200);
         await euroFan.Then_the_response_rankings_should_match(
             """
-            | Rank | CountryCode | CountryName    | PointsAverage | TotalPoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|----------------|---------------|-------------|--------------|------------|----------|-----------------|
-            | 3    | GB          | United Kingdom | 5.974359      | 466         | 78           | 1          | 1        | 39              |
-            | 4    | ES          | Spain          | 5.884615      | 459         | 78           | 1          | 1        | 39              |
+            | Rank | CountryCode | CountryName | PointsAverage | TotalPoints | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|-------------|--------------|------------|----------|-----------------|
+            | 38   | AT          | Austria     | 0.333333      | 6           | 18           | 1          | 1        | 18              |
+            | 37   | SI          | Slovenia    | 0.388889      | 7           | 18           | 1          | 1        | 18              |
             """
         );
         await euroFan.Then_the_response_metadata_should_match(
@@ -85,9 +86,56 @@ public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAccept
             votingMethod: "Jury",
             pageIndex: 1,
             pageSize: 2,
-            descending: false,
+            descending: true,
             totalItems: 40,
             totalPages: 20
+        );
+    }
+
+    [Test]
+    [ApiVersion0Point2AndUp]
+    public async Task Should_retrieve_competing_country_points_average_rankings_page_scenario_3(string apiVersion)
+    {
+        EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        euroFan.Given_I_want_to_retrieve_a_page_of_competing_country_points_average_rankings(
+            minYear: 2016,
+            maxYear: 2050,
+            contestStage: "Any",
+            votingMethod: "Televote",
+            votingCountryCode: "GB",
+            pageSize: 6
+        );
+
+        // When
+        await euroFan.When_I_send_my_request();
+
+        // Then
+        await euroFan.Then_my_request_should_SUCCEED_with_status_code(200);
+        await euroFan.Then_the_response_rankings_should_match(
+            """
+            | Rank | CountryCode | CountryName | PointsAverage | TotalPoints | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|-------------|--------------|------------|----------|-----------------|
+            | 1    | IE          | Ireland     | 12            | 12          | 1            | 1          | 1        | 1               |
+            | 2    | LT          | Lithuania   | 9.666667      | 29          | 3            | 3          | 2        | 1               |
+            | 3    | PL          | Poland      | 9.5           | 38          | 4            | 4          | 2        | 1               |
+            | 4    | UA          | Ukraine     | 8             | 16          | 2            | 2          | 2        | 1               |
+            | 5    | NO          | Norway      | 6.5           | 13          | 2            | 2          | 2        | 1               |
+            | 6    | FI          | Finland     | 5.333333      | 16          | 3            | 3          | 2        | 1               |
+            """
+        );
+        await euroFan.Then_the_response_metadata_should_match(
+            minYear: 2016,
+            maxYear: 2050,
+            contestStage: "Any",
+            votingCountryCode: "GB",
+            votingMethod: "Televote",
+            pageIndex: 0,
+            pageSize: 6,
+            descending: false,
+            totalItems: 37,
+            totalPages: 7
         );
     }
 

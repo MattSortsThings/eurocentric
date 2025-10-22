@@ -20,7 +20,7 @@ BEGIN
 
     DECLARE @resolved_min_year INT = COALESCE(@min_year, -999999);
     DECLARE @resolved_max_year INT = COALESCE(@max_year, 999999);
-    DECLARE @resolved_voting_method NVARCHAR(1) = COALESCE(@voting_method, N'Any');
+    DECLARE @resolved_voting_method NVARCHAR(10) = COALESCE(@voting_method, N'Any');
 
     WITH
 
