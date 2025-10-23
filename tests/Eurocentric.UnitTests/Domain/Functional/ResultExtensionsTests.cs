@@ -12,7 +12,7 @@ public sealed class ResultExtensionsTests : UnitTest
     {
         Title = "Fixed error",
         Detail = "Fixed error for unit tests",
-        Metadata = null,
+        Extensions = null,
     };
 
     private static UnitResult<IDomainError> PredicateThatAlwaysPasses(TestItem value) =>

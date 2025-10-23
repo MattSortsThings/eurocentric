@@ -9,7 +9,7 @@ public static class CountryErrors
         {
             Title = "Country not found",
             Detail = "The requested country does not exist.",
-            Metadata = new Dictionary<string, object?> { { nameof(countryId), countryId } },
+            Extensions = new Dictionary<string, object?> { { nameof(countryId), countryId } },
         };
 
     public static ConflictError CountryDeletionNotAllowed(Guid countryId)
@@ -18,7 +18,7 @@ public static class CountryErrors
         {
             Title = "Country deletion not allowed",
             Detail = "The requested country has a role in one or more contests.",
-            Metadata = new Dictionary<string, object?> { { nameof(countryId), countryId } },
+            Extensions = new Dictionary<string, object?> { { nameof(countryId), countryId } },
         };
     }
 
@@ -28,7 +28,7 @@ public static class CountryErrors
         {
             Title = "Country code conflict",
             Detail = "A country already exists with the provided country code.",
-            Metadata = new Dictionary<string, object?> { { nameof(countryCode), countryCode } },
+            Extensions = new Dictionary<string, object?> { { nameof(countryCode), countryCode } },
         };
     }
 
@@ -38,7 +38,7 @@ public static class CountryErrors
         {
             Title = "Illegal country code value",
             Detail = "Country code value must be a string of 2 upper-case letters.",
-            Metadata = new Dictionary<string, object?> { { nameof(countryCode), countryCode } },
+            Extensions = new Dictionary<string, object?> { { nameof(countryCode), countryCode } },
         };
     }
 
@@ -48,7 +48,7 @@ public static class CountryErrors
         {
             Title = "Illegal country name value",
             Detail = "Country name value must be a non-empty, non-whitespace string of no more than 200 characters.",
-            Metadata = new Dictionary<string, object?> { { nameof(countryName), countryName } },
+            Extensions = new Dictionary<string, object?> { { nameof(countryName), countryName } },
         };
     }
 }

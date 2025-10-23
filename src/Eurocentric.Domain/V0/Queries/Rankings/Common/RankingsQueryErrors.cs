@@ -10,7 +10,7 @@ public static class RankingsQueryErrors
         {
             Title = "Illegal page index value",
             Detail = "Page index value must be a non-negative integer.",
-            Metadata = new Dictionary<string, object?> { { nameof(pageIndex), pageIndex } },
+            Extensions = new Dictionary<string, object?> { { nameof(pageIndex), pageIndex } },
         };
     }
 
@@ -20,7 +20,7 @@ public static class RankingsQueryErrors
         {
             Title = "Illegal page size value",
             Detail = "Page size value must be an integer between 1 and 100.",
-            Metadata = new Dictionary<string, object?> { { nameof(pageSize), pageSize } },
+            Extensions = new Dictionary<string, object?> { { nameof(pageSize), pageSize } },
         };
     }
 
@@ -30,7 +30,7 @@ public static class RankingsQueryErrors
         {
             Title = "Illegal voting country code value",
             Detail = "Voting country code value must be a string of 2 upper-case letters.",
-            Metadata = new Dictionary<string, object?> { { nameof(votingCountryCode), votingCountryCode } },
+            Extensions = new Dictionary<string, object?> { { nameof(votingCountryCode), votingCountryCode } },
         };
     }
 
@@ -40,7 +40,7 @@ public static class RankingsQueryErrors
         {
             Title = "Illegal contest year range",
             Detail = "Maximum contest year must be greater than or equal to minimum contest year.",
-            Metadata = new Dictionary<string, object?> { { nameof(minYear), minYear }, { nameof(maxYear), maxYear } },
+            Extensions = new Dictionary<string, object?> { { nameof(minYear), minYear }, { nameof(maxYear), maxYear } },
         };
     }
 }

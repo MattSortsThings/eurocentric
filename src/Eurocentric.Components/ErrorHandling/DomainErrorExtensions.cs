@@ -25,7 +25,7 @@ internal static class DomainErrorExtensions
             Title = error.Title,
             Detail = error.Detail,
             Type = "https://tools.ietf.org/html/rfc9110#section-15.5.5",
-            Extensions = error.Metadata?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [],
+            Extensions = error.Extensions?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [],
         };
     }
 
@@ -37,7 +37,7 @@ internal static class DomainErrorExtensions
             Title = error.Title,
             Detail = error.Detail,
             Type = "https://tools.ietf.org/html/rfc9110#section-15.5.10",
-            Extensions = error.Metadata?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [],
+            Extensions = error.Extensions?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [],
         };
     }
 
@@ -49,7 +49,7 @@ internal static class DomainErrorExtensions
             Title = error.Title,
             Detail = error.Detail,
             Type = "https://tools.ietf.org/html/rfc9110#section-15.5.21",
-            Extensions = error.Metadata?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [],
+            Extensions = error.Extensions?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [],
         };
     }
 }

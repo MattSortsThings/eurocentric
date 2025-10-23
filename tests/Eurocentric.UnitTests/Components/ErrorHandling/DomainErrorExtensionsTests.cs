@@ -17,7 +17,7 @@ public sealed class DomainErrorExtensionsTests : UnitTest
         {
             Title = "Conflict",
             Detail = "The request conflicted with the system state.",
-            Metadata = null,
+            Extensions = null,
         };
 
         // Act
@@ -44,7 +44,7 @@ public sealed class DomainErrorExtensionsTests : UnitTest
         {
             Title = "Not Found",
             Detail = "The requested resource was not found.",
-            Metadata = new Dictionary<string, object?> { { nameof(resourceId), resourceId } },
+            Extensions = new Dictionary<string, object?> { { nameof(resourceId), resourceId } },
         };
 
         // Act
@@ -73,7 +73,7 @@ public sealed class DomainErrorExtensionsTests : UnitTest
         {
             Title = "Unprocessable",
             Detail = "The request was unprocessable.",
-            Metadata = new Dictionary<string, object?>
+            Extensions = new Dictionary<string, object?>
             {
                 { nameof(valueA), valueA },
                 { nameof(valueB), valueB },
@@ -119,6 +119,6 @@ public sealed class DomainErrorExtensionsTests : UnitTest
 
         public string Detail => string.Empty;
 
-        public IReadOnlyDictionary<string, object?>? Metadata => null;
+        public IReadOnlyDictionary<string, object?>? Extensions => null;
     }
 }

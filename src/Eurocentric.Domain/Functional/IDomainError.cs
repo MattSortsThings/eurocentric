@@ -16,7 +16,7 @@ public interface IDomainError
     string Detail { get; }
 
     /// <summary>
-    ///     Gets the error's optional metadata.
+    ///     Gets the error's optional extensions.
     /// </summary>
-    IReadOnlyDictionary<string, object?>? Metadata { get; }
+    IReadOnlyDictionary<string, object?>? Extensions { get; }
 }
