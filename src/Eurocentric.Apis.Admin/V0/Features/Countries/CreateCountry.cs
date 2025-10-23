@@ -5,7 +5,7 @@ using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 using Eurocentric.Apis.Admin.V0.Enums;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using Eurocentric.Domain.V0.Aggregates.Countries;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;

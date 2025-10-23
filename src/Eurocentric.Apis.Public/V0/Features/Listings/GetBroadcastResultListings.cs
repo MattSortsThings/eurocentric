@@ -4,7 +4,7 @@ using Eurocentric.Apis.Public.V0.Dtos.Listings;
 using Eurocentric.Apis.Public.V0.Enums;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using Eurocentric.Domain.V0.Queries.Listings;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;

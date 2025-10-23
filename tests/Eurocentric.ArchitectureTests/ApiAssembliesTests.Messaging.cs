@@ -1,5 +1,5 @@
 using Eurocentric.ArchitectureTests.TestUtils;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 
 namespace Eurocentric.ArchitectureTests;
 

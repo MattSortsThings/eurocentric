@@ -1,8 +1,8 @@
 using CSharpFunctionalExtensions;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using Eurocentric.UnitTests.TestUtils;
 
-namespace Eurocentric.UnitTests.Domain.Functional;
+namespace Eurocentric.UnitTests.Domain.Core;
 
 public sealed class ResultExtensionsTests : UnitTest
 {

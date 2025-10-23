@@ -3,7 +3,7 @@ using Eurocentric.Apis.Public.V0.Config;
 using Eurocentric.Apis.Public.V0.Dtos.Queryables;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using Eurocentric.Domain.V0.Queries.Queryables;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;

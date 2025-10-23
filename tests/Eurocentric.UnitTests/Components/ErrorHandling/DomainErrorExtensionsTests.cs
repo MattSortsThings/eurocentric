@@ -1,5 +1,5 @@
 using Eurocentric.Components.ErrorHandling;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using Eurocentric.UnitTests.TestUtils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

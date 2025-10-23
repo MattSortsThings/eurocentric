@@ -1,4 +1,4 @@
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

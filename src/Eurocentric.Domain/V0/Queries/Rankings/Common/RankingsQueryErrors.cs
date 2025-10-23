@@ -1,4 +1,4 @@
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 
 namespace Eurocentric.Domain.V0.Queries.Rankings.Common;
 

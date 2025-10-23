@@ -1,4 +1,4 @@
-namespace Eurocentric.Domain.Functional;
+namespace Eurocentric.Domain.Core;
 
 /// <summary>
 ///     An error that occurs in the domain.

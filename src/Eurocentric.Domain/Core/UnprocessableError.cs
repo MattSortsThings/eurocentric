@@ -1,4 +1,4 @@
-namespace Eurocentric.Domain.Functional;
+namespace Eurocentric.Domain.Core;
 
 /// <summary>
 ///     An error that occurs when the request cannot be processed, irrespective of the current state of the requested

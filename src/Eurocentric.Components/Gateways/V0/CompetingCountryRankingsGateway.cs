@@ -1,7 +1,7 @@
 using CSharpFunctionalExtensions;
 using Eurocentric.Components.DataAccess.Common;
 using Eurocentric.Components.DataAccess.Dapper;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using Eurocentric.Domain.V0.Queries.Rankings.Common;
 using Eurocentric.Domain.V0.Queries.Rankings.CompetingCountries;
 

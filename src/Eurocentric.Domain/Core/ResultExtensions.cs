@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
 
-namespace Eurocentric.Domain.Functional;
+namespace Eurocentric.Domain.Core;
 
 public static class ResultExtensions
 {

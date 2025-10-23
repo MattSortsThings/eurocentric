@@ -1,5 +1,5 @@
 using Eurocentric.Components.EndpointMapping;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using SlimMessageBus;
 
 namespace Eurocentric.ArchitectureTests;

@@ -3,7 +3,7 @@ using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
 using Eurocentric.Components.DataAccess.EfCore;
-using Eurocentric.Domain.Functional;
+using Eurocentric.Domain.Core;
 using Eurocentric.Domain.V0.Aggregates.Countries;
 using Microsoft.EntityFrameworkCore;
 

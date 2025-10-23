@@ -1,7 +1,7 @@
 using CSharpFunctionalExtensions;
 using SlimMessageBus;
 
-namespace Eurocentric.Domain.Functional;
+namespace Eurocentric.Domain.Core;
 
 /// <summary>
 ///     A handler for a command that <i>either</i> succeeds and returns no value <i>or</i> fails and returns an error.
