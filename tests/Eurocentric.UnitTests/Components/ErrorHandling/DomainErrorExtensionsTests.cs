@@ -1,7 +1,6 @@
 using Eurocentric.Components.ErrorHandling;
 using Eurocentric.Domain.Functional;
 using Eurocentric.UnitTests.TestUtils;
-using Eurocentric.UnitTests.TestUtils.Assertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +29,7 @@ public sealed class DomainErrorExtensionsTests : UnitTest
             .And.HasDetail(sut.Detail)
             .And.HasStatus(StatusCodes.Status409Conflict)
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.10")
-            .And.HasEmptyExtensions()
+            .And.HasExtensionsCount(0)
             .And.HasNullInstance();
     }
 
@@ -57,6 +56,7 @@ public sealed class DomainErrorExtensionsTests : UnitTest
             .And.HasDetail(sut.Detail)
             .And.HasStatus(StatusCodes.Status404NotFound)
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.5")
+            .And.HasExtensionsCount(1)
             .And.HasExtension("resourceId", resourceId)
             .And.HasNullInstance();
     }
@@ -91,6 +91,7 @@ public sealed class DomainErrorExtensionsTests : UnitTest
             .And.HasDetail(sut.Detail)
             .And.HasStatus(StatusCodes.Status422UnprocessableEntity)
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.21")
+            .And.HasExtensionsCount(3)
             .And.HasExtension("valueA", valueA)
             .And.HasExtension("valueB", valueB)
             .And.HasExtension("valueC", valueC)
