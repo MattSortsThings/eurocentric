@@ -1,4 +1,4 @@
-namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils.Attributes;
+namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public sealed class ApiVersion1Point0AndUpAttribute : DataSourceGeneratorAttribute<string>
 {

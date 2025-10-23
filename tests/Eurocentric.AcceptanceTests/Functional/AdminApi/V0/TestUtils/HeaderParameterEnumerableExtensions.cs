@@ -1,6 +1,6 @@
 using RestSharp;
 
-namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Extensions;
+namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils;
 
 public static class HeaderParameterEnumerableExtensions
 {

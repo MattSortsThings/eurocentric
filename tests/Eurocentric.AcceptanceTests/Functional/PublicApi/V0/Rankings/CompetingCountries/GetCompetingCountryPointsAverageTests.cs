@@ -1,5 +1,4 @@
 using Eurocentric.AcceptanceTests.Functional.PublicApi.V0.TestUtils;
-using Eurocentric.AcceptanceTests.Functional.PublicApi.V0.TestUtils.Attributes;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Public.V0.Dtos.Rankings.CompetingCountries;
 using Eurocentric.Apis.Public.V0.Enums;

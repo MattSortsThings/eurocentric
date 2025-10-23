@@ -1,5 +1,4 @@
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
-using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils.Attributes;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Apis.Admin.V1.Features.Countries;

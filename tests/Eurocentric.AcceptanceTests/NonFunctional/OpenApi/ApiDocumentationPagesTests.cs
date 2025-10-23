@@ -1,6 +1,5 @@
 using System.Net;
 using Eurocentric.AcceptanceTests.TestUtils;
-using Eurocentric.AcceptanceTests.TestUtils.Assertions;
 using RestSharp;
 
 namespace Eurocentric.AcceptanceTests.NonFunctional.OpenApi;

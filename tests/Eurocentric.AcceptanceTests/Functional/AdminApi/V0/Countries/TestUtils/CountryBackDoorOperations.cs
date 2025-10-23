@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.Countries.TestUtils;
 
-public static class Operations
+public static class CountryBackDoorOperations
 {
     public static Func<IServiceProvider, Task> AddFakeContestRoleToCountry(Guid countryId)
     {

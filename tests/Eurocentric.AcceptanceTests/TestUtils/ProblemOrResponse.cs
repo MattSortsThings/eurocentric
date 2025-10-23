@@ -16,12 +16,38 @@ public sealed class ProblemOrResponse : OneOfBase<RestResponse<ProblemDetails>, 
     /// <summary>
     ///     Gets the underlying unsuccessful REST response.
     /// </summary>
-    public RestResponse<ProblemDetails> AsProblem => AsT0;
+    public RestResponse<ProblemDetails> AsProblem
+    {
+        get
+        {
+            try
+            {
+                return AsT0;
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException("value was Response");
+            }
+        }
+    }
 
     /// <summary>
     ///     Gets the underlying successful REST response.
     /// </summary>
-    public RestResponse AsResponse => AsT1;
+    public RestResponse AsResponse
+    {
+        get
+        {
+            try
+            {
+                return AsT1;
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException("value was Problem");
+            }
+        }
+    }
 
     /// <summary>
     ///     Creates and returns a new <see cref="ProblemOrResponse" /> instance wrapping the provided unsuccessful REST

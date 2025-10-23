@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using Eurocentric.AcceptanceTests.TestUtils;
-using Eurocentric.AcceptanceTests.TestUtils.Assertions;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 

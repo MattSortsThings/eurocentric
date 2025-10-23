@@ -4,9 +4,9 @@ using Eurocentric.Apis.Admin.V0.Enums;
 using Eurocentric.Apis.Admin.V0.Features.Countries;
 using RestSharp;
 
-namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Extensions;
+namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils;
 
-public static class AdminKernelExtensions
+public static class CountryShortcuts
 {
     public static async Task<Country> CreateACountryAsync(
         this AdminKernel kernel,

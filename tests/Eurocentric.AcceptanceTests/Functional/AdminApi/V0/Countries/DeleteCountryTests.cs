@@ -1,9 +1,6 @@
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.Countries.TestUtils;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils;
-using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Attributes;
-using Eurocentric.AcceptanceTests.Functional.AdminApi.V0.TestUtils.Extensions;
 using Eurocentric.AcceptanceTests.TestUtils;
-using Eurocentric.AcceptanceTests.TestUtils.Assertions;
 using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V0.Countries;
@@ -103,7 +100,9 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
         {
             Guid existingCountryId = await Assert.That(ExistingCountryId).IsNotNull();
 
-            await Kernel.BackDoor.ExecuteScopedAsync(Operations.AddFakeContestRoleToCountry(existingCountryId));
+            await Kernel.BackDoor.ExecuteScopedAsync(
+                CountryBackDoorOperations.AddFakeContestRoleToCountry(existingCountryId)
+            );
         }
 
         public async Task Given_I_have_deleted_my_country()
