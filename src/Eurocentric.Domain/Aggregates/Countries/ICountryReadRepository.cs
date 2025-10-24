@@ -1,3 +1,7 @@
+using CSharpFunctionalExtensions;
+using Eurocentric.Domain.Core;
+using Eurocentric.Domain.ValueObjects;
+
 namespace Eurocentric.Domain.Aggregates.Countries;
 
 /// <summary>
@@ -10,12 +14,28 @@ public interface ICountryReadRepository
     ///     <see cref="Country.CountryCode" />.
     /// </summary>
     /// <param name="cancellationToken">
-    ///     A <see cref="CancellationToken" /> to observe while waiting for the asynchronous
-    ///     retrieval operation to complete.
+    ///     A <see cref="CancellationToken" /> to observe while waiting for the asynchronous retrieval operation to complete.
     /// </param>
     /// <returns>
     ///     A <see cref="Task" /> that represents the asynchronous retrieval operation. The task result is the array of
     ///     retrieved untracked <see cref="Country" /> objects.
     /// </returns>
     Task<Country[]> GetAllAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Asynchronously retrieves the <see cref="Country" /> aggregate in the system with the specified
+    ///     <see cref="Country.Id" /> value, in an untracked state, if a matching aggregate exists.
+    /// </summary>
+    /// <param name="countryId">The ID of the requested country.</param>
+    /// <param name="cancellationToken">
+    ///     A <see cref="CancellationToken" /> to observe while waiting for the asynchronous retrieval operation to complete.
+    /// </param>
+    /// <returns>
+    ///     A <see cref="Task" /> that represents the asynchronous retrieval operation. The task result is <i>either</i>
+    ///     the retrieved untracked <see cref="Country" /> <i>or</i> an error.
+    /// </returns>
+    Task<Result<Country, IDomainError>> GetByIdAsync(
+        CountryId countryId,
+        CancellationToken cancellationToken = default
+    );
 }

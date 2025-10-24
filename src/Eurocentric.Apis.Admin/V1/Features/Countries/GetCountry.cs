@@ -3,6 +3,7 @@ using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Aggregates.Countries;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -24,7 +25,9 @@ internal static class GetCountry
         [FromRoute(Name = "countryId")] Guid countryId,
         [FromServices] IRequestResponseBus bus,
         CancellationToken ct = default
-    ) => await bus.DispatchAsync(new Query(countryId), MapToOk, ct);
+    ) => await bus.DispatchAsync(countryId.ToQuery(), MapToOk, ct);
+
+    private static Query ToQuery(this Guid countryId) => new(CountryId.FromValue(countryId));
 
     private static Ok<GetCountryResponse> MapToOk(CountryAggregate aggregate)
     {
@@ -41,28 +44,20 @@ internal static class GetCountry
                 .MapGet("countries/{countryId:guid}", ExecuteAsync)
                 .WithName(V1EndpointNames.Countries.GetCountry)
                 .AddedInVersion1Point0()
-                .WithSummary("Get a countries")
-                .WithDescription("Retrieves the requested country in the system.")
+                .WithSummary("Get a country")
+                .WithDescription("Retrieves the requested country.")
                 .WithTags(V1Tags.Countries)
                 .Produces<GetCountryResponse>()
                 .ProducesProblem(StatusCodes.Status404NotFound);
         }
     }
 
-    internal sealed record Query(Guid CountryId) : IQuery<CountryAggregate>;
+    internal sealed record Query(CountryId CountryId) : IQuery<CountryAggregate>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, CountryAggregate>
+    internal sealed class QueryHandler(ICountryReadRepository readRepository) : IQueryHandler<Query, CountryAggregate>
     {
-        public async Task<Result<CountryAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct)
-        {
-            await Task.CompletedTask;
-
-            return new CountryAggregate(
-                CountryId.FromValue(query.CountryId),
-                CountryCode.FromValue("AT").GetValueOrDefault(),
-                CountryName.FromValue("Austria").GetValueOrDefault()
-            );
-        }
+        public async Task<Result<CountryAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct) =>
+            await readRepository.GetByIdAsync(query.CountryId, ct);
     }
 }

@@ -41,7 +41,7 @@ internal static class GetCountries
                 .WithName(V1EndpointNames.Countries.GetCountries)
                 .AddedInVersion1Point0()
                 .WithSummary("Get all countries")
-                .WithDescription("Retrieves all the countries in the system, ordered by country code.")
+                .WithDescription("Retrieves a list of all existing countries, ordered by country code.")
                 .WithTags(V1Tags.Countries)
                 .Produces<GetCountriesResponse>();
         }

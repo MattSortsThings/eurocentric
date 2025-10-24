@@ -1,6 +1,7 @@
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Components.DataAccess.EfCore;
 using Eurocentric.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using CountryAggregate = Eurocentric.Domain.Aggregates.Countries.Country;
 using CountryDto = Eurocentric.Apis.Admin.V1.Dtos.Countries.Country;
@@ -26,6 +27,23 @@ public static class Shortcuts
         await kernel.BackDoor.ExecuteScopedAsync(PersistAsync(aggregate));
 
         return dto;
+    }
+
+    public static async Task DeleteACountryAsync(this AdminKernel kernel, Guid countryId)
+    {
+        CountryId id = CountryId.FromValue(countryId);
+        await kernel.BackDoor.ExecuteScopedAsync(DeleteAsync(id));
+    }
+
+    private static Func<IServiceProvider, Task> DeleteAsync(CountryId countryId)
+    {
+        CountryId idToDelete = countryId;
+
+        return async sp =>
+        {
+            await using AppDbContext dbContext = sp.GetRequiredService<AppDbContext>();
+            await dbContext.Countries.Where(country => country.Id.Equals(idToDelete)).ExecuteDeleteAsync();
+        };
     }
 
     private static Func<IServiceProvider, Task> PersistAsync(CountryAggregate aggregate)
