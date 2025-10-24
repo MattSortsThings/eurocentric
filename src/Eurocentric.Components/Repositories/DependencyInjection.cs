@@ -1,4 +1,5 @@
 using Eurocentric.Components.Repositories.V0;
+using Eurocentric.Domain.Aggregates.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Components.Repositories;
@@ -15,6 +16,8 @@ public static class DependencyInjection
     /// <returns></returns>
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        services.AddScoped<ICountryReadRepository, CountryReadRepository>();
+
         services.AddV0Repositories();
 
         return services;

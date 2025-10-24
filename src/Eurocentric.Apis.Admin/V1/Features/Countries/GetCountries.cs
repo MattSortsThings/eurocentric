@@ -3,8 +3,8 @@ using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Aggregates.Countries;
 using Eurocentric.Domain.Core;
-using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -50,30 +50,9 @@ internal static class GetCountries
     internal sealed record Query : IQuery<CountryAggregate[]>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, CountryAggregate[]>
+    internal sealed class QueryHandler(ICountryReadRepository readRepository) : IQueryHandler<Query, CountryAggregate[]>
     {
-        public async Task<Result<CountryAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct)
-        {
-            await Task.CompletedTask;
-
-            return new[]
-            {
-                new CountryAggregate(
-                    CountryId.FromValue(Guid.NewGuid()),
-                    CountryCode.FromValue("AT").GetValueOrDefault(),
-                    CountryName.FromValue("Austria").GetValueOrDefault()
-                ),
-                new CountryAggregate(
-                    CountryId.FromValue(Guid.NewGuid()),
-                    CountryCode.FromValue("BE").GetValueOrDefault(),
-                    CountryName.FromValue("Belgium").GetValueOrDefault()
-                ),
-                new CountryAggregate(
-                    CountryId.FromValue(Guid.NewGuid()),
-                    CountryCode.FromValue("CZ").GetValueOrDefault(),
-                    CountryName.FromValue("Czechia").GetValueOrDefault()
-                ),
-            };
-        }
+        public async Task<Result<CountryAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct) =>
+            await readRepository.GetAllAsync(ct);
     }
 }

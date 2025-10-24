@@ -6,9 +6,9 @@ using CountryDto = Eurocentric.Apis.Admin.V1.Dtos.Countries.Country;
 
 namespace Eurocentric.Apis.Admin.V1.Dtos.Countries;
 
-internal static class MappingExtensions
+public static class MappingExtensions
 {
-    internal static CountryDto ToDto(this CountryAggregate aggregate)
+    public static CountryDto ToDto(this CountryAggregate aggregate)
     {
         return new CountryDto
         {
