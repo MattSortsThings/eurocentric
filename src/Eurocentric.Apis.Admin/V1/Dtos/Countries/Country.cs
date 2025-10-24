@@ -25,7 +25,7 @@ public sealed record Country : ISchemaExampleProvider<Country>
     /// <summary>
     ///     An array of all the country's contest roles.
     /// </summary>
-    public V0.Dtos.Countries.ContestRole[] ContestRoles { get; init; } = [];
+    public ContestRole[] ContestRoles { get; init; } = [];
 
     public static Country CreateExample() =>
         new()
@@ -33,6 +33,6 @@ public sealed record Country : ISchemaExampleProvider<Country>
             Id = Guid.Parse("a54ef079-5ef6-4867-8a48-38ab8068ed1c"),
             CountryCode = "AT",
             CountryName = "Austria",
-            ContestRoles = [V0.Dtos.Countries.ContestRole.CreateExample()],
+            ContestRoles = [ContestRole.CreateExample()],
         };
 }

@@ -4,6 +4,7 @@ using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Core;
+using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +12,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using CountryAggregate = Eurocentric.Domain.Aggregates.Countries.Country;
+using CountryDto = Eurocentric.Apis.Admin.V1.Dtos.Countries.Country;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Countries;
@@ -23,9 +26,9 @@ internal static class GetCountry
         CancellationToken ct = default
     ) => await bus.DispatchAsync(new Query(countryId), MapToOk, ct);
 
-    private static Ok<GetCountryResponse> MapToOk(Guid countryId)
+    private static Ok<GetCountryResponse> MapToOk(CountryAggregate aggregate)
     {
-        Country countryDto = Country.CreateExample() with { Id = countryId };
+        CountryDto countryDto = aggregate.ToDto();
 
         return TypedResults.Ok(new GetCountryResponse(countryDto));
     }
@@ -46,16 +49,20 @@ internal static class GetCountry
         }
     }
 
-    internal sealed record Query(Guid CountryId) : IQuery<Guid>;
+    internal sealed record Query(Guid CountryId) : IQuery<CountryAggregate>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, Guid>
+    internal sealed class QueryHandler : IQueryHandler<Query, CountryAggregate>
     {
-        public async Task<Result<Guid, IDomainError>> OnHandle(Query query, CancellationToken ct)
+        public async Task<Result<CountryAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct)
         {
             await Task.CompletedTask;
 
-            return query.CountryId;
+            return new CountryAggregate(
+                CountryId.FromValue(query.CountryId),
+                CountryCode.FromValue("AT").GetValueOrDefault(),
+                CountryName.FromValue("Austria").GetValueOrDefault()
+            );
         }
     }
 }

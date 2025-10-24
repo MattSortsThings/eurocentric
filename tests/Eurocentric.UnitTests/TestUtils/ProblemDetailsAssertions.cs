@@ -182,9 +182,13 @@ public static class ProblemDetailsAssertions
             {
                 result = AssertionResult.Failed("key was not present");
             }
+            else if (actualValue is null)
+            {
+                result = AssertionResult.Failed("value was null");
+            }
             else if (actualValue is not Guid actualGuidValue)
             {
-                result = AssertionResult.Failed($"value was {actualValue}");
+                result = AssertionResult.Failed($"value type was {actualValue.GetType()}");
             }
             else if (actualGuidValue != _expectedValue)
             {
@@ -233,9 +237,13 @@ public static class ProblemDetailsAssertions
             {
                 result = AssertionResult.Failed("key was not present");
             }
+            else if (actualValue is null)
+            {
+                result = AssertionResult.Failed("value was null");
+            }
             else if (actualValue is not int actualIntValue)
             {
-                result = AssertionResult.Failed($"value type was {actualValue}");
+                result = AssertionResult.Failed($"value type was {actualValue.GetType()}");
             }
             else if (actualIntValue != _expectedValue)
             {
@@ -284,9 +292,13 @@ public static class ProblemDetailsAssertions
             {
                 result = AssertionResult.Failed("key was not present");
             }
+            else if (actualValue is null)
+            {
+                result = AssertionResult.Failed("value was null");
+            }
             else if (actualValue is not string actualStringValue)
             {
-                result = AssertionResult.Failed($"value was {actualValue}");
+                result = AssertionResult.Failed($"value type was {actualValue.GetType()}");
             }
             else if (!string.Equals(actualStringValue, _expectedValue, StringComparison.Ordinal))
             {

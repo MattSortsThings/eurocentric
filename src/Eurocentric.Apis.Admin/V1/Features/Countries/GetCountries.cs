@@ -4,6 +4,7 @@ using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Core;
+using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +12,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using CountryAggregate = Eurocentric.Domain.Aggregates.Countries.Country;
+using CountryDto = Eurocentric.Apis.Admin.V1.Dtos.Countries.Country;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Countries;
@@ -22,17 +25,9 @@ internal static class GetCountries
         CancellationToken ct = default
     ) => await bus.DispatchAsync(new Query(), MapToOk, ct);
 
-    private static Ok<GetCountriesResponse> MapToOk(string[] countryCodes)
+    private static Ok<GetCountriesResponse> MapToOk(CountryAggregate[] aggregates)
     {
-        Country[] countryDtos = countryCodes
-            .Select(code => new Country
-            {
-                Id = Guid.NewGuid(),
-                CountryCode = code,
-                CountryName = "CountryName",
-                ContestRoles = [],
-            })
-            .ToArray();
+        CountryDto[] countryDtos = aggregates.Select(country => country.ToDto()).ToArray();
 
         return TypedResults.Ok(new GetCountriesResponse(countryDtos));
     }
@@ -52,16 +47,33 @@ internal static class GetCountries
         }
     }
 
-    internal sealed record Query : IQuery<string[]>;
+    internal sealed record Query : IQuery<CountryAggregate[]>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, string[]>
+    internal sealed class QueryHandler : IQueryHandler<Query, CountryAggregate[]>
     {
-        public async Task<Result<string[], IDomainError>> OnHandle(Query _, CancellationToken ct)
+        public async Task<Result<CountryAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct)
         {
             await Task.CompletedTask;
 
-            return new[] { "AT", "BE", "CZ", "DK", "EE", "FI" };
+            return new[]
+            {
+                new CountryAggregate(
+                    CountryId.FromValue(Guid.NewGuid()),
+                    CountryCode.FromValue("AT").GetValueOrDefault(),
+                    CountryName.FromValue("Austria").GetValueOrDefault()
+                ),
+                new CountryAggregate(
+                    CountryId.FromValue(Guid.NewGuid()),
+                    CountryCode.FromValue("BE").GetValueOrDefault(),
+                    CountryName.FromValue("Belgium").GetValueOrDefault()
+                ),
+                new CountryAggregate(
+                    CountryId.FromValue(Guid.NewGuid()),
+                    CountryCode.FromValue("CZ").GetValueOrDefault(),
+                    CountryName.FromValue("Czechia").GetValueOrDefault()
+                ),
+            };
         }
     }
 }

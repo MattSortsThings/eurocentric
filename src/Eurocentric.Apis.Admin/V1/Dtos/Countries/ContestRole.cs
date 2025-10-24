@@ -1,4 +1,4 @@
-using Eurocentric.Apis.Admin.V0.Enums;
+using Eurocentric.Apis.Admin.V1.Enums;
 using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Admin.V1.Dtos.Countries;
