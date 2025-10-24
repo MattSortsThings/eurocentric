@@ -5,6 +5,7 @@ using Eurocentric.Apis.Public.V0.Features.Rankings.CompetingCountries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Security;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Eurocentric.Apis.Public.V0;
@@ -17,7 +18,8 @@ internal static class EndpointRouteBuilderExtensions
             .MapGroup("v{version:apiVersion}")
             .WithGroupName(V0Group.Name)
             .RequiresAuthenticatedClient()
-            .RequiresUserRole();
+            .RequiresUserRole()
+            .ProducesProblem(StatusCodes.Status401Unauthorized);
 
         v0Group.Map<GetCompetingCountryPointsAverageRankings.EndpointMapper>();
 
