@@ -1,5 +1,6 @@
 using Eurocentric.Components.DataAccess.Common;
 using Microsoft.EntityFrameworkCore;
+using Contest = Eurocentric.Domain.Aggregates.Contests.Contest;
 using Country = Eurocentric.Domain.Aggregates.Countries.Country;
 using V0Broadcast = Eurocentric.Domain.V0.Aggregates.Broadcasts.Broadcast;
 using V0Contest = Eurocentric.Domain.V0.Aggregates.Contests.Contest;
@@ -14,6 +15,8 @@ public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
+
+    public DbSet<Contest> Contests => Set<Contest>();
 
     public DbSet<Country> Countries => Set<Country>();
 

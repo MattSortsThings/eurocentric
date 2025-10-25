@@ -4,6 +4,9 @@ internal static class Tables
 {
     internal static class Dbo
     {
+        internal const string Contest = "contest";
+        internal const string ContestChildBroadcast = "contest_child_broadcast";
+        internal const string ContestParticipant = "contest_participant";
         internal const string Country = "country";
         internal const string CountryContestRole = "country_contest_role";
         internal const string EfMigrationsHistory = "__ef_migrations_history";
