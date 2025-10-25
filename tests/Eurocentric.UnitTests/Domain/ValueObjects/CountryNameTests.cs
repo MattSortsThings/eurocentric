@@ -148,7 +148,7 @@ public sealed class CountryNameTests : UnitTest
     [Arguments("Austria")]
     [Arguments("France")]
     [Arguments("Rest of the World")]
-    public async Task FromValue_should_succeed_and_return_instance_with_provided_value(string value)
+    public async Task FromValue_should_return_CountryName_with_provided_Value(string value)
     {
         // Act
         Result<CountryName, IDomainError> result = CountryName.FromValue(value);

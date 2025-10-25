@@ -148,7 +148,7 @@ public sealed class CountryCodeTests : UnitTest
     [Arguments("AA")]
     [Arguments("GB")]
     [Arguments("XX")]
-    public async Task FromValue_should_succeed_and_return_instance_with_provided_value(string value)
+    public async Task FromValue_should_return_CountryCode_with_provided_Value(string value)
     {
         // Act
         Result<CountryCode, IDomainError> result = CountryCode.FromValue(value);
