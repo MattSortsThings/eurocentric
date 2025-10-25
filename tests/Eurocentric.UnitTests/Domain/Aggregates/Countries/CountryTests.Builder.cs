@@ -127,7 +127,7 @@ public sealed class CountryTests : UnitTest
 
         await Assert.That(result.GetValueOrDefault()).IsNull();
 
-        dummyIdFactory.DidNotReceive().Create();
+        await Assert.That(() => dummyIdFactory.DidNotReceive().Create()).ThrowsNothing();
 
         await Assert
             .That(result.Error)
@@ -154,7 +154,7 @@ public sealed class CountryTests : UnitTest
 
         await Assert.That(result.GetValueOrDefault()).IsNull();
 
-        dummyIdFactory.DidNotReceive().Create();
+        await Assert.That(() => dummyIdFactory.DidNotReceive().Create()).ThrowsNothing();
 
         await Assert
             .That(result.Error)
@@ -184,7 +184,7 @@ public sealed class CountryTests : UnitTest
 
         await Assert.That(result.GetValueOrDefault()).IsNull();
 
-        dummyIdFactory.DidNotReceive().Create();
+        await Assert.That(() => dummyIdFactory.DidNotReceive().Create()).ThrowsNothing();
 
         await Assert
             .That(result.Error)
@@ -214,7 +214,7 @@ public sealed class CountryTests : UnitTest
 
         await Assert.That(result.GetValueOrDefault()).IsNull();
 
-        dummyIdFactory.DidNotReceive().Create();
+        await Assert.That(() => dummyIdFactory.DidNotReceive().Create()).ThrowsNothing();
 
         await Assert
             .That(result.Error)
