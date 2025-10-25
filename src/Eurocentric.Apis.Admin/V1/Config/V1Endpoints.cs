@@ -4,6 +4,7 @@ internal static class V1Endpoints
 {
     internal static class Contests
     {
+        internal const string GetContest = "AdminApi.V1.GetContest";
         internal const string GetContests = "AdminApi.V1.GetContests";
     }
 

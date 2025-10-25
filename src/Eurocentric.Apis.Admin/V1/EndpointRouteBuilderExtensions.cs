@@ -21,7 +21,7 @@ internal static class EndpointRouteBuilderExtensions
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
-        v1Group.Map<GetContests.EndpointMapper>();
+        v1Group.Map<GetContest.EndpointMapper>().Map<GetContests.EndpointMapper>();
 
         v1Group.Map<CreateCountry.EndpointMapper>().Map<GetCountries.EndpointMapper>().Map<GetCountry.EndpointMapper>();
     }
