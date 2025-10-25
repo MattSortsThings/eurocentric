@@ -17,8 +17,8 @@ public interface ICountryReadRepository
     ///     A <see cref="CancellationToken" /> to observe while waiting for the asynchronous retrieval operation to complete.
     /// </param>
     /// <returns>
-    ///     A <see cref="Task" /> that represents the asynchronous retrieval operation. The task result is the array of
-    ///     retrieved untracked <see cref="Country" /> objects.
+    ///     A <see cref="Task" /> that represents the asynchronous retrieval operation. The task result is the retrieved array
+    ///     of untracked <see cref="Country" /> aggregates.
     /// </returns>
     Task<Country[]> GetAllAsync(CancellationToken cancellationToken = default);
 

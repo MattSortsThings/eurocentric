@@ -50,18 +50,9 @@ internal static class GetContests
     internal sealed record Query : IQuery<ContestAggregate[]>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, ContestAggregate[]>
+    internal sealed class QueryHandler(IContestReadRepository readRepository) : IQueryHandler<Query, ContestAggregate[]>
     {
-        public async Task<Result<ContestAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct)
-        {
-            await Task.CompletedTask;
-
-            return new ContestAggregate[]
-            {
-                StockholmRulesContest.CreateDummyContest(Guid.NewGuid(), 2016, "Stockholm"),
-                LiverpoolRulesContest.CreateDummyContest(Guid.NewGuid(), 2023, "Liverpool"),
-                LiverpoolRulesContest.CreateDummyContest(Guid.NewGuid(), 2025, "Basel"),
-            };
-        }
+        public async Task<Result<ContestAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct) =>
+            await readRepository.GetAllAsync(ct);
     }
 }

@@ -9,7 +9,7 @@ using CountryDto = Eurocentric.Apis.Admin.V1.Dtos.Countries.Country;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
-public static class Shortcuts
+public static partial class Shortcuts
 {
     public static async Task<CountryDto> CreateACountryAsync(
         this AdminKernel kernel,
