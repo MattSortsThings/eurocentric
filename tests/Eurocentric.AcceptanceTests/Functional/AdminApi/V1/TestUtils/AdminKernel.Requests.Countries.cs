@@ -6,9 +6,7 @@ namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public sealed partial class AdminKernel
 {
-    private sealed class RestRequestFactory(string apiVersion)
-        : IRestRequestFactory,
-            IRestRequestFactory.ICountriesEndpoints
+    private sealed partial class RestRequestFactory : IRestRequestFactory.ICountriesEndpoints
     {
         public RestRequest CreateCountry(CreateCountryRequest request) =>
             PostRequest("/admin/api/{apiVersion}/countries")
@@ -24,11 +22,5 @@ public sealed partial class AdminKernel
                 .UseSecretApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddUrlSegment("countryId", countryId);
-
-        public IRestRequestFactory.ICountriesEndpoints Countries => this;
-
-        private static RestRequest GetRequest(string route) => new(route);
-
-        private static RestRequest PostRequest(string route) => new(route, Method.Post);
     }
 }
