@@ -38,4 +38,10 @@ public interface ICountryReadRepository
         CountryId countryId,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    ///     Returns all the <see cref="Country" /> aggregates in the system as an untracked queryable.
+    /// </summary>
+    /// <returns>An object to allow read-only queries on the <see cref="Country" /> aggregates.</returns>
+    IQueryable<Country> GetAsQueryable();
 }

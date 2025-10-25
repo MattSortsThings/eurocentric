@@ -6,6 +6,14 @@ namespace Eurocentric.UnitTests.TestUtils;
 
 public static class DomainErrorAssertions
 {
+    public static HasNullExtensionsAssertion<T> HasNullExtensions<T>(this IAssertionSource<T> source)
+        where T : IDomainError
+    {
+        source.Context.ExpressionBuilder.Append(".HasNullExtensions()");
+
+        return new HasNullExtensionsAssertion<T>(source.Context);
+    }
+
     public static HasStringExtensionAssertion<T> HasExtension<T>(
         this IAssertionSource<T> source,
         string expectedKey,
@@ -120,6 +128,35 @@ public static class DomainErrorAssertions
         }
     }
 
+    public sealed class HasNullExtensionsAssertion<T> : Assertion<T>
+        where T : IDomainError
+    {
+        public HasNullExtensionsAssertion(AssertionContext<T> context)
+            : base(context) { }
+
+        protected override string GetExpectation() => "to have null Extensions";
+
+        protected override Task<AssertionResult> CheckAsync(EvaluationMetadata<T> metadata)
+        {
+            AssertionResult result = AssertionResult.Passed;
+
+            if (metadata.Exception is { } exception)
+            {
+                result = AssertionResult.Failed($"{exception.GetType().Name} was thrown");
+            }
+            else if (metadata.Value is not { } domainError)
+            {
+                result = AssertionResult.Failed("value was null");
+            }
+            else if (domainError.Extensions is not null)
+            {
+                result = AssertionResult.Failed("Extensions was not null");
+            }
+
+            return Task.FromResult(result);
+        }
+    }
+
     public sealed class HasStringExtensionAssertion<T> : Assertion<T>
         where T : IDomainError
     {
@@ -143,11 +180,11 @@ public static class DomainErrorAssertions
             {
                 result = AssertionResult.Failed($"{exception.GetType().Name} was thrown");
             }
-            else if (metadata.Value is not { } problemDetails)
+            else if (metadata.Value is not { } domainError)
             {
                 result = AssertionResult.Failed("value was null");
             }
-            else if (problemDetails.Extensions is not { } actualExtensions)
+            else if (domainError.Extensions is not { } actualExtensions)
             {
                 result = AssertionResult.Failed("Extensions was null");
             }

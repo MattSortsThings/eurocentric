@@ -27,7 +27,7 @@ public sealed class CountryName : StringAtomicValueObject
 
         return Result
             .Success<string, IDomainError>(value)
-            .Ensure(ValueObjectRules.LegalCountryNameValue)
+            .Ensure(ValueObjectInvariants.LegalCountryNameValue)
             .Map(v => new CountryName(v));
     }
 }

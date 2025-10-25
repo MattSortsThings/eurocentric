@@ -16,7 +16,9 @@ public static class DependencyInjection
     /// <returns></returns>
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<ICountryReadRepository, CountryReadRepository>();
+        services
+            .AddScoped<ICountryReadRepository, CountryReadRepository>()
+            .AddScoped<ICountryWriteRepository, CountryWriteRepository>();
 
         services.AddV0Repositories();
 

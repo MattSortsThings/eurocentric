@@ -4,9 +4,9 @@ using Eurocentric.Domain.Core;
 namespace Eurocentric.Domain.ValueObjects;
 
 /// <summary>
-///     Static methods for enforcing domain value object rules.
+///     Static methods for enforcing domain value object invariants.
 /// </summary>
-public static class ValueObjectRules
+public static class ValueObjectInvariants
 {
     /// <summary>
     ///     Checks that the provided value is a legal <see cref="CountryCode" /> value.

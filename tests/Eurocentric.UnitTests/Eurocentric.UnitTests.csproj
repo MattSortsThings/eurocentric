@@ -4,6 +4,7 @@
     <RootNamespace>Eurocentric.UnitTests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="NSubstitute" />
     <PackageReference Include="TUnit" />
   </ItemGroup>
   <ItemGroup>

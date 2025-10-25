@@ -28,4 +28,6 @@ internal sealed class CountryReadRepository(AppDbContext dbContext) : ICountryRe
 
         return country is not null ? country : CountryErrors.CountryNotFound(countryId);
     }
+
+    public IQueryable<Country> GetAsQueryable() => dbContext.Countries.AsNoTracking();
 }

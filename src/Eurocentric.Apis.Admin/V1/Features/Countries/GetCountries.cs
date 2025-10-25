@@ -38,7 +38,7 @@ internal static class GetCountries
         {
             routeBuilder
                 .MapGet("countries", ExecuteAsync)
-                .WithName(V1EndpointNames.Countries.GetCountries)
+                .WithName(V1Endpoints.Countries.GetCountries)
                 .AddedInVersion1Point0()
                 .WithSummary("Get all countries")
                 .WithDescription("Retrieves a list of all existing countries, ordered by country code.")

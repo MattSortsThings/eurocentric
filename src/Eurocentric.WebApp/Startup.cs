@@ -4,6 +4,7 @@ using Eurocentric.Components.DataAccess;
 using Eurocentric.Components.ErrorHandling;
 using Eurocentric.Components.Gateways;
 using Eurocentric.Components.HttpJson;
+using Eurocentric.Components.IdFactories;
 using Eurocentric.Components.Messaging;
 using Eurocentric.Components.OpenApi;
 using Eurocentric.Components.Repositories;
@@ -34,6 +35,7 @@ internal static class Startup
             .Services.AddDataAccess()
             .AddErrorHandling()
             .AddGateways()
+            .AddIdFactories()
             .AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly)
             .AddOpenApiDocumentation(AdminApiOpenApiDocuments.RegisterAll, PublicApiOpenApiDocuments.RegisterAll)
             .AddRepositories()

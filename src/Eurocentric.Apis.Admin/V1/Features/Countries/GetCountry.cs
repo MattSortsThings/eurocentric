@@ -42,7 +42,7 @@ internal static class GetCountry
         {
             routeBuilder
                 .MapGet("countries/{countryId:guid}", ExecuteAsync)
-                .WithName(V1EndpointNames.Countries.GetCountry)
+                .WithName(V1Endpoints.Countries.GetCountry)
                 .AddedInVersion1Point0()
                 .WithSummary("Get a country")
                 .WithDescription("Retrieves the requested country.")

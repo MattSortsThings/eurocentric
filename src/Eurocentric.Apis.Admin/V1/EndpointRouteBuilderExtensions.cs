@@ -12,7 +12,7 @@ internal static class EndpointRouteBuilderExtensions
 {
     internal static void MapV1EndpointGroup(this IEndpointRouteBuilder routeBuilder)
     {
-        RouteGroupBuilder v0Group = routeBuilder
+        RouteGroupBuilder v1Group = routeBuilder
             .MapGroup("v{version:apiVersion}")
             .WithGroupName(V1Group.Name)
             .RequiresAuthenticatedClient()
@@ -20,6 +20,6 @@ internal static class EndpointRouteBuilderExtensions
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
-        v0Group.Map<GetCountries.EndpointMapper>().Map<GetCountry.EndpointMapper>();
+        v1Group.Map<CreateCountry.EndpointMapper>().Map<GetCountries.EndpointMapper>().Map<GetCountry.EndpointMapper>();
     }
 }

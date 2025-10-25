@@ -24,7 +24,7 @@ public sealed class CountryCode : StringAtomicValueObject
 
         return Result
             .Success<string, IDomainError>(value)
-            .Ensure(ValueObjectRules.LegalCountryCodeValue)
+            .Ensure(ValueObjectInvariants.LegalCountryCodeValue)
             .Map(v => new CountryCode(v));
     }
 }
