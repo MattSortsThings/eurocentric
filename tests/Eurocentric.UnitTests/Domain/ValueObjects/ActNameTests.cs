@@ -5,15 +5,15 @@ using Eurocentric.UnitTests.TestUtils;
 
 namespace Eurocentric.UnitTests.Domain.ValueObjects;
 
-public sealed class CountryNameTests : UnitTest
+public sealed class ActNameTests : UnitTest
 {
-    private const string ArbitraryValue = "CountryName";
+    private const string ArbitraryValue = "ActName";
 
     [Test]
     public async Task CompareTo_should_return_0_when_other_is_same_instance()
     {
         // Arrange
-        CountryName sut = CountryName.FromValue(ArbitraryValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(ArbitraryValue).GetValueOrDefault();
 
         // Act
         int result = sut.CompareTo(sut);
@@ -26,11 +26,11 @@ public sealed class CountryNameTests : UnitTest
     public async Task CompareTo_should_return_negative_value_when_instance_Value_precedes_other_Value()
     {
         // Arrange
-        const string sutValue = "France";
-        const string otherValue = "San Marino";
+        const string sutValue = "JJ";
+        const string otherValue = "Remember Monday";
 
-        CountryName sut = CountryName.FromValue(sutValue).GetValueOrDefault();
-        CountryName other = CountryName.FromValue(otherValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sutValue).GetValueOrDefault();
+        ActName other = ActName.FromValue(otherValue).GetValueOrDefault();
 
         // Act
         int result = sut.CompareTo(other);
@@ -43,11 +43,11 @@ public sealed class CountryNameTests : UnitTest
     public async Task CompareTo_should_return_positive_value_when_other_Value_precedes_instance_Value()
     {
         // Arrange
-        const string sutValue = "France";
-        const string otherValue = "Austria";
+        const string sutValue = "JJ";
+        const string otherValue = "Claude";
 
-        CountryName sut = CountryName.FromValue(sutValue).GetValueOrDefault();
-        CountryName other = CountryName.FromValue(otherValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sutValue).GetValueOrDefault();
+        ActName other = ActName.FromValue(otherValue).GetValueOrDefault();
 
         // Act
         int result = sut.CompareTo(other);
@@ -60,7 +60,7 @@ public sealed class CountryNameTests : UnitTest
     public async Task CompareTo_should_return_positive_value_when_other_is_null()
     {
         // Arrange
-        CountryName sut = CountryName.FromValue(ArbitraryValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(ArbitraryValue).GetValueOrDefault();
 
         // Act
         int result = sut.CompareTo(null);
@@ -73,7 +73,7 @@ public sealed class CountryNameTests : UnitTest
     public async Task Equals_should_return_true_when_other_is_same_instance()
     {
         // Arrange
-        CountryName sut = CountryName.FromValue(ArbitraryValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(ArbitraryValue).GetValueOrDefault();
 
         // Act
         bool result = sut.Equals(sut);
@@ -83,13 +83,13 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    public async Task Equals_should_return_true_when_other_is_CountryName_with_equal_Value()
+    public async Task Equals_should_return_true_when_other_is_ActName_with_equal_Value()
     {
         // Arrange
-        const string sharedValue = "France";
+        const string sharedValue = "JJ";
 
-        CountryName sut = CountryName.FromValue(sharedValue).GetValueOrDefault();
-        CountryName other = CountryName.FromValue(sharedValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sharedValue).GetValueOrDefault();
+        ActName other = ActName.FromValue(sharedValue).GetValueOrDefault();
 
         // Act
         bool result = sut.Equals(other);
@@ -99,14 +99,14 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    public async Task Equals_should_return_false_when_other_is_CountryName_with_unequal_Value()
+    public async Task Equals_should_return_false_when_other_is_ActName_with_unequal_Value()
     {
         // Arrange
-        const string sutValue = "France";
-        const string otherValue = "Czechia";
+        const string sutValue = "JJ";
+        const string otherValue = "Remember Monday";
 
-        CountryName sut = CountryName.FromValue(sutValue).GetValueOrDefault();
-        CountryName other = CountryName.FromValue(otherValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sutValue).GetValueOrDefault();
+        ActName other = ActName.FromValue(otherValue).GetValueOrDefault();
 
         // Act
         bool result = sut.Equals(other);
@@ -116,12 +116,12 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    public async Task Equals_should_return_false_when_other_is_not_CountryName()
+    public async Task Equals_should_return_false_when_other_is_not_ActName()
     {
         // Arrange
-        const string sharedValue = "France";
+        const string sharedValue = "JJ";
 
-        CountryName sut = CountryName.FromValue(sharedValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sharedValue).GetValueOrDefault();
         CountryCode other = CountryCode.FromValue(sharedValue).GetValueOrDefault();
 
         // Act
@@ -135,7 +135,7 @@ public sealed class CountryNameTests : UnitTest
     public async Task Equals_should_return_false_when_other_is_null()
     {
         // Arrange
-        CountryName sut = CountryName.FromValue(ArbitraryValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(ArbitraryValue).GetValueOrDefault();
 
         // Act
         bool result = sut.Equals(null);
@@ -145,13 +145,13 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    [Arguments("Austria")]
-    [Arguments("France")]
-    [Arguments("Rest of the World")]
-    public async Task FromValue_should_return_CountryName_with_provided_Value(string value)
+    [Arguments("VÆB")]
+    [Arguments("Louane")]
+    [Arguments("Lucio Corsi")]
+    public async Task FromValue_should_return_ActName_with_provided_Value(string value)
     {
         // Act
-        Result<CountryName, IDomainError> result = CountryName.FromValue(value);
+        Result<ActName, IDomainError> result = ActName.FromValue(value);
 
         // Assert
         await Assert.That(result.IsSuccess).IsTrue();
@@ -159,7 +159,7 @@ public sealed class CountryNameTests : UnitTest
         await Assert
             .That(result.GetValueOrDefault())
             .IsNotNull()
-            .And.Member(countryCode => countryCode.Value, source => source.IsEqualTo(value));
+            .And.Member(actCode => actCode.Value, source => source.IsEqualTo(value));
     }
 
     [Test]
@@ -169,7 +169,7 @@ public sealed class CountryNameTests : UnitTest
         string value = new('A', 201);
 
         // Act
-        Result<CountryName, IDomainError> result = CountryName.FromValue(value);
+        Result<ActName, IDomainError> result = ActName.FromValue(value);
 
         // Assert
         await Assert.That(result.IsFailure).IsTrue();
@@ -179,11 +179,9 @@ public sealed class CountryNameTests : UnitTest
         await Assert
             .That(result.Error)
             .IsTypeOf<UnprocessableError>()
-            .And.HasTitle("Illegal country name value")
-            .And.HasDetail(
-                "Country name value must be a non-empty, non-whitespace string of no more than 200 characters."
-            )
-            .And.HasExtension("countryName", value);
+            .And.HasTitle("Illegal act name value")
+            .And.HasDetail("Act name value must be a non-empty, non-whitespace string of no more than 200 characters.")
+            .And.HasExtension("actName", value);
     }
 
     [Test]
@@ -193,7 +191,7 @@ public sealed class CountryNameTests : UnitTest
         string value = string.Empty;
 
         // Act
-        Result<CountryName, IDomainError> result = CountryName.FromValue(value);
+        Result<ActName, IDomainError> result = ActName.FromValue(value);
 
         // Assert
         await Assert.That(result.IsFailure).IsTrue();
@@ -203,11 +201,9 @@ public sealed class CountryNameTests : UnitTest
         await Assert
             .That(result.Error)
             .IsTypeOf<UnprocessableError>()
-            .And.HasTitle("Illegal country name value")
-            .And.HasDetail(
-                "Country name value must be a non-empty, non-whitespace string of no more than 200 characters."
-            )
-            .And.HasExtension("countryName", value);
+            .And.HasTitle("Illegal act name value")
+            .And.HasDetail("Act name value must be a non-empty, non-whitespace string of no more than 200 characters.")
+            .And.HasExtension("actName", value);
     }
 
     [Test]
@@ -216,7 +212,7 @@ public sealed class CountryNameTests : UnitTest
     public async Task FromValue_should_fail_given_all_whitespace_string_value(string value)
     {
         // Act
-        Result<CountryName, IDomainError> result = CountryName.FromValue(value);
+        Result<ActName, IDomainError> result = ActName.FromValue(value);
 
         // Assert
         await Assert.That(result.IsFailure).IsTrue();
@@ -226,11 +222,9 @@ public sealed class CountryNameTests : UnitTest
         await Assert
             .That(result.Error)
             .IsTypeOf<UnprocessableError>()
-            .And.HasTitle("Illegal country name value")
-            .And.HasDetail(
-                "Country name value must be a non-empty, non-whitespace string of no more than 200 characters."
-            )
-            .And.HasExtension("countryName", value);
+            .And.HasTitle("Illegal act name value")
+            .And.HasDetail("Act name value must be a non-empty, non-whitespace string of no more than 200 characters.")
+            .And.HasExtension("actName", value);
     }
 
     [Test]
@@ -238,19 +232,19 @@ public sealed class CountryNameTests : UnitTest
     {
         // Assert
         await Assert
-            .That(() => CountryName.FromValue(null!))
+            .That(() => ActName.FromValue(null!))
             .Throws<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'value')");
     }
 
     [Test]
-    public async Task Equality_operator_should_return_true_when_other_is_CountryName_with_equal_Value()
+    public async Task Equality_operator_should_return_true_when_other_is_ActName_with_equal_Value()
     {
         // Arrange
-        const string sharedValue = "France";
+        const string sharedValue = "JJ";
 
-        CountryName sut = CountryName.FromValue(sharedValue).GetValueOrDefault();
-        CountryName other = CountryName.FromValue(sharedValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sharedValue).GetValueOrDefault();
+        ActName other = ActName.FromValue(sharedValue).GetValueOrDefault();
 
         // Act
         bool result = sut == other;
@@ -260,14 +254,14 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    public async Task Equality_operator_should_return_false_when_other_is_CountryName_with_unequal_Value()
+    public async Task Equality_operator_should_return_false_when_other_is_ActName_with_unequal_Value()
     {
         // Arrange
-        const string sutValue = "France";
-        const string otherValue = "Czechia";
+        const string sutValue = "JJ";
+        const string otherValue = "Remember Monday";
 
-        CountryName sut = CountryName.FromValue(sutValue).GetValueOrDefault();
-        CountryName other = CountryName.FromValue(otherValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sutValue).GetValueOrDefault();
+        ActName other = ActName.FromValue(otherValue).GetValueOrDefault();
 
         // Act
         bool result = sut == other;
@@ -277,12 +271,12 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    public async Task Equality_operator_should_return_false_when_other_is_not_CountryName()
+    public async Task Equality_operator_should_return_false_when_other_is_not_ActName()
     {
         // Arrange
-        const string sharedValue = "France";
+        const string sharedValue = "JJ";
 
-        CountryName sut = CountryName.FromValue(sharedValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sharedValue).GetValueOrDefault();
         CountryCode other = CountryCode.FromValue(sharedValue).GetValueOrDefault();
 
         // Act
@@ -293,13 +287,13 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    public async Task Inequality_operator_should_return_false_when_other_is_CountryName_with_equal_Value()
+    public async Task Inequality_operator_should_return_false_when_other_is_ActName_with_equal_Value()
     {
         // Arrange
-        const string sharedValue = "France";
+        const string sharedValue = "JJ";
 
-        CountryName sut = CountryName.FromValue(sharedValue).GetValueOrDefault();
-        CountryName other = CountryName.FromValue(sharedValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sharedValue).GetValueOrDefault();
+        ActName other = ActName.FromValue(sharedValue).GetValueOrDefault();
 
         // Act
         bool result = sut != other;
@@ -309,14 +303,14 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    public async Task Inequality_operator_should_return_true_when_other_is_CountryName_with_unequal_Value()
+    public async Task Inequality_operator_should_return_true_when_other_is_ActName_with_unequal_Value()
     {
         // Arrange
-        const string sutValue = "France";
-        const string otherValue = "Czechia";
+        const string sutValue = "JJ";
+        const string otherValue = "Remember Monday";
 
-        CountryName sut = CountryName.FromValue(sutValue).GetValueOrDefault();
-        CountryName other = CountryName.FromValue(otherValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sutValue).GetValueOrDefault();
+        ActName other = ActName.FromValue(otherValue).GetValueOrDefault();
 
         // Act
         bool result = sut != other;
@@ -326,12 +320,12 @@ public sealed class CountryNameTests : UnitTest
     }
 
     [Test]
-    public async Task Inequality_operator_should_return_true_when_other_is_not_CountryName()
+    public async Task Inequality_operator_should_return_true_when_other_is_not_ActName()
     {
         // Arrange
-        const string sharedValue = "France";
+        const string sharedValue = "JJ";
 
-        CountryName sut = CountryName.FromValue(sharedValue).GetValueOrDefault();
+        ActName sut = ActName.FromValue(sharedValue).GetValueOrDefault();
         CountryCode other = CountryCode.FromValue(sharedValue).GetValueOrDefault();
 
         // Act

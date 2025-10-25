@@ -19,15 +19,15 @@ public sealed record ChildBroadcast : ISchemaExampleProvider<ChildBroadcast>
     public ContestStage ContestStage { get; init; }
 
     /// <summary>
-    ///     A boolean value indicating whether all the points have been awarded in the child broadcast.
+    ///     A boolean value indicating whether the child broadcast is completed.
     /// </summary>
-    public bool AllPointsAwarded { get; init; }
+    public bool Completed { get; init; }
 
     public static ChildBroadcast CreateExample() =>
         new()
         {
             ChildBroadcastId = Guid.Parse("b90a2fb9-262a-4af9-beb2-e3d43cdf135b"),
             ContestStage = ContestStage.GrandFinal,
-            AllPointsAwarded = true,
+            Completed = true,
         };
 }

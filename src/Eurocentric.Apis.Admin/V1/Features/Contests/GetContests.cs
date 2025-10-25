@@ -1,7 +1,9 @@
 using CSharpFunctionalExtensions;
 using Eurocentric.Apis.Admin.V1.Config;
+using Eurocentric.Apis.Admin.V1.Dtos.Contests;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Core;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using ContestAggregate = Eurocentric.Domain.Aggregates.Contests.Contest;
 using ContestDto = Eurocentric.Apis.Admin.V1.Dtos.Contests.Contest;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
@@ -22,12 +25,9 @@ internal static class GetContests
         CancellationToken ct = default
     ) => await bus.DispatchAsync(new Query(), MapToOk, ct);
 
-    private static Ok<GetContestsResponse> MapToOk(int[] contestYears)
+    private static Ok<GetContestsResponse> MapToOk(ContestAggregate[] aggregates)
     {
-        ContestDto[] contestDtos = contestYears
-            .Select(year => ContestDto.CreateExample() with { Id = Guid.NewGuid(), ContestYear = year })
-            .OrderBy(contest => contest.ContestYear)
-            .ToArray();
+        ContestDto[] contestDtos = aggregates.Select(contest => contest.ToDto()).ToArray();
 
         return TypedResults.Ok(new GetContestsResponse(contestDtos));
     }
@@ -47,16 +47,21 @@ internal static class GetContests
         }
     }
 
-    internal sealed record Query : IQuery<int[]>;
+    internal sealed record Query : IQuery<ContestAggregate[]>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, int[]>
+    internal sealed class QueryHandler : IQueryHandler<Query, ContestAggregate[]>
     {
-        public async Task<Result<int[], IDomainError>> OnHandle(Query _, CancellationToken ct)
+        public async Task<Result<ContestAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct)
         {
             await Task.CompletedTask;
 
-            return new[] { 2016, 2020, 2025 };
+            return new ContestAggregate[]
+            {
+                StockholmRulesContest.CreateDummyContest(Guid.NewGuid(), 2016, "Stockholm"),
+                LiverpoolRulesContest.CreateDummyContest(Guid.NewGuid(), 2023, "Liverpool"),
+                LiverpoolRulesContest.CreateDummyContest(Guid.NewGuid(), 2025, "Basel"),
+            };
         }
     }
 }

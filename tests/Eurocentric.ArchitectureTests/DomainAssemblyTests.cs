@@ -28,6 +28,7 @@ public sealed class DomainAssemblyTests : ArchitectureTest
         .AreNot(
             typeof(ValueObject),
             typeof(GuidAtomicValueObject),
+            typeof(Int32AtomicValueObject),
             typeof(StringAtomicValueObject),
             typeof(CompoundValueObject)
         );
@@ -138,7 +139,11 @@ public sealed class DomainAssemblyTests : ArchitectureTest
             .That()
             .Are(ValueObjectClasses)
             .And()
-            .AreAssignableTo(typeof(GuidAtomicValueObject), typeof(StringAtomicValueObject))
+            .AreAssignableTo(
+                typeof(GuidAtomicValueObject),
+                typeof(Int32AtomicValueObject),
+                typeof(StringAtomicValueObject)
+            )
             .Should()
             .FollowCustomCondition(new HasSingleConstructorWhichIsPrivateCondition());
 
@@ -160,28 +165,6 @@ public sealed class DomainAssemblyTests : ArchitectureTest
 
         // Assert
         await Assert.That(results).ContainsOnly(Passed);
-    }
-
-    private sealed class HasNoPublicConstructorCondition : ICondition<Class>
-    {
-        public string Description => "to have no public constructor";
-
-        public IEnumerable<ConditionResult> Check(IEnumerable<Class> objects, Architecture architecture)
-        {
-            foreach (Class @class in objects)
-            {
-                if (@class.GetConstructors().Any(member => member.Visibility == Visibility.Public))
-                {
-                    yield return new ConditionResult(@class, false, "has public constructor");
-                }
-                else
-                {
-                    yield return new ConditionResult(@class, true);
-                }
-            }
-        }
-
-        public bool CheckEmpty() => true;
     }
 
     private sealed class HasPrivateOrPrivateProtectedParameterlessConstructorCondition : ICondition<Class>

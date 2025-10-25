@@ -301,7 +301,7 @@ public sealed class CountryCodeTests : UnitTest
     }
 
     [Test]
-    public async Task Inequality_operator_should_return_false_when_other_is_not_CountryCode()
+    public async Task Inequality_operator_should_return_true_when_other_is_not_CountryCode()
     {
         // Arrange
         const string sharedValue = "GB";

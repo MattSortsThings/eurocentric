@@ -1,7 +1,9 @@
 using CSharpFunctionalExtensions;
 using Eurocentric.Apis.Admin.V1.Config;
+using Eurocentric.Apis.Admin.V1.Dtos.Contests;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Core;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using ContestAggregate = Eurocentric.Domain.Aggregates.Contests.Contest;
 using ContestDto = Eurocentric.Apis.Admin.V1.Dtos.Contests.Contest;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
@@ -25,9 +28,9 @@ internal static class GetContest
 
     private static Query ToQuery(this Guid contestId) => new(contestId);
 
-    private static Ok<GetContestResponse> MapToOk(Guid contestId)
+    private static Ok<GetContestResponse> MapToOk(ContestAggregate aggregate)
     {
-        ContestDto contestDto = ContestDto.CreateExample() with { Id = contestId };
+        ContestDto contestDto = aggregate.ToDto();
 
         return TypedResults.Ok(new GetContestResponse(contestDto));
     }
@@ -48,16 +51,16 @@ internal static class GetContest
         }
     }
 
-    internal sealed record Query(Guid ContestId) : IQuery<Guid>;
+    internal sealed record Query(Guid ContestId) : IQuery<ContestAggregate>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, Guid>
+    internal sealed class QueryHandler : IQueryHandler<Query, ContestAggregate>
     {
-        public async Task<Result<Guid, IDomainError>> OnHandle(Query query, CancellationToken ct)
+        public async Task<Result<ContestAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct)
         {
             await Task.CompletedTask;
 
-            return query.ContestId;
+            return LiverpoolRulesContest.CreateDummyContest(query.ContestId, 2025, "Basel");
         }
     }
 }
