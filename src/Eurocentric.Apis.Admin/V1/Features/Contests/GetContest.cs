@@ -5,6 +5,7 @@ using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Core;
+using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +27,7 @@ internal static class GetContest
         CancellationToken ct = default
     ) => await bus.DispatchAsync(contestId.ToQuery(), MapToOk, ct);
 
-    private static Query ToQuery(this Guid contestId) => new(contestId);
+    private static Query ToQuery(this Guid contestId) => new(ContestId.FromValue(contestId));
 
     private static Ok<GetContestResponse> MapToOk(ContestAggregate aggregate)
     {
@@ -51,16 +52,12 @@ internal static class GetContest
         }
     }
 
-    internal sealed record Query(Guid ContestId) : IQuery<ContestAggregate>;
+    internal sealed record Query(ContestId ContestId) : IQuery<ContestAggregate>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, ContestAggregate>
+    internal sealed class QueryHandler(IContestReadRepository readRepository) : IQueryHandler<Query, ContestAggregate>
     {
-        public async Task<Result<ContestAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct)
-        {
-            await Task.CompletedTask;
-
-            return LiverpoolRulesContest.CreateDummyContest(query.ContestId, 2025, "Basel");
-        }
+        public async Task<Result<ContestAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct) =>
+            await readRepository.GetByIdAsync(query.ContestId, ct);
     }
 }

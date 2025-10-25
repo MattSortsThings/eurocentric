@@ -19,7 +19,7 @@ public static class CountryErrors
         return new NotFoundError
         {
             Title = "Country not found",
-            Detail = "The requested country was not found.",
+            Detail = "The requested country does not exist.",
             Extensions = new Dictionary<string, object?> { { nameof(countryId), countryId.Value } },
         };
     }

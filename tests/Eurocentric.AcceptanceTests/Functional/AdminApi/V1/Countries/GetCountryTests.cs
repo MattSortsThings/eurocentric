@@ -48,7 +48,7 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
         await admin.Then_the_response_problem_details_should_match(
             status: 404,
             title: "Country not found",
-            detail: "The requested country was not found."
+            detail: "The requested country does not exist."
         );
         await admin.Then_the_response_problem_details_extensions_should_include_the_deleted_country_ID();
     }
