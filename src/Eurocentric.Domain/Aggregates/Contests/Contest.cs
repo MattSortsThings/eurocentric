@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
@@ -70,4 +71,74 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// </summary>
     /// <remarks>Accessing this property creates and returns a copy of the contest's participant list.</remarks>
     public IReadOnlyList<Participant> Participants => _participants.ToArray().AsReadOnly();
+
+    /// <summary>
+    ///     Gets the contest's participants.
+    /// </summary>
+    /// <remarks>This internal property accesses the contest's participant list directly.</remarks>
+    internal IReadOnlyCollection<Participant> ParticipantsCollection => _participants;
+
+    private protected abstract class ContestBuilder : IContestBuilder
+    {
+        private protected Result<ContestYear, IDomainError> ErrorOrContestYear { get; private set; } =
+            ContestErrors.ContestYearPropertyNotSet();
+
+        private protected Result<CityName, IDomainError> ErrorOrCityName { get; private set; } =
+            ContestErrors.CityNamePropertyNotSet();
+
+        private protected GlobalTelevote? GlobalTelevote { get; private set; }
+
+        private protected List<Result<Participant, IDomainError>> ErrorsOrParticipants { get; } = new(6);
+
+        public IContestBuilder AddSemiFinal1Participant(
+            CountryId countryId,
+            Result<ActName, IDomainError> errorOrActName,
+            Result<SongTitle, IDomainError> errorOrSongTitle
+        )
+        {
+            ArgumentNullException.ThrowIfNull(countryId);
+
+            ErrorsOrParticipants.Add(Participant.CreateInSemiFinal1(countryId, errorOrActName, errorOrSongTitle));
+
+            return this;
+        }
+
+        public IContestBuilder AddSemiFinal2Participant(
+            CountryId countryId,
+            Result<ActName, IDomainError> errorOrActName,
+            Result<SongTitle, IDomainError> errorOrSongTitle
+        )
+        {
+            ArgumentNullException.ThrowIfNull(countryId);
+
+            ErrorsOrParticipants.Add(Participant.CreateInSemiFinal2(countryId, errorOrActName, errorOrSongTitle));
+
+            return this;
+        }
+
+        public IContestBuilder WithContestYear(Result<ContestYear, IDomainError> errorOrContestYear)
+        {
+            ErrorOrContestYear = errorOrContestYear;
+
+            return this;
+        }
+
+        public IContestBuilder WithCityName(Result<CityName, IDomainError> errorOrCityName)
+        {
+            ErrorOrCityName = errorOrCityName;
+
+            return this;
+        }
+
+        public IContestBuilder WithGlobalTelevote(CountryId countryId)
+        {
+            ArgumentNullException.ThrowIfNull(countryId);
+
+            GlobalTelevote = new GlobalTelevote(countryId);
+
+            return this;
+        }
+
+        public abstract Result<Contest, IDomainError> Build(Func<ContestId> idProvider);
+    }
 }

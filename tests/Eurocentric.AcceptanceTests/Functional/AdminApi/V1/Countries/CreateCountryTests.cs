@@ -24,7 +24,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
         // Then
         await admin.Then_my_request_should_SUCCEED_with_status_code(201);
-        await admin.Then_the_response_should_include_the_created_country_location_with_API_version(apiVersion);
+        await admin.Then_the_response_headers_should_include_the_created_country_location_for_API_version(apiVersion);
         await admin.Then_the_created_country_should_match(countryCode: "AT", countryName: "Austria");
         await admin.Then_the_created_country_should_have_no_contest_roles();
         await admin.Then_the_created_country_should_be_the_only_existing_country();
@@ -44,7 +44,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
         // Then
         await admin.Then_my_request_should_SUCCEED_with_status_code(201);
-        await admin.Then_the_response_should_include_the_created_country_location_with_API_version(apiVersion);
+        await admin.Then_the_response_headers_should_include_the_created_country_location_for_API_version(apiVersion);
         await admin.Then_the_created_country_should_match(countryCode: "BA", countryName: "Bosnia & Herzegovina");
         await admin.Then_the_created_country_should_have_no_contest_roles();
         await admin.Then_the_created_country_should_be_the_only_existing_country();
@@ -64,7 +64,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
         // Then
         await admin.Then_my_request_should_SUCCEED_with_status_code(201);
-        await admin.Then_the_response_should_include_the_created_country_location_with_API_version(apiVersion);
+        await admin.Then_the_response_headers_should_include_the_created_country_location_for_API_version(apiVersion);
         await admin.Then_the_created_country_should_match(countryCode: "XX", countryName: "Rest of the World");
         await admin.Then_the_created_country_should_have_no_contest_roles();
         await admin.Then_the_created_country_should_be_the_only_existing_country();
@@ -90,7 +90,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
             detail: "Country code value must be a string of 2 upper-case letters."
         );
         await admin.Then_the_response_problem_details_extensions_should_include(key: "countryCode", value: "!");
-        await admin.Then_no_countries_should_exist();
+        await admin.Then_there_should_be_no_existing_countries();
     }
 
     [Test]
@@ -113,7 +113,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
             detail: "Country name value must be a non-empty, non-whitespace string of no more than 200 characters."
         );
         await admin.Then_the_response_problem_details_extensions_should_include(key: "countryName", value: " ");
-        await admin.Then_no_countries_should_exist();
+        await admin.Then_there_should_be_no_existing_countries();
     }
 
     [Test]
@@ -187,7 +187,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
             Request = Kernel.Requests.Countries.CreateCountry(requestBody);
         }
 
-        public async Task Then_the_response_should_include_the_created_country_location_with_API_version(
+        public async Task Then_the_response_headers_should_include_the_created_country_location_for_API_version(
             string apiVersion
         )
         {
@@ -198,7 +198,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
             IEnumerable<HeaderParameter>? responseHeaders = await Assert.That(SuccessResponse?.Headers).IsNotNull();
 
             await Assert
-                .That(responseHeaders)
+                .That(SuccessResponse?.Headers)
                 .Contains(headerParam =>
                     headerParam.Name == "Location" && headerParam.Value.EndsWith(expectedLocationSuffix)
                 );
@@ -219,7 +219,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
             await Assert.That(createdCountry.ContestRoles).IsEmpty();
         }
 
-        public async Task Then_no_countries_should_exist()
+        public async Task Then_there_should_be_no_existing_countries()
         {
             Country[] existingCountries = await Kernel.GetAllCountriesAsync();
 

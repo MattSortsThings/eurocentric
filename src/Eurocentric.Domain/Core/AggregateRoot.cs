@@ -19,5 +19,5 @@ public abstract class AggregateRoot<TId> : Entity
     /// <summary>
     ///     Gets the aggregate's system identifier.
     /// </summary>
-    public TId Id { get; private protected init; } = null!;
+    public TId Id { get; private protected set; } = null!;
 }

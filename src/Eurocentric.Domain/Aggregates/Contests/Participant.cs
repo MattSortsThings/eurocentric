@@ -1,7 +1,9 @@
+using CSharpFunctionalExtensions;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
+using Entity = Eurocentric.Domain.Core.Entity;
 
 namespace Eurocentric.Domain.Aggregates.Contests;
 
@@ -45,4 +47,30 @@ public sealed class Participant : Entity
     ///     Gets the participant's song title.
     /// </summary>
     public SongTitle SongTitle { get; private init; } = null!;
+
+    internal static Result<Participant, IDomainError> CreateInSemiFinal1(
+        CountryId countryId,
+        Result<ActName, IDomainError> errorOrActName,
+        Result<SongTitle, IDomainError> errorOrSongTitle
+    ) => ValueTuple.Create(errorOrActName, errorOrSongTitle).Combine().Map(DrawSemiFinal1(countryId));
+
+    internal static Result<Participant, IDomainError> CreateInSemiFinal2(
+        CountryId countryId,
+        Result<ActName, IDomainError> errorOrActName,
+        Result<SongTitle, IDomainError> errorOrSongTitle
+    ) => ValueTuple.Create(errorOrActName, errorOrSongTitle).Combine().Map(DrawSemiFinal2(countryId));
+
+    private static Func<ValueTuple<ActName, SongTitle>, Participant> DrawSemiFinal1(CountryId countryId)
+    {
+        CountryId id = countryId;
+
+        return tuple => new Participant(id, SemiFinalDraw.SemiFinal1, tuple.Item1, tuple.Item2);
+    }
+
+    private static Func<ValueTuple<ActName, SongTitle>, Participant> DrawSemiFinal2(CountryId countryId)
+    {
+        CountryId id = countryId;
+
+        return tuple => new Participant(id, SemiFinalDraw.SemiFinal2, tuple.Item1, tuple.Item2);
+    }
 }

@@ -28,4 +28,6 @@ internal sealed class ContestReadRepository(AppDbContext dbContext) : IContestRe
 
         return contest is not null ? contest : ContestErrors.ContestNotFound(contestId);
     }
+
+    public IQueryable<Contest> GetAsQueryable() => dbContext.Contests.AsNoTracking();
 }

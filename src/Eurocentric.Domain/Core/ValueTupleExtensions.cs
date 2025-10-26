@@ -22,4 +22,28 @@ public static class ValueTupleExtensions
 
         return ValueTuple.Create(item1.Value, item2.Value);
     }
+
+    public static Result<ValueTuple<T1, T2, T3>, TError> Combine<T1, T2, T3, TError>(
+        this ValueTuple<Result<T1, TError>, Result<T2, TError>, Result<T3, TError>> tuple
+    )
+    {
+        (Result<T1, TError> item1, Result<T2, TError> item2, Result<T3, TError> item3) = tuple;
+
+        if (item1.IsFailure)
+        {
+            return item1.Error;
+        }
+
+        if (item2.IsFailure)
+        {
+            return item2.Error;
+        }
+
+        if (item3.IsFailure)
+        {
+            return item3.Error;
+        }
+
+        return ValueTuple.Create(item1.Value, item2.Value, item3.Value);
+    }
 }

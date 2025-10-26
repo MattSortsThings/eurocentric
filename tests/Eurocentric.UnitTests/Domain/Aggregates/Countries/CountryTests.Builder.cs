@@ -14,7 +14,6 @@ public sealed class CountryTests : UnitTest
     );
 
     private static readonly CountryCode DefaultCountryCode = CountryCode.FromValue("AA").GetValueOrDefault();
-
     private static readonly CountryName DefaultCountryName = CountryName.FromValue("CountryName").GetValueOrDefault();
 
     [Test]
@@ -114,20 +113,20 @@ public sealed class CountryTests : UnitTest
     public async Task Builder_should_fail_when_CountryCode_not_set()
     {
         // Arrange
-        ICountryIdFactory dummyIdFactory = Substitute.For<ICountryIdFactory>();
+        ICountryIdFactory idFactorySpy = Substitute.For<ICountryIdFactory>();
 
         // Act
         Result<Country, IDomainError> result = Country
             .Create()
             .WithCountryName(DefaultCountryName)
-            .Build(dummyIdFactory.Create);
+            .Build(idFactorySpy.Create);
 
         // Assert
         await Assert.That(result.IsFailure).IsTrue();
 
         await Assert.That(result.GetValueOrDefault()).IsNull();
 
-        await Assert.That(() => dummyIdFactory.DidNotReceive().Create()).ThrowsNothing();
+        await Assert.That(() => idFactorySpy.DidNotReceive().Create()).ThrowsNothing();
 
         await Assert
             .That(result.Error)
@@ -141,20 +140,20 @@ public sealed class CountryTests : UnitTest
     public async Task Builder_should_fail_when_CountryName_not_set()
     {
         // Arrange
-        ICountryIdFactory dummyIdFactory = Substitute.For<ICountryIdFactory>();
+        ICountryIdFactory idFactorySpy = Substitute.For<ICountryIdFactory>();
 
         // Act
         Result<Country, IDomainError> result = Country
             .Create()
             .WithCountryCode(DefaultCountryCode)
-            .Build(dummyIdFactory.Create);
+            .Build(idFactorySpy.Create);
 
         // Assert
         await Assert.That(result.IsFailure).IsTrue();
 
         await Assert.That(result.GetValueOrDefault()).IsNull();
 
-        await Assert.That(() => dummyIdFactory.DidNotReceive().Create()).ThrowsNothing();
+        await Assert.That(() => idFactorySpy.DidNotReceive().Create()).ThrowsNothing();
 
         await Assert
             .That(result.Error)
@@ -168,7 +167,7 @@ public sealed class CountryTests : UnitTest
     public async Task Builder_should_fail_given_illegal_CountryCode_value()
     {
         // Arrange
-        ICountryIdFactory dummyIdFactory = Substitute.For<ICountryIdFactory>();
+        ICountryIdFactory idFactorySpy = Substitute.For<ICountryIdFactory>();
 
         const string countryCodeValue = " ";
 
@@ -177,14 +176,14 @@ public sealed class CountryTests : UnitTest
             .Create()
             .WithCountryCode(CountryCode.FromValue(countryCodeValue))
             .WithCountryName(DefaultCountryName)
-            .Build(dummyIdFactory.Create);
+            .Build(idFactorySpy.Create);
 
         // Assert
         await Assert.That(result.IsFailure).IsTrue();
 
         await Assert.That(result.GetValueOrDefault()).IsNull();
 
-        await Assert.That(() => dummyIdFactory.DidNotReceive().Create()).ThrowsNothing();
+        await Assert.That(() => idFactorySpy.DidNotReceive().Create()).ThrowsNothing();
 
         await Assert
             .That(result.Error)
@@ -198,7 +197,7 @@ public sealed class CountryTests : UnitTest
     public async Task Builder_should_fail_given_illegal_CountryName_value()
     {
         // Arrange
-        ICountryIdFactory dummyIdFactory = Substitute.For<ICountryIdFactory>();
+        ICountryIdFactory idFactorySpy = Substitute.For<ICountryIdFactory>();
 
         const string countryNameValue = " ";
 
@@ -207,14 +206,14 @@ public sealed class CountryTests : UnitTest
             .Create()
             .WithCountryCode(DefaultCountryCode)
             .WithCountryName(CountryName.FromValue(countryNameValue))
-            .Build(dummyIdFactory.Create);
+            .Build(idFactorySpy.Create);
 
         // Assert
         await Assert.That(result.IsFailure).IsTrue();
 
         await Assert.That(result.GetValueOrDefault()).IsNull();
 
-        await Assert.That(() => dummyIdFactory.DidNotReceive().Create()).ThrowsNothing();
+        await Assert.That(() => idFactorySpy.DidNotReceive().Create()).ThrowsNothing();
 
         await Assert
             .That(result.Error)
@@ -227,7 +226,7 @@ public sealed class CountryTests : UnitTest
     }
 
     [Test]
-    public async Task Builder_should_throw_given_null_idProvider_value()
+    public async Task Builder_Build_should_throw_given_null_idProvider_value()
     {
         // Assert
         await Assert

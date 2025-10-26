@@ -11,6 +11,17 @@ namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public static partial class Shortcuts
 {
+    public static async IAsyncEnumerable<CountryDto> CreateMultipleCountriesAsync(
+        this AdminKernel kernel,
+        params string[] countryCodes
+    )
+    {
+        foreach (string countryCode in countryCodes)
+        {
+            yield return await kernel.CreateACountryAsync(countryCode: countryCode, countryName: "CountryName");
+        }
+    }
+
     public static async Task<CountryDto> CreateACountryAsync(
         this AdminKernel kernel,
         string countryName = "",

@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Aggregates.Countries;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +18,7 @@ public static class DependencyInjection
     {
         services.AddSingleton(TimeProvider.System);
 
-        services.AddScoped<ICountryIdFactory, CountryIdFactory>();
+        services.AddScoped<IContestIdFactory, ContestIdFactory>().AddScoped<ICountryIdFactory, CountryIdFactory>();
 
         return services;
     }

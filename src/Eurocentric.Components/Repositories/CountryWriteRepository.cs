@@ -3,10 +3,10 @@ using Eurocentric.Domain.Aggregates.Countries;
 
 namespace Eurocentric.Components.Repositories;
 
-internal sealed class CountryWriteRepository(AppDbContext dbContext) : ICountryWriteRepository
+internal sealed class CountryWriteRepository : BaseWriteRepository, ICountryWriteRepository
 {
-    public void Add(Country country) => dbContext.Countries.Add(country);
+    public CountryWriteRepository(AppDbContext dbContext)
+        : base(dbContext) { }
 
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
-        await dbContext.SaveChangesAsync(cancellationToken);
+    public void Add(Country country) => DbContext.Countries.Add(country);
 }

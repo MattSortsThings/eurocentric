@@ -5,7 +5,7 @@ namespace Eurocentric.AcceptanceTests.TestUtils;
 public static partial class MarkdownParser
 {
     /// <summary>
-    ///     Parses a sequence of objects from the sequential rows in a Markdown table.
+    ///     Parses an array of objects from the sequential rows in a Markdown table.
     /// </summary>
     /// <param name="markdownTable">The table to be parsed.</param>
     /// <param name="rowMapper">
@@ -14,13 +14,9 @@ public static partial class MarkdownParser
     /// </param>
     /// <typeparam name="TItem">The return value item type.</typeparam>
     /// <returns>
-    ///     A sequence of objects of type <typeparamref name="TItem" />; or an empty sequence if the
-    ///     <paramref name="markdownTable" /> parameter is <see langword="null" />.
+    ///     An array of objects of type <typeparamref name="TItem" />.
     /// </returns>
-    public static IEnumerable<TItem> ParseTable<TItem>(
-        string? markdownTable,
-        Func<Dictionary<string, string>, TItem> rowMapper
-    )
+    public static TItem[] ParseTable<TItem>(string? markdownTable, Func<Dictionary<string, string>, TItem> rowMapper)
     {
         if (string.IsNullOrEmpty(markdownTable))
         {
@@ -45,7 +41,8 @@ public static partial class MarkdownParser
                     .Zip(cells, (header, cell) => new { key = header, value = cell })
                     .ToDictionary(kvp => kvp.key, kvp => kvp.value);
             })
-            .Select(rowMapper);
+            .Select(rowMapper)
+            .ToArray();
     }
 
     [GeneratedRegex(@"\r\n|\n|\r")]

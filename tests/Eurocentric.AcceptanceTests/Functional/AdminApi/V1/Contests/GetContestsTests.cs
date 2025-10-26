@@ -76,7 +76,7 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
             int contestYear = 0
         )
         {
-            Contest contest = await Kernel.CreateALiverpoolRulesContestAsync(contestYear, cityName);
+            Contest contest = await Kernel.CreateADummyLiverpoolRulesContestAsync(contestYear, cityName);
 
             ExistingContests.Add(contest);
         }
@@ -86,7 +86,7 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
             int contestYear = 0
         )
         {
-            Contest contest = await Kernel.CreateAStockholmRulesContestAsync(contestYear, cityName);
+            Contest contest = await Kernel.CreateADummyStockholmRulesContestAsync(contestYear, cityName);
 
             ExistingContests.Add(contest);
         }

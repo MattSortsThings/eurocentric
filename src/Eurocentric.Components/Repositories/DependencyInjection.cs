@@ -19,6 +19,7 @@ public static class DependencyInjection
     {
         services
             .AddScoped<IContestReadRepository, ContestReadRepository>()
+            .AddScoped<IContestWriteRepository, ContestWriteRepository>()
             .AddScoped<ICountryReadRepository, CountryReadRepository>()
             .AddScoped<ICountryWriteRepository, CountryWriteRepository>();
 

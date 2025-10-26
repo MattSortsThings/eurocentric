@@ -1,3 +1,4 @@
+using Eurocentric.Apis.Admin.V1.Features.Contests;
 using Eurocentric.Apis.Admin.V1.Features.Countries;
 using RestSharp;
 
@@ -11,6 +12,8 @@ public interface IRestRequestFactory
 
     interface IContestsEndpoints
     {
+        RestRequest CreateContest(CreateContestRequest request);
+
         RestRequest GetContest(Guid contestId);
 
         RestRequest GetContests();

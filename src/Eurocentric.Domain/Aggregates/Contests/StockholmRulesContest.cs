@@ -1,3 +1,5 @@
+using CSharpFunctionalExtensions;
+using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -16,11 +18,14 @@ public sealed class StockholmRulesContest : Contest
         ContestId id,
         ContestYear contestYear,
         CityName cityName,
-        List<Participant> participants
+        List<Participant> participants,
+        GlobalTelevote? globalTelevote = null
     )
-        : base(id, contestYear, cityName, participants) { }
+        : base(id, contestYear, cityName, participants, globalTelevote) { }
 
     public override ContestRules ContestRules { get; private protected init; } = ContestRules.Stockholm;
+
+    public static IContestBuilder Create() => new Builder();
 
     public static StockholmRulesContest CreateDummyContest(Guid idValue, int contestYearValue, string cityNameValue)
     {
@@ -42,5 +47,27 @@ public sealed class StockholmRulesContest : Contest
             .ToList();
 
         return new StockholmRulesContest(id, contestYear, cityName, participants);
+    }
+
+    private sealed class Builder : ContestBuilder
+    {
+        public override Result<Contest, IDomainError> Build(Func<ContestId> idProvider)
+        {
+            ArgumentNullException.ThrowIfNull(idProvider);
+
+            return ValueTuple
+                .Create(ErrorOrContestYear, ErrorOrCityName, ErrorsOrParticipants.Collect())
+                .Combine()
+                .Map(InitializeWithDummyId)
+                .Ensure(ContestInvariants.HasLegalGlobalTelevote)
+                .Ensure(ContestInvariants.HasLegalContestCountries)
+                .Ensure(ContestInvariants.HasLegalParticipantCounts)
+                .Tap(contest => contest.Id = idProvider())
+                .Map(Contest (contest) => contest);
+        }
+
+        private StockholmRulesContest InitializeWithDummyId(
+            ValueTuple<ContestYear, CityName, List<Participant>> tuple
+        ) => new(ContestId.FromValue(Guid.Empty), tuple.Item1, tuple.Item2, tuple.Item3, GlobalTelevote);
     }
 }

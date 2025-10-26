@@ -70,7 +70,7 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
         public async Task Given_I_have_created_a_Stockholm_rules_contest_with_dummy_countries(
             string cityName = "",
             int contestYear = 0
-        ) => ExistingContest = await Kernel.CreateAStockholmRulesContestAsync(contestYear, cityName);
+        ) => ExistingContest = await Kernel.CreateADummyStockholmRulesContestAsync(contestYear, cityName);
 
         public async Task Given_I_have_deleted_my_contest()
         {
