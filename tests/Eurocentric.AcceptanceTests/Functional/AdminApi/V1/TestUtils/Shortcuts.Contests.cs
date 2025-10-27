@@ -1,34 +1,32 @@
 using Eurocentric.AcceptanceTests.TestUtils;
-using Eurocentric.Apis.Admin.V1.Dtos.Contests;
 using Eurocentric.Apis.Admin.V1.Enums;
 using Eurocentric.Apis.Admin.V1.Features.Contests;
 using Eurocentric.Components.DataAccess.EfCore;
-using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RestSharp;
-using ContestAggregate = Eurocentric.Domain.Aggregates.Contests.Contest;
 using ContestDto = Eurocentric.Apis.Admin.V1.Dtos.Contests.Contest;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public static partial class Shortcuts
 {
-    public static async Task<ContestDto> CreateAStockholmRulesContestAsync(
+    public static async Task<ContestDto> CreateALiverpoolRulesContestAsync(
         this AdminKernel kernel,
         Guid[] semiFinal2CountryIds = null!,
         Guid[] semiFinal1CountryIds = null!,
-        Guid globalTelevoteCountryId = default,
+        Guid globalTelevoteVotingCountryId = default,
+        string? cityName = null,
         int contestYear = 0
     )
     {
         CreateContestRequest requestBody = new()
         {
             ContestYear = contestYear,
-            CityName = TestDefaults.DefaultCityName,
-            ContestRules = ContestRules.Stockholm,
-            GlobalTelevoteVotingCountryId = null,
+            CityName = cityName ?? TestDefaults.DefaultCityName,
+            ContestRules = ContestRules.Liverpool,
+            GlobalTelevoteVotingCountryId = globalTelevoteVotingCountryId,
             Participants = semiFinal1CountryIds
                 .Select(TestDefaults.SemiFinal1ParticipantRequest)
                 .Concat(semiFinal2CountryIds.Select(TestDefaults.SemiFinal2ParticipantRequest))
@@ -44,34 +42,33 @@ public static partial class Shortcuts
         return response.AsResponse.Data!.Contest;
     }
 
-    public static async Task<ContestDto> CreateADummyLiverpoolRulesContestAsync(
+    public static async Task<ContestDto> CreateAStockholmRulesContestAsync(
         this AdminKernel kernel,
-        int contestYear,
-        string cityName
+        Guid[] semiFinal2CountryIds = null!,
+        Guid[] semiFinal1CountryIds = null!,
+        string? cityName = null,
+        int contestYear = 0
     )
     {
-        LiverpoolRulesContest contest = LiverpoolRulesContest.CreateDummyContest(Guid.NewGuid(), contestYear, cityName);
+        CreateContestRequest requestBody = new()
+        {
+            ContestYear = contestYear,
+            CityName = cityName ?? TestDefaults.DefaultCityName,
+            ContestRules = ContestRules.Stockholm,
+            GlobalTelevoteVotingCountryId = null,
+            Participants = semiFinal1CountryIds
+                .Select(TestDefaults.SemiFinal1ParticipantRequest)
+                .Concat(semiFinal2CountryIds.Select(TestDefaults.SemiFinal2ParticipantRequest))
+                .ToArray(),
+        };
 
-        ContestDto contestDto = contest.ToDto();
+        RestRequest request = kernel.Requests.Contests.CreateContest(requestBody);
 
-        await kernel.BackDoor.ExecuteScopedAsync(PersistAsync(contest));
+        ProblemOrResponse<CreateContestResponse> response = await kernel.Client.SendAsync<CreateContestResponse>(
+            request
+        );
 
-        return contestDto;
-    }
-
-    public static async Task<ContestDto> CreateADummyStockholmRulesContestAsync(
-        this AdminKernel kernel,
-        int contestYear,
-        string cityName
-    )
-    {
-        StockholmRulesContest contest = StockholmRulesContest.CreateDummyContest(Guid.NewGuid(), contestYear, cityName);
-
-        ContestDto contestDto = contest.ToDto();
-
-        await kernel.BackDoor.ExecuteScopedAsync(PersistAsync(contest));
-
-        return contestDto;
+        return response.AsResponse.Data!.Contest;
     }
 
     public static async Task DeleteAContestAsync(this AdminKernel kernel, Guid contestId)
@@ -97,18 +94,6 @@ public static partial class Shortcuts
         {
             await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
             await dbContext.Contests.Where(contest => contest.Id.Equals(idToDelete)).ExecuteDeleteAsync();
-        };
-    }
-
-    private static Func<IServiceProvider, Task> PersistAsync(ContestAggregate aggregate)
-    {
-        ContestAggregate aggToPersist = aggregate;
-
-        return async serviceProvider =>
-        {
-            await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
-            dbContext.Contests.Add(aggToPersist);
-            await dbContext.SaveChangesAsync();
         };
     }
 }

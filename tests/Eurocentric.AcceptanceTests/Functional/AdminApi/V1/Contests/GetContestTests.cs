@@ -2,6 +2,7 @@ using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Contests.TestUtils;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Dtos.Contests;
+using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Apis.Admin.V1.Features.Contests;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Contests;
@@ -16,9 +17,12 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
         Admin admin = new(AdminKernel.Create(SystemUnderTest, apiVersion));
 
         // Given
-        await admin.Given_I_have_created_a_Stockholm_rules_contest_with_dummy_countries(
-            contestYear: 2016,
-            cityName: "Stockholm"
+        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
+        await admin.Given_I_have_created_a_Stockholm_format_contest(
+            contestYear: 2018,
+            cityName: "Lisbon",
+            semiFinal1Countries: ["AT", "BE", "CZ"],
+            semiFinal2Countries: ["DK", "EE", "FI"]
         );
 
         await admin.Given_I_want_to_retrieve_my_contest();
@@ -38,9 +42,12 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
         Admin admin = new(AdminKernel.Create(SystemUnderTest, apiVersion));
 
         // Given
-        await admin.Given_I_have_created_a_Stockholm_rules_contest_with_dummy_countries(
-            contestYear: 2016,
-            cityName: "Stockholm"
+        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
+        await admin.Given_I_have_created_a_Stockholm_format_contest(
+            contestYear: 2018,
+            cityName: "Lisbon",
+            semiFinal1Countries: ["AT", "BE", "CZ"],
+            semiFinal2Countries: ["DK", "EE", "FI"]
         );
         await admin.Given_I_have_deleted_my_contest();
 
@@ -63,14 +70,38 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
     {
         private protected override AdminKernel Kernel { get; } = kernel;
 
+        private CountryIdLookup ExistingCountryIds { get; } = new();
+
         private Contest? ExistingContest { get; set; }
 
         private Guid? DeletedContestId { get; set; }
 
-        public async Task Given_I_have_created_a_Stockholm_rules_contest_with_dummy_countries(
+        public async Task Given_I_have_created_some_countries(params string[] countryCodes)
+        {
+            ExistingCountryIds.EnsureCapacity(countryCodes.Length);
+
+            await foreach (Country country in Kernel.CreateMultipleCountriesAsync(countryCodes))
+            {
+                ExistingCountryIds.Add(country.CountryCode, country.Id);
+            }
+        }
+
+        public async Task Given_I_have_created_a_Stockholm_format_contest(
+            string[] semiFinal2Countries = null!,
+            string[] semiFinal1Countries = null!,
             string cityName = "",
             int contestYear = 0
-        ) => ExistingContest = await Kernel.CreateADummyStockholmRulesContestAsync(contestYear, cityName);
+        )
+        {
+            Contest contest = await Kernel.CreateAStockholmRulesContestAsync(
+                contestYear: contestYear,
+                cityName: cityName,
+                semiFinal1CountryIds: semiFinal1Countries.Select(ExistingCountryIds.GetId).ToArray(),
+                semiFinal2CountryIds: semiFinal2Countries.Select(ExistingCountryIds.GetId).ToArray()
+            );
+
+            ExistingContest = contest;
+        }
 
         public async Task Given_I_have_deleted_my_contest()
         {

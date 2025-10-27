@@ -2,6 +2,7 @@ using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Contests.TestUtils;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Dtos.Contests;
+using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Apis.Admin.V1.Features.Contests;
 using TUnit.Assertions.Enums;
 
@@ -17,25 +18,33 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
         Admin admin = new(AdminKernel.Create(SystemUnderTest, apiVersion));
 
         // Given
-        await admin.Given_I_have_created_a_Liverpool_rules_contest_with_dummy_countries(
-            contestYear: 2023,
-            cityName: "Liverpool"
-        );
-        await admin.Given_I_have_created_a_Stockholm_rules_contest_with_dummy_countries(
-            contestYear: 2016,
-            cityName: "Stockholm"
-        );
-        await admin.Given_I_have_created_a_Stockholm_rules_contest_with_dummy_countries(
-            contestYear: 2017,
-            cityName: "Kyiv"
-        );
-        await admin.Given_I_have_created_a_Liverpool_rules_contest_with_dummy_countries(
-            contestYear: 2021,
-            cityName: "Rotterdam"
-        );
-        await admin.Given_I_have_created_a_Liverpool_rules_contest_with_dummy_countries(
+        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI", "GB", "HR", "XX");
+
+        await admin.Given_I_have_created_a_Liverpool_format_contest(
             contestYear: 2024,
-            cityName: "Malmö"
+            cityName: "Malmö",
+            globalTelevoteCountry: "XX",
+            semiFinal1Countries: ["AT", "BE", "CZ"],
+            semiFinal2Countries: ["DK", "EE", "FI"]
+        );
+        await admin.Given_I_have_created_a_Stockholm_format_contest(
+            contestYear: 2016,
+            cityName: "Stockholm",
+            semiFinal1Countries: ["AT", "BE", "CZ"],
+            semiFinal2Countries: ["DK", "EE", "FI"]
+        );
+        await admin.Given_I_have_created_a_Liverpool_format_contest(
+            contestYear: 2025,
+            cityName: "Basel",
+            globalTelevoteCountry: "XX",
+            semiFinal1Countries: ["AT", "BE", "CZ", "DK"],
+            semiFinal2Countries: ["EE", "FI", "GB", "HR"]
+        );
+        await admin.Given_I_have_created_a_Stockholm_format_contest(
+            contestYear: 2021,
+            cityName: "Rotterdam",
+            semiFinal1Countries: ["AT", "BE", "CZ", "DK"],
+            semiFinal2Countries: ["EE", "FI", "GB", "HR"]
         );
 
         admin.Given_I_want_to_retrieve_all_existing_contests();
@@ -69,24 +78,52 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
     {
         private protected override AdminKernel Kernel { get; } = kernel;
 
+        private CountryIdLookup ExistingCountryIds { get; } = new();
+
         private List<Contest> ExistingContests { get; } = [];
 
-        public async Task Given_I_have_created_a_Liverpool_rules_contest_with_dummy_countries(
+        public async Task Given_I_have_created_some_countries(params string[] countryCodes)
+        {
+            ExistingCountryIds.EnsureCapacity(countryCodes.Length);
+
+            await foreach (Country country in Kernel.CreateMultipleCountriesAsync(countryCodes))
+            {
+                ExistingCountryIds.Add(country.CountryCode, country.Id);
+            }
+        }
+
+        public async Task Given_I_have_created_a_Liverpool_format_contest(
+            string globalTelevoteCountry,
+            string[] semiFinal2Countries = null!,
+            string[] semiFinal1Countries = null!,
             string cityName = "",
             int contestYear = 0
         )
         {
-            Contest contest = await Kernel.CreateADummyLiverpoolRulesContestAsync(contestYear, cityName);
+            Contest contest = await Kernel.CreateALiverpoolRulesContestAsync(
+                contestYear: contestYear,
+                cityName: cityName,
+                semiFinal1CountryIds: semiFinal1Countries.Select(ExistingCountryIds.GetId).ToArray(),
+                semiFinal2CountryIds: semiFinal2Countries.Select(ExistingCountryIds.GetId).ToArray(),
+                globalTelevoteVotingCountryId: ExistingCountryIds.GetId(globalTelevoteCountry)
+            );
 
             ExistingContests.Add(contest);
         }
 
-        public async Task Given_I_have_created_a_Stockholm_rules_contest_with_dummy_countries(
+        public async Task Given_I_have_created_a_Stockholm_format_contest(
+            string[] semiFinal2Countries = null!,
+            string[] semiFinal1Countries = null!,
             string cityName = "",
             int contestYear = 0
         )
         {
-            Contest contest = await Kernel.CreateADummyStockholmRulesContestAsync(contestYear, cityName);
+            Contest contest = await Kernel.CreateAStockholmRulesContestAsync(
+                contestYear: contestYear,
+                cityName: cityName,
+                semiFinal1CountryIds: semiFinal1Countries.Select(ExistingCountryIds.GetId).ToArray(),
+                semiFinal2CountryIds: semiFinal2Countries.Select(ExistingCountryIds.GetId).ToArray()
+            );
 
             ExistingContests.Add(contest);
         }
