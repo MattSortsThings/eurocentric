@@ -99,6 +99,31 @@ public sealed class DomainErrorExtensionsTests : UnitTest
     }
 
     [Test]
+    public async Task ToProblemDetails_should_return_mapped_ProblemDetails_when_instance_is_UnexpectedError()
+    {
+        // Arrange
+        UnexpectedError sut = new()
+        {
+            Title = "Unexpected",
+            Detail = "An unexpected error occurred.",
+            Extensions = null,
+        };
+
+        // Act
+        ProblemDetails result = sut.ToProblemDetails();
+
+        // Assert
+        await Assert
+            .That(result)
+            .HasTitle(sut.Title)
+            .And.HasDetail(sut.Detail)
+            .And.HasStatus(StatusCodes.Status500InternalServerError)
+            .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.6.1")
+            .And.HasExtensionsCount(0)
+            .And.HasNullInstance();
+    }
+
+    [Test]
     public async Task ToProblemDetails_should_throw_when_instance_is_unsupported_type()
     {
         // Arrange

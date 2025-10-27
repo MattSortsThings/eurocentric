@@ -46,9 +46,11 @@ public sealed class Country : AggregateRoot<CountryId>
 
     private sealed class Builder : ICountryBuilder
     {
-        private Result<CountryCode, IDomainError> ErrorOrCountryCode { get; set; } = CountryErrors.CountryCodeNotSet();
+        private Result<CountryCode, IDomainError> ErrorOrCountryCode { get; set; } =
+            CountryErrors.CountryCodePropertyNotSet();
 
-        private Result<CountryName, IDomainError> ErrorOrCountryName { get; set; } = CountryErrors.CountryNameNotSet();
+        private Result<CountryName, IDomainError> ErrorOrCountryName { get; set; } =
+            CountryErrors.CountryNamePropertyNotSet();
 
         public ICountryBuilder WithCountryCode(Result<CountryCode, IDomainError> errorOrCountryCode)
         {

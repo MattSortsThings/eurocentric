@@ -320,7 +320,7 @@ public sealed class StockholmRulesContestTests : UnitTest
 
         await Assert
             .That(result.Error)
-            .IsTypeOf<UnprocessableError>()
+            .IsTypeOf<UnexpectedError>()
             .And.HasTitle("ContestYear property not set")
             .And.HasDetail("Client attempted to create a Contest aggregate without setting its ContestYear property.")
             .And.HasNullExtensions();
@@ -353,7 +353,7 @@ public sealed class StockholmRulesContestTests : UnitTest
 
         await Assert
             .That(result.Error)
-            .IsTypeOf<UnprocessableError>()
+            .IsTypeOf<UnexpectedError>()
             .And.HasTitle("CityName property not set")
             .And.HasDetail("Client attempted to create a Contest aggregate without setting its CityName property.")
             .And.HasNullExtensions();

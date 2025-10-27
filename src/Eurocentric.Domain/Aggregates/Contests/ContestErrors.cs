@@ -108,10 +108,10 @@ public static class ContestErrors
     ///     Creates and returns a new error indicating that the client has attempted to create a <see cref="Contest" />
     ///     without setting its <see cref="Contest.ContestYear" /> property.
     /// </summary>
-    /// <returns>A new <see cref="UnprocessableError" /> instance.</returns>
-    public static UnprocessableError ContestYearPropertyNotSet()
+    /// <returns>A new <see cref="UnexpectedError" /> instance.</returns>
+    public static UnexpectedError ContestYearPropertyNotSet()
     {
-        return new UnprocessableError
+        return new UnexpectedError
         {
             Title = "ContestYear property not set",
             Detail = "Client attempted to create a Contest aggregate without setting its ContestYear property.",
@@ -123,10 +123,10 @@ public static class ContestErrors
     ///     Creates and returns a new error indicating that the client has attempted to create a <see cref="Contest" />
     ///     without setting its <see cref="Contest.CityName" /> property.
     /// </summary>
-    /// <returns>A new <see cref="UnprocessableError" /> instance.</returns>
-    public static UnprocessableError CityNamePropertyNotSet()
+    /// <returns>A new <see cref="UnexpectedError" /> instance.</returns>
+    public static UnexpectedError CityNamePropertyNotSet()
     {
-        return new UnprocessableError
+        return new UnexpectedError
         {
             Title = "CityName property not set",
             Detail = "Client attempted to create a Contest aggregate without setting its CityName property.",

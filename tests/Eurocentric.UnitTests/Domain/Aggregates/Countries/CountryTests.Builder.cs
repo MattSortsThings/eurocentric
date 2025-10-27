@@ -110,7 +110,7 @@ public sealed class CountryTests : UnitTest
     }
 
     [Test]
-    public async Task Builder_should_fail_when_CountryCode_not_set()
+    public async Task Builder_should_fail_on_CountryCode_property_not_set()
     {
         // Arrange
         ICountryIdFactory idFactorySpy = Substitute.For<ICountryIdFactory>();
@@ -130,14 +130,14 @@ public sealed class CountryTests : UnitTest
 
         await Assert
             .That(result.Error)
-            .IsTypeOf<UnprocessableError>()
-            .And.HasTitle("CountryCode not set")
+            .IsTypeOf<UnexpectedError>()
+            .And.HasTitle("CountryCode property not set")
             .And.HasDetail("Client attempted to create a Country aggregate without setting its CountryCode property.")
             .And.HasNullExtensions();
     }
 
     [Test]
-    public async Task Builder_should_fail_when_CountryName_not_set()
+    public async Task Builder_should_fail_on_CountryName_property_not_set()
     {
         // Arrange
         ICountryIdFactory idFactorySpy = Substitute.For<ICountryIdFactory>();
@@ -157,8 +157,8 @@ public sealed class CountryTests : UnitTest
 
         await Assert
             .That(result.Error)
-            .IsTypeOf<UnprocessableError>()
-            .And.HasTitle("CountryName not set")
+            .IsTypeOf<UnexpectedError>()
+            .And.HasTitle("CountryName property not set")
             .And.HasDetail("Client attempted to create a Country aggregate without setting its CountryName property.")
             .And.HasNullExtensions();
     }

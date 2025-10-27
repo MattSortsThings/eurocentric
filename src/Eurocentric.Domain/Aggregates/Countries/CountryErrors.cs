@@ -44,27 +44,27 @@ public static class CountryErrors
     ///     Creates and returns a new error indicating that the client has attempted to create a <see cref="Country" /> without
     ///     setting its <see cref="Country.CountryCode" /> property.
     /// </summary>
-    /// <returns>A new <see cref="UnprocessableError" /> instance.</returns>
-    public static UnprocessableError CountryCodeNotSet()
+    /// <returns>A new <see cref="UnexpectedError" /> instance.</returns>
+    public static UnexpectedError CountryCodePropertyNotSet()
     {
-        return new UnprocessableError
+        return new UnexpectedError
         {
-            Title = "CountryCode not set",
+            Title = "CountryCode property not set",
             Detail = "Client attempted to create a Country aggregate without setting its CountryCode property.",
             Extensions = null,
         };
     }
 
     /// <summary>
-    ///     Creates and returns a new error indicating that the client has attempted to create a <see cref="Country" /> without
-    ///     setting its <see cref="Country.CountryName" /> property.
+    ///     Creates and returns a new error indicating that the client has attempted to create a <see cref="Country" />
+    ///     without setting its <see cref="Country.CountryName" /> property.
     /// </summary>
-    /// <returns>A new <see cref="UnprocessableError" /> instance.</returns>
-    public static UnprocessableError CountryNameNotSet()
+    /// <returns>A new <see cref="UnexpectedError" /> instance.</returns>
+    public static UnexpectedError CountryNamePropertyNotSet()
     {
-        return new UnprocessableError
+        return new UnexpectedError
         {
-            Title = "CountryName not set",
+            Title = "CountryName property not set",
             Detail = "Client attempted to create a Country aggregate without setting its CountryName property.",
             Extensions = null,
         };
