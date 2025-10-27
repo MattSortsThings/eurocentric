@@ -7,6 +7,12 @@ public sealed partial class AdminKernel
 {
     private sealed partial class RestRequestFactory : IRestRequestFactory.IBroadcastsEndpoints
     {
+        public RestRequest GetBroadcast(Guid broadcastId) =>
+            GetRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}")
+                .UseSecretApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddUrlSegment("broadcastId", broadcastId);
+
         public RestRequest GetBroadcasts() =>
             GetRequest("/admin/api/{apiVersion}/broadcasts").UseSecretApiKey().AddUrlSegment("apiVersion", apiVersion);
     }

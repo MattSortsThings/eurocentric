@@ -44,7 +44,7 @@ internal static class GetContest
                 .MapGet("contests/{contestId:guid}", ExecuteAsync)
                 .WithName(V1Endpoints.Contests.GetContest)
                 .AddedInVersion1Point0()
-                .WithSummary("Get aa contest")
+                .WithSummary("Get a contest")
                 .WithDescription("Retrieves the requested contest.")
                 .WithTags(V1Tags.Contests)
                 .Produces<GetContestResponse>()

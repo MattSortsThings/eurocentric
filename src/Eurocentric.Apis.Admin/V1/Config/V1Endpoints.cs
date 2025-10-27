@@ -4,6 +4,7 @@ internal static class V1Endpoints
 {
     internal static class Broadcasts
     {
+        internal const string GetBroadcast = "GetBroadcast";
         internal const string GetBroadcasts = "GetBroadcasts";
     }
 

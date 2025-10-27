@@ -14,6 +14,8 @@ public interface IRestRequestFactory
 
     interface IBroadcastsEndpoints
     {
+        RestRequest GetBroadcast(Guid broadcastId);
+
         RestRequest GetBroadcasts();
     }
 
