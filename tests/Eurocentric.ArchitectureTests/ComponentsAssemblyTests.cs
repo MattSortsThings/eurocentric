@@ -5,23 +5,21 @@ namespace Eurocentric.ArchitectureTests;
 public sealed class ComponentsAssemblyTests : ArchitectureTest
 {
     [Test]
-    public async Task Domain_service_implementations_should_be_internal()
+    public async Task Domain_interface_implementations_should_be_internal()
     {
         // Arrange
-        ClassRule rule = Classes()
+        TypeRule rule = Types()
             .That()
-            .ImplementAnyInterfaces(Interfaces().That().Are(DomainAssemblyTypes))
-            .And()
             .Are(ComponentsAssemblyTypes)
             .And()
-            .AreNot(AlwaysIgnoredTypes)
+            .ImplementAnyInterfaces(Interfaces().That().Are(DomainAssemblyTypes))
             .Should()
             .BeInternal();
 
         // Act
-        IEnumerable<EvaluationResult> results = rule.Evaluate(ArchitectureUnderTest);
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
 
         // Assert
-        await Assert.That(results).ContainsOnly(Passed);
+        await Assert.That(result).ContainsOnly(Passed);
     }
 }

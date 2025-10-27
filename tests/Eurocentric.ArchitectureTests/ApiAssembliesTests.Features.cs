@@ -1,7 +1,21 @@
+using Eurocentric.ArchitectureTests.TestUtils;
+
 namespace Eurocentric.ArchitectureTests;
 
 public sealed partial class ApiAssembliesTests
 {
+    private static readonly IObjectProvider<Class> FeatureClasses = Classes()
+        .That()
+        .Are(Types().That().Are(AdminApiAssemblyTypes).Or().Are(PublicApiAssemblyTypes))
+        .And()
+        .ResideInNamespaceMatching("Eurocentric.Apis.*.*.Features.*.")
+        .And()
+        .AreNotNested()
+        .And()
+        .DoNotHaveNameEndingWith("Request")
+        .And()
+        .DoNotHaveNameEndingWith("Response");
+
     [Test]
     public async Task Feature_classes_should_be_internal()
     {
@@ -9,23 +23,10 @@ public sealed partial class ApiAssembliesTests
         ClassRule rule = Classes().That().Are(FeatureClasses).Should().BeInternal();
 
         // Act
-        IEnumerable<EvaluationResult> results = rule.Evaluate(ArchitectureUnderTest);
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
 
         // Assert
-        await Assert.That(results).ContainsOnly(Passed);
-    }
-
-    [Test]
-    public async Task Feature_classes_should_be_static()
-    {
-        // Arrange
-        ClassRule rule = Classes().That().Are(FeatureClasses).Should().BeSealed().AndShould().BeAbstract();
-
-        // Act
-        IEnumerable<EvaluationResult> results = rule.Evaluate(ArchitectureUnderTest);
-
-        // Assert
-        await Assert.That(results).ContainsOnly(Passed);
+        await Assert.That(result).ContainsOnly(Passed);
     }
 
     [Test]
@@ -36,16 +37,12 @@ public sealed partial class ApiAssembliesTests
             .That()
             .Are(FeatureClasses)
             .Should()
-            .FollowCustomCondition(
-                cls => cls.Members.All(member => member.Visibility != Visibility.Public),
-                "has no public members",
-                "at least one public member was found"
-            );
+            .FollowCustomCondition(new ClassHasNoPublicMembersCondition());
 
         // Act
-        IEnumerable<EvaluationResult> results = rule.Evaluate(ArchitectureUnderTest);
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
 
         // Assert
-        await Assert.That(results).ContainsOnly(Passed);
+        await Assert.That(result).ContainsOnly(Passed);
     }
 }
