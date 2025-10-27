@@ -27,28 +27,6 @@ public sealed class StockholmRulesContest : Contest
 
     public static IContestBuilder Create() => new Builder();
 
-    public static StockholmRulesContest CreateDummyContest(Guid idValue, int contestYearValue, string cityNameValue)
-    {
-        ContestId id = ContestId.FromValue(idValue);
-        ContestYear? contestYear = ContestYear.FromValue(contestYearValue).GetValueOrDefault();
-        CityName? cityName = CityName.FromValue(cityNameValue).GetValueOrDefault();
-
-        List<Participant> participants = Enumerable
-            .Range(0, 10)
-            .Select(i =>
-            {
-                CountryId countryId = CountryId.FromValue(Guid.NewGuid());
-                ActName actName = ActName.FromValue("ActName ").GetValueOrDefault();
-                SongTitle songTitle = SongTitle.FromValue("SongTitle").GetValueOrDefault();
-                SemiFinalDraw draw = i % 2 == 0 ? SemiFinalDraw.SemiFinal1 : SemiFinalDraw.SemiFinal2;
-
-                return new Participant(countryId, draw, actName, songTitle);
-            })
-            .ToList();
-
-        return new StockholmRulesContest(id, contestYear, cityName, participants);
-    }
-
     private sealed class Builder : ContestBuilder
     {
         public override Result<Contest, IDomainError> Build(Func<ContestId> idProvider)

@@ -15,7 +15,7 @@ public sealed class Country : AggregateRoot<CountryId>
     [UsedImplicitly(Reason = "EF Core")]
     private Country() { }
 
-    public Country(CountryId id, CountryCode countryCode, CountryName countryName)
+    private Country(CountryId id, CountryCode countryCode, CountryName countryName)
     {
         Id = id;
         CountryCode = countryCode;
