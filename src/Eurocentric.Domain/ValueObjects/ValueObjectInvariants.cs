@@ -9,6 +9,18 @@ namespace Eurocentric.Domain.ValueObjects;
 public static class ValueObjectInvariants
 {
     /// <summary>
+    ///     Checks that the provided value is a legal <see cref="BroadcastDate" /> value.
+    /// </summary>
+    /// <param name="value">The value to be checked.</param>
+    /// <returns>An error if the rule was not satisfied; otherwise, a successful result with no return value.</returns>
+    public static UnitResult<IDomainError> LegalBroadcastDateValue(DateOnly value)
+    {
+        UnitResult<IDomainError> yearResult = LegalContestYearValue(value.Year);
+
+        return yearResult.IsSuccess ? yearResult : ValueObjectErrors.IllegalBroadcastDateValue(value);
+    }
+
+    /// <summary>
     ///     Checks that the provided value is a legal <see cref="CountryCode" /> value.
     /// </summary>
     /// <param name="value">The value to be checked.</param>
@@ -92,4 +104,20 @@ public static class ValueObjectInvariants
 
         return ValueObjectErrors.IllegalSongTitleValue(value);
     }
+
+    /// <summary>
+    ///     Checks that the provided value is a legal <see cref="FinishingPosition" /> value.
+    /// </summary>
+    /// <param name="value">The value to be checked.</param>
+    /// <returns>An error if the rule was not satisfied; otherwise, a successful result with no return value.</returns>
+    public static UnitResult<IDomainError> LegalFinishingPositionValue(int value) =>
+        value >= 1 ? UnitResult.Success<IDomainError>() : ValueObjectErrors.IllegalFinishingPositionValue(value);
+
+    /// <summary>
+    ///     Checks that the provided value is a legal <see cref="RunningOrderSpotValue" /> value.
+    /// </summary>
+    /// <param name="value">The value to be checked.</param>
+    /// <returns>An error if the rule was not satisfied; otherwise, a successful result with no return value.</returns>
+    public static UnitResult<IDomainError> LegalRunningOrderSpotValue(int value) =>
+        value >= 1 ? UnitResult.Success<IDomainError>() : ValueObjectErrors.IllegalRunningOrderSpotValue(value);
 }

@@ -53,9 +53,5 @@ public abstract class StringAtomicValueObject : ValueObject, IComparable<StringA
     }
 
     /// <inheritdoc />
-    /// <remarks>
-    ///     <see cref="StringAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties using
-    ///     <see cref="StringComparison.Ordinal" /> string comparison rules.
-    /// </remarks>
     public override int GetHashCode() => Value.GetHashCode(StringComparison.Ordinal);
 }

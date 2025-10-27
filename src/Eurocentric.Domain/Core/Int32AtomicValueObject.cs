@@ -16,7 +16,7 @@ public abstract class Int32AtomicValueObject : ValueObject, IComparable<Int32Ato
     public int Value { get; }
 
     /// <inheritdoc />
-    /// <remarks><see cref="StringAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
+    /// <remarks><see cref="Int32AtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
     public int CompareTo(Int32AtomicValueObject? other)
     {
         if (ReferenceEquals(this, other))
@@ -28,7 +28,7 @@ public abstract class Int32AtomicValueObject : ValueObject, IComparable<Int32Ato
     }
 
     /// <inheritdoc />
-    /// <remarks><see cref="StringAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
+    /// <remarks><see cref="Int32AtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
     public override bool Equals(ValueObject? other)
     {
         if (other is null)
@@ -41,10 +41,9 @@ public abstract class Int32AtomicValueObject : ValueObject, IComparable<Int32Ato
             return true;
         }
 
-        return other is Int32AtomicValueObject g && g.GetType() == GetType() && g.Value == Value;
+        return other is Int32AtomicValueObject i && i.GetType() == GetType() && i.Value == Value;
     }
 
     /// <inheritdoc />
-    /// <remarks><see cref="StringAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
     public override int GetHashCode() => Value.GetHashCode();
 }

@@ -18,6 +18,7 @@ public sealed partial class DomainAssemblyTests
         .Are(ValueObjectTypes)
         .And()
         .AreAssignableTo(
+            typeof(DateOnlyAtomicValueObject),
             typeof(GuidAtomicValueObject),
             typeof(Int32AtomicValueObject),
             typeof(StringAtomicValueObject)

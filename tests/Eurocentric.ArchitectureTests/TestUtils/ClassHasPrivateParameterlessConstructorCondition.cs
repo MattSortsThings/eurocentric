@@ -1,0 +1,25 @@
+using ArchUnitNET.Fluent.Conditions;
+
+namespace Eurocentric.ArchitectureTests.TestUtils;
+
+public class ClassHasPrivateParameterlessConstructorCondition : ICondition<Class>
+{
+    public string Description => "have private parameterless constructor";
+
+    public IEnumerable<ConditionResult> Check(IEnumerable<Class> objects, Architecture architecture)
+    {
+        foreach (Class @class in objects)
+        {
+            if (@class.Constructors.Any(member => member.Visibility == Visibility.Private && !member.Parameters.Any()))
+            {
+                yield return new ConditionResult(@class, true);
+            }
+            else
+            {
+                yield return new ConditionResult(@class, false, "has no private parameterless constructor");
+            }
+        }
+    }
+
+    public bool CheckEmpty() => true;
+}

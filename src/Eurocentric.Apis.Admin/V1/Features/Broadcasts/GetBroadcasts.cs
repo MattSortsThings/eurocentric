@@ -4,6 +4,7 @@ using Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Core;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using BroadcastAggregate = Eurocentric.Domain.Aggregates.Broadcasts.Broadcast;
+using BroadcastDto = Eurocentric.Apis.Admin.V1.Dtos.Broadcasts.Broadcast;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Broadcasts;
@@ -23,20 +26,9 @@ internal static class GetBroadcasts
         CancellationToken ct = default
     ) => await bus.DispatchAsync(new Query(), MapToOk, ct);
 
-    private static Ok<GetBroadcastsResponse> MapToOk(ContestYear[] contestYears)
+    private static Ok<GetBroadcastsResponse> MapToOk(BroadcastAggregate[] aggregates)
     {
-        Broadcast[] broadcastDtos = contestYears
-            .Select(year => year.Value)
-            .Select(yearValue =>
-                Broadcast.CreateExample() with
-                {
-                    Id = Guid.NewGuid(),
-                    BroadcastDate = new DateOnly(yearValue, 1, 1),
-                    ParentContestId = Guid.NewGuid(),
-                }
-            )
-            .OrderBy(broadcast => broadcast.BroadcastDate)
-            .ToArray();
+        BroadcastDto[] broadcastDtos = aggregates.Select(broadcast => broadcast.ToDto()).ToArray();
 
         return TypedResults.Ok(new GetBroadcastsResponse(broadcastDtos));
     }
@@ -56,18 +48,26 @@ internal static class GetBroadcasts
         }
     }
 
-    internal sealed record Query : IQuery<ContestYear[]>;
+    internal sealed record Query : IQuery<BroadcastAggregate[]>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, ContestYear[]>
+    internal sealed class QueryHandler : IQueryHandler<Query, BroadcastAggregate[]>
     {
-        public async Task<Result<ContestYear[], IDomainError>> OnHandle(Query _, CancellationToken ct)
+        public async Task<Result<BroadcastAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct)
         {
             await Task.CompletedTask;
 
-            return Enumerable
-                .Range(2016, 4)
-                .Select(value => ContestYear.FromValue(value).GetValueOrDefault())
+            IEnumerable<BroadcastDate> dates = Enumerable
+                .Range(1, 3)
+                .Select(day => BroadcastDate.FromValue(new DateOnly(2025, 5, day)).GetValueOrDefault());
+
+            return dates
+                .Zip(
+                    Enum.GetValues<ContestStage>(),
+                    (date, stage) =>
+                        BroadcastAggregate.CreateDummyBroadcast(BroadcastId.FromValue(Guid.NewGuid()), date, stage)
+                )
+                .OrderBy(broadcast => broadcast.BroadcastDate)
                 .ToArray();
         }
     }

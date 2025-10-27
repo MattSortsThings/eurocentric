@@ -122,7 +122,7 @@ public sealed class ContestYearTests : UnitTest
         const int sharedValue = 2025;
 
         ContestYear sut = ContestYear.FromValue(sharedValue).GetValueOrDefault();
-        TestIntValue other = TestIntValue.FromValue(sharedValue);
+        FinishingPosition other = FinishingPosition.FromValue(sharedValue).GetValueOrDefault();
 
         // Act
         bool result = sut.Equals(other);
@@ -156,10 +156,7 @@ public sealed class ContestYearTests : UnitTest
         // Assert
         await Assert.That(result.IsSuccess).IsTrue();
 
-        await Assert
-            .That(result.GetValueOrDefault())
-            .IsNotNull()
-            .And.Member(actCode => actCode.Value, source => source.IsEqualTo(value));
+        await Assert.That(result.GetValueOrDefault()).IsNotNull().And.HasValue(value);
     }
 
     [Test]
@@ -246,7 +243,7 @@ public sealed class ContestYearTests : UnitTest
         const int sharedValue = 2025;
 
         ContestYear sut = ContestYear.FromValue(sharedValue).GetValueOrDefault();
-        TestIntValue other = TestIntValue.FromValue(sharedValue);
+        FinishingPosition other = FinishingPosition.FromValue(sharedValue).GetValueOrDefault();
 
         // Act
         bool result = sut == other;
@@ -295,20 +292,12 @@ public sealed class ContestYearTests : UnitTest
         const int sharedValue = 2025;
 
         ContestYear sut = ContestYear.FromValue(sharedValue).GetValueOrDefault();
-        TestIntValue other = TestIntValue.FromValue(sharedValue);
+        FinishingPosition other = FinishingPosition.FromValue(sharedValue).GetValueOrDefault();
 
         // Act
         bool result = sut != other;
 
         // Assert
         await Assert.That(result).IsTrue();
-    }
-
-    private sealed class TestIntValue : Int32AtomicValueObject
-    {
-        private TestIntValue(int value)
-            : base(value) { }
-
-        public static TestIntValue FromValue(int value) => new(value);
     }
 }

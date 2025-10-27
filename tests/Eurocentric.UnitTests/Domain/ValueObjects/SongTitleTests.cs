@@ -156,10 +156,7 @@ public sealed class SongTitleTests : UnitTest
         // Assert
         await Assert.That(result.IsSuccess).IsTrue();
 
-        await Assert
-            .That(result.GetValueOrDefault())
-            .IsNotNull()
-            .And.Member(actCode => actCode.Value, source => source.IsEqualTo(value));
+        await Assert.That(result.GetValueOrDefault()).IsNotNull().And.HasValue(value);
     }
 
     [Test]

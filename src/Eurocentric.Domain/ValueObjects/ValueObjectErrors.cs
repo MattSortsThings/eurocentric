@@ -8,6 +8,22 @@ namespace Eurocentric.Domain.ValueObjects;
 public static class ValueObjectErrors
 {
     /// <summary>
+    ///     Creates and returns a new error indicating that the client has attempted to create a
+    ///     <see cref="BroadcastDate" /> object with an illegal value.
+    /// </summary>
+    /// <param name="broadcastDate">The illegal broadcast date value.</param>
+    /// <returns>A new <see cref="UnprocessableError" /> instance.</returns>
+    public static UnprocessableError IllegalBroadcastDateValue(DateOnly broadcastDate)
+    {
+        return new UnprocessableError
+        {
+            Title = "Illegal broadcast date value",
+            Detail = "Broadcast date value must be a date with a year between 2016 and 2050.",
+            Extensions = new Dictionary<string, object?> { { nameof(broadcastDate), broadcastDate } },
+        };
+    }
+
+    /// <summary>
     ///     Creates and returns a new error indicating that the client has attempted to create a <see cref="CountryCode" />
     ///     object with an illegal value.
     /// </summary>
@@ -100,6 +116,38 @@ public static class ValueObjectErrors
             Title = "Illegal country name value",
             Detail = "Country name value must be a non-empty, non-whitespace string of no more than 200 characters.",
             Extensions = new Dictionary<string, object?> { { nameof(countryName), countryName } },
+        };
+    }
+
+    /// <summary>
+    ///     Creates and returns a new error indicating that the client has attempted to create a
+    ///     <see cref="FinishingPosition" /> object with an illegal value.
+    /// </summary>
+    /// <param name="finishingPosition">The illegal finishing position value.</param>
+    /// <returns>A new <see cref="UnprocessableError" /> instance.</returns>
+    public static UnprocessableError IllegalFinishingPositionValue(int finishingPosition)
+    {
+        return new UnprocessableError
+        {
+            Title = "Illegal finishing position value",
+            Detail = "Finishing position value must be an integer greater than or equal to 1.",
+            Extensions = new Dictionary<string, object?> { { nameof(finishingPosition), finishingPosition } },
+        };
+    }
+
+    /// <summary>
+    ///     Creates and returns a new error indicating that the client has attempted to create a
+    ///     <see cref="RunningOrderSpot" /> object with an illegal value.
+    /// </summary>
+    /// <param name="runningOrderSpot">The illegal running order spot value.</param>
+    /// <returns>A new <see cref="UnprocessableError" /> instance.</returns>
+    public static UnprocessableError IllegalRunningOrderSpotValue(int runningOrderSpot)
+    {
+        return new UnprocessableError
+        {
+            Title = "Illegal running order spot value",
+            Detail = "Running order spot value must be an integer greater than or equal to 1.",
+            Extensions = new Dictionary<string, object?> { { nameof(runningOrderSpot), runningOrderSpot } },
         };
     }
 }

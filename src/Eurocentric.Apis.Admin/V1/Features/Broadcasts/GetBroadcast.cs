@@ -4,6 +4,8 @@ using Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
 using Eurocentric.Domain.Core;
+using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +13,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
+using BroadcastAggregate = Eurocentric.Domain.Aggregates.Broadcasts.Broadcast;
+using BroadcastDto = Eurocentric.Apis.Admin.V1.Dtos.Broadcasts.Broadcast;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Broadcasts;
@@ -23,11 +27,11 @@ internal static class GetBroadcast
         CancellationToken ct = default
     ) => await bus.DispatchAsync(broadcastId.ToQuery(), MapToOk, ct);
 
-    private static Query ToQuery(this Guid broadcastId) => new(broadcastId);
+    private static Query ToQuery(this Guid broadcastId) => new(BroadcastId.FromValue(broadcastId));
 
-    private static Ok<GetBroadcastResponse> MapToOk(Guid broadcastId)
+    private static Ok<GetBroadcastResponse> MapToOk(BroadcastAggregate aggregate)
     {
-        Broadcast broadcastDto = Broadcast.CreateExample() with { Id = broadcastId };
+        BroadcastDto broadcastDto = aggregate.ToDto();
 
         return TypedResults.Ok(new GetBroadcastResponse(broadcastDto));
     }
@@ -48,16 +52,18 @@ internal static class GetBroadcast
         }
     }
 
-    internal sealed record Query(Guid BroadcastId) : IQuery<Guid>;
+    internal sealed record Query(BroadcastId BroadcastId) : IQuery<BroadcastAggregate>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, Guid>
+    internal sealed class QueryHandler : IQueryHandler<Query, BroadcastAggregate>
     {
-        public async Task<Result<Guid, IDomainError>> OnHandle(Query query, CancellationToken ct)
+        public async Task<Result<BroadcastAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct)
         {
             await Task.CompletedTask;
 
-            return query.BroadcastId;
+            BroadcastDate broadcastDate = BroadcastDate.FromValue(V1ExampleValues.BroadcastDate).GetValueOrDefault();
+
+            return BroadcastAggregate.CreateDummyBroadcast(query.BroadcastId, broadcastDate, ContestStage.GrandFinal);
         }
     }
 }

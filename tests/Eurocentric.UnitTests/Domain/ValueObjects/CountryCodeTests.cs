@@ -156,10 +156,7 @@ public sealed class CountryCodeTests : UnitTest
         // Assert
         await Assert.That(result.IsSuccess).IsTrue();
 
-        await Assert
-            .That(result.GetValueOrDefault())
-            .IsNotNull()
-            .And.Member(countryCode => countryCode.Value, source => source.IsEqualTo(value));
+        await Assert.That(result.GetValueOrDefault()).IsNotNull().And.HasValue(value);
     }
 
     [Test]

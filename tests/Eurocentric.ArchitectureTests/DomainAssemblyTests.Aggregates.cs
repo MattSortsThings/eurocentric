@@ -54,6 +54,25 @@ public sealed partial class DomainAssemblyTests
     }
 
     [Test]
+    public async Task Entity_classes_should_have_private_or_private_protected_parameterless_constructor()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That()
+            .Are(EntityTypes)
+            .Should()
+            .FollowCustomCondition(new ClassHasPrivateParameterlessConstructorCondition())
+            .OrShould()
+            .FollowCustomCondition(new ClassHasPrivateProtectedParameterlessConstructorCondition());
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
     public async Task Entity_classes_should_have_no_public_constructor()
     {
         // Arrange

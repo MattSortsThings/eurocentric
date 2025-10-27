@@ -16,7 +16,7 @@ public abstract class GuidAtomicValueObject : ValueObject, IComparable<GuidAtomi
     public Guid Value { get; }
 
     /// <inheritdoc />
-    /// <remarks><see cref="StringAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
+    /// <remarks><see cref="GuidAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
     public int CompareTo(GuidAtomicValueObject? other)
     {
         if (ReferenceEquals(this, other))
@@ -28,7 +28,7 @@ public abstract class GuidAtomicValueObject : ValueObject, IComparable<GuidAtomi
     }
 
     /// <inheritdoc />
-    /// <remarks><see cref="StringAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
+    /// <remarks><see cref="GuidAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
     public override bool Equals(ValueObject? other)
     {
         if (other is null)
@@ -45,6 +45,5 @@ public abstract class GuidAtomicValueObject : ValueObject, IComparable<GuidAtomi
     }
 
     /// <inheritdoc />
-    /// <remarks><see cref="StringAtomicValueObject" /> instances are compared by their <see cref="Value" /> properties.</remarks>
     public override int GetHashCode() => Value.GetHashCode();
 }

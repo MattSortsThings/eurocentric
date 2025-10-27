@@ -156,10 +156,7 @@ public sealed class CityNameTests : UnitTest
         // Assert
         await Assert.That(result.IsSuccess).IsTrue();
 
-        await Assert
-            .That(result.GetValueOrDefault())
-            .IsNotNull()
-            .And.Member(cityCode => cityCode.Value, source => source.IsEqualTo(value));
+        await Assert.That(result.GetValueOrDefault()).IsNotNull().And.HasValue(value);
     }
 
     [Test]
