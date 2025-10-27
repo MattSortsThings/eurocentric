@@ -2,6 +2,11 @@ namespace Eurocentric.Apis.Admin.V1.Config;
 
 internal static class V1Endpoints
 {
+    internal static class Broadcasts
+    {
+        internal const string GetBroadcasts = "GetBroadcasts";
+    }
+
     internal static class Contests
     {
         internal const string CreateContest = "AdminApi.V1.CreateContest";

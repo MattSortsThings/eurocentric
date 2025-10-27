@@ -6,6 +6,8 @@ public sealed partial class AdminKernel
 {
     private sealed partial class RestRequestFactory(string apiVersion) : IRestRequestFactory
     {
+        public IRestRequestFactory.IBroadcastsEndpoints Broadcasts => this;
+
         public IRestRequestFactory.IContestsEndpoints Contests => this;
 
         public IRestRequestFactory.ICountriesEndpoints Countries => this;

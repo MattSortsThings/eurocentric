@@ -1,4 +1,5 @@
 using Eurocentric.Apis.Admin.V1.Config;
+using Eurocentric.Apis.Admin.V1.Features.Broadcasts;
 using Eurocentric.Apis.Admin.V1.Features.Contests;
 using Eurocentric.Apis.Admin.V1.Features.Countries;
 using Eurocentric.Components.EndpointMapping;
@@ -20,6 +21,8 @@ internal static class EndpointRouteBuilderExtensions
             .RequiresAdministratorRole()
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden);
+
+        v1Group.Map<GetBroadcasts.EndpointMapper>();
 
         v1Group.Map<CreateContest.EndpointMapper>().Map<GetContest.EndpointMapper>().Map<GetContests.EndpointMapper>();
 
