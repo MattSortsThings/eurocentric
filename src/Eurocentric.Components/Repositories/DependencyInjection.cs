@@ -1,4 +1,5 @@
 using Eurocentric.Components.Repositories.V0;
+using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Aggregates.Countries;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ public static class DependencyInjection
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services
+            .AddScoped<IBroadcastReadRepository, BroadcastReadRepository>()
             .AddScoped<IContestReadRepository, ContestReadRepository>()
             .AddScoped<IContestWriteRepository, ContestWriteRepository>()
             .AddScoped<ICountryReadRepository, CountryReadRepository>()

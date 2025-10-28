@@ -31,7 +31,10 @@ public sealed class BroadcastEqualityComparer : IEqualityComparer<Broadcast>
             && x.ParentContestId.Equals(y.ParentContestId)
             && x.ContestStage == y.ContestStage
             && x.Competitors.OrderBy(competitor => competitor.CompetingCountryId)
-                .SequenceEqual(y.Competitors.OrderBy(competitor => competitor.CompetingCountryId))
+                .SequenceEqual(
+                    y.Competitors.OrderBy(competitor => competitor.CompetingCountryId),
+                    new CompetitorEqualityComparer()
+                )
             && x.Juries.OrderBy(jury => jury.VotingCountryId)
                 .SequenceEqual(y.Juries.OrderBy(jury => jury.VotingCountryId))
             && x.Televotes.OrderBy(televote => televote.VotingCountryId)

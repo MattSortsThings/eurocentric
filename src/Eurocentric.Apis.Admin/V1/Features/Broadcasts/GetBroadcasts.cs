@@ -3,9 +3,8 @@ using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Core;
-using Eurocentric.Domain.Enums;
-using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -51,24 +50,10 @@ internal static class GetBroadcasts
     internal sealed record Query : IQuery<BroadcastAggregate[]>;
 
     [UsedImplicitly]
-    internal sealed class QueryHandler : IQueryHandler<Query, BroadcastAggregate[]>
+    internal sealed class QueryHandler(IBroadcastReadRepository readRepository)
+        : IQueryHandler<Query, BroadcastAggregate[]>
     {
-        public async Task<Result<BroadcastAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct)
-        {
-            await Task.CompletedTask;
-
-            IEnumerable<BroadcastDate> dates = Enumerable
-                .Range(1, 3)
-                .Select(day => BroadcastDate.FromValue(new DateOnly(2025, 5, day)).GetValueOrDefault());
-
-            return dates
-                .Zip(
-                    Enum.GetValues<ContestStage>(),
-                    (date, stage) =>
-                        BroadcastAggregate.CreateDummyBroadcast(BroadcastId.FromValue(Guid.NewGuid()), date, stage)
-                )
-                .OrderBy(broadcast => broadcast.BroadcastDate)
-                .ToArray();
-        }
+        public async Task<Result<BroadcastAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct) =>
+            await readRepository.GetAllAsync(ct);
     }
 }
