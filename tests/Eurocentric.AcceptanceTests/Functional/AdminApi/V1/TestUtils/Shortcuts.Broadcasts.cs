@@ -1,6 +1,7 @@
 using Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 using Eurocentric.Components.DataAccess.EfCore;
 using Eurocentric.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ApiContestStage = Eurocentric.Apis.Admin.V1.Enums.ContestStage;
 using BroadcastAggregate = Eurocentric.Domain.Aggregates.Broadcasts.Broadcast;
@@ -29,6 +30,13 @@ public static partial class Shortcuts
         return dto;
     }
 
+    public static async Task DeleteABroadcastAsync(this AdminKernel kernel, Guid broadcastId)
+    {
+        BroadcastId id = BroadcastId.FromValue(broadcastId);
+
+        await kernel.BackDoor.ExecuteScopedAsync(DeleteAsync(id));
+    }
+
     private static Func<IServiceProvider, Task> PersistAsync(BroadcastAggregate aggregate)
     {
         BroadcastAggregate broadcast = aggregate;
@@ -38,6 +46,17 @@ public static partial class Shortcuts
             await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
             dbContext.Broadcasts.Add(broadcast);
             await dbContext.SaveChangesAsync();
+        };
+    }
+
+    private static Func<IServiceProvider, Task> DeleteAsync(BroadcastId broadcastId)
+    {
+        BroadcastId id = broadcastId;
+
+        return async serviceProvider =>
+        {
+            await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
+            await dbContext.Broadcasts.Where(broadcast => broadcast.Id.Equals(id)).ExecuteDeleteAsync();
         };
     }
 }
