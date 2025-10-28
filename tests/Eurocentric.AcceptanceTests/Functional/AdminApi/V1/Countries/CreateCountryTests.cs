@@ -1,4 +1,3 @@
-using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Countries.TestUtils;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
@@ -206,10 +205,10 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
         public async Task Then_the_created_country_should_match(string countryName = "", string countryCode = "")
         {
-            Country createdCountry = await Assert.That(SuccessResponse?.Data?.Country).IsNotNull();
-
-            await Assert.That(createdCountry.CountryCode).IsEqualTo(countryCode);
-            await Assert.That(createdCountry.CountryName).IsEqualTo(countryName);
+            await Assert
+                .That(SuccessResponse?.Data?.Country)
+                .HasProperty(country => country.CountryCode, countryCode)
+                .And.HasProperty(country => country.CountryName, countryName);
         }
 
         public async Task Then_the_created_country_should_have_no_contest_roles()

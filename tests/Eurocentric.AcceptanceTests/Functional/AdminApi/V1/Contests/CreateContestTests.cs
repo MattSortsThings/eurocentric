@@ -1,4 +1,3 @@
-using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Contests.TestUtils;
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Dtos.Contests;
@@ -83,8 +82,8 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
 
             await Assert
                 .That(SuccessResponse?.Headers)
-                .Contains(headerParam =>
-                    headerParam.Name == "Location" && headerParam.Value.EndsWith(expectedLocationSuffix)
+                .Contains(headerParameter =>
+                    headerParameter.Name == "Location" && headerParameter.Value.EndsWith(expectedLocationSuffix)
                 );
         }
 
@@ -114,7 +113,7 @@ public sealed partial class CreateContestTests : SerialCleanAcceptanceTest
                 .And.Member(contest => contest.GlobalTelevote, source => source.IsEqualTo(expectedGlobalTelevote))
                 .And.Member(
                     contest => contest.Participants,
-                    source => source.IsEquivalentTo(expectedParticipants, new ParticipantEqualityComparer())
+                    collection => collection.IsEquivalentTo(expectedParticipants, new ParticipantEqualityComparer())
                 );
         }
 

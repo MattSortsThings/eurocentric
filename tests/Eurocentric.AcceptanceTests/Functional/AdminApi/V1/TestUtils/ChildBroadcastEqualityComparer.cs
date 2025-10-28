@@ -1,6 +1,6 @@
 using Eurocentric.Apis.Admin.V1.Dtos.Contests;
 
-namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Contests.TestUtils;
+namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public sealed class ChildBroadcastEqualityComparer : IEqualityComparer<ChildBroadcast>
 {

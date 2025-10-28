@@ -1,6 +1,6 @@
 using Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 
-namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Broadcasts.TestUtils;
+namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public sealed class BroadcastEqualityComparer : IEqualityComparer<Broadcast>
 {

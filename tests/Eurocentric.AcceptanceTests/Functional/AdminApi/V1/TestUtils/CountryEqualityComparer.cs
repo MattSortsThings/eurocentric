@@ -1,6 +1,6 @@
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 
-namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Countries.TestUtils;
+namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public sealed class CountryEqualityComparer : IEqualityComparer<Country>
 {

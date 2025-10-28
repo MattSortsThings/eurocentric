@@ -8,19 +8,27 @@ public sealed partial class AdminKernel
 {
     private sealed partial class RestRequestFactory : IRestRequestFactory.IContestsEndpoints
     {
-        public RestRequest CreateContest(CreateContestRequest request) =>
-            PostRequest("/admin/api/{apiVersion}/contests")
+        public RestRequest CreateContest(CreateContestRequest request)
+        {
+            return PostRequest("/admin/api/{apiVersion}/contests")
                 .UseSecretApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddJsonBody(request);
+        }
 
-        public RestRequest GetContest(Guid contestId) =>
-            GetRequest("/admin/api/{apiVersion}/contests/{contestId}")
+        public RestRequest GetContest(Guid contestId)
+        {
+            return GetRequest("/admin/api/{apiVersion}/contests/{contestId}")
                 .UseSecretApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddUrlSegment("contestId", contestId);
+        }
 
-        public RestRequest GetContests() =>
-            GetRequest("/admin/api/{apiVersion}/contests").UseSecretApiKey().AddUrlSegment("apiVersion", apiVersion);
+        public RestRequest GetContests()
+        {
+            return GetRequest("/admin/api/{apiVersion}/contests")
+                .UseSecretApiKey()
+                .AddUrlSegment("apiVersion", apiVersion);
+        }
     }
 }
