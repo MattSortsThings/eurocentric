@@ -12,7 +12,7 @@ public static class ContestErrors
     ///     Creates and returns a new error indicating that the client has requested a <see cref="Contest" /> that does not
     ///     exist in the system.
     /// </summary>
-    /// <param name="contestId">The ID of the requested country.</param>
+    /// <param name="contestId">The ID of the requested contest.</param>
     /// <returns>A new <see cref="NotFoundError" /> instance.</returns>
     public static NotFoundError ContestNotFound(ContestId contestId)
     {
