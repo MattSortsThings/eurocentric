@@ -24,7 +24,7 @@ public static partial class Shortcuts
         CreateContestRequest requestBody = new()
         {
             ContestYear = contestYear,
-            CityName = cityName ?? TestDefaults.DefaultCityName,
+            CityName = cityName ?? TestDefaults.CityName,
             ContestRules = ContestRules.Liverpool,
             GlobalTelevoteVotingCountryId = globalTelevoteVotingCountryId,
             Participants = semiFinal1CountryIds
@@ -53,7 +53,7 @@ public static partial class Shortcuts
         CreateContestRequest requestBody = new()
         {
             ContestYear = contestYear,
-            CityName = cityName ?? TestDefaults.DefaultCityName,
+            CityName = cityName ?? TestDefaults.CityName,
             ContestRules = ContestRules.Stockholm,
             GlobalTelevoteVotingCountryId = null,
             Participants = semiFinal1CountryIds

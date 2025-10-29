@@ -624,8 +624,8 @@ public sealed partial class CreateContestTests
                 {
                     ParticipatingCountryId = id,
                     SemiFinalDraw = SemiFinalDraw.SemiFinal1,
-                    ActName = TestDefaults.DefaultActName,
-                    SongTitle = TestDefaults.DefaultSongTitle,
+                    ActName = TestDefaults.ActName,
+                    SongTitle = TestDefaults.SongTitle,
                 });
 
             IEnumerable<CreateParticipantRequest> semiFinal2Participants = semiFinal2Countries
@@ -634,14 +634,14 @@ public sealed partial class CreateContestTests
                 {
                     ParticipatingCountryId = id,
                     SemiFinalDraw = SemiFinalDraw.SemiFinal2,
-                    ActName = TestDefaults.DefaultActName,
-                    SongTitle = TestDefaults.DefaultSongTitle,
+                    ActName = TestDefaults.ActName,
+                    SongTitle = TestDefaults.SongTitle,
                 });
 
             CreateContestRequest requestBody = new()
             {
-                ContestYear = TestDefaults.DefaultContestYear,
-                CityName = TestDefaults.DefaultCityName,
+                ContestYear = TestDefaults.ContestYear,
+                CityName = TestDefaults.CityName,
                 ContestRules = ContestRules.Stockholm,
                 GlobalTelevoteVotingCountryId = globalTelevoteCountry is null
                     ? null
@@ -662,8 +662,8 @@ public sealed partial class CreateContestTests
                 {
                     ParticipatingCountryId = id,
                     SemiFinalDraw = SemiFinalDraw.SemiFinal1,
-                    ActName = TestDefaults.DefaultActName,
-                    SongTitle = TestDefaults.DefaultSongTitle,
+                    ActName = TestDefaults.ActName,
+                    SongTitle = TestDefaults.SongTitle,
                 });
 
             IEnumerable<CreateParticipantRequest> semiFinal2Participants = allCountryIds
@@ -673,14 +673,14 @@ public sealed partial class CreateContestTests
                 {
                     ParticipatingCountryId = id,
                     SemiFinalDraw = SemiFinalDraw.SemiFinal2,
-                    ActName = TestDefaults.DefaultActName,
-                    SongTitle = TestDefaults.DefaultSongTitle,
+                    ActName = TestDefaults.ActName,
+                    SongTitle = TestDefaults.SongTitle,
                 });
 
             CreateContestRequest requestBody = new()
             {
-                ContestYear = TestDefaults.DefaultContestYear,
-                CityName = TestDefaults.DefaultCityName,
+                ContestYear = TestDefaults.ContestYear,
+                CityName = TestDefaults.CityName,
                 ContestRules = ContestRules.Stockholm,
                 GlobalTelevoteVotingCountryId = null,
                 Participants = semiFinal1Participants.Concat(semiFinal2Participants).ToArray(),

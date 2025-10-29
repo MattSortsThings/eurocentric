@@ -2,7 +2,6 @@ using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Apis.Admin.V1.Features.Countries;
-using RestSharp;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Countries;
 
@@ -146,15 +145,8 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
         private Country? ExistingCountry { get; set; }
 
-        public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "")
-        {
-            Country createdCountry = await Kernel.CreateACountryAsync(
-                countryCode: countryCode,
-                countryName: countryName
-            );
-
-            ExistingCountry = createdCountry;
-        }
+        public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "") =>
+            ExistingCountry = await Kernel.CreateACountryAsync(countryCode: countryCode, countryName: countryName);
 
         public void Given_I_want_to_create_a_country(string countryName = "", string countryCode = "")
         {
@@ -194,12 +186,10 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
             string expectedLocationSuffix = $"/admin/api/{apiVersion}/countries/{createdCountryId}";
 
-            IEnumerable<HeaderParameter>? responseHeaders = await Assert.That(SuccessResponse?.Headers).IsNotNull();
-
             await Assert
                 .That(SuccessResponse?.Headers)
-                .Contains(headerParam =>
-                    headerParam.Name == "Location" && headerParam.Value.EndsWith(expectedLocationSuffix)
+                .Contains(headerParameter =>
+                    headerParameter.Name == "Location" && headerParameter.Value.EndsWith(expectedLocationSuffix)
                 );
         }
 

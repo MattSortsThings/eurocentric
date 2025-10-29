@@ -21,7 +21,7 @@ public interface IRestRequestFactory
 
     interface IContestsEndpoints
     {
-        RestRequest CreateContest(CreateContestRequest request);
+        RestRequest CreateContest(CreateContestRequest requestBody);
 
         RestRequest GetContest(Guid contestId);
 
@@ -30,7 +30,7 @@ public interface IRestRequestFactory
 
     interface ICountriesEndpoints
     {
-        RestRequest CreateCountry(CreateCountryRequest request);
+        RestRequest CreateCountry(CreateCountryRequest requestBody);
 
         RestRequest GetCountries();
 

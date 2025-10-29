@@ -2,6 +2,7 @@ using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Apis.Admin.V1.Features.Countries;
+using TUnit.Assertions.Enums;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Countries;
 
@@ -70,12 +71,11 @@ public sealed class GetCountriesTests : SerialCleanAcceptanceTest
 
             await Assert
                 .That(SuccessResponse?.Data?.Countries)
-                .IsNotNull()
-                .And.IsEquivalentTo(expectedCountries, new CountryEqualityComparer())
+                .IsEquivalentTo(expectedCountries, new CountryEqualityComparer(), CollectionOrdering.Matching)
                 .And.IsOrderedBy(country => country.CountryCode);
         }
 
         public async Task Then_the_retrieved_countries_should_be_an_empty_list() =>
-            await Assert.That(SuccessResponse?.Data?.Countries).IsNotNull().And.IsEmpty();
+            await Assert.That(SuccessResponse?.Data?.Countries).IsEmpty();
     }
 }

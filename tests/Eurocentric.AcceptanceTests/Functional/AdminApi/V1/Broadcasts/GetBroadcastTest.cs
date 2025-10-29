@@ -117,7 +117,7 @@ public sealed class GetBroadcastTest : SerialCleanAcceptanceTest
         {
             Guid deletedBroadcastId = await Assert.That(DeletedBroadcastId).IsNotNull();
 
-            await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension("broadcastId", deletedBroadcastId);
+            await Assert.That(FailureResponse?.Data).HasExtension("broadcastId", deletedBroadcastId);
         }
     }
 }

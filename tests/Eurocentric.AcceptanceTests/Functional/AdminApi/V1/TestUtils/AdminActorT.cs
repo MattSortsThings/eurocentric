@@ -32,41 +32,27 @@ public abstract class AdminActor<T> : IActor<T>
     {
         HttpStatusCode expectedStatusCode = (HttpStatusCode)statusCode;
 
-        await Assert
-            .That(SuccessResponse)
-            .IsNotNull()
-            .And.Member(response => response.StatusCode, assertion => assertion.IsEqualTo(expectedStatusCode));
+        await Assert.That(SuccessResponse).HasProperty(response => response.StatusCode, expectedStatusCode);
     }
 
     public async Task Then_my_request_should_FAIL_with_status_code(int statusCode)
     {
         HttpStatusCode expectedStatusCode = (HttpStatusCode)statusCode;
 
-        await Assert
-            .That(FailureResponse)
-            .IsNotNull()
-            .And.Member(response => response.StatusCode, assertion => assertion.IsEqualTo(expectedStatusCode));
+        await Assert.That(FailureResponse).HasProperty(response => response.StatusCode, expectedStatusCode);
     }
 
     public async Task Then_the_response_problem_details_should_match(
         string detail = "",
         string title = "",
         int status = 0
-    )
-    {
-        await Assert
-            .That(FailureResponse?.Data)
-            .IsNotNull()
-            .And.HasTitle(title)
-            .And.HasDetail(detail)
-            .And.HasStatus(status);
-    }
+    ) => await Assert.That(FailureResponse?.Data).HasTitle(title).And.HasDetail(detail).And.HasStatus(status);
 
     public async Task Then_the_response_problem_details_extensions_should_include(int value = 0, string key = "") =>
-        await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension(key, value);
+        await Assert.That(FailureResponse?.Data).HasExtension(key, value);
 
     public async Task Then_the_response_problem_details_extensions_should_include(string value = "", string key = "") =>
-        await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension(key, value);
+        await Assert.That(FailureResponse?.Data).HasExtension(key, value);
 
     private void OnProblem(RestResponse<ProblemDetails> problem) => FailureResponse = problem;
 

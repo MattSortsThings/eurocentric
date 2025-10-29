@@ -92,14 +92,12 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
             int contestYear = 0
         )
         {
-            Contest contest = await Kernel.CreateAStockholmRulesContestAsync(
+            ExistingContest = await Kernel.CreateAStockholmRulesContestAsync(
                 contestYear: contestYear,
                 cityName: cityName,
                 semiFinal1CountryIds: semiFinal1Countries.Select(ExistingCountryIds.GetId).ToArray(),
                 semiFinal2CountryIds: semiFinal2Countries.Select(ExistingCountryIds.GetId).ToArray()
             );
-
-            ExistingContest = contest;
         }
 
         public async Task Given_I_have_deleted_my_contest()
@@ -137,7 +135,7 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
         {
             Guid deletedContestId = await Assert.That(DeletedContestId).IsNotNull();
 
-            await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension("contestId", deletedContestId);
+            await Assert.That(FailureResponse?.Data).HasExtension("contestId", deletedContestId);
         }
     }
 }

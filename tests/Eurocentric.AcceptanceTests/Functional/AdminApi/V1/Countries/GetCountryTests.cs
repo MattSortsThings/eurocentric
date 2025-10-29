@@ -60,15 +60,8 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
 
         private Guid? DeletedCountryId { get; set; }
 
-        public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "")
-        {
-            Country createdCountry = await Kernel.CreateACountryAsync(
-                countryCode: countryCode,
-                countryName: countryName
-            );
-
-            ExistingCountry = createdCountry;
-        }
+        public async Task Given_I_have_created_a_country(string countryName = "", string countryCode = "") =>
+            ExistingCountry = await Kernel.CreateACountryAsync(countryCode: countryCode, countryName: countryName);
 
         public async Task Given_I_have_deleted_my_country()
         {
@@ -98,17 +91,14 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
         {
             Country expectedCountry = await Assert.That(ExistingCountry).IsNotNull();
 
-            await Assert
-                .That(SuccessResponse?.Data?.Country)
-                .IsNotNull()
-                .And.IsEqualTo(expectedCountry, new CountryEqualityComparer());
+            await Assert.That(SuccessResponse?.Data?.Country).IsEqualTo(expectedCountry, new CountryEqualityComparer());
         }
 
         public async Task Then_the_response_problem_details_extensions_should_include_the_deleted_country_ID()
         {
             Guid deletedCountryId = await Assert.That(DeletedCountryId).IsNotNull();
 
-            await Assert.That(FailureResponse?.Data).IsNotNull().And.HasExtension("countryId", deletedCountryId);
+            await Assert.That(FailureResponse?.Data).HasExtension("countryId", deletedCountryId);
         }
     }
 }

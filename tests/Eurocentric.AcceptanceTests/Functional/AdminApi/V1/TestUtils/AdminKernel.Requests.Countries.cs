@@ -8,12 +8,12 @@ public sealed partial class AdminKernel
 {
     private sealed partial class RestRequestFactory : IRestRequestFactory.ICountriesEndpoints
     {
-        public RestRequest CreateCountry(CreateCountryRequest request)
+        public RestRequest CreateCountry(CreateCountryRequest requestBody)
         {
             return PostRequest("/admin/api/{apiVersion}/countries")
                 .UseSecretApiKey()
                 .AddUrlSegment("apiVersion", apiVersion)
-                .AddJsonBody(request);
+                .AddJsonBody(requestBody);
         }
 
         public RestRequest GetCountries()
