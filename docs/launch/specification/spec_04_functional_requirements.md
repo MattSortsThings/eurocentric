@@ -12,7 +12,7 @@ This document is part of the [launch specification](../README.md#launch-specific
       - [fa05: Get broadcasts](#fa05-get-broadcasts)
     - [Contests](#contests)
       - [fa06: Create contest](#fa06-create-contest)
-      - [fa07: Create contest child broadcast](#fa07-create-contest-child-broadcast)
+      - [fa07: Create contest broadcast](#fa07-create-contest-broadcast)
       - [fa08: Delete contest](#fa08-delete-contest)
       - [fa09: Get contest](#fa09-get-contest)
       - [fa10: Get contests](#fa10-get-contests)
@@ -120,7 +120,7 @@ This document is part of the [launch specification](../README.md#launch-specific
     - the global televote voting country ID
 - So that I can create the broadcasts for the created contest.
 
-#### fa07: Create contest child broadcast
+#### fa07: Create contest broadcast
 
 - As the Admin
 - I want to create a new child broadcast for an existing contest
