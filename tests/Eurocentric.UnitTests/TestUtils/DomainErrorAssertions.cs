@@ -28,6 +28,20 @@ public static class DomainErrorAssertions
         return new HasDateOnlyExtensionAssertion<T>(source.Context, expectedKey, expectedValue);
     }
 
+    public static HasGuidExtensionAssertion<T> HasExtension<T>(
+        this IAssertionSource<T> source,
+        string expectedKey,
+        Guid expectedValue,
+        [CallerArgumentExpression(nameof(expectedKey))] string? keyExpression = null,
+        [CallerArgumentExpression(nameof(expectedValue))] string? valueExpression = null
+    )
+        where T : IDomainError
+    {
+        source.Context.ExpressionBuilder.Append($"HasExtension({keyExpression}, {valueExpression})");
+
+        return new HasGuidExtensionAssertion<T>(source.Context, expectedKey, expectedValue);
+    }
+
     public static HasInt32ExtensionAssertion<T> HasExtension<T>(
         this IAssertionSource<T> source,
         string expectedKey,
@@ -231,6 +245,58 @@ public static class DomainErrorAssertions
             else if (actualDateOnlyValue != _expectedValue)
             {
                 result = AssertionResult.Failed($"value was {actualDateOnlyValue}");
+            }
+
+            return Task.FromResult(result);
+        }
+    }
+
+    public sealed class HasGuidExtensionAssertion<T> : Assertion<T>
+        where T : IDomainError
+    {
+        private readonly string _expectedKey;
+        private readonly Guid _expectedValue;
+
+        public HasGuidExtensionAssertion(AssertionContext<T> context, string expectedKey, Guid expectedValue)
+            : base(context)
+        {
+            _expectedKey = expectedKey;
+            _expectedValue = expectedValue;
+        }
+
+        protected override string GetExpectation() => $"to have Extension \"{_expectedKey}\": {_expectedValue}";
+
+        protected override Task<AssertionResult> CheckAsync(EvaluationMetadata<T> metadata)
+        {
+            AssertionResult result = AssertionResult.Passed;
+
+            if (metadata.Exception is { } exception)
+            {
+                result = AssertionResult.Failed($"{exception.GetType().Name} was thrown");
+            }
+            else if (metadata.Value is not { } domainError)
+            {
+                result = AssertionResult.Failed("value was null");
+            }
+            else if (domainError.Extensions is not { } actualExtensions)
+            {
+                result = AssertionResult.Failed("Extensions was null");
+            }
+            else if (!actualExtensions.TryGetValue(_expectedKey, out object? actualValue))
+            {
+                result = AssertionResult.Failed("key was not present");
+            }
+            else if (actualValue is null)
+            {
+                result = AssertionResult.Failed("value was null");
+            }
+            else if (actualValue is not Guid actualGuidValue)
+            {
+                result = AssertionResult.Failed($"value type was {actualValue.GetType()}");
+            }
+            else if (actualGuidValue != _expectedValue)
+            {
+                result = AssertionResult.Failed($"value was {actualGuidValue}");
             }
 
             return Task.FromResult(result);

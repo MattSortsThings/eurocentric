@@ -28,4 +28,6 @@ internal sealed class BroadcastReadRepository(AppDbContext dbContext) : IBroadca
 
         return broadcast is not null ? broadcast : BroadcastErrors.BroadcastNotFound(broadcastId);
     }
+
+    public IQueryable<Broadcast> GetAsQueryable() => dbContext.Broadcasts.AsNoTracking();
 }

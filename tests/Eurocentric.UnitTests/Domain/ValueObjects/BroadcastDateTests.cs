@@ -10,6 +10,61 @@ public sealed class BroadcastDateTests : UnitTest
     private static readonly DateOnly ArbitraryValue = DateOnly.Parse("2025-05-17");
 
     [Test]
+    [Arguments("2025-01-01", 2025)]
+    [Arguments("2025-12-31", 2025)]
+    [Arguments("2016-05-10", 2016)]
+    [Arguments("2023-05-17", 2023)]
+    public async Task IsIn_should_return_true_when_contestYear_Value_is_equal_to_year_of_instance_Value(
+        string dateValue,
+        int yearValue
+    )
+    {
+        // Arrange
+        BroadcastDate sut = BroadcastDate.FromValue(DateOnly.Parse(dateValue)).GetValueOrDefault();
+        ContestYear contestYear = ContestYear.FromValue(yearValue).GetValueOrDefault();
+
+        // Act
+        bool result = sut.IsIn(contestYear);
+
+        // Assert
+        await Assert.That(result).IsTrue();
+    }
+
+    [Test]
+    [Arguments("2025-01-01", 2026)]
+    [Arguments("2025-12-31", 2024)]
+    [Arguments("2016-05-10", 2019)]
+    [Arguments("2023-05-17", 2016)]
+    public async Task IsIn_should_return_false_when_contestYear_Value_is_not_equal_to_year_of_instance_Value_year(
+        string dateValue,
+        int yearValue
+    )
+    {
+        // Arrange
+        BroadcastDate sut = BroadcastDate.FromValue(DateOnly.Parse(dateValue)).GetValueOrDefault();
+        ContestYear contestYear = ContestYear.FromValue(yearValue).GetValueOrDefault();
+
+        // Act
+        bool result = sut.IsIn(contestYear);
+
+        // Assert
+        await Assert.That(result).IsFalse();
+    }
+
+    [Test]
+    public async Task IsIn_should_throw_given_null_contestYear_arg()
+    {
+        // Arrange
+        BroadcastDate sut = BroadcastDate.FromValue(ArbitraryValue).Value;
+
+        // Assert
+        await Assert
+            .That(() => sut.IsIn(null!))
+            .Throws<ArgumentNullException>()
+            .WithMessage("Value cannot be null. (Parameter 'contestYear')");
+    }
+
+    [Test]
     public async Task CompareTo_should_return_0_when_other_is_same_instance()
     {
         // Arrange

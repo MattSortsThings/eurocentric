@@ -1,0 +1,879 @@
+using CSharpFunctionalExtensions;
+using Eurocentric.Domain.Aggregates.Broadcasts;
+using Eurocentric.Domain.Aggregates.Contests;
+using Eurocentric.Domain.Core;
+using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.ValueObjects;
+using Eurocentric.UnitTests.Domain.Aggregates.Contests.TestUtils;
+using Eurocentric.UnitTests.TestUtils;
+using NSubstitute;
+
+namespace Eurocentric.UnitTests.Domain.Aggregates.Contests;
+
+public sealed partial class StockholmRulesContestTests
+{
+    [Test]
+    [Arguments("26786949-965a-44cc-801a-22c6b5667a3b")]
+    [Arguments("cbafd594-551e-4d87-8089-a8450d4ad059")]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_specified_ID(string broadcastIdValue)
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        BroadcastId broadcastId = BroadcastId.FromValue(Guid.Parse(broadcastIdValue));
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(() => broadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        await Assert.That(result.Value).IsTypeOf<Broadcast>().And.HasProperty(broadcast => broadcast.Id, broadcastId);
+    }
+
+    [Test]
+    [Arguments("2018-05-01", 2018)]
+    [Arguments("2025-05-17", 2025)]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_specified_BroadcastDate(
+        string broadcastDateValue,
+        int contestYearValue
+    )
+    {
+        // Arrange
+        BroadcastDate broadcastDate = BroadcastDate.FromValue(DateOnly.Parse(broadcastDateValue)).GetValueOrDefault();
+        ContestYear contestYear = ContestYear.FromValue(contestYearValue).GetValueOrDefault();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: contestYear,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(broadcastDate)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        await Assert
+            .That(result.Value)
+            .IsTypeOf<Broadcast>()
+            .And.HasProperty(broadcast => broadcast.BroadcastDate, broadcastDate);
+    }
+
+    [Test]
+    [Arguments("26786949-965a-44cc-801a-22c6b5667a3b")]
+    [Arguments("cbafd594-551e-4d87-8089-a8450d4ad059")]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_instance_ID_as_ParentContestId(
+        string contestIdValue
+    )
+    {
+        // Arrange
+        ContestId contestId = ContestId.FromValue(Guid.Parse(contestIdValue));
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi],
+            contestId: contestId
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        await Assert
+            .That(result.Value)
+            .IsTypeOf<Broadcast>()
+            .And.HasProperty(broadcast => broadcast.ParentContestId, contestId);
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_SemiFinal1_ContestStage()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        await Assert
+            .That(result.Value)
+            .IsTypeOf<Broadcast>()
+            .And.HasProperty(broadcast => broadcast.ContestStage, ContestStage.SemiFinal1);
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_false_Completed()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        await Assert.That(result.Value).IsTypeOf<Broadcast>().And.HasProperty(broadcast => broadcast.Completed, false);
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_specified_Competitors_scenario_1()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast broadcast = await Assert.That(result.Value).IsNotNull();
+
+        await Assert
+            .That(broadcast.Competitors)
+            .HasCount(2)
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 1,
+                    competingCountryId: CountryIds.At,
+                    finishingPosition: 1
+                )
+            )
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 2,
+                    competingCountryId: CountryIds.Be,
+                    finishingPosition: 2
+                )
+            );
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_specified_Competitors_scenario_2()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(null, CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast broadcast = await Assert.That(result.Value).IsNotNull();
+
+        await Assert
+            .That(broadcast.Competitors)
+            .HasCount(2)
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 2,
+                    competingCountryId: CountryIds.At,
+                    finishingPosition: 1
+                )
+            )
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 3,
+                    competingCountryId: CountryIds.Be,
+                    finishingPosition: 2
+                )
+            );
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_specified_Competitors_scenario_3()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, null, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast broadcast = await Assert.That(result.Value).IsNotNull();
+
+        await Assert
+            .That(broadcast.Competitors)
+            .HasCount(2)
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 1,
+                    competingCountryId: CountryIds.At,
+                    finishingPosition: 1
+                )
+            )
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 3,
+                    competingCountryId: CountryIds.Be,
+                    finishingPosition: 2
+                )
+            );
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_specified_Competitors_scenario_4()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, null, null, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast broadcast = await Assert.That(result.Value).IsNotNull();
+
+        await Assert
+            .That(broadcast.Competitors)
+            .HasCount(2)
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 1,
+                    competingCountryId: CountryIds.At,
+                    finishingPosition: 1
+                )
+            )
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 4,
+                    competingCountryId: CountryIds.Be,
+                    finishingPosition: 2
+                )
+            );
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_specified_Competitors_scenario_5()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be, null)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast broadcast = await Assert.That(result.Value).IsNotNull();
+
+        await Assert
+            .That(broadcast.Competitors)
+            .HasCount(2)
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 1,
+                    competingCountryId: CountryIds.At,
+                    finishingPosition: 1
+                )
+            )
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 2,
+                    competingCountryId: CountryIds.Be,
+                    finishingPosition: 2
+                )
+            );
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_specified_Competitors_scenario_6()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.Cz, CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast broadcast = await Assert.That(result.Value).IsNotNull();
+
+        await Assert
+            .That(broadcast.Competitors)
+            .HasCount(3)
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 1,
+                    competingCountryId: CountryIds.Cz,
+                    finishingPosition: 1
+                )
+            )
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 2,
+                    competingCountryId: CountryIds.At,
+                    finishingPosition: 2
+                )
+            )
+            .And.Contains(
+                Matchers.CompetitorWithNoPointsAwards(
+                    runningOrderSpot: 3,
+                    competingCountryId: CountryIds.Be,
+                    finishingPosition: 3
+                )
+            );
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_correct_Juries()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast broadcast = await Assert.That(result.Value).IsNotNull();
+
+        await Assert
+            .That(broadcast.Juries)
+            .HasCount(3)
+            .And.Contains(Matchers.Jury(votingCountryId: CountryIds.At, pointsAwarded: false))
+            .And.Contains(Matchers.Jury(votingCountryId: CountryIds.Be, pointsAwarded: false))
+            .And.Contains(Matchers.Jury(votingCountryId: CountryIds.Cz, pointsAwarded: false));
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_return_Broadcast_with_correct_Televotes()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast broadcast = await Assert.That(result.Value).IsNotNull();
+
+        await Assert
+            .That(broadcast.Televotes)
+            .HasCount(3)
+            .And.Contains(Matchers.Televote(votingCountryId: CountryIds.At, pointsAwarded: false))
+            .And.Contains(Matchers.Televote(votingCountryId: CountryIds.Be, pointsAwarded: false))
+            .And.Contains(Matchers.Televote(votingCountryId: CountryIds.Cz, pointsAwarded: false));
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_BroadcastDate_not_set()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithCompetingCountries(CountryIds.At, CountryIds.Fi)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<UnexpectedError>()
+            .And.HasTitle("BroadcastDate property not set")
+            .And.HasDetail(
+                "Client attempted to create a Broadcast aggregate without setting its BroadcastDate property."
+            )
+            .And.HasNullExtensions();
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_illegal_broadcast_date_value()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        DateOnly broadcastDateValue = DateOnly.Parse("1066-10-14");
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate.FromValue(broadcastDateValue))
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<UnprocessableError>()
+            .And.HasTitle("Illegal broadcast date value")
+            .And.HasDetail("Broadcast date value must be a date with a year between 2016 and 2050.")
+            .And.HasExtension("broadcastDate", broadcastDateValue);
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_illegal_competitors_count_scenario_1()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<UnprocessableError>()
+            .And.HasTitle("Illegal competitors count")
+            .And.HasDetail("A broadcast must have at least 2 competitors.")
+            .And.HasNullExtensions();
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_illegal_competitors_count_scenario_2()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries()
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<UnprocessableError>()
+            .And.HasTitle("Illegal competitors count")
+            .And.HasDetail("A broadcast must have at least 2 competitors.")
+            .And.HasNullExtensions();
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_illegal_competitors_count_scenario_3()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<UnprocessableError>()
+            .And.HasTitle("Illegal competitors count")
+            .And.HasDetail("A broadcast must have at least 2 competitors.")
+            .And.HasNullExtensions();
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_illegal_competitors_count_scenario_4()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, null)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<UnprocessableError>()
+            .And.HasTitle("Illegal competitors count")
+            .And.HasDetail("A broadcast must have at least 2 competitors.")
+            .And.HasNullExtensions();
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_illegal_competing_countries_scenario_1()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be, CountryIds.At)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<UnprocessableError>()
+            .And.HasTitle("Illegal competing countries")
+            .And.HasDetail("Each competitor in a broadcast must reference a different country.")
+            .And.HasNullExtensions();
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_illegal_competing_countries_scenario_2()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, null, CountryIds.Be, null, CountryIds.Be)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<UnprocessableError>()
+            .And.HasTitle("Illegal competing countries")
+            .And.HasDetail("Each competitor in a broadcast must reference a different country.")
+            .And.HasNullExtensions();
+    }
+
+    [Test]
+    [MatrixDataSource]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_parent_contest_year_conflict(
+        [Matrix("2020-01-01", "2022-01-01", "2024-01-01")] string broadcastDateValue,
+        [Matrix(2021, 2023)] int contestYearValue
+    )
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        BroadcastDate broadcastDate = BroadcastDate.FromValue(DateOnly.Parse(broadcastDateValue)).GetValueOrDefault();
+        ContestYear contestYear = ContestYear.FromValue(contestYearValue).GetValueOrDefault();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: contestYear,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(broadcastDate)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<ConflictError>()
+            .And.HasTitle("Parent contest year conflict")
+            .And.HasDetail("The requested contest's year does not match the provided broadcast date.")
+            .And.HasExtension("broadcastDate", broadcastDateValue);
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_parent_contest_participants_conflict_scenario_1()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        CountryId orphanCountryId = CountryId.FromValue(Guid.Parse("bc09624f-e722-4565-9828-93d68ddcd7d4"));
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be, orphanCountryId)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<ConflictError>()
+            .And.HasTitle("Parent contest participants conflict")
+            .And.HasDetail(
+                "The requested contest has no participant with the provided country ID "
+                    + "eligible to compete in the provided contest stage."
+            )
+            .And.HasExtension("contestId", sut.Id.Value)
+            .And.HasExtension("contestStage", "SemiFinal1")
+            .And.HasExtension("countryId", orphanCountryId.Value);
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_fail_on_parent_contest_participants_conflict_scenario_2()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateSemiFinal1Broadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Be, CountryIds.Fi)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<ConflictError>()
+            .And.HasTitle("Parent contest participants conflict")
+            .And.HasDetail(
+                "The requested contest has no participant with the provided country ID "
+                    + "eligible to compete in the provided contest stage."
+            )
+            .And.HasExtension("contestId", sut.Id.Value)
+            .And.HasExtension("contestStage", "SemiFinal1")
+            .And.HasExtension("countryId", CountryIds.Fi.Value);
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_WithCompetingCountries_should_throw_given_null_competingCountryIds_arg()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        CountryId?[] nullCompetingCountries = null!;
+
+        // Assert
+        await Assert
+            .That(() => sut.CreateSemiFinal1Broadcast().WithCompetingCountries(nullCompetingCountries))
+            .Throws<ArgumentNullException>()
+            .WithMessage("Value cannot be null. (Parameter 'competingCountryIds')");
+    }
+
+    [Test]
+    public async Task CreateSemiFinal1Broadcast_Build_should_throw_given_null_idProvider_arg()
+    {
+        // Arrange
+        StockholmRulesContest sut = CreateAStockholmRulesContest(
+            contestYear: ContestYear2016,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        Func<BroadcastId> nullIdProvider = null!;
+
+        // Assert
+        await Assert
+            .That(() => sut.CreateSemiFinal1Broadcast().Build(nullIdProvider))
+            .Throws<ArgumentNullException>()
+            .WithMessage("Value cannot be null. (Parameter 'idProvider')");
+    }
+}

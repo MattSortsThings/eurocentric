@@ -20,6 +20,7 @@ public static class DependencyInjection
     {
         services
             .AddScoped<IBroadcastReadRepository, BroadcastReadRepository>()
+            .AddScoped<IBroadcastWriteRepository, BroadcastWriteRepository>()
             .AddScoped<IContestReadRepository, ContestReadRepository>()
             .AddScoped<IContestWriteRepository, ContestWriteRepository>()
             .AddScoped<ICountryReadRepository, CountryReadRepository>()

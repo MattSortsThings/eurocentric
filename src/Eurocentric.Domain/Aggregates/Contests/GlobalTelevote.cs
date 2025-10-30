@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -20,5 +21,7 @@ public sealed class GlobalTelevote : Entity
     /// <summary>
     ///     Gets the ID of the global televote's voting country.
     /// </summary>
-    public CountryId VotingCountryId { get; private init; } = null!;
+    public CountryId VotingCountryId { get; [UsedImplicitly] private init; } = null!;
+
+    internal Televote CreateTelevote() => new(VotingCountryId);
 }

@@ -31,11 +31,11 @@ public sealed class FinishingPosition : Int32AtomicValueObject
     ///     Creates a sequence of consecutive <see cref="FinishingPosition" /> instances starting at
     ///     <see cref="FinishingPosition.Value" /> = 1.
     /// </summary>
-    /// <param name="count">An integer greater than or equal to 1. The length of the sequence to be generated.</param>
+    /// <param name="count">A non-negative integer. The length of the sequence to be generated.</param>
     /// <returns>A finite sequence of new <see cref="FinishingPosition" /> instances.</returns>
     public static IEnumerable<FinishingPosition> CreateSequence(int count)
     {
-        ArgumentOutOfRangeException.ThrowIfLessThan(count, 1, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfNegative(count, nameof(count));
 
         return Enumerable.Range(1, count).Select(value => new FinishingPosition(value));
     }

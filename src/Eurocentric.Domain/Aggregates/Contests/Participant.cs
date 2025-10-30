@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
@@ -31,7 +32,7 @@ public sealed class Participant : Entity
     /// <summary>
     ///     Gets the ID of the participating country.
     /// </summary>
-    public CountryId ParticipatingCountryId { get; private init; } = null!;
+    public CountryId ParticipatingCountryId { get; [UsedImplicitly] private init; } = null!;
 
     /// <summary>
     ///     Gets the participant's semi-final draw.
@@ -47,6 +48,10 @@ public sealed class Participant : Entity
     ///     Gets the participant's song title.
     /// </summary>
     public SongTitle SongTitle { get; private init; } = null!;
+
+    internal Jury CreateJury() => new(ParticipatingCountryId);
+
+    internal Televote CreateTelevote() => new(ParticipatingCountryId);
 
     internal static Result<Participant, IDomainError> CreateInSemiFinal1(
         CountryId countryId,

@@ -104,7 +104,7 @@ public sealed class GetContestsTests : SerialCleanAcceptanceTest
                 cityName: cityName,
                 semiFinal1CountryIds: semiFinal1Countries.Select(ExistingCountryIds.GetId).ToArray(),
                 semiFinal2CountryIds: semiFinal2Countries.Select(ExistingCountryIds.GetId).ToArray(),
-                globalTelevoteVotingCountryId: ExistingCountryIds.GetId(globalTelevoteCountry)
+                globalTelevoteCountryId: ExistingCountryIds.GetId(globalTelevoteCountry)
             );
 
             ExistingContests.Add(contest);

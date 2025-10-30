@@ -19,4 +19,7 @@ public sealed class CountryIdLookup
     public Guid GetId(string countryCode) => _lookup[countryCode];
 
     public Guid[] GetAllIds() => _lookup.Values.ToArray();
+
+    public Guid?[] MapToNullableIds(IEnumerable<string?> countryCodes) =>
+        countryCodes.Select<string?, Guid?>(countryCode => countryCode is null ? null : _lookup[countryCode]).ToArray();
 }

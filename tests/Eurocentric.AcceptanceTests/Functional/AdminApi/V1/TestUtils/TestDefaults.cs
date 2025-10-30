@@ -5,6 +5,7 @@ namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public static class TestDefaults
 {
+    public const string DateFormat = "yyyy-MM-dd";
     public const int ContestYear = 2016;
     public const string CityName = "CityName";
     public const string ActName = "ActName";

@@ -16,7 +16,7 @@ public static partial class Shortcuts
         this AdminKernel kernel,
         Guid[] semiFinal2CountryIds = null!,
         Guid[] semiFinal1CountryIds = null!,
-        Guid globalTelevoteVotingCountryId = default,
+        Guid globalTelevoteCountryId = default,
         string? cityName = null,
         int contestYear = 0
     )
@@ -26,7 +26,7 @@ public static partial class Shortcuts
             ContestYear = contestYear,
             CityName = cityName ?? TestDefaults.CityName,
             ContestRules = ContestRules.Liverpool,
-            GlobalTelevoteVotingCountryId = globalTelevoteVotingCountryId,
+            GlobalTelevoteVotingCountryId = globalTelevoteCountryId,
             Participants = semiFinal1CountryIds
                 .Select(TestDefaults.SemiFinal1ParticipantRequest)
                 .Concat(semiFinal2CountryIds.Select(TestDefaults.SemiFinal2ParticipantRequest))
@@ -76,6 +76,14 @@ public static partial class Shortcuts
         ContestId id = ContestId.FromValue(contestId);
 
         await kernel.BackDoor.ExecuteScopedAsync(DeleteAsync(id));
+    }
+
+    public static async Task<ContestDto> GetAContestAsync(this AdminKernel kernel, Guid contestId)
+    {
+        RestRequest request = kernel.Requests.Contests.GetContest(contestId);
+        ProblemOrResponse<GetContestResponse> response = await kernel.Client.SendAsync<GetContestResponse>(request);
+
+        return response.AsResponse.Data!.Contest;
     }
 
     public static async Task<ContestDto[]> GetAllContestsAsync(this AdminKernel kernel)

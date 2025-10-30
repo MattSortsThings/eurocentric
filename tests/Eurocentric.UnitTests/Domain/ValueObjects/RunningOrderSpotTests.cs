@@ -219,10 +219,23 @@ public sealed class RunningOrderSpotTests : UnitTest
     }
 
     [Test]
-    public async Task CreateSequence_should_throw_given_count_arg_less_than_1()
+    public async Task CreateSequence_should_return_empty_array_given_0_count_arg()
     {
         // Arrange
         const int count = 0;
+
+        // Act
+        RunningOrderSpot[] result = RunningOrderSpot.CreateSequence(count).ToArray();
+
+        // Assert
+        await Assert.That(result).IsEmpty();
+    }
+
+    [Test]
+    public async Task CreateSequence_should_throw_given_negative_count_arg()
+    {
+        // Arrange
+        const int count = -1;
 
         // Assert
         await Assert
@@ -230,8 +243,8 @@ public sealed class RunningOrderSpotTests : UnitTest
             .Throws<ArgumentOutOfRangeException>()
             .WithMessage(
                 """
-                count ('0') must be greater than or equal to '1'. (Parameter 'count')
-                Actual value was 0.
+                count ('-1') must be a non-negative value. (Parameter 'count')
+                Actual value was -1.
                 """
             );
     }

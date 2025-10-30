@@ -23,6 +23,8 @@ public interface IRestRequestFactory
     {
         RestRequest CreateContest(CreateContestRequest requestBody);
 
+        RestRequest CreateContestBroadcast(Guid contestId, CreateContestBroadcastRequest requestBody);
+
         RestRequest GetContest(Guid contestId);
 
         RestRequest GetContests();

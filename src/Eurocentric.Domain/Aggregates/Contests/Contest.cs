@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
@@ -75,8 +76,38 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// <summary>
     ///     Gets the contest's participants.
     /// </summary>
-    /// <remarks>This internal property accesses the contest's participant list directly.</remarks>
+    /// <remarks>This internal property accesses the contest's participants list directly.</remarks>
     internal IReadOnlyCollection<Participant> ParticipantsCollection => _participants;
+
+    /// <summary>
+    ///     Initializes a fluent builder to build a child <see cref="Broadcast" /> for this instance representing the
+    ///     <see cref="ContestStage.SemiFinal1" /> broadcast of the parent contest.
+    /// </summary>
+    /// <returns>
+    ///     An instance of a type that implements <see cref="IBroadcastBuilder" />, configured to build the Semi-Final 1
+    ///     child broadcast of this instance.
+    /// </returns>
+    public abstract IBroadcastBuilder CreateSemiFinal1Broadcast();
+
+    /// <summary>
+    ///     Initializes a fluent builder to build a child <see cref="Broadcast" /> for this instance representing the
+    ///     <see cref="ContestStage.SemiFinal2" /> broadcast of the parent contest.
+    /// </summary>
+    /// <returns>
+    ///     An instance of a type that implements <see cref="IBroadcastBuilder" />, configured to build the Semi-Final 2
+    ///     child broadcast of this instance.
+    /// </returns>
+    public abstract IBroadcastBuilder CreateSemiFinal2Broadcast();
+
+    /// <summary>
+    ///     Initializes a fluent builder to build a child <see cref="Broadcast" /> for this instance representing the
+    ///     <see cref="ContestStage.GrandFinal" /> broadcast of the parent contest.
+    /// </summary>
+    /// <returns>
+    ///     An instance of a type that implements <see cref="IBroadcastBuilder" />, configured to build the Grand Final
+    ///     child broadcast of this instance.
+    /// </returns>
+    public abstract IBroadcastBuilder CreateGrandFinalBroadcast();
 
     private protected abstract class ContestBuilder : IContestBuilder
     {

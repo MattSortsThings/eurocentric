@@ -31,13 +31,14 @@ internal static class MappingExtensions
         };
     }
 
-    internal static DomainSemiFinalDraw ToDomainSemiFinalDraw(this ApiSemiFinalDraw value)
+    internal static DomainContestStage ToDomainContestStage(this ApiContestStage value)
     {
         return value switch
         {
-            ApiSemiFinalDraw.SemiFinal1 => DomainSemiFinalDraw.SemiFinal1,
-            ApiSemiFinalDraw.SemiFinal2 => DomainSemiFinalDraw.SemiFinal2,
-            _ => throw new InvalidEnumArgumentException($"Invalid SemiFinalDraw enum value: {value}."),
+            ApiContestStage.SemiFinal1 => DomainContestStage.SemiFinal1,
+            ApiContestStage.SemiFinal2 => DomainContestStage.SemiFinal2,
+            ApiContestStage.GrandFinal => DomainContestStage.GrandFinal,
+            _ => throw new InvalidEnumArgumentException($"Invalid ContestStage enum value: {value}."),
         };
     }
 }

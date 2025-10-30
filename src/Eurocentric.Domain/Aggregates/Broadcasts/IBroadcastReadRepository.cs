@@ -38,4 +38,10 @@ public interface IBroadcastReadRepository
         BroadcastId broadcastId,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    ///     Returns all the <see cref="Broadcast" /> aggregates in the system as an untracked queryable.
+    /// </summary>
+    /// <returns>An object to allow read-only queries on the <see cref="Broadcast" /> aggregates.</returns>
+    IQueryable<Broadcast> GetAsQueryable();
 }

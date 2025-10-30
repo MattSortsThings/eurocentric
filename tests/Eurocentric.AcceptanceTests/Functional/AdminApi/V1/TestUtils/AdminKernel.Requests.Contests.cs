@@ -16,6 +16,15 @@ public sealed partial class AdminKernel
                 .AddJsonBody(requestBody);
         }
 
+        public RestRequest CreateContestBroadcast(Guid contestId, CreateContestBroadcastRequest requestBody)
+        {
+            return PostRequest("/admin/api/{apiVersion}/contests/{contestId}/broadcasts")
+                .UseSecretApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddUrlSegment("contestId", contestId)
+                .AddJsonBody(requestBody);
+        }
+
         public RestRequest GetContest(Guid contestId)
         {
             return GetRequest("/admin/api/{apiVersion}/contests/{contestId}")

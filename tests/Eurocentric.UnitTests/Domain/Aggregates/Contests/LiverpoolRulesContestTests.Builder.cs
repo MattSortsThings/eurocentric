@@ -9,17 +9,8 @@ using NSubstitute;
 
 namespace Eurocentric.UnitTests.Domain.Aggregates.Contests;
 
-public sealed class LiverpoolRulesContests : UnitTest
+public sealed partial class LiverpoolRulesContestTests
 {
-    private static readonly ContestId DefaultContestId = ContestId.FromValue(
-        Guid.Parse("fe901f2e-35ab-4c3a-a828-8d0fd019a182")
-    );
-
-    private static readonly ContestYear DefaultContestYear = ContestYear.FromValue(2016).GetValueOrDefault();
-    private static readonly CityName DefaultCityName = CityName.FromValue("CityName").GetValueOrDefault();
-    private static readonly ActName DefaultActName = ActName.FromValue("ActName").GetValueOrDefault();
-    private static readonly SongTitle DefaultSongTitle = SongTitle.FromValue("SongTitle").GetValueOrDefault();
-
     [Test]
     [Arguments("26786949-965a-44cc-801a-22c6b5667a3b")]
     [Arguments("cbafd594-551e-4d87-8089-a8450d4ad059")]
@@ -31,7 +22,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -95,7 +86,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(cityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -121,7 +112,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -147,7 +138,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -173,7 +164,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -204,7 +195,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(countryId)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -235,7 +226,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, ActName.FromValue("AT Act"), SongTitle.FromValue("AT Song"))
@@ -350,7 +341,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
             .AddSemiFinal1Participant(CountryIds.Be, DefaultActName, DefaultSongTitle)
@@ -427,7 +418,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(errorOrCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -466,7 +457,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, errorOrActName, DefaultSongTitle)
@@ -505,7 +496,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -544,7 +535,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, errorOrSongTitle)
@@ -585,7 +576,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -622,7 +613,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -658,7 +649,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -694,7 +685,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -730,7 +721,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.Xx, DefaultActName, DefaultSongTitle)
@@ -766,7 +757,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -802,7 +793,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -840,7 +831,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .Build(idFactorySpy.Create);
@@ -869,7 +860,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal2Participant(CountryIds.Dk, DefaultActName, DefaultSongTitle)
@@ -901,7 +892,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
@@ -933,7 +924,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.Be, DefaultActName, DefaultSongTitle)
@@ -967,7 +958,7 @@ public sealed class LiverpoolRulesContests : UnitTest
         // Act
         Result<Contest, IDomainError> result = LiverpoolRulesContest
             .Create()
-            .WithContestYear(DefaultContestYear)
+            .WithContestYear(ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(CountryIds.Xx)
             .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)

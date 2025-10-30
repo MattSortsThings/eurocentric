@@ -31,11 +31,11 @@ public sealed class RunningOrderSpot : Int32AtomicValueObject
     ///     Creates a sequence of consecutive <see cref="RunningOrderSpot" /> instances starting at
     ///     <see cref="RunningOrderSpot.Value" /> = 1.
     /// </summary>
-    /// <param name="count">An integer greater than or equal to 1. The length of the sequence to be generated.</param>
+    /// <param name="count">A non-negative integer. The length of the sequence to be generated.</param>
     /// <returns>A finite sequence of new <see cref="RunningOrderSpot" /> instances.</returns>
     public static IEnumerable<RunningOrderSpot> CreateSequence(int count)
     {
-        ArgumentOutOfRangeException.ThrowIfLessThan(count, 1, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfNegative(count, nameof(count));
 
         return Enumerable.Range(1, count).Select(value => new RunningOrderSpot(value));
     }
