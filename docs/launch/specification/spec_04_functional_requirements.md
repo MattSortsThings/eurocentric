@@ -24,7 +24,7 @@ This document is part of the [launch specification](../README.md#launch-specific
       - [fa15: Delete country](#fa15-delete-country)
       - [fa16: Get countries](#fa16-get-countries)
       - [fa17: Get country](#fa17-get-country)
-      - [fa18: Handle contest completed](#fa18-handle-contest-completed)
+      - [fa18: Handle contest created](#fa18-handle-contest-created)
       - [fa19: Handle contest deleted](#fa19-handle-contest-deleted)
   - [*public-api* feature scope](#public-api-feature-scope)
     - [Competing country rankings](#competing-country-rankings)
@@ -224,7 +224,7 @@ This document is part of the [launch specification](../README.md#launch-specific
     - the country's ID
 - So that I can review its status.
 
-#### fa18: Handle contest completed
+#### fa18: Handle contest created
 
 - As the Admin
   - who has created a new contest
