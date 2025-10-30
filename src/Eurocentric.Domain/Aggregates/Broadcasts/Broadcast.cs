@@ -87,37 +87,6 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     /// <remarks>This internal property accesses the broadcast's competitors list directly.</remarks>
     internal IReadOnlyCollection<Competitor> CompetitorsCollection => _competitors;
 
-    public static Broadcast CreateDummyBroadcast(BroadcastId id, BroadcastDate date, ContestStage contestStage)
-    {
-        ContestId parentContestId = ContestId.FromValue(Guid.NewGuid());
-
-        CountryId[] countryIds = Enumerable
-            .Range(0, 3)
-            .Select(_ => Guid.NewGuid())
-            .Select(CountryId.FromValue)
-            .ToArray();
-
-        var competitorNumbers = RunningOrderSpot
-            .CreateSequence(3)
-            .Zip(
-                FinishingPosition.CreateSequence(3),
-                (runningOrderSpot, finishingPosition) => new { runningOrderSpot, finishingPosition }
-            );
-
-        List<Competitor> competitors = countryIds
-            .Zip(
-                competitorNumbers,
-                (countryId, item) => new Competitor(countryId, item.runningOrderSpot, item.finishingPosition)
-            )
-            .ToList();
-
-        List<Jury> juries = countryIds.Select(countryId => new Jury(countryId)).ToList();
-
-        List<Televote> televotes = countryIds.Select(countryId => new Televote(countryId)).ToList();
-
-        return new Broadcast(id, date, contestStage, parentContestId, competitors, juries, televotes);
-    }
-
     internal abstract class Builder : IBroadcastBuilder
     {
         private Result<BroadcastDate, IDomainError> ErrorOrBroadcastDate { get; set; } =

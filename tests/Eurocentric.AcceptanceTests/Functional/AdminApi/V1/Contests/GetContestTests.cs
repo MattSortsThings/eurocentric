@@ -95,8 +95,8 @@ public sealed class GetContestTests : SerialCleanAcceptanceTest
             ExistingContest = await Kernel.CreateAStockholmRulesContestAsync(
                 contestYear: contestYear,
                 cityName: cityName,
-                semiFinal1CountryIds: semiFinal1Countries.Select(ExistingCountryIds.GetId).ToArray(),
-                semiFinal2CountryIds: semiFinal2Countries.Select(ExistingCountryIds.GetId).ToArray()
+                semiFinal1CountryIds: ExistingCountryIds.MapToGuids(semiFinal1Countries),
+                semiFinal2CountryIds: ExistingCountryIds.MapToGuids(semiFinal2Countries)
             );
         }
 

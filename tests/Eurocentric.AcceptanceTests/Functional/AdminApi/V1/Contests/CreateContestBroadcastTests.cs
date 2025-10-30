@@ -44,7 +44,7 @@ public sealed partial class CreateContestBroadcastTests : SerialCleanAcceptanceT
                 contestId: contestId,
                 broadcastDate: DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
                 contestStage: Enum.Parse<ContestStage>(contestStage),
-                competingCountryIds: ExistingCountryIds.MapToNullableIds(competingCountries)
+                competingCountryIds: ExistingCountryIds.MapToNullableGuids(competingCountries)
             );
 
             ExistingContest = await Kernel.GetAContestAsync(contestId);
@@ -62,7 +62,7 @@ public sealed partial class CreateContestBroadcastTests : SerialCleanAcceptanceT
             {
                 BroadcastDate = DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
                 ContestStage = Enum.Parse<ContestStage>(contestStage),
-                CompetingCountryIds = ExistingCountryIds.MapToNullableIds(competingCountries),
+                CompetingCountryIds = ExistingCountryIds.MapToNullableGuids(competingCountries),
             };
 
             Request = Kernel.Requests.Contests.CreateContestBroadcast(contestId, requestBody);

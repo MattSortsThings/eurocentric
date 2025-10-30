@@ -1,6 +1,8 @@
 using Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
+using Eurocentric.Apis.Admin.V1.Dtos.Contests;
+using Eurocentric.Apis.Admin.V1.Dtos.Countries;
 using Eurocentric.Apis.Admin.V1.Enums;
 using Eurocentric.Apis.Admin.V1.Features.Broadcasts;
 using TUnit.Assertions.Enums;
@@ -16,21 +18,26 @@ public sealed class GetBroadcastsTests : SerialCleanAcceptanceTest
         Admin admin = new(AdminKernel.Create(SystemUnderTest, apiVersion));
 
         // Given
-        await admin.Given_I_have_created_a_broadcast_with_dummy_contest_and_countries(
-            broadcastDate: "2023-05-01",
-            contestStage: "SemiFinal1"
+        await admin.Given_I_have_created_some_countries("AT", "BE", "CZ", "DK", "EE", "FI");
+        await admin.Given_I_have_created_a_Stockholm_rules_contest(
+            contestYear: 2025,
+            semiFinal1Countries: ["AT", "BE", "CZ"],
+            semiFinal2Countries: ["DK", "EE", "FI"]
         );
-        await admin.Given_I_have_created_a_broadcast_with_dummy_contest_and_countries(
-            broadcastDate: "2016-05-03",
-            contestStage: "GrandFinal"
+        await admin.Given_I_have_created_a_broadcast_for_my_contest(
+            contestStage: "SemiFinal2",
+            broadcastDate: "2025-05-02",
+            competingCountries: ["DK", "EE"]
         );
-        await admin.Given_I_have_created_a_broadcast_with_dummy_contest_and_countries(
+        await admin.Given_I_have_created_a_broadcast_for_my_contest(
+            contestStage: "SemiFinal1",
             broadcastDate: "2025-05-01",
-            contestStage: "SemiFinal1"
+            competingCountries: ["AT", "BE"]
         );
-        await admin.Given_I_have_created_a_broadcast_with_dummy_contest_and_countries(
-            broadcastDate: "2016-05-02",
-            contestStage: "SemiFinal2"
+        await admin.Given_I_have_created_a_broadcast_for_my_contest(
+            contestStage: "GrandFinal",
+            broadcastDate: "2025-05-03",
+            competingCountries: ["AT", "FI"]
         );
 
         admin.Given_I_want_to_retrieve_all_existing_broadcasts();
@@ -64,19 +71,50 @@ public sealed class GetBroadcastsTests : SerialCleanAcceptanceTest
     {
         private protected override AdminKernel Kernel { get; } = kernel;
 
+        private CountryIdLookup ExistingCountryIds { get; } = new();
+
+        private Guid? ExistingContestId { get; set; }
+
         private List<Broadcast> ExistingBroadcasts { get; } = [];
 
-        public async Task Given_I_have_created_a_broadcast_with_dummy_contest_and_countries(
+        public async Task Given_I_have_created_some_countries(params string[] countryCodes)
+        {
+            ExistingCountryIds.EnsureCapacity(countryCodes.Length);
+
+            await foreach (Country country in Kernel.CreateMultipleCountriesAsync(countryCodes))
+            {
+                ExistingCountryIds.Add(country.CountryCode, country.Id);
+            }
+        }
+
+        public async Task Given_I_have_created_a_Stockholm_rules_contest(
+            string[] semiFinal2Countries = null!,
+            string[] semiFinal1Countries = null!,
+            int contestYear = 0
+        )
+        {
+            Contest contest = await Kernel.CreateAStockholmRulesContestAsync(
+                contestYear: contestYear,
+                semiFinal1CountryIds: ExistingCountryIds.MapToGuids(semiFinal1Countries),
+                semiFinal2CountryIds: ExistingCountryIds.MapToGuids(semiFinal2Countries)
+            );
+
+            ExistingContestId = contest.Id;
+        }
+
+        public async Task Given_I_have_created_a_broadcast_for_my_contest(
+            string?[] competingCountries = null!,
             string contestStage = "",
             string broadcastDate = ""
         )
         {
-            ContestStage stage = Enum.Parse<ContestStage>(contestStage);
-            DateOnly date = DateOnly.Parse(broadcastDate);
+            Guid contestId = await Assert.That(ExistingContestId).IsNotNull();
 
-            Broadcast broadcast = await Kernel.CreateABroadcastWithDummyContestAndCountriesAsync(
-                broadcastDate: date,
-                contestStage: stage
+            Broadcast broadcast = await Kernel.CreateABroadcastAsync(
+                contestId: contestId,
+                broadcastDate: DateOnly.ParseExact(broadcastDate, TestDefaults.DateFormat),
+                contestStage: Enum.Parse<ContestStage>(contestStage),
+                competingCountryIds: ExistingCountryIds.MapToNullableGuids(competingCountries)
             );
 
             ExistingBroadcasts.Add(broadcast);
