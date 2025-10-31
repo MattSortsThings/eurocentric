@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 
@@ -137,7 +138,9 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
                 .Ensure(BroadcastInvariants.LegalCompetingCountries)
                 .Ensure(BroadcastInvariants.BroadcastDateMatchesParentContestYear(ParentContest))
                 .Ensure(BroadcastInvariants.EveryCompetitorMatchesEligibleParticipantInParentContest(ParentContest))
-                .Tap(broadcast => broadcast.Id = idProvider.Invoke());
+                .Tap(broadcast => broadcast.Id = idProvider.Invoke())
+                .Tap(broadcast => broadcast.AddDomainEvent(new BroadcastCreatedEvent(broadcast)))
+                .Map(broadcast => broadcast);
         }
 
         private List<Competitor> CreateCompetitors()

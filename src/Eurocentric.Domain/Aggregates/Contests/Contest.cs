@@ -109,6 +109,28 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// </returns>
     public abstract IBroadcastBuilder CreateGrandFinalBroadcast();
 
+    /// <summary>
+    ///     Adds a new child broadcast with the specified <see cref="ChildBroadcast.ChildBroadcastId" /> and
+    ///     <see cref="ChildBroadcast.ContestStage" /> values and a <see cref="ChildBroadcast.Completed" /> value of
+    ///     <see langword="false" />.
+    /// </summary>
+    /// <param name="broadcastId">The broadcast ID.</param>
+    /// <param name="contestStage">The broadcast's stage in the contest.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     The <paramref name="broadcastId" /> argument or the
+    ///     <paramref name="contestStage" /> matches an existing item in the <see cref="ChildBroadcasts" /> collection of this
+    ///     instance.
+    /// </exception>
+    public void AddChildBroadcast(BroadcastId broadcastId, ContestStage contestStage)
+    {
+        ArgumentNullException.ThrowIfNull(broadcastId);
+        ThrowOnChildBroadcastIdConflict(broadcastId);
+        ThrowOnChildBroadcastContestStageConflict(contestStage);
+
+        _childBroadcasts.Add(new ChildBroadcast(broadcastId, contestStage));
+    }
+
     /// <inheritdoc />
     public override IDomainEvent[] DetachAllDomainEvents()
     {
@@ -119,6 +141,22 @@ public abstract class Contest : AggregateRoot<ContestId>
             : DetachDomainEvents().Concat(_participants.SelectMany(participant => participant.DetachDomainEvents()));
 
         return eventsEnumerable.ToArray();
+    }
+
+    private void ThrowOnChildBroadcastIdConflict(BroadcastId broadcastId)
+    {
+        if (_childBroadcasts.Any(broadcast => broadcast.ChildBroadcastId.Equals(broadcastId)))
+        {
+            throw new ArgumentException("Contest already has a ChildBroadcast with the provided BroadcastId.");
+        }
+    }
+
+    private void ThrowOnChildBroadcastContestStageConflict(ContestStage contestStage)
+    {
+        if (_childBroadcasts.Any(broadcast => broadcast.ContestStage == contestStage))
+        {
+            throw new ArgumentException("Contest already has a ChildBroadcast with the provided ContestStage.");
+        }
     }
 
     private protected abstract class ContestBuilder : IContestBuilder
