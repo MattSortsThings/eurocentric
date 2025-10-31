@@ -87,6 +87,17 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     /// <remarks>This internal property accesses the broadcast's competitors list directly.</remarks>
     internal IReadOnlyCollection<Competitor> CompetitorsCollection => _competitors;
 
+    /// <inheritdoc />
+    public override IDomainEvent[] DetachAllDomainEvents()
+    {
+        IEnumerable<IDomainEvent> eventsEnumerable = DetachDomainEvents()
+            .Concat(_competitors.SelectMany(competitor => competitor.DetachDomainEvents()))
+            .Concat(_juries.SelectMany(jury => jury.DetachDomainEvents()))
+            .Concat(_televotes.SelectMany(televote => televote.DetachDomainEvents()));
+
+        return eventsEnumerable.ToArray();
+    }
+
     internal abstract class Builder : IBroadcastBuilder
     {
         private Result<BroadcastDate, IDomainError> ErrorOrBroadcastDate { get; set; } =

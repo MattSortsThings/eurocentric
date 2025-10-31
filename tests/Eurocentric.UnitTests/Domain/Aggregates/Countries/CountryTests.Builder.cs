@@ -7,15 +7,8 @@ using NSubstitute;
 
 namespace Eurocentric.UnitTests.Domain.Aggregates.Countries;
 
-public sealed class CountryTests : UnitTest
+public sealed partial class CountryTests : UnitTest
 {
-    private static readonly CountryId DefaultCountryId = CountryId.FromValue(
-        Guid.Parse("fe901f2e-35ab-4c3a-a828-8d0fd019a182")
-    );
-
-    private static readonly CountryCode DefaultCountryCode = CountryCode.FromValue("AA").GetValueOrDefault();
-    private static readonly CountryName DefaultCountryName = CountryName.FromValue("CountryName").GetValueOrDefault();
-
     [Test]
     [Arguments("26786949-965a-44cc-801a-22c6b5667a3b")]
     [Arguments("cbafd594-551e-4d87-8089-a8450d4ad059")]

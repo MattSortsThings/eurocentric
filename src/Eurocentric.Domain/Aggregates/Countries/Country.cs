@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Eurocentric.Domain.Core;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 
@@ -39,10 +40,57 @@ public sealed class Country : AggregateRoot<CountryId>
     public IReadOnlyList<ContestRole> ContestRoles => _contestRoles.ToArray().AsReadOnly();
 
     /// <summary>
+    ///     Adds a new contest role with the specified <see cref="ContestRole.ContestId" /> and a the
+    ///     <see cref="ContestRoleType.GlobalTelevote" /> role type.
+    /// </summary>
+    /// <param name="contestId">The contest ID.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     The <paramref name="contestId" /> argument matches an existing item in the
+    ///     <see cref="ContestRoles" /> collection of this instance.
+    /// </exception>
+    public void AddGlobalTelevoteContestRole(ContestId contestId)
+    {
+        ArgumentNullException.ThrowIfNull(contestId);
+        ThrowOnContestIdConflict(contestId);
+
+        _contestRoles.Add(new ContestRole(contestId, ContestRoleType.GlobalTelevote));
+    }
+
+    /// <summary>
+    ///     Adds a new contest role with the specified <see cref="ContestRole.ContestId" /> and a the
+    ///     <see cref="ContestRoleType.Participant" /> role type.
+    /// </summary>
+    /// <param name="contestId">The contest ID.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     The <paramref name="contestId" /> argument matches an existing item in the
+    ///     <see cref="ContestRoles" /> collection of this instance.
+    /// </exception>
+    public void AddParticipantContestRole(ContestId contestId)
+    {
+        ArgumentNullException.ThrowIfNull(contestId);
+        ThrowOnContestIdConflict(contestId);
+
+        _contestRoles.Add(new ContestRole(contestId, ContestRoleType.Participant));
+    }
+
+    /// <inheritdoc />
+    public override IDomainEvent[] DetachAllDomainEvents() => DetachDomainEvents().ToArray();
+
+    /// <summary>
     ///     Starts the process of creating a new <see cref="Country" /> instance using the fluent builder.
     /// </summary>
     /// <returns>A new instance of a type that implements <see cref="ICountryBuilder" />.</returns>
     public static ICountryBuilder Create() => new Builder();
+
+    private void ThrowOnContestIdConflict(ContestId contestId)
+    {
+        if (_contestRoles.Any(role => role.ContestId.Equals(contestId)))
+        {
+            throw new ArgumentException("Country already has a ContestRole with the provided ContestId.");
+        }
+    }
 
     private sealed class Builder : ICountryBuilder
     {

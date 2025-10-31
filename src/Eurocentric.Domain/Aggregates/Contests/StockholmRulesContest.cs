@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 
@@ -48,6 +49,7 @@ public sealed class StockholmRulesContest : Contest
                 .Ensure(ContestInvariants.HasLegalContestCountries)
                 .Ensure(ContestInvariants.HasLegalParticipantCounts)
                 .Tap(contest => contest.Id = idProvider())
+                .Tap(contest => contest.AddDomainEvent(new ContestCreatedEvent(contest)))
                 .Map(Contest (contest) => contest);
         }
 

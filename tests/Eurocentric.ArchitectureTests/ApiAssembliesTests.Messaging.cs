@@ -54,6 +54,18 @@ public sealed partial class ApiAssembliesTests : ArchitectureTest
         .And()
         .ImplementInterface(typeof(IUnitCommandHandler<>));
 
+    private static readonly IObjectProvider<IType> TypesThatImplementIConsumer = Types()
+        .That()
+        .Are(Types().That().Are(AdminApiAssemblyTypes).Or().Are(PublicApiAssemblyTypes))
+        .And()
+        .ImplementInterface(typeof(IConsumer<>));
+
+    private static readonly IObjectProvider<Class> DomainEventHandlerClasses = Classes()
+        .That()
+        .Are(TypesThatImplementIConsumer)
+        .And()
+        .ImplementInterface(typeof(IDomainEventHandler<>));
+
     [Test]
     public async Task Request_implementations_should_be_internal()
     {
@@ -244,6 +256,71 @@ public sealed partial class ApiAssembliesTests : ArchitectureTest
     {
         // Arrange
         ClassRule rule = Classes().That().Are(UnitCommandHandlerClasses).Should().HaveName("UnitCommandHandler");
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Consumer_implementations_should_be_internal()
+    {
+        // Arrange
+        TypeRule rule = Types().That().Are(TypesThatImplementIConsumer).Should().BeInternal();
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Consumer_implementations_should_be_nested_in_Feature_classes()
+    {
+        // Arrange
+        TypeRule rule = Types().That().Are(TypesThatImplementIConsumer).Should().BeNestedIn(FeatureClasses);
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Consumer_implementations_should_be_DomainEventHandler_classes()
+    {
+        // Arrange
+        TypeRule rule = Types().That().Are(TypesThatImplementIConsumer).Should().Be(DomainEventHandlerClasses);
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task DomainEventHandler_classes_should_not_be_records()
+    {
+        // Arrange
+        ClassRule rule = Classes().That().Are(DomainEventHandlerClasses).Should().NotBeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task DomainEventHandler_classes_should_have_name_DomainEventHandler()
+    {
+        // Arrange
+        ClassRule rule = Classes().That().Are(DomainEventHandlerClasses).Should().HaveName("DomainEventHandler");
 
         // Act
         IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);

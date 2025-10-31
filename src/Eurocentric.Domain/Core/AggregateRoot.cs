@@ -5,7 +5,7 @@ namespace Eurocentric.Domain.Core;
 /// <summary>
 ///     Abstract base class for a domain aggregate root entity.
 /// </summary>
-public abstract class AggregateRoot<TId> : Entity
+public abstract class AggregateRoot<TId> : Entity, IDomainEventSource
     where TId : GuidAtomicValueObject
 {
     [UsedImplicitly(Reason = "EF Core")]
@@ -20,4 +20,7 @@ public abstract class AggregateRoot<TId> : Entity
     ///     Gets the aggregate's system identifier.
     /// </summary>
     public TId Id { get; private protected set; } = null!;
+
+    /// <inheritdoc />
+    public abstract IDomainEvent[] DetachAllDomainEvents();
 }

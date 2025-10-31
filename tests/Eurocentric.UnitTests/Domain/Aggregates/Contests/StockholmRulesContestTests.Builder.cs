@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.UnitTests.Domain.Aggregates.Contests.TestUtils;
 using Eurocentric.UnitTests.TestUtils;
@@ -281,6 +282,41 @@ public sealed partial class StockholmRulesContestTests
                     actName: "FI Act",
                     songTitle: "FI Song"
                 )
+            );
+    }
+
+    [Test]
+    public async Task Builder_should_return_StockholmRulesContest_with_ContestCreatedEvent()
+    {
+        // Act
+        Result<Contest, IDomainError> result = StockholmRulesContest
+            .Create()
+            .WithContestYear(ContestYear2016)
+            .WithCityName(DefaultCityName)
+            .AddSemiFinal1Participant(CountryIds.At, DefaultActName, DefaultSongTitle)
+            .AddSemiFinal1Participant(CountryIds.Be, DefaultActName, DefaultSongTitle)
+            .AddSemiFinal1Participant(CountryIds.Cz, DefaultActName, DefaultSongTitle)
+            .AddSemiFinal2Participant(CountryIds.Dk, DefaultActName, DefaultSongTitle)
+            .AddSemiFinal2Participant(CountryIds.Ee, DefaultActName, DefaultSongTitle)
+            .AddSemiFinal2Participant(CountryIds.Fi, DefaultActName, DefaultSongTitle)
+            .Build(() => DefaultContestId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        StockholmRulesContest createdContest = await Assert
+            .That(result.Value)
+            .IsTypeOf<StockholmRulesContest>()
+            .And.IsNotNull();
+
+        IDomainEvent singleEvent = await Assert.That(createdContest.DetachAllDomainEvents()).HasSingleItem();
+
+        await Assert
+            .That(singleEvent)
+            .IsTypeOf<ContestCreatedEvent>()
+            .And.Member(
+                contestCreatedEvent => contestCreatedEvent.Contest,
+                source => source.IsSameReferenceAs(createdContest)
             );
     }
 

@@ -59,7 +59,7 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// <summary>
     ///     Gets the contest's optional global televote.
     /// </summary>
-    public GlobalTelevote? GlobalTelevote { get; private init; }
+    public GlobalTelevote? GlobalTelevote { get; }
 
     /// <summary>
     ///     Gets a list of all the contest's child broadcasts.
@@ -108,6 +108,18 @@ public abstract class Contest : AggregateRoot<ContestId>
     ///     child broadcast of this instance.
     /// </returns>
     public abstract IBroadcastBuilder CreateGrandFinalBroadcast();
+
+    /// <inheritdoc />
+    public override IDomainEvent[] DetachAllDomainEvents()
+    {
+        IEnumerable<IDomainEvent> eventsEnumerable = GlobalTelevote is { } globalTelevote
+            ? DetachDomainEvents()
+                .Concat(_participants.SelectMany(participant => participant.DetachDomainEvents()))
+                .Concat(globalTelevote.DetachDomainEvents())
+            : DetachDomainEvents().Concat(_participants.SelectMany(participant => participant.DetachDomainEvents()));
+
+        return eventsEnumerable.ToArray();
+    }
 
     private protected abstract class ContestBuilder : IContestBuilder
     {
