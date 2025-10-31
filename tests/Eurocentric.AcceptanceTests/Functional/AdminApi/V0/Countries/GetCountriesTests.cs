@@ -58,8 +58,7 @@ public sealed class GetCountriesTests : SerialCleanAcceptanceTest
         {
             Country createdCountry = await Kernel.CreateACountryAsync(
                 countryCode: countryCode,
-                countryName: countryName,
-                cancellationToken: TestContext.Current!.CancellationToken
+                countryName: countryName
             );
 
             ExistingCountries.Add(createdCountry);

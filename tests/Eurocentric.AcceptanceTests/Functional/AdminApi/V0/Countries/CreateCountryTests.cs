@@ -148,8 +148,7 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         {
             Country createdCountry = await Kernel.CreateACountryAsync(
                 countryCode: countryCode,
-                countryName: countryName,
-                cancellationToken: TestContext.Current!.CancellationToken
+                countryName: countryName
             );
 
             ExistingCountry = createdCountry;
@@ -226,14 +225,14 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
 
             string location = await Assert.That(SuccessResponse?.Headers?.ExtractLocation()).IsNotNull();
 
-            Country retrievedCountry = await RetrieveCountryAsync(location, TestContext.Current!.CancellationToken);
+            Country retrievedCountry = await RetrieveCountryAsync(location);
 
             await Assert.That(retrievedCountry).IsEqualTo(createdCountry, new CountryEqualityComparer());
         }
 
         public async Task Then_no_countries_should_exist_in_the_system()
         {
-            Country[] existingCountries = await Kernel.GetAllCountriesAsync(TestContext.Current!.CancellationToken);
+            Country[] existingCountries = await Kernel.GetAllCountriesAsync();
 
             await Assert.That(existingCountries).IsEmpty();
         }
@@ -242,18 +241,18 @@ public sealed class CreateCountryTests : SerialCleanAcceptanceTest
         {
             Country expectedExistingCountry = await Assert.That(ExistingCountry).IsNotNull();
 
-            Country[] existingCountries = await Kernel.GetAllCountriesAsync(TestContext.Current!.CancellationToken);
+            Country[] existingCountries = await Kernel.GetAllCountriesAsync();
 
             Country actualExistingCountry = await Assert.That(existingCountries).HasSingleItem();
 
             await Assert.That(actualExistingCountry).IsEqualTo(expectedExistingCountry, new CountryEqualityComparer());
         }
 
-        private async Task<Country> RetrieveCountryAsync(string location, CancellationToken cancellationToken)
+        private async Task<Country> RetrieveCountryAsync(string location)
         {
             Guid countryId = Guid.Parse(location.Split('/').Last());
 
-            return await Kernel.GetACountryAsync(countryId, cancellationToken);
+            return await Kernel.GetACountryAsync(countryId);
         }
     }
 }

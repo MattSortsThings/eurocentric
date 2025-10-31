@@ -21,10 +21,7 @@ public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
             .UseSecretApiKey();
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getRankingsRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getRankingsRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -56,10 +53,7 @@ public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
         RestRequest getCountriesRequest = GetRequest("/admin/api/v0.2/countries").UseSecretApiKey();
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();

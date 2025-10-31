@@ -21,10 +21,7 @@ public sealed class ApiDocumentationPagesTests : ParallelSeededAcceptanceTest
             .AddHeader("Accept", "text/html");
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getDocumentRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getDocumentRequest);
 
         // Assert
         RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();

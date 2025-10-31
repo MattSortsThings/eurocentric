@@ -19,10 +19,7 @@ public abstract class AdminActor : IActor
     {
         RestRequest request = await Assert.That(Request).IsNotNull();
 
-        ProblemOrResponse problemOrResponse = await Kernel.Client.SendAsync(
-            request,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await Kernel.Client.SendAsync(request);
 
         problemOrResponse.Switch(OnProblem, OnResponse);
     }

@@ -63,8 +63,7 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
         {
             Country createdCountry = await Kernel.CreateACountryAsync(
                 countryCode: countryCode,
-                countryName: countryName,
-                cancellationToken: TestContext.Current!.CancellationToken
+                countryName: countryName
             );
 
             ExistingCountry = createdCountry;
@@ -74,7 +73,7 @@ public sealed class GetCountryTests : SerialCleanAcceptanceTest
         {
             Guid existingCountryId = await Assert.That(ExistingCountry?.Id).IsNotNull();
 
-            await Kernel.DeleteACountryAsync(existingCountryId, TestContext.Current!.CancellationToken);
+            await Kernel.DeleteACountryAsync(existingCountryId);
 
             DeletedCountryId = existingCountryId;
             ExistingCountry = null;

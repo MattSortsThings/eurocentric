@@ -89,8 +89,7 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
         {
             Country createdCountry = await Kernel.CreateACountryAsync(
                 countryCode: countryCode,
-                countryName: countryName,
-                cancellationToken: TestContext.Current!.CancellationToken
+                countryName: countryName
             );
 
             ExistingCountryId = createdCountry.Id;
@@ -109,7 +108,7 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
         {
             Guid existingCountryId = await Assert.That(ExistingCountryId).IsNotNull();
 
-            await Kernel.DeleteACountryAsync(existingCountryId, TestContext.Current!.CancellationToken);
+            await Kernel.DeleteACountryAsync(existingCountryId);
 
             DeletedCountryId = existingCountryId;
             ExistingCountryId = null;
@@ -131,7 +130,7 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
 
         public async Task Then_no_countries_should_exist_in_the_system()
         {
-            Country[] existingCountries = await Kernel.GetAllCountriesAsync(TestContext.Current!.CancellationToken);
+            Country[] existingCountries = await Kernel.GetAllCountriesAsync();
 
             await Assert.That(existingCountries).IsEmpty();
         }
@@ -140,7 +139,7 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
         {
             Guid expectedCountryId = await Assert.That(ExistingCountryId).IsNotNull();
 
-            Country[] existingCountries = await Kernel.GetAllCountriesAsync(TestContext.Current!.CancellationToken);
+            Country[] existingCountries = await Kernel.GetAllCountriesAsync();
 
             await Assert
                 .That(existingCountries)

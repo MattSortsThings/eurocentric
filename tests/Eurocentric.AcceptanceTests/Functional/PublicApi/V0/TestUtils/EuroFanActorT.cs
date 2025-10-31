@@ -26,10 +26,7 @@ public abstract class EuroFanActor<T> : IActor<T>
     {
         RestRequest request = await Assert.That(Request).IsNotNull();
 
-        ProblemOrResponse<T> problemOrResponse = await Kernel.Client.SendAsync<T>(
-            request,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse<T> problemOrResponse = await Kernel.Client.SendAsync<T>(request);
 
         problemOrResponse.Switch(OnProblem, OnResponse);
     }

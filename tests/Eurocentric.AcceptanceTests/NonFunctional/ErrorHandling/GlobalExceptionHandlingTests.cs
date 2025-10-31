@@ -19,10 +19,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
             .AddJsonBody("""{ "countryType": "Real", "countryName": "CountryName" }""");
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            createCountryRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(createCountryRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -52,10 +49,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
             .AddJsonBody("""{ "countryType": "INVALID", "countryCode": "AA", "countryName": "CountryName" }""");
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            createCountryRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(createCountryRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -85,10 +79,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
             .AddJsonBody("""{ "countryType": 999999, "countryCode": "AA", "countryName": "CountryName" }""");
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            createCountryRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(createCountryRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -115,10 +106,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
             .AddQueryParameter("contestStage", "SemiFinal1");
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getListingsRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getListingsRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -149,10 +137,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
             .AddQueryParameter("contestStage", "INVALID");
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getListingsRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getListingsRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -183,10 +168,7 @@ public sealed class GlobalExceptionHandlingTests : ParallelSeededAcceptanceTest
             .AddQueryParameter("contestStage", 999999);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getListingsRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getListingsRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();

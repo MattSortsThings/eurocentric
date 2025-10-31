@@ -21,10 +21,7 @@ public sealed class OpenApiDocumentsTests : ParallelSeededAcceptanceTest
         RestRequest getDocumentRequest = GetRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getDocumentRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getDocumentRequest);
 
         // Assert
         RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
@@ -47,10 +44,7 @@ public sealed class OpenApiDocumentsTests : ParallelSeededAcceptanceTest
         RestRequest getDocumentRequest = GetRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getDocumentRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getDocumentRequest);
 
         // Assert
         RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
@@ -98,10 +92,7 @@ public sealed class OpenApiDocumentsTests : ParallelSeededAcceptanceTest
         RestRequest getDocumentRequest = GetRequest("/openapi/{docName}.json").AddUrlSegment("docName", docName);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getDocumentRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getDocumentRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();

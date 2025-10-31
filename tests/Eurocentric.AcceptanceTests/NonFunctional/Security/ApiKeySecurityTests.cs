@@ -21,10 +21,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", TestApiKeys.Secret);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
@@ -43,10 +40,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", TestApiKeys.Demo);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -65,10 +59,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", UnrecognizedApiKey);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -86,10 +77,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddUrlSegment("apiVersion", apiVersion);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -107,10 +95,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", TestApiKeys.Secret);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
@@ -128,10 +113,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", TestApiKeys.Demo);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -149,10 +131,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", UnrecognizedApiKey);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -169,10 +148,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddUrlSegment("apiVersion", apiVersion);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -191,10 +167,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", TestApiKeys.Secret);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
@@ -213,10 +186,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", TestApiKeys.Demo);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
@@ -235,10 +205,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddHeader("X-Api-Key", UnrecognizedApiKey);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -256,10 +223,7 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
             .AddUrlSegment("apiVersion", apiVersion);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountriesRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();

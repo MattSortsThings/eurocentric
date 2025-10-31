@@ -13,10 +13,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         RestRequest request = GetRequest("/admin/api/v0.1/countries").UseSecretApiKey();
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            request,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
         await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
@@ -29,10 +26,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         RestRequest request = GetRequest("/admin/api/v0.2/countries").UseSecretApiKey();
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            request,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
         await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
@@ -45,10 +39,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         RestRequest request = GetRequest("/admin/api/v1.0/countries").UseSecretApiKey();
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            request,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
         await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
@@ -61,10 +52,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         RestRequest request = GetRequest("/public/api/v0.1/queryables/countries").UseSecretApiKey();
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            request,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
         await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2");
@@ -77,10 +65,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         RestRequest request = GetRequest("/public/api/v0.2/queryables/countries").UseSecretApiKey();
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            request,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
         await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2");

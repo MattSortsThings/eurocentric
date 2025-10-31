@@ -21,10 +21,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
             .AddUrlSegment("countryId", nonExistentCountryId);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getCountryRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountryRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -53,10 +50,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
             .AddUrlSegment("countryId", countryWithContestRolesId);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            deleteCountryRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(deleteCountryRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
@@ -85,10 +79,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
             .AddQueryParameter("pageSize", illegalPageSizeValue);
 
         // Act
-        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(
-            getRankingsRequest,
-            TestContext.Current!.CancellationToken
-        );
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getRankingsRequest);
 
         // Assert
         RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
