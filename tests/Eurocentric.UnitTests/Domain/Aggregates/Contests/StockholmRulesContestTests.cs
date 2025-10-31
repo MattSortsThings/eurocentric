@@ -26,7 +26,7 @@ public sealed partial class StockholmRulesContestTests : UnitTest
     private static StockholmRulesContest CreateAStockholmRulesContest(
         CountryId[] semiFinal2CountryIds = null!,
         CountryId[] semiFinal1CountryIds = null!,
-        ContestYear contestYear = null!,
+        ContestYear? contestYear = null,
         ContestId? contestId = null
     )
     {
@@ -34,7 +34,7 @@ public sealed partial class StockholmRulesContestTests : UnitTest
 
         IContestBuilder builder = StockholmRulesContest
             .Create()
-            .WithContestYear(contestYear)
+            .WithContestYear(contestYear ?? ContestYear2016)
             .WithCityName(DefaultCityName);
 
         foreach (CountryId countryId in semiFinal1CountryIds)

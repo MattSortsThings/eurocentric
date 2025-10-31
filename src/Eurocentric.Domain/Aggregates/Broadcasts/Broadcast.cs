@@ -136,6 +136,7 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
                 .Map(InitializeWithDummyId)
                 .Ensure(BroadcastInvariants.LegalCompetitorsCount)
                 .Ensure(BroadcastInvariants.LegalCompetingCountries)
+                .Ensure(BroadcastInvariants.HasUniqueContestStageForParentContest(ParentContest))
                 .Ensure(BroadcastInvariants.BroadcastDateMatchesParentContestYear(ParentContest))
                 .Ensure(BroadcastInvariants.EveryCompetitorMatchesEligibleParticipantInParentContest(ParentContest))
                 .Tap(broadcast => broadcast.Id = idProvider.Invoke())

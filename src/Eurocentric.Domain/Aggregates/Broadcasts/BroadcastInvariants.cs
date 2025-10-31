@@ -41,21 +41,16 @@ public static class BroadcastInvariants
         };
     }
 
-    public static Func<Broadcast, UnitResult<IDomainError>> HasUniqueParentContestIdContestStage(
-        IQueryable<Broadcast> existingBroadcasts
-    )
+    public static Func<Broadcast, UnitResult<IDomainError>> HasUniqueContestStageForParentContest(Contest contest)
     {
-        IQueryable<Broadcast> broadcasts = existingBroadcasts;
+        Contest parentContest = contest;
 
         return broadcast =>
         {
-            ContestId contestId = broadcast.ParentContestId;
             ContestStage contestStage = broadcast.ContestStage;
 
-            return broadcasts.Any(existingBroadcast =>
-                existingBroadcast.ParentContestId.Equals(contestId) && existingBroadcast.ContestStage == contestStage
-            )
-                ? BroadcastErrors.ParentContestChildBroadcastsConflict(contestId, contestStage)
+            return contest.ChildBroadcasts.Any(existingBroadcast => existingBroadcast.ContestStage == contestStage)
+                ? BroadcastErrors.ParentContestChildBroadcastsConflict(parentContest.Id, contestStage)
                 : UnitResult.Success<IDomainError>();
         };
     }

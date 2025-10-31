@@ -100,9 +100,6 @@ internal static class CreateContestBroadcast
                 .Tap(Apply(command))
                 .Bind(builder => builder.Build(idFactory.Create))
                 .Ensure(BroadcastInvariants.HasUniqueBroadcastDate(broadcastReadRepository.GetAsQueryable()))
-                .Ensure(
-                    BroadcastInvariants.HasUniqueParentContestIdContestStage(broadcastReadRepository.GetAsQueryable())
-                )
                 .Tap(broadcastWriteRepository.Add)
                 .Tap(_ => broadcastWriteRepository.SaveChangesAsync(ct))
                 .Map(broadcast => broadcast);

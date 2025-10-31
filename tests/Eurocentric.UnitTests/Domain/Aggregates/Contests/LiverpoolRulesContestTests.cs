@@ -27,7 +27,7 @@ public sealed partial class LiverpoolRulesContestTests : UnitTest
         CountryId globalTelevoteCountryId = null!,
         CountryId[] semiFinal2CountryIds = null!,
         CountryId[] semiFinal1CountryIds = null!,
-        ContestYear contestYear = null!,
+        ContestYear? contestYear = null,
         ContestId? contestId = null
     )
     {
@@ -35,7 +35,7 @@ public sealed partial class LiverpoolRulesContestTests : UnitTest
 
         IContestBuilder builder = LiverpoolRulesContest
             .Create()
-            .WithContestYear(contestYear)
+            .WithContestYear(contestYear ?? ContestYear2016)
             .WithCityName(DefaultCityName)
             .WithGlobalTelevote(globalTelevoteCountryId);
 

@@ -3,6 +3,7 @@ using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.UnitTests.Domain.Aggregates.Contests.TestUtils;
 using Eurocentric.UnitTests.TestUtils;
@@ -490,6 +491,39 @@ public sealed partial class LiverpoolRulesContestTests
     }
 
     [Test]
+    public async Task CreateGrandFinalBroadcast_Build_should_return_Broadcast_with_BroadcastCreatedEvent()
+    {
+        // Arrange
+        LiverpoolRulesContest sut = CreateALiverpoolRulesContest(
+            contestYear: ContestYear2016,
+            globalTelevoteCountryId: CountryIds.Xx,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateGrandFinalBroadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Fi)
+            .Build(() => DefaultBroadcastId);
+
+        // Assert
+        await Assert.That(result.IsSuccess).IsTrue();
+
+        Broadcast createdBroadcast = await Assert.That(result.Value).IsNotNull();
+
+        IDomainEvent singleDomainEvent = await Assert.That(createdBroadcast.DetachAllDomainEvents()).HasSingleItem();
+
+        await Assert
+            .That(singleDomainEvent)
+            .IsTypeOf<BroadcastCreatedEvent>()
+            .And.Member(
+                broadcastCreatedEvent => broadcastCreatedEvent.Broadcast,
+                source => source.IsSameReferenceAs(createdBroadcast)
+            );
+    }
+
+    [Test]
     public async Task CreateGrandFinalBroadcast_Build_should_fail_on_BroadcastDate_not_set()
     {
         // Arrange
@@ -883,6 +917,43 @@ public sealed partial class LiverpoolRulesContestTests
             .And.HasExtension("contestId", sut.Id.Value)
             .And.HasExtension("contestStage", "GrandFinal")
             .And.HasExtension("countryId", CountryIds.Xx.Value);
+    }
+
+    [Test]
+    public async Task CreateGrandFinalBroadcast_Build_should_fail_on_parent_contest_child_broadcasts_conflict()
+    {
+        // Arrange
+        IBroadcastIdFactory spyIdFactory = Substitute.For<IBroadcastIdFactory>();
+
+        LiverpoolRulesContest sut = CreateALiverpoolRulesContest(
+            contestYear: ContestYear2016,
+            globalTelevoteCountryId: CountryIds.Xx,
+            semiFinal1CountryIds: [CountryIds.At, CountryIds.Be, CountryIds.Cz],
+            semiFinal2CountryIds: [CountryIds.Dk, CountryIds.Ee, CountryIds.Fi]
+        );
+
+        sut.AddChildBroadcast(DefaultBroadcastId, ContestStage.GrandFinal);
+
+        // Act
+        Result<Broadcast, IDomainError> result = sut.CreateGrandFinalBroadcast()
+            .WithBroadcastDate(BroadcastDate2016JanFirst)
+            .WithCompetingCountries(CountryIds.At, CountryIds.Fi)
+            .Build(spyIdFactory.Create);
+
+        // Assert
+        await Assert.That(result.IsFailure).IsTrue();
+
+        await Assert.That(() => spyIdFactory.DidNotReceiveWithAnyArgs().Create()).ThrowsNothing();
+
+        await Assert.That(result.GetValueOrDefault()).IsNull();
+
+        await Assert
+            .That(result.Error)
+            .IsTypeOf<ConflictError>()
+            .And.HasTitle("Parent contest child broadcasts conflict")
+            .And.HasDetail("The requested contest already has a child broadcast with the provided contest stage.")
+            .And.HasExtension("contestId", sut.Id.Value)
+            .And.HasExtension("contestStage", "GrandFinal");
     }
 
     [Test]
