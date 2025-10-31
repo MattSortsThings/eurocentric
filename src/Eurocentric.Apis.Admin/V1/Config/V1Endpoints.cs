@@ -4,8 +4,9 @@ internal static class V1Endpoints
 {
     internal static class Broadcasts
     {
-        internal const string GetBroadcast = "GetBroadcast";
-        internal const string GetBroadcasts = "GetBroadcasts";
+        internal const string DeleteBroadcast = "AdminApi.V1.DeleteBroadcast";
+        internal const string GetBroadcast = "AdminApi.V1.GetBroadcast";
+        internal const string GetBroadcasts = "AdminApi.V1.GetBroadcasts";
     }
 
     internal static class Contests

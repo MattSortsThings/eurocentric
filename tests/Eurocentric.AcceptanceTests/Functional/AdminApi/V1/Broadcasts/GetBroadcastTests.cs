@@ -8,7 +8,7 @@ using Eurocentric.Apis.Admin.V1.Features.Broadcasts;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.Broadcasts;
 
-public sealed class GetBroadcastTest : SerialCleanAcceptanceTest
+public sealed class GetBroadcastTests : SerialCleanAcceptanceTest
 {
     [Test]
     [ApiVersion1Point0AndUp]

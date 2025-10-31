@@ -14,6 +14,8 @@ public interface IRestRequestFactory
 
     interface IBroadcastsEndpoints
     {
+        RestRequest DeleteBroadcast(Guid broadcastId);
+
         RestRequest GetBroadcast(Guid broadcastId);
 
         RestRequest GetBroadcasts();

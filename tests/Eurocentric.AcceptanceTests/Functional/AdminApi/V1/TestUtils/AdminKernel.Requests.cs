@@ -12,6 +12,8 @@ public sealed partial class AdminKernel
 
         public IRestRequestFactory.ICountriesEndpoints Countries => this;
 
+        private static RestRequest DeleteRequest(string route) => new(route, Method.Delete);
+
         private static RestRequest GetRequest(string route) => new(route);
 
         private static RestRequest PostRequest(string route) => new(route, Method.Post);
