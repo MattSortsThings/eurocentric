@@ -16,6 +16,8 @@ public sealed partial class AdminKernel
 
         private static RestRequest GetRequest(string route) => new(route);
 
+        private static RestRequest PatchRequest(string route) => new(route, Method.Patch);
+
         private static RestRequest PostRequest(string route) => new(route, Method.Post);
     }
 }

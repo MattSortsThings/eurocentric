@@ -88,6 +88,12 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     /// <remarks>This internal property accesses the broadcast's competitors list directly.</remarks>
     internal IReadOnlyCollection<Competitor> CompetitorsCollection => _competitors;
 
+    /// <summary>
+    ///     Gets the broadcast's televotes.
+    /// </summary>
+    /// <remarks>This internal property accesses the broadcast's televotes list directly.</remarks>
+    internal IReadOnlyCollection<Televote> TelevotesCollection => _televotes;
+
     /// <inheritdoc />
     public override IDomainEvent[] DetachAllDomainEvents()
     {
@@ -98,6 +104,64 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
 
         return eventsEnumerable.ToArray();
     }
+
+    /// <summary>
+    ///     Awards the points from a televote to the competitors in the broadcast.
+    /// </summary>
+    /// <param name="awardParams">Determines the points to be awarded.</param>
+    /// <returns><i>Either</i> a successful result <i>or</i> an error.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="awardParams" /> is <see langword="null" />.</exception>
+    public UnitResult<IDomainError> AwardTelevotePoints(IAwardParams awardParams)
+    {
+        ArgumentNullException.ThrowIfNull(awardParams);
+
+        return Result
+            .Success<IAwardParams, IDomainError>(awardParams)
+            .Ensure(BroadcastInvariants.NoTelevoteVotingCountryConflict(this))
+            .Ensure(BroadcastInvariants.NoRankedCompetingCountriesConflict(this))
+            .Tap(AwardPoints)
+            .Tap(_ => UpdateCompetitorFinishingPositions())
+            .Tap(_ => UpdateCompleted())
+            .Bind(_ => UnitResult.Success<IDomainError>());
+    }
+
+    private void AwardPoints(IAwardParams @params)
+    {
+        Televote televote = GetTelevoteToAwardPoints(@params.VotingCountryId);
+        Competitor[] competitors = GetRankedCompetitorsToReceivePoints(@params.RankedCompetingCountryIds);
+
+        televote.AwardPoints(competitors);
+    }
+
+    private Televote GetTelevoteToAwardPoints(CountryId votingCountryId) =>
+        _televotes.Single(televote => televote.VotingCountryId.Equals(votingCountryId));
+
+    private Competitor[] GetRankedCompetitorsToReceivePoints(IEnumerable<CountryId> rankedCompetingCountryIds)
+    {
+        return rankedCompetingCountryIds
+            .Join(
+                _competitors,
+                countryId => countryId,
+                competitor => competitor.CompetingCountryId,
+                (_, competitor) => competitor
+            )
+            .ToArray();
+    }
+
+    private void UpdateCompetitorFinishingPositions()
+    {
+        IEnumerable<FinishingPosition> finishingPositions = FinishingPosition.CreateSequence(_competitors.Count);
+
+        _competitors.Sort(Competitor.BroadcastCompetitorComparer);
+
+        foreach ((Competitor competitor, FinishingPosition finishingPosition) in _competitors.Zip(finishingPositions))
+        {
+            competitor.FinishingPosition = finishingPosition;
+        }
+    }
+
+    private void UpdateCompleted() =>
+        Completed = _juries.All(jury => jury.PointsAwarded) && _televotes.All(televote => televote.PointsAwarded);
 
     internal abstract class Builder : IBroadcastBuilder
     {

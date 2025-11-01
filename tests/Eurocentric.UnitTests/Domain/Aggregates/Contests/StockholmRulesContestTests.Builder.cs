@@ -5,6 +5,7 @@ using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.Events;
 using Eurocentric.Domain.ValueObjects;
 using Eurocentric.UnitTests.Domain.Aggregates.Contests.TestUtils;
+using Eurocentric.UnitTests.Domain.Aggregates.TestUtils;
 using Eurocentric.UnitTests.TestUtils;
 using NSubstitute;
 

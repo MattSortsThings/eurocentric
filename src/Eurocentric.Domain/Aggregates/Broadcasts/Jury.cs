@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 
@@ -13,4 +14,7 @@ public sealed class Jury : Voter
 
     internal Jury(CountryId votingCountryId)
         : base(votingCountryId) { }
+
+    private protected override void GivePointsAward(Competitor competitor, PointsValue pointsValue) =>
+        competitor.ReceivePointsAward(new JuryAward(VotingCountryId, pointsValue));
 }

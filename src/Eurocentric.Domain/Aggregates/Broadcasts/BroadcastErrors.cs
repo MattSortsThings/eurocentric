@@ -46,6 +46,47 @@ public static class BroadcastErrors
     }
 
     /// <summary>
+    ///     Creates and returns a new error indicating that the client has attempted to award a set of televote points
+    ///     providing a voting country ID that matches no televote in the requested <see cref="Broadcast" /> that has not yet
+    ///     awarded points.
+    /// </summary>
+    /// <param name="broadcastId">The broadcast ID.</param>
+    /// <param name="countryId">The country ID.</param>
+    /// <returns>A new <see cref="ConflictError" /> instance.</returns>
+    public static ConflictError TelevoteVotingCountryConflict(BroadcastId broadcastId, CountryId countryId)
+    {
+        return new ConflictError
+        {
+            Title = "Televote voting country conflict",
+            Detail = "The requested broadcast has no televote that may award points and has the provided country ID.",
+            Extensions = new Dictionary<string, object?>
+            {
+                { nameof(broadcastId), broadcastId.Value },
+                { nameof(countryId), countryId.Value },
+            },
+        };
+    }
+
+    /// <summary>
+    ///     Creates and returns a new error indicating that the client has attempted to award a set of points providing a
+    ///     voting country ID and an ordered array of competing country IDs that do not match the expected competing country
+    ///     IDs in the requested <see cref="Broadcast" />.
+    /// </summary>
+    /// <param name="broadcastId">The broadcast ID.</param>
+    /// <returns>A new <see cref="ConflictError" /> instance.</returns>
+    public static ConflictError RankedCompetingCountriesConflict(BroadcastId broadcastId)
+    {
+        return new ConflictError
+        {
+            Title = "Ranked competing countries conflict",
+            Detail =
+                "Ranked competing countries must comprise every competing country in the broadcast, "
+                + "excluding the voting country, without duplication.",
+            Extensions = new Dictionary<string, object?> { { nameof(broadcastId), broadcastId.Value } },
+        };
+    }
+
+    /// <summary>
     ///     Creates and returns a new error indicating that the client has attempted to create a <see cref="Broadcast" /> in
     ///     which one of its <see cref="Broadcast.Competitors" /> references a country that matches no participant in the
     ///     parent <see cref="Contest" /> eligible to compete in its <see cref="Broadcast.ContestStage" />.

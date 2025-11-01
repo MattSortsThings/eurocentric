@@ -17,6 +17,13 @@ public interface IBroadcastWriteRepository
     void Add(Broadcast broadcast);
 
     /// <summary>
+    ///     Updates the specified <see cref="Broadcast" /> aggregate in the repository.
+    /// </summary>
+    /// <remarks>Changes are not committed until the <see cref="SaveChangesAsync" /> method is invoked.</remarks>
+    /// <param name="broadcast">The broadcast to be updated.</param>
+    void Update(Broadcast broadcast);
+
+    /// <summary>
     ///     Removes the specified <see cref="Broadcast" /> aggregate from the repository.
     /// </summary>
     /// <remarks>Changes are not committed until the <see cref="SaveChangesAsync" /> method is invoked.</remarks>

@@ -1,4 +1,5 @@
 using Eurocentric.Domain.Core;
+using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 
@@ -26,4 +27,20 @@ public abstract class Voter : Entity
     ///     Gets a boolean value indicating whether the voter has awarded its points.
     /// </summary>
     public bool PointsAwarded { get; private set; }
+
+    internal void AwardPoints(IReadOnlyCollection<Competitor> rankedCompetitors)
+    {
+        IEnumerable<PointsValue> pointsValues = Enum.GetValues<PointsValue>()
+            .Concat(Enumerable.Repeat(PointsValue.Zero, rankedCompetitors.Count))
+            .OrderByDescending(value => value);
+
+        foreach ((Competitor competitor, PointsValue pointsValue) in rankedCompetitors.Zip(pointsValues))
+        {
+            GivePointsAward(competitor, pointsValue);
+        }
+
+        PointsAwarded = true;
+    }
+
+    private protected abstract void GivePointsAward(Competitor competitor, PointsValue pointsValue);
 }

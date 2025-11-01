@@ -15,6 +15,8 @@ internal sealed class BroadcastWriteRepository : BaseWriteRepository, IBroadcast
 
     public void Add(Broadcast contest) => DbContext.Broadcasts.Add(contest);
 
+    public void Update(Broadcast broadcast) => DbContext.Broadcasts.Update(broadcast);
+
     public void Remove(Broadcast broadcast) => DbContext.Broadcasts.Remove(broadcast);
 
     public async Task<Result<Broadcast, IDomainError>> GetByIdAsync(

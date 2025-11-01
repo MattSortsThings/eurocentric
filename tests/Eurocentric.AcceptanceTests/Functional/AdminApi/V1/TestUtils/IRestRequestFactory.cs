@@ -1,3 +1,4 @@
+using Eurocentric.Apis.Admin.V1.Features.Broadcasts;
 using Eurocentric.Apis.Admin.V1.Features.Contests;
 using Eurocentric.Apis.Admin.V1.Features.Countries;
 using RestSharp;
@@ -14,6 +15,8 @@ public interface IRestRequestFactory
 
     interface IBroadcastsEndpoints
     {
+        RestRequest AwardBroadcastTelevotePoints(Guid broadcastId, AwardBroadcastTelevotePointsRequest requestBody);
+
         RestRequest DeleteBroadcast(Guid broadcastId);
 
         RestRequest GetBroadcast(Guid broadcastId);

@@ -1,7 +1,7 @@
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Enums;
 using Eurocentric.Domain.ValueObjects;
-using Eurocentric.UnitTests.Domain.Aggregates.Contests.TestUtils;
+using Eurocentric.UnitTests.Domain.Aggregates.TestUtils;
 
 namespace Eurocentric.UnitTests.Domain.Aggregates.Contests;
 

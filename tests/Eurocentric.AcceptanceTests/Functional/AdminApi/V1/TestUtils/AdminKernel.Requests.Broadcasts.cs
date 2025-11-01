@@ -1,4 +1,5 @@
 using Eurocentric.AcceptanceTests.TestUtils;
+using Eurocentric.Apis.Admin.V1.Features.Broadcasts;
 using RestSharp;
 
 namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
@@ -7,6 +8,18 @@ public sealed partial class AdminKernel
 {
     private sealed partial class RestRequestFactory : IRestRequestFactory.IBroadcastsEndpoints
     {
+        public RestRequest AwardBroadcastTelevotePoints(
+            Guid broadcastId,
+            AwardBroadcastTelevotePointsRequest requestBody
+        )
+        {
+            return PatchRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}/award-televote")
+                .UseSecretApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddUrlSegment("broadcastId", broadcastId)
+                .AddJsonBody(requestBody);
+        }
+
         public RestRequest DeleteBroadcast(Guid broadcastId)
         {
             return DeleteRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}")

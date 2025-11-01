@@ -9,6 +9,49 @@ namespace Eurocentric.Domain.Aggregates.Broadcasts;
 
 public static class BroadcastInvariants
 {
+    public static Func<IAwardParams, UnitResult<IDomainError>> NoRankedCompetingCountriesConflict(Broadcast broadcast)
+    {
+        (BroadcastId broadcastId, IReadOnlyCollection<Competitor> competitors) = (
+            broadcast.Id,
+            broadcast.CompetitorsCollection
+        );
+
+        return awardParams =>
+        {
+            IOrderedEnumerable<CountryId> expectedCompetingCountryIds = competitors
+                .Where(competitor => !competitor.CompetingCountryId.Equals(awardParams.VotingCountryId))
+                .Select(competitor => competitor.CompetingCountryId)
+                .OrderBy(countryId => countryId);
+
+            IOrderedEnumerable<CountryId> actualCompetingCountryIds = awardParams.RankedCompetingCountryIds.OrderBy(
+                countryId => countryId
+            );
+
+            return actualCompetingCountryIds.SequenceEqual(expectedCompetingCountryIds)
+                ? UnitResult.Success<IDomainError>()
+                : BroadcastErrors.RankedCompetingCountriesConflict(broadcastId);
+        };
+    }
+
+    public static Func<IAwardParams, UnitResult<IDomainError>> NoTelevoteVotingCountryConflict(Broadcast broadcast)
+    {
+        (BroadcastId broadcastId, IReadOnlyCollection<Televote> televotes) = (
+            broadcast.Id,
+            broadcast.TelevotesCollection
+        );
+
+        return awardParams =>
+        {
+            CountryId votingCountryId = awardParams.VotingCountryId;
+
+            return televotes
+                .Where(televote => !televote.PointsAwarded)
+                .Any(televote => televote.VotingCountryId.Equals(votingCountryId))
+                ? UnitResult.Success<IDomainError>()
+                : BroadcastErrors.TelevoteVotingCountryConflict(broadcastId, votingCountryId);
+        };
+    }
+
     public static UnitResult<IDomainError> LegalCompetitorsCount(Broadcast broadcast)
     {
         return broadcast.CompetitorsCollection.Count < 2
