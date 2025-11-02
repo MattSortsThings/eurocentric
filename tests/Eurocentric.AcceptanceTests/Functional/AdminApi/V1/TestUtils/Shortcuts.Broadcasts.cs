@@ -9,6 +9,33 @@ namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public static partial class Shortcuts
 {
+    public static async Task AwardAllBroadcastJuryPointsAsync(
+        this AdminKernel kernel,
+        Broadcast broadcast,
+        Guid? excludedVotingCountryId = null
+    )
+    {
+        Guid broadcastId = broadcast.Id;
+        AwardBroadcastJuryPointsRequest[] requestBodies = GenerateJuryRequestBodies(broadcast, excludedVotingCountryId);
+
+        await kernel.AwardBroadcastJuryPointsAsync(broadcastId, requestBodies);
+    }
+
+    public static async Task AwardAllBroadcastTelevotePointsAsync(
+        this AdminKernel kernel,
+        Broadcast broadcast,
+        Guid? excludedVotingCountryId = null
+    )
+    {
+        Guid broadcastId = broadcast.Id;
+        AwardBroadcastTelevotePointsRequest[] requestBodies = GenerateTelevoteRequestBodies(
+            broadcast,
+            excludedVotingCountryId
+        );
+
+        await kernel.AwardBroadcastTelevotePointsAsync(broadcastId, requestBodies);
+    }
+
     public static async Task AwardBroadcastJuryPointsAsync(
         this AdminKernel kernel,
         Guid broadcastId,
@@ -79,5 +106,61 @@ public static partial class Shortcuts
         );
 
         return response.AsResponse.Data!.Broadcasts;
+    }
+
+    private static AwardBroadcastTelevotePointsRequest[] GenerateTelevoteRequestBodies(
+        Broadcast broadcast,
+        Guid? excludedVotingCountryId = null
+    )
+    {
+        Guid[] competingCountryIds = broadcast
+            .Competitors.Select(competitor => competitor.CompetingCountryId)
+            .ToArray();
+
+        IEnumerable<Televote> televotes = broadcast.Televotes.Where(televote =>
+            televote.VotingCountryId != excludedVotingCountryId
+        );
+
+        return televotes
+            .Select(televote =>
+            {
+                Guid votingCountryId = televote.VotingCountryId;
+
+                return new AwardBroadcastTelevotePointsRequest
+                {
+                    VotingCountryId = votingCountryId,
+                    RankedCompetingCountryIds = competingCountryIds
+                        .Where(countryId => countryId != votingCountryId)
+                        .ToArray(),
+                };
+            })
+            .ToArray();
+    }
+
+    private static AwardBroadcastJuryPointsRequest[] GenerateJuryRequestBodies(
+        Broadcast broadcast,
+        Guid? excludedVotingCountryId = null
+    )
+    {
+        Guid[] competingCountryIds = broadcast
+            .Competitors.Select(competitor => competitor.CompetingCountryId)
+            .ToArray();
+
+        IEnumerable<Jury> juries = broadcast.Juries.Where(jury => jury.VotingCountryId != excludedVotingCountryId);
+
+        return juries
+            .Select(jury =>
+            {
+                Guid votingCountryId = jury.VotingCountryId;
+
+                return new AwardBroadcastJuryPointsRequest
+                {
+                    VotingCountryId = votingCountryId,
+                    RankedCompetingCountryIds = competingCountryIds
+                        .Where(countryId => countryId != votingCountryId)
+                        .ToArray(),
+                };
+            })
+            .ToArray();
     }
 }

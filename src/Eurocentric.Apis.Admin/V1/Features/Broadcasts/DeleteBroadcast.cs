@@ -51,6 +51,7 @@ internal static class DeleteBroadcast
         {
             return await writeRepository
                 .GetTrackedAsync(command.BroadcastId, ct)
+                .Tap(broadcast => broadcast.MarkForDeletion())
                 .Tap(writeRepository.Remove)
                 .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 .Bind(_ => UnitResult.Success<IDomainError>());

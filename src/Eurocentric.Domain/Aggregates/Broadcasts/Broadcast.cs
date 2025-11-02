@@ -153,6 +153,11 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .Bind(_ => UnitResult.Success<IDomainError>());
     }
 
+    /// <summary>
+    ///     Marks the broadcast for deletion by adding a <see cref="BroadcastDeletedEvent" />.
+    /// </summary>
+    public void MarkForDeletion() => AddDomainEvent(new BroadcastDeletedEvent(this));
+
     private void AwardPointsFromJuryToCompetitors(IAwardParams awardParams)
     {
         Jury jury = GetJuryToGivePoints(awardParams.VotingCountryId);

@@ -62,12 +62,16 @@ public sealed partial class BroadcastTests : UnitTest
 
         Contest contest = builder.Build(() => DefaultContestId).GetValueOrDefault();
 
-        return contest
+        Broadcast? broadcast = contest
             .CreateSemiFinal1Broadcast()
             .WithBroadcastDate(DefaultBroadcastDate)
             .WithCompetingCountries(competingCountryIds)
             .Build(() => DefaultBroadcastId)
             .GetValueOrDefault();
+
+        broadcast.DetachAllDomainEvents();
+
+        return broadcast;
     }
 
     private static Broadcast CreateJuryAndTelevoteBroadcast(
@@ -100,12 +104,16 @@ public sealed partial class BroadcastTests : UnitTest
 
         Contest contest = builder.Build(() => DefaultContestId).GetValueOrDefault();
 
-        return contest
+        Broadcast? broadcast = contest
             .CreateSemiFinal1Broadcast()
             .WithBroadcastDate(DefaultBroadcastDate)
             .WithCompetingCountries(competingCountryIds)
             .Build(() => DefaultBroadcastId)
             .GetValueOrDefault();
+
+        broadcast.DetachAllDomainEvents();
+
+        return broadcast;
     }
 
     private static void AwardJuryPoints(Broadcast broadcast, params IAwardParams[] parameters)

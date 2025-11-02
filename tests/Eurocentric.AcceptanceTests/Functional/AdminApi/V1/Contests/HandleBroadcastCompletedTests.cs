@@ -448,11 +448,7 @@ public sealed class HandleBroadcastCompletedTests : SerialCleanAcceptanceTest
                 broadcast.ContestStage == Enum.Parse<ContestStage>(contestStage)
             );
 
-            await Kernel.AwardBroadcastJuryPointsAsync(
-                broadcast.Id,
-                GenerateJuryRequestBodies(broadcast, excludedVotingCountryId)
-            );
-
+            await Kernel.AwardAllBroadcastJuryPointsAsync(broadcast, excludedVotingCountryId);
             await RefreshExistingContestAndBroadcasts();
         }
 
@@ -469,11 +465,7 @@ public sealed class HandleBroadcastCompletedTests : SerialCleanAcceptanceTest
                 broadcast.ContestStage == Enum.Parse<ContestStage>(contestStage)
             );
 
-            await Kernel.AwardBroadcastTelevotePointsAsync(
-                broadcast.Id,
-                GenerateTelevoteRequestBodies(broadcast, excludedVotingCountryId)
-            );
-
+            await Kernel.AwardAllBroadcastTelevotePointsAsync(broadcast, excludedVotingCountryId);
             await RefreshExistingContestAndBroadcasts();
         }
 
@@ -552,62 +544,6 @@ public sealed class HandleBroadcastCompletedTests : SerialCleanAcceptanceTest
                 ContestStage = contestStage,
                 Completed = completed,
             };
-        }
-
-        private static AwardBroadcastJuryPointsRequest[] GenerateJuryRequestBodies(
-            Broadcast broadcast,
-            Guid? excludedVotingCountryId = null
-        )
-        {
-            Guid[] competingCountryIds = broadcast
-                .Competitors.Select(competitor => competitor.CompetingCountryId)
-                .ToArray();
-
-            IEnumerable<Jury> juries = broadcast.Juries.Where(jury => jury.VotingCountryId != excludedVotingCountryId);
-
-            return juries
-                .Select(jury =>
-                {
-                    Guid votingCountryId = jury.VotingCountryId;
-
-                    return new AwardBroadcastJuryPointsRequest
-                    {
-                        VotingCountryId = votingCountryId,
-                        RankedCompetingCountryIds = competingCountryIds
-                            .Where(countryId => countryId != votingCountryId)
-                            .ToArray(),
-                    };
-                })
-                .ToArray();
-        }
-
-        private static AwardBroadcastTelevotePointsRequest[] GenerateTelevoteRequestBodies(
-            Broadcast broadcast,
-            Guid? excludedVotingCountryId = null
-        )
-        {
-            Guid[] competingCountryIds = broadcast
-                .Competitors.Select(competitor => competitor.CompetingCountryId)
-                .ToArray();
-
-            IEnumerable<Televote> televotes = broadcast.Televotes.Where(televote =>
-                televote.VotingCountryId != excludedVotingCountryId
-            );
-
-            return televotes
-                .Select(televote =>
-                {
-                    Guid votingCountryId = televote.VotingCountryId;
-
-                    return new AwardBroadcastTelevotePointsRequest
-                    {
-                        VotingCountryId = votingCountryId,
-                        RankedCompetingCountryIds = competingCountryIds
-                            .Where(countryId => countryId != votingCountryId)
-                            .ToArray(),
-                    };
-                })
-                .ToArray();
         }
     }
 }

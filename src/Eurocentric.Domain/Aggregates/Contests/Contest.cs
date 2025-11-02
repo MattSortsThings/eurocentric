@@ -150,6 +150,25 @@ public abstract class Contest : AggregateRoot<ContestId>
         UpdateQueryable();
     }
 
+    /// <summary>
+    ///     Removes the existing child broadcast with the specified <see cref="ChildBroadcast.ChildBroadcastId" />.
+    /// </summary>
+    /// <remarks>The method updates the <see cref="Queryable" /> value of this instance to <see langword="false" />.</remarks>
+    /// <param name="broadcastId">The broadcast ID.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     The <paramref name="broadcastId" /> argument matches no existing item in the <see cref="ChildBroadcasts" />
+    ///     collection of this instance.
+    /// </exception>
+    public void RemoveChildBroadcast(BroadcastId broadcastId)
+    {
+        ArgumentNullException.ThrowIfNull(broadcastId);
+
+        ChildBroadcast childBroadcast = GetChildBroadcastOrThrowIfNotFound(broadcastId);
+        _childBroadcasts.Remove(childBroadcast);
+        UpdateQueryable();
+    }
+
     /// <inheritdoc />
     public override IDomainEvent[] DetachAllDomainEvents()
     {
