@@ -16,6 +16,14 @@ public sealed partial class AdminKernel
                 .AddJsonBody(requestBody);
         }
 
+        public RestRequest DeleteCountry(Guid countryId)
+        {
+            return DeleteRequest("/admin/api/{apiVersion}/countries/{countryId}")
+                .UseSecretApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddUrlSegment("countryId", countryId);
+        }
+
         public RestRequest GetCountries()
         {
             return GetRequest("/admin/api/{apiVersion}/countries")

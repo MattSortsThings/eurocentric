@@ -2,7 +2,7 @@ using CSharpFunctionalExtensions;
 using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
-using Eurocentric.Domain.Aggregates.Contests;
+using Eurocentric.Domain.Aggregates.Countries;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
@@ -15,44 +15,44 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Countries;
 
-internal static class DeleteContest
+internal static class DeleteCountry
 {
     private static async Task<IResult> ExecuteAsync(
-        [FromRoute(Name = "contestId")] Guid contestId,
+        [FromRoute(Name = "countryId")] Guid countryId,
         [FromServices] IRequestResponseBus bus,
         CancellationToken ct = default
-    ) => await bus.DispatchAsync(contestId.ToUnitCommand(), ct);
+    ) => await bus.DispatchAsync(countryId.ToUnitCommand(), ct);
 
-    private static UnitCommand ToUnitCommand(this Guid contestId) => new(ContestId.FromValue(contestId));
+    private static UnitCommand ToUnitCommand(this Guid countryId) => new(CountryId.FromValue(countryId));
 
     internal sealed class EndpointMapper : IEndpointMapper
     {
         public void MapEndpoint(RouteGroupBuilder routeBuilder)
         {
             routeBuilder
-                .MapDelete("contests/{contestId:guid}", ExecuteAsync)
-                .WithName(V1Endpoints.Contests.DeleteContest)
+                .MapDelete("countries/{countryId:guid}", ExecuteAsync)
+                .WithName(V1Endpoints.Countries.DeleteCountry)
                 .AddedInVersion1Point0()
-                .WithSummary("Delete a contest")
-                .WithDescription("Permanently deletes the requested contest.")
-                .WithTags(V1Tags.Contests)
+                .WithSummary("Delete a country")
+                .WithDescription("Permanently deletes the requested country.")
+                .WithTags(V1Tags.Countries)
                 .Produces(StatusCodes.Status204NoContent)
                 .ProducesProblem(StatusCodes.Status404NotFound)
                 .ProducesProblem(StatusCodes.Status409Conflict);
         }
     }
 
-    internal sealed record UnitCommand(ContestId ContestId) : IUnitCommand;
+    internal sealed record UnitCommand(CountryId CountryId) : IUnitCommand;
 
     [UsedImplicitly]
-    internal sealed class UnitCommandHandler(IContestWriteRepository writeRepository, IUnitOfWork unitOfWork)
+    internal sealed class UnitCommandHandler(ICountryWriteRepository writeRepository, IUnitOfWork unitOfWork)
         : IUnitCommandHandler<UnitCommand>
     {
         public async Task<UnitResult<IDomainError>> OnHandle(UnitCommand command, CancellationToken ct)
         {
             return await writeRepository
-                .GetTrackedAsync(command.ContestId, ct)
-                .Ensure(ContestInvariants.CanBeDeleted)
+                .GetTrackedAsync(command.CountryId, ct)
+                .Ensure(CountryInvariants.CanBeDeleted)
                 .Tap(writeRepository.Remove)
                 .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 .Bind(_ => UnitResult.Success<IDomainError>());

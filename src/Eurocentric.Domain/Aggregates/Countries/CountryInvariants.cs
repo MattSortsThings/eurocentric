@@ -9,6 +9,13 @@ namespace Eurocentric.Domain.Aggregates.Countries;
 /// </summary>
 public static class CountryInvariants
 {
+    public static UnitResult<IDomainError> CanBeDeleted(Country country)
+    {
+        return country.ContestRoles.Count == 0
+            ? UnitResult.Success<IDomainError>()
+            : CountryErrors.CountryDeletionNotPermitted(country.Id);
+    }
+
     public static Func<Country, UnitResult<IDomainError>> HasUniqueCountryCode(IQueryable<Country> existingCountries)
     {
         IQueryable<Country> countries = existingCountries;

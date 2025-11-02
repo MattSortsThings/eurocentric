@@ -43,6 +43,8 @@ public interface IRestRequestFactory
     {
         RestRequest CreateCountry(CreateCountryRequest requestBody);
 
+        RestRequest DeleteCountry(Guid countryId);
+
         RestRequest GetCountries();
 
         RestRequest GetCountry(Guid countryId);
