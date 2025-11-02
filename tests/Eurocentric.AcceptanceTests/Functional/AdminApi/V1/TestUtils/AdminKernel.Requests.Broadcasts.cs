@@ -8,6 +8,15 @@ public sealed partial class AdminKernel
 {
     private sealed partial class RestRequestFactory : IRestRequestFactory.IBroadcastsEndpoints
     {
+        public RestRequest AwardBroadcastJuryPoints(Guid broadcastId, AwardBroadcastJuryPointsRequest requestBody)
+        {
+            return PatchRequest("/admin/api/{apiVersion}/broadcasts/{broadcastId}/award-jury")
+                .UseSecretApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddUrlSegment("broadcastId", broadcastId)
+                .AddJsonBody(requestBody);
+        }
+
         public RestRequest AwardBroadcastTelevotePoints(
             Guid broadcastId,
             AwardBroadcastTelevotePointsRequest requestBody

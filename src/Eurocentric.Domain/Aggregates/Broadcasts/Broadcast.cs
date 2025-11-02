@@ -89,6 +89,12 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     internal IReadOnlyCollection<Competitor> CompetitorsCollection => _competitors;
 
     /// <summary>
+    ///     Gets the broadcast's juries.
+    /// </summary>
+    /// <remarks>This internal property accesses the broadcast's juries list directly.</remarks>
+    internal IReadOnlyCollection<Jury> JuriesCollection => _juries;
+
+    /// <summary>
     ///     Gets the broadcast's televotes.
     /// </summary>
     /// <remarks>This internal property accesses the broadcast's televotes list directly.</remarks>
@@ -106,6 +112,26 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
     }
 
     /// <summary>
+    ///     Awards the points from a jury to the competitors in the broadcast.
+    /// </summary>
+    /// <param name="awardParams">Determines the points to be awarded.</param>
+    /// <returns><i>Either</i> a successful result <i>or</i> an error.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="awardParams" /> is <see langword="null" />.</exception>
+    public UnitResult<IDomainError> AwardJuryPoints(IAwardParams awardParams)
+    {
+        ArgumentNullException.ThrowIfNull(awardParams);
+
+        return Result
+            .Success<IAwardParams, IDomainError>(awardParams)
+            .Ensure(BroadcastInvariants.NoJuryVotingCountryConflict(this))
+            .Ensure(BroadcastInvariants.NoRankedCompetingCountriesConflict(this))
+            .Tap(AwardPointsFromJuryToCompetitors)
+            .Tap(_ => UpdateCompetitorFinishingPositions())
+            .Tap(_ => UpdateCompleted())
+            .Bind(_ => UnitResult.Success<IDomainError>());
+    }
+
+    /// <summary>
     ///     Awards the points from a televote to the competitors in the broadcast.
     /// </summary>
     /// <param name="awardParams">Determines the points to be awarded.</param>
@@ -119,21 +145,32 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .Success<IAwardParams, IDomainError>(awardParams)
             .Ensure(BroadcastInvariants.NoTelevoteVotingCountryConflict(this))
             .Ensure(BroadcastInvariants.NoRankedCompetingCountriesConflict(this))
-            .Tap(AwardPoints)
+            .Tap(AwardPointsFromTelevoteToCompetitors)
             .Tap(_ => UpdateCompetitorFinishingPositions())
             .Tap(_ => UpdateCompleted())
             .Bind(_ => UnitResult.Success<IDomainError>());
     }
 
-    private void AwardPoints(IAwardParams @params)
+    private void AwardPointsFromJuryToCompetitors(IAwardParams awardParams)
     {
-        Televote televote = GetTelevoteToAwardPoints(@params.VotingCountryId);
-        Competitor[] competitors = GetRankedCompetitorsToReceivePoints(@params.RankedCompetingCountryIds);
+        Jury jury = GetJuryToGivePoints(awardParams.VotingCountryId);
+        Competitor[] competitors = GetRankedCompetitorsToReceivePoints(awardParams.RankedCompetingCountryIds);
+
+        jury.AwardPoints(competitors);
+    }
+
+    private void AwardPointsFromTelevoteToCompetitors(IAwardParams awardParams)
+    {
+        Televote televote = GetTelevoteToGivePoints(awardParams.VotingCountryId);
+        Competitor[] competitors = GetRankedCompetitorsToReceivePoints(awardParams.RankedCompetingCountryIds);
 
         televote.AwardPoints(competitors);
     }
 
-    private Televote GetTelevoteToAwardPoints(CountryId votingCountryId) =>
+    private Jury GetJuryToGivePoints(CountryId votingCountryId) =>
+        _juries.Single(jury => jury.VotingCountryId.Equals(votingCountryId));
+
+    private Televote GetTelevoteToGivePoints(CountryId votingCountryId) =>
         _televotes.Single(televote => televote.VotingCountryId.Equals(votingCountryId));
 
     private Competitor[] GetRankedCompetitorsToReceivePoints(IEnumerable<CountryId> rankedCompetingCountryIds)

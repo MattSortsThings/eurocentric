@@ -9,6 +9,19 @@ namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public static partial class Shortcuts
 {
+    public static async Task AwardBroadcastJuryPointsAsync(
+        this AdminKernel kernel,
+        Guid broadcastId,
+        params AwardBroadcastJuryPointsRequest[] requestBodies
+    )
+    {
+        foreach (AwardBroadcastJuryPointsRequest requestBody in requestBodies)
+        {
+            RestRequest request = kernel.Requests.Broadcasts.AwardBroadcastJuryPoints(broadcastId, requestBody);
+            _ = await kernel.Client.SendAsync(request);
+        }
+    }
+
     public static async Task AwardBroadcastTelevotePointsAsync(
         this AdminKernel kernel,
         Guid broadcastId,

@@ -23,6 +23,7 @@ internal static class EndpointRouteBuilderExtensions
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
         v1Group
+            .Map<AwardBroadcastJuryPoints.EndpointMapper>()
             .Map<AwardBroadcastTelevotePoints.EndpointMapper>()
             .Map<DeleteBroadcast.EndpointMapper>()
             .Map<GetBroadcast.EndpointMapper>()

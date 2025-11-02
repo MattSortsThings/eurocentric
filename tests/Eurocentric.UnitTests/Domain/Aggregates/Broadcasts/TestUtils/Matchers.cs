@@ -36,6 +36,43 @@ public static class Matchers
             return this;
         }
 
+        public CompetitorMatcher HasJuryAward(CountryId votingCountryId, PointsValue pointsValue)
+        {
+            Func<Competitor, bool> existingPredicate = Predicate;
+
+            Predicate = competitor =>
+                competitor.JuryAwards.Any(award =>
+                    award.VotingCountryId.Equals(votingCountryId) && award.PointsValue == pointsValue
+                ) && existingPredicate(competitor);
+
+            return this;
+        }
+
+        public CompetitorMatcher HasSingleJuryAward(CountryId votingCountryId)
+        {
+            Func<Competitor, bool> existingPredicate = Predicate;
+
+            Predicate = competitor =>
+                competitor.JuryAwards.Single() is var singleAward
+                && singleAward.VotingCountryId.Equals(votingCountryId)
+                && existingPredicate(competitor);
+
+            return this;
+        }
+
+        public CompetitorMatcher HasSingleJuryAward(CountryId votingCountryId, PointsValue pointsValue)
+        {
+            Func<Competitor, bool> existingPredicate = Predicate;
+
+            Predicate = competitor =>
+                competitor.JuryAwards.Single() is var singleAward
+                && singleAward.VotingCountryId.Equals(votingCountryId)
+                && singleAward.PointsValue == pointsValue
+                && existingPredicate(competitor);
+
+            return this;
+        }
+
         public CompetitorMatcher HasNoTelevoteAwards()
         {
             Func<Competitor, bool> existingPredicate = Predicate;

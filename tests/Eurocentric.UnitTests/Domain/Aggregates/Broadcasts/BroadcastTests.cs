@@ -1,6 +1,7 @@
 using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.ValueObjects;
+using Eurocentric.UnitTests.Domain.Aggregates.Broadcasts.TestUtils;
 using Eurocentric.UnitTests.Domain.Aggregates.TestUtils;
 using Eurocentric.UnitTests.TestUtils;
 
@@ -107,12 +108,29 @@ public sealed partial class BroadcastTests : UnitTest
             .GetValueOrDefault();
     }
 
+    private static void AwardJuryPoints(Broadcast broadcast, params IAwardParams[] parameters)
+    {
+        foreach (IAwardParams p in parameters)
+        {
+            broadcast.AwardJuryPoints(p);
+        }
+    }
+
     private static void AwardTelevotePoints(Broadcast broadcast, params IAwardParams[] parameters)
     {
         foreach (IAwardParams p in parameters)
         {
             broadcast.AwardTelevotePoints(p);
         }
+    }
+
+    private static async Task AssertNoPointsAwarded(Broadcast broadcast)
+    {
+        await Assert
+            .That(broadcast.Competitors)
+            .ContainsOnly(Matchers.Competitor().HasNoJuryAwards().HasNoTelevoteAwards().Match);
+        await Assert.That(broadcast.Juries).IsEmpty().Or.ContainsOnly(Matchers.Jury().PointsNotAwarded().Match);
+        await Assert.That(broadcast.Televotes).IsEmpty().Or.ContainsOnly(Matchers.Televote().PointsNotAwarded().Match);
     }
 
     private sealed class AwardParams : IAwardParams

@@ -4,6 +4,7 @@ internal static class V1Endpoints
 {
     internal static class Broadcasts
     {
+        internal const string AwardBroadcastJuryPoints = "AdminApi.V1.AwardBroadcastJuryPoints";
         internal const string AwardBroadcastTelevotePoints = "AdminApi.V1.AwardBroadcastTelevotePoints";
         internal const string DeleteBroadcast = "AdminApi.V1.DeleteBroadcast";
         internal const string GetBroadcast = "AdminApi.V1.GetBroadcast";

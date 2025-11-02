@@ -33,6 +33,20 @@ public static class BroadcastInvariants
         };
     }
 
+    public static Func<IAwardParams, UnitResult<IDomainError>> NoJuryVotingCountryConflict(Broadcast broadcast)
+    {
+        (BroadcastId broadcastId, IReadOnlyCollection<Jury> juries) = (broadcast.Id, broadcast.JuriesCollection);
+
+        return awardParams =>
+        {
+            CountryId votingCountryId = awardParams.VotingCountryId;
+
+            return juries.Where(jury => !jury.PointsAwarded).Any(jury => jury.VotingCountryId.Equals(votingCountryId))
+                ? UnitResult.Success<IDomainError>()
+                : BroadcastErrors.JuryVotingCountryConflict(broadcastId, votingCountryId);
+        };
+    }
+
     public static Func<IAwardParams, UnitResult<IDomainError>> NoTelevoteVotingCountryConflict(Broadcast broadcast)
     {
         (BroadcastId broadcastId, IReadOnlyCollection<Televote> televotes) = (

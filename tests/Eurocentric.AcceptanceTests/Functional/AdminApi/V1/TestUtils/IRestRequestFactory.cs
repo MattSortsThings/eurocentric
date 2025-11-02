@@ -15,6 +15,8 @@ public interface IRestRequestFactory
 
     interface IBroadcastsEndpoints
     {
+        RestRequest AwardBroadcastJuryPoints(Guid broadcastId, AwardBroadcastJuryPointsRequest requestBody);
+
         RestRequest AwardBroadcastTelevotePoints(Guid broadcastId, AwardBroadcastTelevotePointsRequest requestBody);
 
         RestRequest DeleteBroadcast(Guid broadcastId);

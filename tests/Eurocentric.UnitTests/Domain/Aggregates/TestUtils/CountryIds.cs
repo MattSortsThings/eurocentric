@@ -16,6 +16,7 @@ public static class CountryIds
     public static readonly CountryId Lv = CountryId.FromValue(Guid.Parse("12abcdef-eaa6-4c18-89ed-ea537b06b092"));
     public static readonly CountryId Mt = CountryId.FromValue(Guid.Parse("13abcdef-eaa6-4c18-89ed-ea537b06b092"));
     public static readonly CountryId No = CountryId.FromValue(Guid.Parse("14abcdef-eaa6-4c18-89ed-ea537b06b092"));
+    public static readonly CountryId Pt = CountryId.FromValue(Guid.Parse("15abcdef-eaa6-4c18-89ed-ea537b06b092"));
     public static readonly CountryId Xx = CountryId.FromValue(Guid.Parse("24abcdef-eaa6-4c18-89ed-ea537b06b092"));
 
     public static IEnumerable<CountryId> Generate(int count)
