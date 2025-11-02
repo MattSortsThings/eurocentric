@@ -46,8 +46,8 @@ public sealed class Country : AggregateRoot<CountryId>
     /// <param name="contestId">The contest ID.</param>
     /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException">
-    ///     The <paramref name="contestId" /> argument matches an existing item in the
-    ///     <see cref="ContestRoles" /> collection of this instance.
+    ///     The <paramref name="contestId" /> argument matches an existing item in the <see cref="ContestRoles" />
+    ///     collection of this instance.
     /// </exception>
     public void AddGlobalTelevoteContestRole(ContestId contestId)
     {
@@ -64,8 +64,8 @@ public sealed class Country : AggregateRoot<CountryId>
     /// <param name="contestId">The contest ID.</param>
     /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException">
-    ///     The <paramref name="contestId" /> argument matches an existing item in the
-    ///     <see cref="ContestRoles" /> collection of this instance.
+    ///     The <paramref name="contestId" /> argument matches an existing item in the <see cref="ContestRoles" />
+    ///     collection of this instance.
     /// </exception>
     public void AddParticipantContestRole(ContestId contestId)
     {
@@ -73,6 +73,23 @@ public sealed class Country : AggregateRoot<CountryId>
         ThrowOnContestIdConflict(contestId);
 
         _contestRoles.Add(new ContestRole(contestId, ContestRoleType.Participant));
+    }
+
+    /// <summary>
+    ///     Removes the contest role with the specified <see cref="ContestRole.ContestId" />.
+    /// </summary>
+    /// <param name="contestId">The contest ID.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="contestId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     The <paramref name="contestId" /> argument matches no existing item in the <see cref="ContestRoles" />
+    ///     collection of this instance.
+    /// </exception>
+    public void RemoveContestRole(ContestId contestId)
+    {
+        ArgumentNullException.ThrowIfNull(contestId);
+
+        ContestRole contestRole = GetContestRoleOrThrowIfNotFound(contestId);
+        _contestRoles.Remove(contestRole);
     }
 
     /// <inheritdoc />
@@ -90,6 +107,12 @@ public sealed class Country : AggregateRoot<CountryId>
         {
             throw new ArgumentException("Country already has a ContestRole with the provided ContestId.");
         }
+    }
+
+    private ContestRole GetContestRoleOrThrowIfNotFound(ContestId contestId)
+    {
+        return _contestRoles.SingleOrDefault(contestRole => contestRole.ContestId.Equals(contestId))
+            ?? throw new ArgumentException("Country has no ContestRole with the provided ContestId.");
     }
 
     private sealed class Builder : ICountryBuilder

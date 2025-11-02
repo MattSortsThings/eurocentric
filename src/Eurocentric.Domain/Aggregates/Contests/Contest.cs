@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Core;
 using Eurocentric.Domain.Enums;
+using Eurocentric.Domain.Events;
 using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 
@@ -180,6 +181,11 @@ public abstract class Contest : AggregateRoot<ContestId>
 
         return eventsEnumerable.ToArray();
     }
+
+    /// <summary>
+    ///     Marks the contest for deletion by adding a <see cref="ContestDeletedEvent" />.
+    /// </summary>
+    public void MarkForDeletion() => AddDomainEvent(new ContestDeletedEvent(this));
 
     private void ThrowOnChildBroadcastIdConflict(BroadcastId broadcastId)
     {

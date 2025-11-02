@@ -51,6 +51,8 @@ public sealed partial class LiverpoolRulesContestTests : UnitTest
 
         Contest contest = builder.Build(idProvider).GetValueOrDefault();
 
+        _ = contest.DetachAllDomainEvents();
+
         return contest as LiverpoolRulesContest ?? throw new InvalidOperationException("Build failed.");
     }
 }

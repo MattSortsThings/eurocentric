@@ -8,13 +8,13 @@ using JetBrains.Annotations;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Countries;
 
-internal static class HandleContestCreated
+internal static class HandleContestDeleted
 {
     [UsedImplicitly]
     internal sealed class DomainEventHandler(ICountryWriteRepository writeRepository)
-        : IDomainEventHandler<ContestCreatedEvent>
+        : IDomainEventHandler<ContestDeletedEvent>
     {
-        public async Task OnHandle(ContestCreatedEvent message, CancellationToken ct)
+        public async Task OnHandle(ContestDeletedEvent message, CancellationToken ct)
         {
             (ContestId contestId, IReadOnlyList<Participant> participants, GlobalTelevote? globalTelevote) = (
                 message.Contest.Id,
@@ -25,14 +25,14 @@ internal static class HandleContestCreated
             if (globalTelevote is not null)
             {
                 Country globalTelevoteCountry = await GetTrackedCountryAsync(globalTelevote.VotingCountryId, ct);
-                globalTelevoteCountry.AddGlobalTelevoteContestRole(contestId);
+                globalTelevoteCountry.RemoveContestRole(contestId);
                 writeRepository.Update(globalTelevoteCountry);
             }
 
             foreach (Participant participant in participants)
             {
                 Country participantCountry = await GetTrackedCountryAsync(participant.ParticipatingCountryId, ct);
-                participantCountry.AddParticipantContestRole(contestId);
+                participantCountry.RemoveContestRole(contestId);
                 writeRepository.Update(participantCountry);
             }
         }

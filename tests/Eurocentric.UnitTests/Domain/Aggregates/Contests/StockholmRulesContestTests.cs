@@ -49,6 +49,8 @@ public sealed partial class StockholmRulesContestTests : UnitTest
 
         Contest contest = builder.Build(idProvider).GetValueOrDefault();
 
+        _ = contest.DetachAllDomainEvents();
+
         return contest as StockholmRulesContest ?? throw new InvalidOperationException("Build failed.");
     }
 }

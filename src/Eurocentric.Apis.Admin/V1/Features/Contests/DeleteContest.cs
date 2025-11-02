@@ -53,6 +53,7 @@ internal static class DeleteContest
             return await writeRepository
                 .GetTrackedAsync(command.ContestId, ct)
                 .Ensure(ContestInvariants.CanBeDeleted)
+                .Tap(contest => contest.MarkForDeletion())
                 .Tap(writeRepository.Remove)
                 .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 .Bind(_ => UnitResult.Success<IDomainError>());
