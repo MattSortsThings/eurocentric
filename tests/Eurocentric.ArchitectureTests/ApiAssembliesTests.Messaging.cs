@@ -328,4 +328,21 @@ public sealed partial class ApiAssembliesTests : ArchitectureTest
         // Assert
         await Assert.That(result).ContainsOnly(Passed);
     }
+
+    [Test]
+    public async Task DomainEventHandler_classes_should_not_depend_on_unit_of_work_service()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That()
+            .Are(DomainEventHandlerClasses)
+            .Should()
+            .NotDependOnAny(Types().That().ImplementInterface(typeof(IUnitOfWork)));
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
 }

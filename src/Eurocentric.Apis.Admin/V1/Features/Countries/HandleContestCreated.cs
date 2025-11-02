@@ -41,7 +41,7 @@ internal static class HandleContestCreated
 
         private async Task<Country> GetTrackedCountryAsync(CountryId countryId, CancellationToken ct)
         {
-            Result<Country, IDomainError> result = await writeRepository.GetByIdAsync(countryId, ct);
+            Result<Country, IDomainError> result = await writeRepository.GetTrackedAsync(countryId, ct);
 
             return result.GetValueOrDefault();
         }

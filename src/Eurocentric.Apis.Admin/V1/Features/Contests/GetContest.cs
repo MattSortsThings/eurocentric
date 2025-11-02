@@ -58,6 +58,6 @@ internal static class GetContest
     internal sealed class QueryHandler(IContestReadRepository readRepository) : IQueryHandler<Query, ContestAggregate>
     {
         public async Task<Result<ContestAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct) =>
-            await readRepository.GetByIdAsync(query.ContestId, ct);
+            await readRepository.GetUntrackedAsync(query.ContestId, ct);
     }
 }

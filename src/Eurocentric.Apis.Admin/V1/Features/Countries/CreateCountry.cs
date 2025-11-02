@@ -77,8 +77,8 @@ internal static class CreateCountry
     [UsedImplicitly]
     internal sealed class CommandHandler(
         ICountryIdFactory idFactory,
-        ICountryReadRepository readRepository,
-        ICountryWriteRepository writeRepository
+        ICountryRepository countryRepository,
+        IUnitOfWork unitOfWork
     ) : ICommandHandler<Command, CountryAggregate>
     {
         public async Task<Result<CountryAggregate, IDomainError>> OnHandle(Command command, CancellationToken ct)
@@ -88,9 +88,9 @@ internal static class CreateCountry
                 .WithCountryCode(command.ErrorOrCountryCode)
                 .WithCountryName(command.ErrorOrCountryName)
                 .Build(idFactory.Create)
-                .Ensure(CountryInvariants.HasUniqueCountryCode(readRepository.GetAsQueryable()))
-                .Tap(writeRepository.Add)
-                .Tap(_ => writeRepository.SaveChangesAsync(ct))
+                .Ensure(CountryInvariants.HasUniqueCountryCode(countryRepository.GetUntrackedQueryable()))
+                .Tap(countryRepository.Add)
+                .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 .Map(country => country);
         }
     }

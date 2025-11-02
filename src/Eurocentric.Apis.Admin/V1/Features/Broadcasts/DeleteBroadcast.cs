@@ -44,15 +44,15 @@ internal static class DeleteBroadcast
     internal sealed record UnitCommand(BroadcastId BroadcastId) : IUnitCommand;
 
     [UsedImplicitly]
-    internal sealed class UnitCommandHandler(IBroadcastWriteRepository writeRepository)
+    internal sealed class UnitCommandHandler(IBroadcastWriteRepository writeRepository, IUnitOfWork unitOfWork)
         : IUnitCommandHandler<UnitCommand>
     {
         public async Task<UnitResult<IDomainError>> OnHandle(UnitCommand command, CancellationToken ct)
         {
             return await writeRepository
-                .GetByIdAsync(command.BroadcastId, ct)
+                .GetTrackedAsync(command.BroadcastId, ct)
                 .Tap(writeRepository.Remove)
-                .Tap(_ => writeRepository.SaveChangesAsync(ct))
+                .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 .Bind(_ => UnitResult.Success<IDomainError>());
         }
     }

@@ -53,6 +53,6 @@ internal static class GetCountries
     internal sealed class QueryHandler(ICountryReadRepository readRepository) : IQueryHandler<Query, CountryAggregate[]>
     {
         public async Task<Result<CountryAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct) =>
-            await readRepository.GetAllAsync(ct);
+            await readRepository.GetAllUntrackedAsync(country => country.CountryCode, ct);
     }
 }

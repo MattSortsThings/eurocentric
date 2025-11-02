@@ -87,21 +87,21 @@ internal static class CreateContestBroadcast
     [UsedImplicitly]
     internal sealed class CommandHandler(
         IBroadcastIdFactory idFactory,
-        IBroadcastReadRepository broadcastReadRepository,
-        IBroadcastWriteRepository broadcastWriteRepository,
-        IContestReadRepository contestReadRepository
+        IBroadcastRepository broadcastRepository,
+        IContestWriteRepository contestWriteRepository,
+        IUnitOfWork unitOfWork
     ) : ICommandHandler<Command, BroadcastAggregate>
     {
         public async Task<Result<BroadcastAggregate, IDomainError>> OnHandle(Command command, CancellationToken ct)
         {
-            return await contestReadRepository
-                .GetByIdAsync(command.ContestId, ct)
+            return await contestWriteRepository
+                .GetTrackedAsync(command.ContestId, ct)
                 .Map(InitializeBuilder(command.ContestStage))
                 .Tap(Apply(command))
                 .Bind(builder => builder.Build(idFactory.Create))
-                .Ensure(BroadcastInvariants.HasUniqueBroadcastDate(broadcastReadRepository.GetAsQueryable()))
-                .Tap(broadcastWriteRepository.Add)
-                .Tap(_ => broadcastWriteRepository.SaveChangesAsync(ct))
+                .Ensure(BroadcastInvariants.HasUniqueBroadcastDate(broadcastRepository.GetUntrackedQueryable()))
+                .Tap(broadcastRepository.Add)
+                .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 .Map(broadcast => broadcast);
         }
 

@@ -57,23 +57,19 @@ internal static class AwardBroadcastJuryPoints
     ) : IUnitCommand, IAwardParams;
 
     [UsedImplicitly]
-    internal sealed class UnitCommandHandler(IBroadcastWriteRepository writeRepository)
+    internal sealed class UnitCommandHandler(IBroadcastWriteRepository writeRepository, IUnitOfWork unitOfWork)
         : IUnitCommandHandler<UnitCommand>
     {
         public async Task<UnitResult<IDomainError>> OnHandle(UnitCommand command, CancellationToken ct)
         {
-            return await GetTrackedBroadcastAsync(command.BroadcastId, ct)
+            return await writeRepository
+                .GetTrackedAsync(command.BroadcastId, ct)
                 .Bind(broadcast =>
                     broadcast
                         .AwardJuryPoints(command)
                         .Tap(() => writeRepository.Update(broadcast))
-                        .Tap(() => writeRepository.SaveChangesAsync(ct))
+                        .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 );
         }
-
-        private async Task<Result<Broadcast, IDomainError>> GetTrackedBroadcastAsync(
-            BroadcastId broadcastId,
-            CancellationToken ct
-        ) => await writeRepository.GetByIdAsync(broadcastId, ct);
     }
 }

@@ -59,6 +59,6 @@ internal static class GetBroadcast
         : IQueryHandler<Query, BroadcastAggregate>
     {
         public async Task<Result<BroadcastAggregate, IDomainError>> OnHandle(Query query, CancellationToken ct) =>
-            await readRepository.GetByIdAsync(query.BroadcastId, ct);
+            await readRepository.GetUntrackedAsync(query.BroadcastId, ct);
     }
 }

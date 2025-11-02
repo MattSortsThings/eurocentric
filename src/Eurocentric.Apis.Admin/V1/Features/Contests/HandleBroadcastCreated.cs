@@ -30,7 +30,7 @@ internal static class HandleBroadcastCreated
 
         private async Task<Contest> GetTrackedContestAsync(ContestId contestId, CancellationToken ct)
         {
-            Result<Contest, IDomainError> result = await writeRepository.GetByIdAsync(contestId, ct);
+            Result<Contest, IDomainError> result = await writeRepository.GetTrackedAsync(contestId, ct);
 
             return result.GetValueOrDefault();
         }

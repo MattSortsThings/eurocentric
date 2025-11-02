@@ -114,9 +114,9 @@ internal static class CreateContest
     [UsedImplicitly]
     internal sealed class CommandHandler(
         IContestIdFactory idFactory,
-        IContestReadRepository contestReadRepository,
-        IContestWriteRepository writeRepository,
-        ICountryReadRepository countryReadRepository
+        IContestRepository contestRepository,
+        ICountryReadRepository countryReadRepository,
+        IUnitOfWork unitOfWork
     ) : ICommandHandler<Command, ContestAggregate>
     {
         public async Task<Result<ContestAggregate, IDomainError>> OnHandle(Command command, CancellationToken ct)
@@ -124,10 +124,10 @@ internal static class CreateContest
             return await InitializeBuilder(command.ContestRules)
                 .Tap(Apply(command))
                 .Bind(builder => builder.Build(idFactory.Create))
-                .Ensure(ContestInvariants.HasUniqueContestYear(contestReadRepository.GetAsQueryable()))
-                .Ensure(ContestInvariants.HasNoOrphanContestCountries(countryReadRepository.GetAsQueryable()))
-                .Tap(writeRepository.Add)
-                .Tap(_ => writeRepository.SaveChangesAsync(ct))
+                .Ensure(ContestInvariants.HasUniqueContestYear(contestRepository.GetUntrackedQueryable()))
+                .Ensure(ContestInvariants.HasNoOrphanContestCountries(countryReadRepository.GetUntrackedQueryable()))
+                .Tap(contestRepository.Add)
+                .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 .Map(contest => contest);
         }
 
