@@ -15,6 +15,7 @@ internal static class V1Endpoints
     {
         internal const string CreateContest = "AdminApi.V1.CreateContest";
         internal const string CreateContestBroadcast = "AdminApi.V1.CreateContestBroadcast";
+        internal const string DeleteContest = "AdminApi.V1.DeleteContest";
         internal const string GetContest = "AdminApi.V1.GetContest";
         internal const string GetContests = "AdminApi.V1.GetContests";
     }

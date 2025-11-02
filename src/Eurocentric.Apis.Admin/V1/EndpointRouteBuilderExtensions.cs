@@ -32,6 +32,7 @@ internal static class EndpointRouteBuilderExtensions
         v1Group
             .Map<CreateContest.EndpointMapper>()
             .Map<CreateContestBroadcast.EndpointMapper>()
+            .Map<DeleteContest.EndpointMapper>()
             .Map<GetContest.EndpointMapper>()
             .Map<GetContests.EndpointMapper>();
 

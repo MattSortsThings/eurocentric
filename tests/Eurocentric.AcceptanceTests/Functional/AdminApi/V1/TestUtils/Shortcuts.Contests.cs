@@ -1,10 +1,6 @@
 using Eurocentric.AcceptanceTests.TestUtils;
 using Eurocentric.Apis.Admin.V1.Enums;
 using Eurocentric.Apis.Admin.V1.Features.Contests;
-using Eurocentric.Components.DataAccess.EfCore;
-using Eurocentric.Domain.ValueObjects;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using RestSharp;
 using ContestDto = Eurocentric.Apis.Admin.V1.Dtos.Contests.Contest;
 
@@ -73,9 +69,8 @@ public static partial class Shortcuts
 
     public static async Task DeleteAContestAsync(this AdminKernel kernel, Guid contestId)
     {
-        ContestId id = ContestId.FromValue(contestId);
-
-        await kernel.BackDoor.ExecuteScopedAsync(DeleteAsync(id));
+        RestRequest request = kernel.Requests.Contests.DeleteContest(contestId);
+        _ = await kernel.Client.SendAsync(request);
     }
 
     public static async Task<ContestDto> GetAContestAsync(this AdminKernel kernel, Guid contestId)
@@ -92,16 +87,5 @@ public static partial class Shortcuts
         ProblemOrResponse<GetContestsResponse> response = await kernel.Client.SendAsync<GetContestsResponse>(request);
 
         return response.AsResponse.Data!.Contests;
-    }
-
-    private static Func<IServiceProvider, Task> DeleteAsync(ContestId contestId)
-    {
-        ContestId idToDelete = contestId;
-
-        return async serviceProvider =>
-        {
-            await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
-            await dbContext.Contests.Where(contest => contest.Id.Equals(idToDelete)).ExecuteDeleteAsync();
-        };
     }
 }

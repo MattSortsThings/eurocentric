@@ -25,6 +25,22 @@ public static class ContestErrors
     }
 
     /// <summary>
+    ///     Creates and returns a new error indicating that the client has attempted to delete a <see cref="Contest" /> that
+    ///     has one or more child broadcasts.
+    /// </summary>
+    /// <param name="contestId">The ID of the requested contest.</param>
+    /// <returns>A new <see cref="ConflictError" /> instance.</returns>
+    public static ConflictError ContestDeletionNotPermitted(ContestId contestId)
+    {
+        return new ConflictError
+        {
+            Title = "Contest deletion not permitted",
+            Detail = "The requested contest has one or more child broadcasts.",
+            Extensions = new Dictionary<string, object?> { { nameof(contestId), contestId.Value } },
+        };
+    }
+
+    /// <summary>
     ///     Creates and returns a new error indicating that the client has tried to create a <see cref="Contest" /> in which
     ///     any of its <see cref="Contest.Participants" /> or <see cref="Contest.GlobalTelevote" /> references a non-existent
     ///     country.

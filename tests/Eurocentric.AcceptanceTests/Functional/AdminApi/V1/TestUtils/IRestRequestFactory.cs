@@ -32,6 +32,8 @@ public interface IRestRequestFactory
 
         RestRequest CreateContestBroadcast(Guid contestId, CreateContestBroadcastRequest requestBody);
 
+        RestRequest DeleteContest(Guid contestId);
+
         RestRequest GetContest(Guid contestId);
 
         RestRequest GetContests();

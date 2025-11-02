@@ -11,6 +11,13 @@ namespace Eurocentric.Domain.Aggregates.Contests;
 /// </summary>
 public static class ContestInvariants
 {
+    public static UnitResult<IDomainError> CanBeDeleted(Contest contest)
+    {
+        return contest.ChildBroadcasts.Count == 0
+            ? UnitResult.Success<IDomainError>()
+            : ContestErrors.ContestDeletionNotPermitted(contest.Id);
+    }
+
     public static Func<Contest, UnitResult<IDomainError>> HasNoOrphanContestCountries(
         IQueryable<Country> existingCountries
     )

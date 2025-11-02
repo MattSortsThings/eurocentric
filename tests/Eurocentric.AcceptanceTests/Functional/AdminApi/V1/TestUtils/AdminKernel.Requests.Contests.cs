@@ -25,6 +25,14 @@ public sealed partial class AdminKernel
                 .AddJsonBody(requestBody);
         }
 
+        public RestRequest DeleteContest(Guid contestId)
+        {
+            return DeleteRequest("/admin/api/{apiVersion}/contests/{contestId}")
+                .UseSecretApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddUrlSegment("contestId", contestId);
+        }
+
         public RestRequest GetContest(Guid contestId)
         {
             return GetRequest("/admin/api/{apiVersion}/contests/{contestId}")
