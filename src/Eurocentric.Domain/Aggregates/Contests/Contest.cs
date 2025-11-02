@@ -118,9 +118,8 @@ public abstract class Contest : AggregateRoot<ContestId>
     /// <param name="contestStage">The broadcast's stage in the contest.</param>
     /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
     /// <exception cref="ArgumentException">
-    ///     The <paramref name="broadcastId" /> argument or the
-    ///     <paramref name="contestStage" /> matches an existing item in the <see cref="ChildBroadcasts" /> collection of this
-    ///     instance.
+    ///     The <paramref name="broadcastId" /> argument or the <paramref name="contestStage" /> argument matches an existing
+    ///     item in the <see cref="ChildBroadcasts" /> collection of this instance.
     /// </exception>
     public void AddChildBroadcast(BroadcastId broadcastId, ContestStage contestStage)
     {
@@ -129,6 +128,26 @@ public abstract class Contest : AggregateRoot<ContestId>
         ThrowOnChildBroadcastContestStageConflict(contestStage);
 
         _childBroadcasts.Add(new ChildBroadcast(broadcastId, contestStage));
+    }
+
+    /// <summary>
+    ///     Updates the existing child broadcast with the specified <see cref="ChildBroadcast.ChildBroadcastId" /> by setting
+    ///     its <see cref="ChildBroadcast.Completed" /> value to <see langword="true" />.
+    /// </summary>
+    /// <remarks>The method may also update the <see cref="Queryable" /> value of this instance.</remarks>
+    /// <param name="broadcastId">The broadcast ID.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="broadcastId" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">
+    ///     The <paramref name="broadcastId" /> argument matches no existing item in the <see cref="ChildBroadcasts" />
+    ///     collection of this instance.
+    /// </exception>
+    public void CompleteChildBroadcast(BroadcastId broadcastId)
+    {
+        ArgumentNullException.ThrowIfNull(broadcastId);
+
+        ChildBroadcast childBroadcast = GetChildBroadcastOrThrowIfNotFound(broadcastId);
+        childBroadcast.Completed = true;
+        UpdateQueryable();
     }
 
     /// <inheritdoc />
@@ -157,6 +176,19 @@ public abstract class Contest : AggregateRoot<ContestId>
         {
             throw new ArgumentException("Contest already has a ChildBroadcast with the provided ContestStage.");
         }
+    }
+
+    private ChildBroadcast GetChildBroadcastOrThrowIfNotFound(BroadcastId broadcastId)
+    {
+        return _childBroadcasts.SingleOrDefault(broadcast => broadcast.ChildBroadcastId.Equals(broadcastId))
+            ?? throw new ArgumentException("Contest has no ChildBroadcast with the provided BroadcastId.");
+    }
+
+    private void UpdateQueryable()
+    {
+        Queryable =
+            _childBroadcasts.Count == Enum.GetValues<ContestStage>().Length
+            && _childBroadcasts.All(broadcast => broadcast.Completed);
     }
 
     private protected abstract class ContestBuilder : IContestBuilder

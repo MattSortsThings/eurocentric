@@ -126,8 +126,9 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .Ensure(BroadcastInvariants.NoJuryVotingCountryConflict(this))
             .Ensure(BroadcastInvariants.NoRankedCompetingCountriesConflict(this))
             .Tap(AwardPointsFromJuryToCompetitors)
-            .Tap(_ => UpdateCompetitorFinishingPositions())
-            .Tap(_ => UpdateCompleted())
+            .Tap(UpdateCompetitorFinishingPositions)
+            .Tap(UpdateCompleted)
+            .Tap(AddEventIfCompleted)
             .Bind(_ => UnitResult.Success<IDomainError>());
     }
 
@@ -146,8 +147,9 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
             .Ensure(BroadcastInvariants.NoTelevoteVotingCountryConflict(this))
             .Ensure(BroadcastInvariants.NoRankedCompetingCountriesConflict(this))
             .Tap(AwardPointsFromTelevoteToCompetitors)
-            .Tap(_ => UpdateCompetitorFinishingPositions())
-            .Tap(_ => UpdateCompleted())
+            .Tap(UpdateCompetitorFinishingPositions)
+            .Tap(UpdateCompleted)
+            .Tap(AddEventIfCompleted)
             .Bind(_ => UnitResult.Success<IDomainError>());
     }
 
@@ -199,6 +201,14 @@ public sealed class Broadcast : AggregateRoot<BroadcastId>
 
     private void UpdateCompleted() =>
         Completed = _juries.All(jury => jury.PointsAwarded) && _televotes.All(televote => televote.PointsAwarded);
+
+    private void AddEventIfCompleted()
+    {
+        if (Completed)
+        {
+            AddDomainEvent(new BroadcastCompletedEvent(this));
+        }
+    }
 
     internal abstract class Builder : IBroadcastBuilder
     {
