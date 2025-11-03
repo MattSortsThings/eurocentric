@@ -85,8 +85,7 @@ public sealed class GetQueryableCountriesTests : ParallelSeededAcceptanceTest
 
             await Assert
                 .That(SuccessResponse?.Data?.QueryableCountries)
-                .IsOrderedBy(qc => qc.CountryCode)
-                .And.IsEquivalentTo(expectedItems, new EqualityComparer(), CollectionOrdering.Matching);
+                .IsEquivalentTo(expectedItems, new EqualityComparer(), CollectionOrdering.Matching);
         }
 
         private static QueryableCountry MapToQueryableCountry(Dictionary<string, string> row) =>

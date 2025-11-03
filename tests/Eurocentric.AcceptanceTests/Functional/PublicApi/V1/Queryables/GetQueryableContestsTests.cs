@@ -46,8 +46,7 @@ public sealed class GetQueryableContestsTests : ParallelSeededAcceptanceTest
 
             await Assert
                 .That(SuccessResponse?.Data?.QueryableContests)
-                .IsOrderedBy(contest => contest.ContestYear)
-                .And.IsEquivalentTo(expected, new EqualityComparer(), CollectionOrdering.Matching);
+                .IsEquivalentTo(expected, new EqualityComparer(), CollectionOrdering.Matching);
         }
 
         private static QueryableContest MapToQueryableContest(Dictionary<string, string> row)

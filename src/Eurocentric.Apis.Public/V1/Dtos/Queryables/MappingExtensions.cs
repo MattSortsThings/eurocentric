@@ -1,3 +1,6 @@
+using Eurocentric.Apis.Public.V1.Enums;
+using QueryableBroadcastDto = Eurocentric.Apis.Public.V1.Dtos.Queryables.QueryableBroadcast;
+using QueryableBroadcastRow = Eurocentric.Domain.Analytics.Queryables.QueryableBroadcast;
 using QueryableContestDto = Eurocentric.Apis.Public.V1.Dtos.Queryables.QueryableContest;
 using QueryableContestRow = Eurocentric.Domain.Analytics.Queryables.QueryableContest;
 using QueryableCountryDto = Eurocentric.Apis.Public.V1.Dtos.Queryables.QueryableCountry;
@@ -7,6 +10,20 @@ namespace Eurocentric.Apis.Public.V1.Dtos.Queryables;
 
 internal static class MappingExtensions
 {
+    internal static QueryableBroadcastDto ToDto(this QueryableBroadcastRow row)
+    {
+        return new QueryableBroadcastDto
+        {
+            BroadcastDate = row.BroadcastDate,
+            ContestYear = row.ContestYear,
+            CityName = row.CityName,
+            ContestStage = row.ContestStage.ToApiContestStage(),
+            Competitors = row.Competitors,
+            Juries = row.Juries,
+            Televotes = row.Televotes,
+        };
+    }
+
     internal static QueryableContestDto ToDto(this QueryableContestRow row)
     {
         return new QueryableContestDto

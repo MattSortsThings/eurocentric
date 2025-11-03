@@ -7,6 +7,13 @@ public sealed partial class EuroFanKernel
 {
     private sealed partial class RestRequestFactory : IRestRequestFactory.IQueryablesEndpoints
     {
+        public RestRequest GetQueryableBroadcasts()
+        {
+            return GetRequest("/public/api/{apiVersion}/queryables/broadcasts")
+                .UseDemoApiKey()
+                .AddUrlSegment("apiVersion", apiVersion);
+        }
+
         public RestRequest GetQueryableContests()
         {
             return GetRequest("/public/api/{apiVersion}/queryables/contests")

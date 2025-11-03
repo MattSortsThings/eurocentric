@@ -19,6 +19,9 @@ internal static class EndpointRouteBuilderExtensions
             .RequiresUserRole()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        v1Group.Map<GetQueryableContests.EndpointMapper>().Map<GetQueryableCountries.EndpointMapper>();
+        v1Group
+            .Map<GetQueryableBroadcasts.EndpointMapper>()
+            .Map<GetQueryableContests.EndpointMapper>()
+            .Map<GetQueryableCountries.EndpointMapper>();
     }
 }

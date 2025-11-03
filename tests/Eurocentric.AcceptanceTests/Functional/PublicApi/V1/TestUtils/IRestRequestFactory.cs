@@ -8,6 +8,8 @@ public interface IRestRequestFactory
 
     interface IQueryablesEndpoints
     {
+        RestRequest GetQueryableBroadcasts();
+
         RestRequest GetQueryableContests();
 
         RestRequest GetQueryableCountries();
