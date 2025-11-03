@@ -15,4 +15,8 @@
     </PackageReference>
     <PackageReference Include="SlimMessageBus" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Analytics\" />
+    <Folder Include="Queries\" />
+  </ItemGroup>
 </Project>

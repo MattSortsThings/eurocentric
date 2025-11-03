@@ -55,7 +55,7 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
-        await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2");
+        await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
     }
 
     [Test]
@@ -68,7 +68,20 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
-        await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2");
+        await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
+    }
+
+    [Test]
+    public async Task Public_API_v1_0_response_should_report_all_Public_API_versions()
+    {
+        // Arrange
+        RestRequest request = GetRequest("/public/api/v1.0/queryables/countries").UseSecretApiKey();
+
+        // Act
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
+
+        // Assert
+        await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
     }
 
     private static RestRequest GetRequest(string route) => new(route);

@@ -15,6 +15,7 @@ public sealed class OpenApiDocumentsTests : ParallelSeededAcceptanceTest
     [Arguments("admin-api-v1.0")]
     [Arguments("public-api-v0.1")]
     [Arguments("public-api-v0.2")]
+    [Arguments("public-api-v1.0")]
     public async Task OpenAPI_endpoint_should_serve_requested_OpenAPI_JSON_document_to_anonymous_client(string docName)
     {
         // Arrange
@@ -35,6 +36,7 @@ public sealed class OpenApiDocumentsTests : ParallelSeededAcceptanceTest
     [Arguments("admin-api-v1.0", "/admin/api/v1.0")]
     [Arguments("public-api-v0.1", "/public/api/v0.1")]
     [Arguments("public-api-v0.2", "/public/api/v0.2")]
+    [Arguments("public-api-v1.0", "/public/api/v1.0")]
     public async Task OpenAPI_document_should_have_correct_server_URL_and_paths_for_API_release(
         string docName,
         string serverUrlSuffix
@@ -85,7 +87,7 @@ public sealed class OpenApiDocumentsTests : ParallelSeededAcceptanceTest
     [Arguments("admin-api-v1.1")]
     [Arguments("public-api-v0")]
     [Arguments("public-api-v0.3")]
-    [Arguments("public-api-v1.0")]
+    [Arguments("public-api-v1.1")]
     public async Task OpenAPI_endpoint_should_return_404_on_non_existent_OpenAPI_document_requested(string docName)
     {
         // Arrange

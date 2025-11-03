@@ -1,4 +1,5 @@
 using Eurocentric.Apis.Public.V0.OpenApi;
+using Eurocentric.Apis.Public.V1.OpenApi;
 using Eurocentric.Components.OpenApi;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ public static class OpenApiDocuments
     {
         services
             .RegisterOpenApiDocument<V0Point1DocumentRegistrar>()
-            .RegisterOpenApiDocument<V0Point2DocumentRegistrar>();
+            .RegisterOpenApiDocument<V0Point2DocumentRegistrar>()
+            .RegisterOpenApiDocument<V1Point0DocumentRegistrar>();
     }
 }

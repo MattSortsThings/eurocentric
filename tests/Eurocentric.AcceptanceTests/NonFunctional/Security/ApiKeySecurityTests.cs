@@ -231,5 +231,76 @@ public sealed class ApiKeySecurityTests : ParallelSeededAcceptanceTest
         await Assert.That(problem.StatusCode).IsEqualTo(HttpStatusCode.Unauthorized);
     }
 
+    [Test]
+    [Arguments("v1.0")]
+    public async Task Public_API_v1_x_should_authenticate_client_using_SECRET_API_KEY(string apiVersion)
+    {
+        // Arrange
+        RestRequest getCountriesRequest = GetRequest("/public/api/{apiVersion}/queryables/countries")
+            .AddUrlSegment("apiVersion", apiVersion)
+            .AddHeader("X-Api-Key", TestApiKeys.Secret);
+
+        // Act
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
+
+        // Assert
+        RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
+
+        await Assert.That(response.StatusCode).IsEqualTo(HttpStatusCode.OK);
+    }
+
+    [Test]
+    [Arguments("v1.0")]
+    public async Task Public_API_v1_x_should_authenticate_client_using_DEMO_API_KEY(string apiVersion)
+    {
+        // Arrange
+        RestRequest getCountriesRequest = GetRequest("/public/api/{apiVersion}/queryables/countries")
+            .AddUrlSegment("apiVersion", apiVersion)
+            .AddHeader("X-Api-Key", TestApiKeys.Demo);
+
+        // Act
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
+
+        // Assert
+        RestResponse response = await Assert.That(problemOrResponse).IsResponse().And.IsNotNull();
+
+        await Assert.That(response.StatusCode).IsEqualTo(HttpStatusCode.OK);
+    }
+
+    [Test]
+    [Arguments("v1.0")]
+    public async Task Public_API_v1_x_should_not_authenticate_client_using_unrecognized_API_key(string apiVersion)
+    {
+        // Arrange
+        RestRequest getCountriesRequest = GetRequest("/public/api/{apiVersion}/queryables/countries")
+            .AddUrlSegment("apiVersion", apiVersion)
+            .AddHeader("X-Api-Key", UnrecognizedApiKey);
+
+        // Act
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
+
+        // Assert
+        RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
+
+        await Assert.That(problem.StatusCode).IsEqualTo(HttpStatusCode.Unauthorized);
+    }
+
+    [Test]
+    [Arguments("v1.0")]
+    public async Task Public_API_v1_x_should_not_authenticate_client_using_no_API_key(string apiVersion)
+    {
+        // Arrange
+        RestRequest getCountriesRequest = GetRequest("/public/api/{apiVersion}/queryables/countries")
+            .AddUrlSegment("apiVersion", apiVersion);
+
+        // Act
+        ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
+
+        // Assert
+        RestResponse<ProblemDetails> problem = await Assert.That(problemOrResponse).IsProblem().And.IsNotNull();
+
+        await Assert.That(problem.StatusCode).IsEqualTo(HttpStatusCode.Unauthorized);
+    }
+
     private static RestRequest GetRequest(string route) => new(route);
 }

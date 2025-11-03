@@ -1,4 +1,5 @@
 using Eurocentric.Components.Gateways.V0;
+using Eurocentric.Domain.Analytics.Queryables;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Components.Gateways;
@@ -16,6 +17,8 @@ public static class DependencyInjection
     public static IServiceCollection AddGateways(this IServiceCollection services)
     {
         services.AddV0Gateways();
+
+        services.AddScoped<IQueryablesGateway, QueryablesGateway>();
 
         return services;
     }

@@ -13,6 +13,7 @@ public sealed class ApiDocumentationPagesTests : ParallelSeededAcceptanceTest
     [Arguments("admin-api-v1.0")]
     [Arguments("public-api-v0.1")]
     [Arguments("public-api-v0.2")]
+    [Arguments("public-api-v1.0")]
     public async Task Should_serve_requested_API_HTML_document_to_anonymous_client(string docName)
     {
         // Arrange
