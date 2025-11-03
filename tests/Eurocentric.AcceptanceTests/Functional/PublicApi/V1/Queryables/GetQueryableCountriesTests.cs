@@ -16,7 +16,7 @@ public sealed class GetQueryableCountriesTests : ParallelSeededAcceptanceTest
         EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
 
         // Given
-        euroFan.Given_I_want_to_retrieve_all_existing_countries();
+        euroFan.Given_I_want_to_retrieve_all_queryable_countries();
 
         // When
         await euroFan.When_I_send_my_request();
@@ -76,7 +76,7 @@ public sealed class GetQueryableCountriesTests : ParallelSeededAcceptanceTest
     {
         private protected override EuroFanKernel Kernel { get; } = kernel;
 
-        public void Given_I_want_to_retrieve_all_existing_countries() =>
+        public void Given_I_want_to_retrieve_all_queryable_countries() =>
             Request = Kernel.Requests.Queryables.GetQueryableCountries();
 
         public async Task Then_the_retrieved_queryable_countries_in_order_should_be(string table)
@@ -86,7 +86,7 @@ public sealed class GetQueryableCountriesTests : ParallelSeededAcceptanceTest
             await Assert
                 .That(SuccessResponse?.Data?.QueryableCountries)
                 .IsOrderedBy(qc => qc.CountryCode)
-                .IsEquivalentTo(expectedItems, new EqualityComparer(), CollectionOrdering.Matching);
+                .And.IsEquivalentTo(expectedItems, new EqualityComparer(), CollectionOrdering.Matching);
         }
 
         private static QueryableCountry MapToQueryableCountry(Dictionary<string, string> row) =>
