@@ -1,6 +1,7 @@
 using Eurocentric.Apis.Public.V1.Config;
 using Eurocentric.Apis.Public.V1.Features.Queryables;
 using Eurocentric.Apis.Public.V1.Features.Rankings.CompetingCountries;
+using Eurocentric.Apis.Public.V1.Features.Rankings.VotingCountries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Security;
 using Microsoft.AspNetCore.Builder;
@@ -26,5 +27,7 @@ internal static class EndpointRouteBuilderExtensions
             .Map<GetQueryableBroadcasts.EndpointMapper>()
             .Map<GetQueryableContests.EndpointMapper>()
             .Map<GetQueryableCountries.EndpointMapper>();
+
+        v1Group.Map<GetVotingCountryPointsAverageRankings.EndpointMapper>();
     }
 }

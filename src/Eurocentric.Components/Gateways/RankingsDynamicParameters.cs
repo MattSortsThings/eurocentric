@@ -31,6 +31,11 @@ internal sealed class RankingsDynamicParameters : DynamicParameters
             dp.PopulateFrom(ovm);
         }
 
+        if (query is IRequiredCompetingCountryFiltering rcc)
+        {
+            dp.PopulateFrom(rcc);
+        }
+
         return dp;
     }
 
@@ -102,5 +107,16 @@ internal sealed class RankingsDynamicParameters : DynamicParameters
                 direction: ParameterDirection.Input
             );
         }
+    }
+
+    private void PopulateFrom(IRequiredCompetingCountryFiltering filtering)
+    {
+        Add(
+            "@competing_country_code",
+            filtering.CompetingCountryCode,
+            DbType.StringFixedLength,
+            size: 2,
+            direction: ParameterDirection.Input
+        );
     }
 }

@@ -1,6 +1,7 @@
 using Eurocentric.Components.Gateways.V0;
 using Eurocentric.Domain.Analytics.Queryables;
 using Eurocentric.Domain.Analytics.Rankings.CompetingCountries;
+using Eurocentric.Domain.Analytics.Rankings.VotingCountries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Components.Gateways;
@@ -11,7 +12,7 @@ namespace Eurocentric.Components.Gateways;
 public static class DependencyInjection
 {
     /// <summary>
-    ///     Adds the domain query gateway services to the application service descriptor collection.
+    ///     Adds the domain analytics gateway services to the application service descriptor collection.
     /// </summary>
     /// <param name="services">Contains service descriptors for the application.</param>
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
@@ -21,7 +22,8 @@ public static class DependencyInjection
 
         services
             .AddScoped<ICompetingCountryRankingsGateway, CompetingCountryRankingsGateway>()
-            .AddScoped<IQueryablesGateway, QueryablesGateway>();
+            .AddScoped<IQueryablesGateway, QueryablesGateway>()
+            .AddScoped<IVotingCountryRankingsGateway, VotingCountryRankingsGateway>();
 
         return services;
     }

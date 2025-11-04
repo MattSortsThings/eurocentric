@@ -247,44 +247,6 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
 
         // Given
         euroFan.Given_I_want_to_retrieve_a_page_of_competing_country_points_average_rankings(
-            votingMethod: "Jury",
-            pageSize: 5
-        );
-
-        // When
-        await euroFan.When_I_send_my_request();
-
-        // Then
-        await euroFan.Then_my_request_should_SUCCEED_with_status_code(200);
-        await euroFan.Then_the_retrieved_rankings_in_order_should_match(
-            """
-            | Rank | CountryCode | CountryName | PointsAverage | TotalPoints | PointsAwards | Broadcasts | Contests | VotingCountries |
-            |------|-------------|-------------|---------------|-------------|--------------|------------|----------|-----------------|
-            | 1    | SE          | Sweden      | 8.631579      | 820         | 95           | 3          | 2        | 39              |
-            | 2    | GR          | Greece      | 5.421053      | 309         | 57           | 2          | 1        | 39              |
-            | 3    | NL          | Netherlands | 4.754386      | 271         | 57           | 2          | 1        | 39              |
-            | 4    | IT          | Italy       | 4.453333      | 334         | 75           | 2          | 2        | 39              |
-            | 5    | AU          | Australia   | 4.442105      | 422         | 95           | 3          | 2        | 39              |
-            """
-        );
-        await euroFan.Then_the_retrieved_metadata_should_match(
-            votingMethod: "Jury",
-            pageIndex: 0,
-            pageSize: 5,
-            descending: false,
-            totalItems: 40,
-            totalPages: 8
-        );
-    }
-
-    [Test]
-    [ApiVersion1Point0AndUp]
-    public async Task Should_retrieve_rankings_page_and_metadata_scenario_8(string apiVersion)
-    {
-        EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
-
-        // Given
-        euroFan.Given_I_want_to_retrieve_a_page_of_competing_country_points_average_rankings(
             votingMethod: "Televote",
             pageSize: 5
         );
@@ -317,7 +279,7 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Should_retrieve_rankings_page_and_metadata_scenario_9(string apiVersion)
+    public async Task Should_retrieve_rankings_page_and_metadata_scenario_8(string apiVersion)
     {
         EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
 
@@ -355,6 +317,50 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
 
     [Test]
     [ApiVersion1Point0AndUp]
+    public async Task Should_retrieve_rankings_page_and_metadata_scenario_9(string apiVersion)
+    {
+        EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        euroFan.Given_I_want_to_retrieve_a_page_of_competing_country_points_average_rankings(
+            minYear: 2023,
+            contestStage: "Any",
+            votingMethod: "Televote",
+            votingCountryCode: "GB",
+            pageSize: 5
+        );
+
+        // When
+        await euroFan.When_I_send_my_request();
+
+        // Then
+        await euroFan.Then_my_request_should_SUCCEED_with_status_code(200);
+        await euroFan.Then_the_retrieved_rankings_in_order_should_match(
+            """
+            | Rank | CountryCode | CountryName | PointsAverage | TotalPoints | PointsAwards | Broadcasts | Contests | VotingCountries |
+            |------|-------------|-------------|---------------|-------------|--------------|------------|----------|-----------------|
+            | 1    | FI          | Finland     | 12            | 12          | 1            | 1          | 1        | 1               |
+            | 2    | LT          | Lithuania   | 11            | 22          | 2            | 2          | 1        | 1               |
+            | 3    | PL          | Poland      | 9             | 18          | 2            | 2          | 1        | 1               |
+            | 4    | NO          | Norway      | 7             | 7           | 1            | 1          | 1        | 1               |
+            | 5    | BE          | Belgium     | 6             | 12          | 2            | 2          | 1        | 1               |
+            """
+        );
+        await euroFan.Then_the_retrieved_metadata_should_match(
+            minYear: 2023,
+            contestStage: "Any",
+            votingMethod: "Televote",
+            votingCountryCode: "GB",
+            pageIndex: 0,
+            pageSize: 5,
+            descending: false,
+            totalItems: 31,
+            totalPages: 7
+        );
+    }
+
+    [Test]
+    [ApiVersion1Point0AndUp]
     public async Task Should_retrieve_empty_rankings_page_when_no_data_matches_query(string apiVersion)
     {
         EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
@@ -362,7 +368,8 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
         // Given
         euroFan.Given_I_want_to_retrieve_a_page_of_competing_country_points_average_rankings(
             minYear: 1066,
-            maxYear: 1666
+            maxYear: 1963,
+            votingCountryCode: "ZZ"
         );
 
         // When
@@ -373,7 +380,8 @@ public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeed
         await euroFan.Then_the_retrieved_rankings_should_be_an_empty_list();
         await euroFan.Then_the_retrieved_metadata_should_match(
             minYear: 1066,
-            maxYear: 1666,
+            maxYear: 1963,
+            votingCountryCode: "ZZ",
             pageIndex: 0,
             pageSize: 10,
             descending: false,

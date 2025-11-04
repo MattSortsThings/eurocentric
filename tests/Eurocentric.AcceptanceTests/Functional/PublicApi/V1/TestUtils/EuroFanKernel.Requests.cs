@@ -10,6 +10,8 @@ public sealed partial class EuroFanKernel
 
         public IRestRequestFactory.IQueryablesEndpoints Queryables => this;
 
+        public IRestRequestFactory.IVotingCountryRankingsEndpoints VotingCountryRankings => this;
+
         private static RestRequest GetRequest(string route) => new(route);
     }
 }

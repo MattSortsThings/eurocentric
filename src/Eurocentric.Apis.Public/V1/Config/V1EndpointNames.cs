@@ -14,4 +14,10 @@ internal static class V1EndpointNames
         internal const string GetQueryableContests = "PublicApi.V1.GetQueryableContests";
         internal const string GetQueryableCountries = "PublicApi.V1.GetQueryableCountries";
     }
+
+    internal static class VotingCountryRankings
+    {
+        internal const string GetVotingCountryPointsAverageRankings =
+            "PublicApi.V1.GetVotingCountryPointsAverageRankings";
+    }
 }

@@ -4,4 +4,5 @@ internal static class V1Tags
 {
     internal const string CompetingCountryRankings = "Competing Country Rankings";
     internal const string Queryables = "Queryables";
+    internal const string VotingCountryRankings = "Voting Country Rankings";
 }

@@ -22,9 +22,9 @@ AS
 -- Create date: 2025-11-04
 --
 -- Description:
---  Ranks competing countries based on descending points average.
+--  Ranks competing countries based on descending POINTS_AVERAGE.
 --
---  Points average is a float between 0 and 12, calculated as the average individual points value received by the
+--  POINTS_AVERAGE is a float between 0 and 12, calculated as the average individual points value received by the
 --  competing country across broadcasts.
 --
 --  Returns 1) a page of rankings (which may be empty), then 2) a single metadata record.
@@ -77,9 +77,9 @@ AS
 --  2) A single metadata record with the following columns:
 --    - min_year INT, may be NULL
 --    - max_year INT, may be NULL
---    - contest_stage NVARCHAR(10), may be null
---    - voting_country_code NCHAR(2), may be null
---    - voting_method NVARCHAR(10), may be null
+--    - contest_stage NVARCHAR(10), may be NULL
+--    - voting_country_code NCHAR(2), may be NULL
+--    - voting_method NVARCHAR(10), may be NULL
 --    - page_index INT
 --    - page_size INT
 --    - descending BIT
@@ -195,7 +195,7 @@ grouped_metric AS (SELECT gd.competing_country_id,
 
     DECLARE @total_items INT = (SELECT COUNT(*) FROM #ranking);
 
-    DECLARE @total_pages INT = dbo.udf_get_pagination_total_pages( @page_size,  @total_items);
+    DECLARE @total_pages INT = dbo.udf_get_pagination_total_pages(@page_size, @total_items);
 
     SELECT @min_year            AS min_year,
            @max_year            AS max_year,

@@ -44,4 +44,17 @@ public static class RankingsInvariants
 
         return UnitResult.Success<IDomainError>();
     }
+
+    public static UnitResult<IDomainError> LegalCompetingCountrySettings(IRequiredCompetingCountryFiltering filtering)
+    {
+        if (
+            filtering.CompetingCountryCode is { } competingCountryCode
+            && ValueObjectInvariants.LegalCountryCodeValue(competingCountryCode).IsFailure
+        )
+        {
+            return RankingsErrors.IllegalCompetingCountryCodeValue(competingCountryCode);
+        }
+
+        return UnitResult.Success<IDomainError>();
+    }
 }
