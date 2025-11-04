@@ -11,7 +11,9 @@ public sealed partial class EuroFanKernel
             IRestRequestFactory.IListingsEndpoints,
             IRestRequestFactory.IQueryablesEndpoints
     {
-        public RestRequest GetCompetingCountryPointsAverageRankings(IDictionary<string, object?> queryParameters)
+        public RestRequest GetCompetingCountryPointsAverageRankings(
+            IReadOnlyDictionary<string, object?> queryParameters
+        )
         {
             return GetRequest("/public/api/{apiVersion}/competing-country-rankings/points-average")
                 .UseDemoApiKey()
@@ -19,7 +21,7 @@ public sealed partial class EuroFanKernel
                 .AddQueryParameters(queryParameters);
         }
 
-        public RestRequest GetBroadcastResultListings(IDictionary<string, object?> queryParameters)
+        public RestRequest GetBroadcastResultListings(IReadOnlyDictionary<string, object?> queryParameters)
         {
             return GetRequest("/public/api/{apiVersion}/listings/broadcast-result")
                 .UseDemoApiKey()

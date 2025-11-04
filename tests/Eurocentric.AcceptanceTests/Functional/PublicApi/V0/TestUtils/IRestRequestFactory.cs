@@ -12,12 +12,12 @@ public interface IRestRequestFactory
 
     interface ICompetingCountryRankingsEndpoints
     {
-        RestRequest GetCompetingCountryPointsAverageRankings(IDictionary<string, object?> queryParameters);
+        RestRequest GetCompetingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParameters);
     }
 
     interface IListingsEndpoints
     {
-        RestRequest GetBroadcastResultListings(IDictionary<string, object?> queryParameters);
+        RestRequest GetBroadcastResultListings(IReadOnlyDictionary<string, object?> queryParameters);
     }
 
     interface IQueryablesEndpoints

@@ -4,7 +4,14 @@ namespace Eurocentric.AcceptanceTests.Functional.PublicApi.V1.TestUtils;
 
 public interface IRestRequestFactory
 {
+    ICompetingCountryRankingsEndpoints CompetingCountryRankings { get; }
+
     IQueryablesEndpoints Queryables { get; }
+
+    interface ICompetingCountryRankingsEndpoints
+    {
+        RestRequest GetCompetingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
+    }
 
     interface IQueryablesEndpoints
     {

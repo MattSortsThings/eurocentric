@@ -1,5 +1,6 @@
 using Eurocentric.Apis.Public.V1.Config;
 using Eurocentric.Apis.Public.V1.Features.Queryables;
+using Eurocentric.Apis.Public.V1.Features.Rankings.CompetingCountries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Security;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +19,8 @@ internal static class EndpointRouteBuilderExtensions
             .RequiresAuthenticatedClient()
             .RequiresUserRole()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
+
+        v1Group.Map<GetCompetingCountryPointsAverageRankings.EndpointMapper>();
 
         v1Group
             .Map<GetQueryableBroadcasts.EndpointMapper>()

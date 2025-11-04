@@ -6,6 +6,8 @@ public sealed partial class EuroFanKernel
 {
     private sealed partial class RestRequestFactory(string apiVersion) : IRestRequestFactory
     {
+        public IRestRequestFactory.ICompetingCountryRankingsEndpoints CompetingCountryRankings => this;
+
         public IRestRequestFactory.IQueryablesEndpoints Queryables => this;
 
         private static RestRequest GetRequest(string route) => new(route);

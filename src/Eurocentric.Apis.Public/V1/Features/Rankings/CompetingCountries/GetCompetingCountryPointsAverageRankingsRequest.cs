@@ -1,0 +1,35 @@
+using System.ComponentModel;
+using Eurocentric.Apis.Public.V1.Enums;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Eurocentric.Apis.Public.V1.Features.Rankings.CompetingCountries;
+
+public sealed record GetCompetingCountryPointsAverageRankingsRequest
+{
+    [FromQuery(Name = "minYear")]
+    public int? MinYear { get; init; }
+
+    [FromQuery(Name = "maxYear")]
+    public int? MaxYear { get; init; }
+
+    [FromQuery(Name = "contestStage")]
+    public ContestStageFilter? ContestStage { get; init; }
+
+    [FromQuery(Name = "votingCountryCode")]
+    public string? VotingCountryCode { get; init; }
+
+    [FromQuery(Name = "votingMethod")]
+    public VotingMethodFilter? VotingMethod { get; init; }
+
+    [DefaultValue(0)]
+    [FromQuery(Name = "pageIndex")]
+    public int? PageIndex { get; init; }
+
+    [DefaultValue(10)]
+    [FromQuery(Name = "pageSize")]
+    public int? PageSize { get; init; }
+
+    [DefaultValue(false)]
+    [FromQuery(Name = "descending")]
+    public bool? Descending { get; init; }
+}
