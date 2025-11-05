@@ -1,6 +1,7 @@
 using Eurocentric.Components.Gateways.V0;
 using Eurocentric.Domain.Analytics.Queryables;
 using Eurocentric.Domain.Analytics.Rankings.CompetingCountries;
+using Eurocentric.Domain.Analytics.Rankings.Competitors;
 using Eurocentric.Domain.Analytics.Rankings.VotingCountries;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +23,7 @@ public static class DependencyInjection
 
         services
             .AddScoped<ICompetingCountryRankingsGateway, CompetingCountryRankingsGateway>()
+            .AddScoped<ICompetitorRankingsGateway, CompetitorRankingsGateway>()
             .AddScoped<IQueryablesGateway, QueryablesGateway>()
             .AddScoped<IVotingCountryRankingsGateway, VotingCountryRankingsGateway>();
 

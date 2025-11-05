@@ -8,6 +8,11 @@ internal static class V1EndpointNames
             "PublicApi.V1.GetCompetingCountryPointsAverageRankings";
     }
 
+    internal static class CompetitorRankings
+    {
+        internal const string GetCompetitorPointsAverageRankings = "PublicApi.V1.GetCompetitorPointsAverageRankings";
+    }
+
     internal static class Queryables
     {
         internal const string GetQueryableBroadcasts = "PublicApi.V1.GetQueryableBroadcasts";

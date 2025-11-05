@@ -8,6 +8,8 @@ public sealed partial class EuroFanKernel
     {
         public IRestRequestFactory.ICompetingCountryRankingsEndpoints CompetingCountryRankings => this;
 
+        public IRestRequestFactory.ICompetitorRankingsEndpoints CompetitorRankings => this;
+
         public IRestRequestFactory.IQueryablesEndpoints Queryables => this;
 
         public IRestRequestFactory.IVotingCountryRankingsEndpoints VotingCountryRankings => this;
