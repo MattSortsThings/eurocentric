@@ -1,11 +1,11 @@
 using Eurocentric.AcceptanceTests.Functional.PublicApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
-using Eurocentric.Apis.Public.V1.Dtos.Rankings.CompetingCountries;
+using Eurocentric.Apis.Public.V1.Dtos.CompetingCountryRankings;
 using Eurocentric.Apis.Public.V1.Enums;
-using Eurocentric.Apis.Public.V1.Features.Rankings.CompetingCountries;
+using Eurocentric.Apis.Public.V1.Features.CompetingCountryRankings;
 using TUnit.Assertions.Enums;
 
-namespace Eurocentric.AcceptanceTests.Functional.PublicApi.V1.Rankings.CompetingCountries;
+namespace Eurocentric.AcceptanceTests.Functional.PublicApi.V1.CompetingCountryRankings;
 
 [Category("public-api")]
 public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeededAcceptanceTest

@@ -1,11 +1,11 @@
 using Eurocentric.AcceptanceTests.Functional.PublicApi.V1.TestUtils;
 using Eurocentric.AcceptanceTests.TestUtils;
-using Eurocentric.Apis.Public.V1.Dtos.Rankings.VotingCountries;
+using Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 using Eurocentric.Apis.Public.V1.Enums;
-using Eurocentric.Apis.Public.V1.Features.Rankings.VotingCountries;
+using Eurocentric.Apis.Public.V1.Features.VotingCountryRankings;
 using TUnit.Assertions.Enums;
 
-namespace Eurocentric.AcceptanceTests.Functional.PublicApi.V1.Rankings.VotingCountries;
+namespace Eurocentric.AcceptanceTests.Functional.PublicApi.V1.VotingCountryRankings;
 
 [Category("public-api")]
 public sealed class GetVotingCountryPointsAverageRankingsTests : ParallelSeededAcceptanceTest

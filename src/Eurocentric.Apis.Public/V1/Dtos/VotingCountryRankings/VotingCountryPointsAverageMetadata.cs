@@ -1,7 +1,7 @@
 using Eurocentric.Apis.Public.V1.Enums;
 using Eurocentric.Components.OpenApi;
 
-namespace Eurocentric.Apis.Public.V1.Dtos.Rankings.VotingCountries;
+namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
 public sealed record VotingCountryPointsAverageMetadata : ISchemaExampleProvider<VotingCountryPointsAverageMetadata>
 {

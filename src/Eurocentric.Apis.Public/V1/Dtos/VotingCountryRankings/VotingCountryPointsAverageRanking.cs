@@ -1,6 +1,6 @@
 using Eurocentric.Components.OpenApi;
 
-namespace Eurocentric.Apis.Public.V1.Dtos.Rankings.VotingCountries;
+namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
 public sealed record VotingCountryPointsAverageRanking : ISchemaExampleProvider<VotingCountryPointsAverageRanking>
 {

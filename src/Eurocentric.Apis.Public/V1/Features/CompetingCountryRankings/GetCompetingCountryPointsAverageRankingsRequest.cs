@@ -2,7 +2,7 @@ using System.ComponentModel;
 using Eurocentric.Apis.Public.V1.Enums;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Eurocentric.Apis.Public.V1.Features.Rankings.CompetingCountries;
+namespace Eurocentric.Apis.Public.V1.Features.CompetingCountryRankings;
 
 public sealed record GetCompetingCountryPointsAverageRankingsRequest
 {

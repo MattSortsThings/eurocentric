@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Eurocentric.Apis.Public.V1.Enums;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Eurocentric.Apis.Public.V1.Features.Rankings.VotingCountries;
+namespace Eurocentric.Apis.Public.V1.Features.VotingCountryRankings;
 
 public sealed record GetVotingCountryPointsAverageRankingsRequest
 {

@@ -1,18 +1,18 @@
 using Eurocentric.Apis.Public.V1.Enums;
-using Eurocentric.Domain.Analytics.Rankings.CompetingCountries;
+using Eurocentric.Domain.Analytics.Rankings.VotingCountries;
 
-namespace Eurocentric.Apis.Public.V1.Dtos.Rankings.CompetingCountries;
+namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
 internal static class MappingExtensions
 {
-    internal static CompetingCountryPointsAverageMetadata ToDto(this PointsAverageMetadata row)
+    internal static VotingCountryPointsAverageMetadata ToDto(this PointsAverageMetadata row)
     {
-        return new CompetingCountryPointsAverageMetadata
+        return new VotingCountryPointsAverageMetadata
         {
+            CompetingCountryCode = row.CompetingCountryCode,
             MinYear = row.MinYear,
             MaxYear = row.MaxYear,
             ContestStage = row.ContestStage?.ToApiContestStageFilter(),
-            VotingCountryCode = row.VotingCountryCode,
             VotingMethod = row.VotingMethod?.ToApiVotingMethodFilter(),
             PageIndex = row.PageIndex,
             PageSize = row.PageSize,
@@ -22,9 +22,9 @@ internal static class MappingExtensions
         };
     }
 
-    internal static CompetingCountryPointsAverageRanking ToDto(this PointsAverageRanking row)
+    internal static VotingCountryPointsAverageRanking ToDto(this PointsAverageRanking row)
     {
-        return new CompetingCountryPointsAverageRanking
+        return new VotingCountryPointsAverageRanking
         {
             Rank = row.Rank,
             CountryCode = row.CountryCode,
@@ -34,7 +34,6 @@ internal static class MappingExtensions
             PointsAwards = row.PointsAwards,
             Broadcasts = row.Broadcasts,
             Contests = row.Contests,
-            VotingCountries = row.VotingCountries,
         };
     }
 }

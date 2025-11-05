@@ -1,6 +1,6 @@
 using Eurocentric.Components.OpenApi;
 
-namespace Eurocentric.Apis.Public.V1.Dtos.Rankings.CompetingCountries;
+namespace Eurocentric.Apis.Public.V1.Dtos.CompetingCountryRankings;
 
 public sealed record CompetingCountryPointsAverageRanking : ISchemaExampleProvider<CompetingCountryPointsAverageRanking>
 {

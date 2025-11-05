@@ -1,7 +1,7 @@
 using Eurocentric.Apis.Public.V1.Config;
+using Eurocentric.Apis.Public.V1.Features.CompetingCountryRankings;
 using Eurocentric.Apis.Public.V1.Features.Queryables;
-using Eurocentric.Apis.Public.V1.Features.Rankings.CompetingCountries;
-using Eurocentric.Apis.Public.V1.Features.Rankings.VotingCountries;
+using Eurocentric.Apis.Public.V1.Features.VotingCountryRankings;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Security;
 using Microsoft.AspNetCore.Builder;

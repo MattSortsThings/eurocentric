@@ -1,6 +1,6 @@
-using Eurocentric.Apis.Public.V1.Dtos.Rankings.VotingCountries;
+using Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
-namespace Eurocentric.Apis.Public.V1.Features.Rankings.VotingCountries;
+namespace Eurocentric.Apis.Public.V1.Features.VotingCountryRankings;
 
 public sealed record GetVotingCountryPointsAverageRankingsResponse(
     VotingCountryPointsAverageRanking[] Rankings,
