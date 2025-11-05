@@ -1,8 +1,6 @@
-using Eurocentric.Components.OpenApi;
-
 namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
-public sealed record VotingCountryPointsAverageRanking : ISchemaExampleProvider<VotingCountryPointsAverageRanking>
+public sealed record VotingCountryPointsAverageRanking
 {
     public int Rank { get; init; }
 
@@ -19,17 +17,4 @@ public sealed record VotingCountryPointsAverageRanking : ISchemaExampleProvider<
     public int Broadcasts { get; init; }
 
     public int Contests { get; init; }
-
-    public static VotingCountryPointsAverageRanking CreateExample() =>
-        new()
-        {
-            Rank = 1,
-            CountryCode = "AT",
-            CountryName = "Austria",
-            PointsAverage = 7.0m,
-            TotalPoints = 28,
-            PointsAwards = 4,
-            Broadcasts = 2,
-            Contests = 2,
-        };
 }
