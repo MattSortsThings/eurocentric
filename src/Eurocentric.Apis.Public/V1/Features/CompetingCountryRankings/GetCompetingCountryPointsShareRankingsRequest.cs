@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eurocentric.Apis.Public.V1.Features.CompetingCountryRankings;
 
-public sealed record GetCompetingCountryPointsAverageRankingsRequest
+public sealed record GetCompetingCountryPointsShareRankingsRequest
 {
     [FromQuery(Name = "minYear")]
     [Description("Filters voting data by inclusive minimum contest year.")]

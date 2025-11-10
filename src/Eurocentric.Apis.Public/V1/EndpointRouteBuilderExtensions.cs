@@ -22,7 +22,9 @@ internal static class EndpointRouteBuilderExtensions
             .RequiresUserRole()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        v1Group.Map<GetCompetingCountryPointsAverageRankings.EndpointMapper>();
+        v1Group
+            .Map<GetCompetingCountryPointsAverageRankings.EndpointMapper>()
+            .Map<GetCompetingCountryPointsShareRankings.EndpointMapper>();
 
         v1Group.Map<GetCompetitorPointsAverageRankings.EndpointMapper>();
 

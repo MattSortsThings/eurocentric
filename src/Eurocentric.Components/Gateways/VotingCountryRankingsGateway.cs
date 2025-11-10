@@ -20,7 +20,7 @@ internal sealed class VotingCountryRankingsGateway(SingleThenListSprocRunner spr
             .Ensure(RankingsInvariants.LegalBroadcastFiltering)
             .Ensure(RankingsInvariants.LegalPaginationSettings)
             .Ensure(RankingsInvariants.LegalCompetingCountryFiltering)
-            .Bind(pointsAverageQuery => RunSprocAsync(pointsAverageQuery, cancellationToken));
+            .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
     }
 
     private async Task<Result<PointsAverageRankings, IDomainError>> RunSprocAsync(

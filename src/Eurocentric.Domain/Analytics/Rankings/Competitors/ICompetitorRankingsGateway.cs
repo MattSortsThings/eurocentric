@@ -17,8 +17,8 @@ public interface ICompetitorRankingsGateway
     ///     complete.
     /// </param>
     /// <returns>
-    ///     A <see cref="Task" /> representing the asynchronous ranking operation. The task's result is the retrieved
-    ///     rankings object.
+    ///     A <see cref="Task" /> representing the asynchronous ranking operation. The task's result is <i>either</i>
+    ///     the rankings result object <i>or</i> an error.
     /// </returns>
     Task<Result<PointsAverageRankings, IDomainError>> GetPointsAverageRankingsAsync(
         PointsAverageQuery query,

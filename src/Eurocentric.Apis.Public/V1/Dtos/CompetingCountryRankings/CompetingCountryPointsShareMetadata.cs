@@ -5,7 +5,7 @@ namespace Eurocentric.Apis.Public.V1.Dtos.CompetingCountryRankings;
 /// <summary>
 ///     Metadata describing an executed competing country points average rankings query.
 /// </summary>
-public sealed record CompetingCountryPointsAverageMetadata
+public sealed record CompetingCountryPointsShareMetadata
 {
     /// <summary>
     ///     The optional inclusive minimum contest year filter value.
