@@ -18,7 +18,7 @@ internal static class DependencyInjection
         DefaultTypeMap.MatchNamesWithUnderscores = true;
         SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
 
-        services.AddScoped<SprocRunner>();
+        services.AddScoped<SingleThenListSprocRunner>().AddScoped<V0SprocRunner>();
 
         return services;
     }

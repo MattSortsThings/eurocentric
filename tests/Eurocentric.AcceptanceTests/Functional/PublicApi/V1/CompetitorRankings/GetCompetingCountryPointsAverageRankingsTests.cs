@@ -209,6 +209,43 @@ public sealed class GetCompetitorPointsAverageRankingsTests : ParallelSeededAcce
 
         // Given
         euroFan.Given_I_want_to_retrieve_a_page_of_competitor_points_average_rankings(
+            competingCountryCode: "FI",
+            pageSize: 5
+        );
+
+        // When
+        await euroFan.When_I_send_my_request();
+
+        // Then
+        await euroFan.Then_my_request_should_SUCCEED_with_status_code(200);
+        await euroFan.Then_the_retrieved_rankings_in_order_should_match(
+            """
+            | Rank | ContestYear | ContestStage | RunningOrderSpot | CountryCode | CountryName | FinishingPosition | ActName    | SongTitle   | PointsAverage | TotalPoints | PointsAwards | VotingCountries |
+            |------|-------------|--------------|------------------|-------------|-------------|-------------------|------------|-------------|---------------|-------------|--------------|-----------------|
+            | 1    | 2023        | SemiFinal1   | 15               | FI          | Finland     | 1                 | Käärijä    | Cha Cha Cha | 9.833333      | 177         | 18           | 18              |
+            | 2    | 2023        | GrandFinal   | 13               | FI          | Finland     | 2                 | Käärijä    | Cha Cha Cha | 7.205479      | 526         | 73           | 37              |
+            | 3    | 2022        | SemiFinal2   | 1                | FI          | Finland     | 7                 | The Rasmus | Jezebel     | 4.05          | 162         | 40           | 20              |
+            | 4    | 2022        | GrandFinal   | 4                | FI          | Finland     | 21                | The Rasmus | Jezebel     | 0.487179      | 38          | 78           | 39              |
+            """
+        );
+        await euroFan.Then_the_retrieved_metadata_should_match(
+            competingCountryCode: "FI",
+            pageIndex: 0,
+            pageSize: 5,
+            descending: false,
+            totalItems: 4,
+            totalPages: 1
+        );
+    }
+
+    [Test]
+    [ApiVersion1Point0AndUp]
+    public async Task Should_retrieve_rankings_page_and_metadata_scenario_7(string apiVersion)
+    {
+        EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        euroFan.Given_I_want_to_retrieve_a_page_of_competitor_points_average_rankings(
             votingMethod: "Jury",
             pageSize: 5
         );
@@ -241,7 +278,7 @@ public sealed class GetCompetitorPointsAverageRankingsTests : ParallelSeededAcce
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Should_retrieve_rankings_page_and_metadata_scenario_7(string apiVersion)
+    public async Task Should_retrieve_rankings_page_and_metadata_scenario_8(string apiVersion)
     {
         EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
 
@@ -279,7 +316,7 @@ public sealed class GetCompetitorPointsAverageRankingsTests : ParallelSeededAcce
 
     [Test]
     [ApiVersion1Point0AndUp]
-    public async Task Should_retrieve_rankings_page_and_metadata_scenario_8(string apiVersion)
+    public async Task Should_retrieve_rankings_page_and_metadata_scenario_9(string apiVersion)
     {
         EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
 
@@ -443,6 +480,7 @@ public sealed class GetCompetitorPointsAverageRankingsTests : ParallelSeededAcce
             int? pageSize = null,
             int? pageIndex = null,
             string? votingMethod = null,
+            string? competingCountryCode = null,
             string? contestStage = null,
             int? maxYear = null,
             int? minYear = null
@@ -454,6 +492,7 @@ public sealed class GetCompetitorPointsAverageRankingsTests : ParallelSeededAcce
                 { nameof(pageSize), pageSize },
                 { nameof(pageIndex), pageIndex },
                 { nameof(votingMethod), votingMethod },
+                { nameof(competingCountryCode), competingCountryCode },
                 { nameof(contestStage), contestStage },
                 { nameof(maxYear), maxYear },
                 { nameof(minYear), minYear },
@@ -482,6 +521,7 @@ public sealed class GetCompetitorPointsAverageRankingsTests : ParallelSeededAcce
             int pageIndex = -1,
             string? votingMethod = null,
             string? contestStage = null,
+            string? competingCountryCode = null,
             int? maxYear = null,
             int? minYear = null
         )
@@ -494,6 +534,7 @@ public sealed class GetCompetitorPointsAverageRankingsTests : ParallelSeededAcce
                 .HasProperty(cp => cp.MinYear, minYear)
                 .And.HasProperty(cp => cp.MaxYear, maxYear)
                 .And.HasProperty(cp => cp.ContestStage, expectedContestStage)
+                .And.HasProperty(cp => cp.CompetingCountryCode, competingCountryCode)
                 .And.HasProperty(cp => cp.VotingMethod, expectedVotingMethod)
                 .And.HasProperty(cp => cp.PageIndex, pageIndex)
                 .And.HasProperty(cp => cp.PageSize, pageSize)

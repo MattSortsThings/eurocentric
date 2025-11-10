@@ -16,7 +16,12 @@ internal sealed class RankingsDynamicParameters : DynamicParameters
             dp.PopulateFrom(ob);
         }
 
-        if (query is IOptionalPaginationSettings op)
+        if (query is IOptionalCompetingCountryFiltering occ)
+        {
+            dp.PopulateFrom(occ);
+        }
+
+        if (query is IOptionalPaginationOverrides op)
         {
             dp.PopulateFrom(op);
         }
@@ -63,21 +68,35 @@ internal sealed class RankingsDynamicParameters : DynamicParameters
         }
     }
 
-    private void PopulateFrom(IOptionalPaginationSettings settings)
+    private void PopulateFrom(IOptionalPaginationOverrides overrides)
     {
-        if (settings.PageIndex is { } pageIndex)
+        if (overrides.PageIndex is { } pageIndex)
         {
             Add("@page_index", pageIndex, DbType.Int32, ParameterDirection.Input);
         }
 
-        if (settings.PageSize is { } pageSize)
+        if (overrides.PageSize is { } pageSize)
         {
             Add("@page_size", pageSize, DbType.Int32, ParameterDirection.Input);
         }
 
-        if (settings.Descending is { } descending)
+        if (overrides.Descending is { } descending)
         {
             Add("@descending", descending, DbType.Boolean, ParameterDirection.Input);
+        }
+    }
+
+    private void PopulateFrom(IOptionalCompetingCountryFiltering filtering)
+    {
+        if (filtering.CompetingCountryCode is { } competingCountryCode)
+        {
+            Add(
+                "@competing_country_code",
+                competingCountryCode,
+                DbType.StringFixedLength,
+                size: 2,
+                direction: ParameterDirection.Input
+            );
         }
     }
 

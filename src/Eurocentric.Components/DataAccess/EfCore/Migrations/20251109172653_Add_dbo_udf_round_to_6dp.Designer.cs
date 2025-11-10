@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Components.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251105120033_Add_dbo_udf_get_contest_stage_sort_order")]
-    partial class Add_dbo_udf_get_contest_stage_sort_order
+    [Migration("20251109172653_Add_dbo_udf_round_to_6dp")]
+    partial class Add_dbo_udf_round_to_6dp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

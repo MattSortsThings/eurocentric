@@ -7,7 +7,8 @@ using Eurocentric.Domain.Core;
 
 namespace Eurocentric.Components.Gateways;
 
-internal sealed class VotingCountryRankingsGateway(SprocRunner sprocRunner) : IVotingCountryRankingsGateway
+internal sealed class VotingCountryRankingsGateway(SingleThenListSprocRunner sprocRunner)
+    : IVotingCountryRankingsGateway
 {
     public async Task<Result<PointsAverageRankings, IDomainError>> GetPointsAverageRankingsAsync(
         PointsAverageQuery query,
@@ -18,7 +19,7 @@ internal sealed class VotingCountryRankingsGateway(SprocRunner sprocRunner) : IV
             .Success<PointsAverageQuery, IDomainError>(query)
             .Ensure(RankingsInvariants.LegalBroadcastFiltering)
             .Ensure(RankingsInvariants.LegalPaginationSettings)
-            .Ensure(RankingsInvariants.LegalCompetingCountrySettings)
+            .Ensure(RankingsInvariants.LegalCompetingCountryFiltering)
             .Bind(pointsAverageQuery => RunSprocAsync(pointsAverageQuery, cancellationToken));
     }
 
@@ -29,11 +30,11 @@ internal sealed class VotingCountryRankingsGateway(SprocRunner sprocRunner) : IV
     {
         RankingsDynamicParameters dynamicParameters = RankingsDynamicParameters.From(query);
 
-        (List<PointsAverageRanking> first, PointsAverageMetadata second) = await sprocRunner.ExecuteMultipleAsync<
-            PointsAverageRanking,
-            PointsAverageMetadata
+        (PointsAverageMetadata metadata, List<PointsAverageRanking> rankings) = await sprocRunner.ExecuteAsync<
+            PointsAverageMetadata,
+            PointsAverageRanking
         >(Sprocs.Dbo.GetVotingCountryPointsAverageRankings, dynamicParameters, cancellationToken);
 
-        return new PointsAverageRankings(first, second);
+        return new PointsAverageRankings(rankings, metadata);
     }
 }

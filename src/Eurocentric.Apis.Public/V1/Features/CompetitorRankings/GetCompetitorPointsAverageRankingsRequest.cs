@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Eurocentric.Apis.Public.V1.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,13 +19,18 @@ public sealed record GetCompetitorPointsAverageRankingsRequest
     [Description("Filters voting data by contest stage.")]
     public ContestStageFilter? ContestStage { get; init; }
 
+    [RegularExpression("^[A-Z]{2}$")]
+    [FromQuery(Name = "competingCountryCode")]
+    [Description("Filters voting data by competing country code.")]
+    public string? CompetingCountryCode { get; init; }
+
     [FromQuery(Name = "votingMethod")]
     [Description("Filters voting data by voting method.")]
     public VotingMethodFilter? VotingMethod { get; init; }
 
     [DefaultValue(0)]
     [FromQuery(Name = "pageIndex")]
-    [Description("Sets the pagination page index.")]
+    [Description("Sets the zero-based pagination page index.")]
     public int? PageIndex { get; init; }
 
     [DefaultValue(10)]
@@ -34,6 +40,6 @@ public sealed record GetCompetitorPointsAverageRankingsRequest
 
     [DefaultValue(false)]
     [FromQuery(Name = "descending")]
-    [Description("Sorts rankings initially by descending rank (true) or ascending rank (false).")]
+    [Description("Sets the pre-pagination initial sort to descending rank (true) or ascending rank (false)")]
     public bool? Descending { get; init; }
 }

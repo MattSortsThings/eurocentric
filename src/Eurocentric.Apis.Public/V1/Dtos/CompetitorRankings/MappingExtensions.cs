@@ -12,6 +12,7 @@ internal static class MappingExtensions
             MinYear = row.MinYear,
             MaxYear = row.MaxYear,
             ContestStage = row.ContestStage?.ToApiContestStageFilter(),
+            CompetingCountryCode = row.CompetingCountryCode,
             VotingMethod = row.VotingMethod?.ToApiVotingMethodFilter(),
             PageIndex = row.PageIndex,
             PageSize = row.PageSize,

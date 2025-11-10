@@ -30,7 +30,7 @@ public sealed record GetVotingCountryPointsAverageRankingsRequest
 
     [DefaultValue(0)]
     [FromQuery(Name = "pageIndex")]
-    [Description("Sets the pagination page index.")]
+    [Description("Sets the zero-based pagination page index.")]
     public int? PageIndex { get; init; }
 
     [DefaultValue(10)]
@@ -40,6 +40,6 @@ public sealed record GetVotingCountryPointsAverageRankingsRequest
 
     [DefaultValue(false)]
     [FromQuery(Name = "descending")]
-    [Description("Sorts rankings initially by descending rank (true) or ascending rank (false).")]
+    [Description("Sets the pre-pagination initial sort to descending rank (true) or ascending rank (false)")]
     public bool? Descending { get; init; }
 }

@@ -6,7 +6,7 @@ using Eurocentric.Domain.V0.Queries.Listings;
 
 namespace Eurocentric.Components.Gateways.V0;
 
-internal sealed class ListingsGateway(SprocRunner sprocRunner) : IListingsGateway
+internal sealed class ListingsGateway(V0SprocRunner sprocRunner) : IListingsGateway
 {
     public async Task<BroadcastResultListings> GetBroadcastResultListingsAsync(
         BroadcastResultQuery query,

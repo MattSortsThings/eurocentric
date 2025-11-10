@@ -7,7 +7,8 @@ using Eurocentric.Domain.Core;
 
 namespace Eurocentric.Components.Gateways;
 
-internal sealed class CompetingCountryRankingsGateway(SprocRunner sprocRunner) : ICompetingCountryRankingsGateway
+internal sealed class CompetingCountryRankingsGateway(SingleThenListSprocRunner sprocRunner)
+    : ICompetingCountryRankingsGateway
 {
     public async Task<Result<PointsAverageRankings, IDomainError>> GetPointsAverageRankingsAsync(
         PointsAverageQuery query,
@@ -29,11 +30,11 @@ internal sealed class CompetingCountryRankingsGateway(SprocRunner sprocRunner) :
     {
         RankingsDynamicParameters dynamicParameters = RankingsDynamicParameters.From(query);
 
-        (List<PointsAverageRanking> first, PointsAverageMetadata second) = await sprocRunner.ExecuteMultipleAsync<
-            PointsAverageRanking,
-            PointsAverageMetadata
+        (PointsAverageMetadata metadata, List<PointsAverageRanking> rankings) = await sprocRunner.ExecuteAsync<
+            PointsAverageMetadata,
+            PointsAverageRanking
         >(Sprocs.Dbo.GetCompetingCountryPointsAverageRankings, dynamicParameters, cancellationToken);
 
-        return new PointsAverageRankings(first, second);
+        return new PointsAverageRankings(rankings, metadata);
     }
 }

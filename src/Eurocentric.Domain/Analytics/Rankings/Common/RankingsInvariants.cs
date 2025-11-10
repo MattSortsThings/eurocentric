@@ -6,15 +6,15 @@ namespace Eurocentric.Domain.Analytics.Rankings.Common;
 
 public static class RankingsInvariants
 {
-    public static UnitResult<IDomainError> LegalPaginationSettings(IOptionalPaginationSettings settings)
+    public static UnitResult<IDomainError> LegalPaginationSettings(IOptionalPaginationOverrides overrides)
     {
         UnitResult<IDomainError> result = UnitResult.Success<IDomainError>();
 
-        if (settings.PageIndex is { } pageIndex and < 0)
+        if (overrides.PageIndex is { } pageIndex and < 0)
         {
             result = RankingsErrors.IllegalPageIndexValue(pageIndex);
         }
-        else if (settings.PageSize is { } pageSize and (< 1 or > 100))
+        else if (overrides.PageSize is { } pageSize and (< 1 or > 100))
         {
             result = RankingsErrors.IllegalPageSizeValue(pageSize);
         }
@@ -24,37 +24,33 @@ public static class RankingsInvariants
 
     public static UnitResult<IDomainError> LegalBroadcastFiltering(IOptionalBroadcastFiltering filtering)
     {
-        if (filtering is { MinYear: { } minYear, MaxYear: { } maxYear } && maxYear < minYear)
-        {
-            return RankingsErrors.IllegalContestYearRange(minYear, maxYear);
-        }
-
-        return UnitResult.Success<IDomainError>();
+        return filtering is { MinYear: { } minYear, MaxYear: { } maxYear } && maxYear < minYear
+            ? RankingsErrors.IllegalContestYearRange(minYear, maxYear)
+            : UnitResult.Success<IDomainError>();
     }
 
     public static UnitResult<IDomainError> LegalVotingCountryFiltering(IOptionalVotingCountryFiltering filtering)
     {
-        if (
+        return
             filtering.VotingCountryCode is { } votingCountryCode
             && ValueObjectInvariants.LegalCountryCodeValue(votingCountryCode).IsFailure
-        )
-        {
-            return RankingsErrors.IllegalVotingCountryCodeValue(votingCountryCode);
-        }
-
-        return UnitResult.Success<IDomainError>();
+            ? RankingsErrors.IllegalVotingCountryCodeValue(votingCountryCode)
+            : UnitResult.Success<IDomainError>();
     }
 
-    public static UnitResult<IDomainError> LegalCompetingCountrySettings(IRequiredCompetingCountryFiltering filtering)
+    public static UnitResult<IDomainError> LegalCompetingCountryFiltering(IOptionalCompetingCountryFiltering filtering)
     {
-        if (
+        return
             filtering.CompetingCountryCode is { } competingCountryCode
             && ValueObjectInvariants.LegalCountryCodeValue(competingCountryCode).IsFailure
-        )
-        {
-            return RankingsErrors.IllegalCompetingCountryCodeValue(competingCountryCode);
-        }
+            ? RankingsErrors.IllegalCompetingCountryCodeValue(competingCountryCode)
+            : UnitResult.Success<IDomainError>();
+    }
 
-        return UnitResult.Success<IDomainError>();
+    public static UnitResult<IDomainError> LegalCompetingCountryFiltering(IRequiredCompetingCountryFiltering filtering)
+    {
+        return ValueObjectInvariants.LegalCountryCodeValue(filtering.CompetingCountryCode).IsFailure
+            ? RankingsErrors.IllegalCompetingCountryCodeValue(filtering.CompetingCountryCode)
+            : UnitResult.Success<IDomainError>();
     }
 }

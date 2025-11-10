@@ -10,7 +10,7 @@ namespace Eurocentric.Components.DataAccess.Dapper;
 ///     Executes a named stored procedure in the database.
 /// </summary>
 /// <param name="options">Contains options used for connecting to the Azure SQL database.</param>
-internal sealed class SprocRunner(IOptions<AzureSqlDbOptions> options)
+internal sealed class V0SprocRunner(IOptions<AzureSqlDbOptions> options)
 {
     /// <summary>
     ///     Asynchronously executes the named stored procedure with the provided dynamic parameters and returns the list of

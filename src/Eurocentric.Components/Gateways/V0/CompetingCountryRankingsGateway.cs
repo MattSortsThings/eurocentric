@@ -7,7 +7,7 @@ using Eurocentric.Domain.V0.Queries.Rankings.CompetingCountries;
 
 namespace Eurocentric.Components.Gateways.V0;
 
-internal sealed class CompetingCountryRankingsGateway(SprocRunner sprocRunner) : ICompetingCountryRankingsGateway
+internal sealed class CompetingCountryRankingsGateway(V0SprocRunner sprocRunner) : ICompetingCountryRankingsGateway
 {
     public async Task<Result<PointsAverageRankings, IDomainError>> GetPointsAverageRankingsAsync(
         PointsAverageQuery query,

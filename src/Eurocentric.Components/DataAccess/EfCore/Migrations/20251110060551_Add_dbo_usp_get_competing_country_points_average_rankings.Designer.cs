@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Components.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251105121013_Add_dbo_usp_get_competitor_points_average_rankings")]
-    partial class Add_dbo_usp_get_competitor_points_average_rankings
+    [Migration("20251110060551_Add_dbo_usp_get_competing_country_points_average_rankings")]
+    partial class Add_dbo_usp_get_competing_country_points_average_rankings
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

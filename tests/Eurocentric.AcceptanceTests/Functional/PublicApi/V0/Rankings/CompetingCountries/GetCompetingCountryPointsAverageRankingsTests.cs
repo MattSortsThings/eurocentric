@@ -7,7 +7,7 @@ using Eurocentric.Apis.Public.V0.Features.Rankings.CompetingCountries;
 namespace Eurocentric.AcceptanceTests.Functional.PublicApi.V0.Rankings.CompetingCountries;
 
 [Category("public-api")]
-public sealed class GetCompetingCountryPointsAverageTests : ParallelSeededAcceptanceTest
+public sealed class GetCompetingCountryPointsAverageRankingsTests : ParallelSeededAcceptanceTest
 {
     [Test]
     [ApiVersion0Point2AndUp]
