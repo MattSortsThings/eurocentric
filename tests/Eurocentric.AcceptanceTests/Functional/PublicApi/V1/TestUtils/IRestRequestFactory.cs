@@ -22,6 +22,8 @@ public interface IRestRequestFactory
     interface ICompetitorRankingsEndpoints
     {
         RestRequest GetCompetitorPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
+
+        RestRequest GetCompetitorPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams);
     }
 
     interface IQueryablesEndpoints

@@ -26,7 +26,9 @@ internal static class EndpointRouteBuilderExtensions
             .Map<GetCompetingCountryPointsAverageRankings.EndpointMapper>()
             .Map<GetCompetingCountryPointsShareRankings.EndpointMapper>();
 
-        v1Group.Map<GetCompetitorPointsAverageRankings.EndpointMapper>();
+        v1Group
+            .Map<GetCompetitorPointsAverageRankings.EndpointMapper>()
+            .Map<GetCompetitorPointsShareRankings.EndpointMapper>();
 
         v1Group
             .Map<GetQueryableBroadcasts.EndpointMapper>()

@@ -13,6 +13,7 @@ internal static class V1EndpointNames
     internal static class CompetitorRankings
     {
         internal const string GetCompetitorPointsAverageRankings = "PublicApi.V1.GetCompetitorPointsAverageRankings";
+        internal const string GetCompetitorPointsShareRankings = "PublicApi.V1.GetCompetitorPointsShareRankings";
     }
 
     internal static class Queryables

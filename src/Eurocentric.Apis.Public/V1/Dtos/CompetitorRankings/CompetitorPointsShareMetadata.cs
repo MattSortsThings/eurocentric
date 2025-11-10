@@ -3,9 +3,9 @@ using Eurocentric.Apis.Public.V1.Enums;
 namespace Eurocentric.Apis.Public.V1.Dtos.CompetitorRankings;
 
 /// <summary>
-///     Metadata describing an executed competitor points average rankings query.
+///     Metadata describing an executed competitor points share rankings query.
 /// </summary>
-public sealed record CompetitorPointsAverageMetadata
+public sealed record CompetitorPointsShareMetadata
 {
     /// <summary>
     ///     The optional inclusive minimum contest year filter value.
