@@ -13,6 +13,7 @@ internal static class Sprocs
 
         internal const string GetVotingCountryPointsAverageRankings =
             "dbo.usp_get_voting_country_points_average_rankings";
+        internal const string GetVotingCountryPointsShareRankings = "dbo.usp_get_voting_country_points_share_rankings";
     }
 
     internal static class V0

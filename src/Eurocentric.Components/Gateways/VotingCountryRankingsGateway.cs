@@ -23,6 +23,19 @@ internal sealed class VotingCountryRankingsGateway(SingleThenListSprocRunner spr
             .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
     }
 
+    public async Task<Result<PointsShareRankings, IDomainError>> GetPointsShareRankingsAsync(
+        PointsShareQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await Result
+            .Success<PointsShareQuery, IDomainError>(query)
+            .Ensure(RankingsInvariants.LegalBroadcastFiltering)
+            .Ensure(RankingsInvariants.LegalPaginationSettings)
+            .Ensure(RankingsInvariants.LegalCompetingCountryFiltering)
+            .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
+    }
+
     private async Task<Result<PointsAverageRankings, IDomainError>> RunSprocAsync(
         PointsAverageQuery query,
         CancellationToken cancellationToken
@@ -36,5 +49,20 @@ internal sealed class VotingCountryRankingsGateway(SingleThenListSprocRunner spr
         >(Sprocs.Dbo.GetVotingCountryPointsAverageRankings, dynamicParameters, cancellationToken);
 
         return new PointsAverageRankings(rankings, metadata);
+    }
+
+    private async Task<Result<PointsShareRankings, IDomainError>> RunSprocAsync(
+        PointsShareQuery query,
+        CancellationToken cancellationToken
+    )
+    {
+        RankingsDynamicParameters dynamicParameters = RankingsDynamicParameters.From(query);
+
+        (PointsShareMetadata metadata, List<PointsShareRanking> rankings) = await sprocRunner.ExecuteAsync<
+            PointsShareMetadata,
+            PointsShareRanking
+        >(Sprocs.Dbo.GetVotingCountryPointsShareRankings, dynamicParameters, cancellationToken);
+
+        return new PointsShareRankings(rankings, metadata);
     }
 }

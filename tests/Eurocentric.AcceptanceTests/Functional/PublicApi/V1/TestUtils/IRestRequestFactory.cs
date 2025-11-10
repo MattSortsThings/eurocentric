@@ -36,5 +36,7 @@ public interface IRestRequestFactory
     interface IVotingCountryRankingsEndpoints
     {
         RestRequest GetVotingCountryPointsAverageRankings(IReadOnlyDictionary<string, object?> queryParams);
+
+        RestRequest GetVotingCountryPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams);
     }
 }

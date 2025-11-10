@@ -26,5 +26,6 @@ internal static class V1EndpointNames
     {
         internal const string GetVotingCountryPointsAverageRankings =
             "PublicApi.V1.GetVotingCountryPointsAverageRankings";
+        internal const string GetVotingCountryPointsShareRankings = "PublicApi.V1.GetVotingCountryPointsShareRankings";
     }
 }

@@ -33,6 +33,8 @@ internal static class EndpointRouteBuilderExtensions
             .Map<GetQueryableContests.EndpointMapper>()
             .Map<GetQueryableCountries.EndpointMapper>();
 
-        v1Group.Map<GetVotingCountryPointsAverageRankings.EndpointMapper>();
+        v1Group
+            .Map<GetVotingCountryPointsAverageRankings.EndpointMapper>()
+            .Map<GetVotingCountryPointsShareRankings.EndpointMapper>();
     }
 }

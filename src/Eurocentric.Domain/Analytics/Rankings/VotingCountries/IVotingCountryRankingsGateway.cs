@@ -24,4 +24,21 @@ public interface IVotingCountryRankingsGateway
         PointsAverageQuery query,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    ///     Asynchronously ranks voting countries by descending points share.
+    /// </summary>
+    /// <param name="query">The query parameters.</param>
+    /// <param name="cancellationToken">
+    ///     A <see cref="CancellationToken" /> to observe while waiting for the asynchronous ranking operation to
+    ///     complete.
+    /// </param>
+    /// <returns>
+    ///     A <see cref="Task" /> representing the asynchronous ranking operation. The task's result is <i>either</i>
+    ///     the rankings result object <i>or</i> an error.
+    /// </returns>
+    Task<Result<PointsShareRankings, IDomainError>> GetPointsShareRankingsAsync(
+        PointsShareQuery query,
+        CancellationToken cancellationToken = default
+    );
 }

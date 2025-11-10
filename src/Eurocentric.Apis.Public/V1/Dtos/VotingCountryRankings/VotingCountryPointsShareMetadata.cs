@@ -3,9 +3,9 @@ using Eurocentric.Apis.Public.V1.Enums;
 namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
 /// <summary>
-///     Metadata describing an executed voting country points average rankings query.
+///     Metadata describing an executed voting country points share rankings query.
 /// </summary>
-public sealed record VotingCountryPointsAverageMetadata
+public sealed record VotingCountryPointsShareMetadata
 {
     /// <summary>
     ///     The required competing country code filter value.
