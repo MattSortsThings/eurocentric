@@ -29,6 +29,7 @@ internal static class EndpointRouteBuilderExtensions
 
         v1Group
             .Map<GetCompetitorPointsAverageRankings.EndpointMapper>()
+            .Map<GetCompetitorPointsConsensusRankings.EndpointMapper>()
             .Map<GetCompetitorPointsShareRankings.EndpointMapper>();
 
         v1Group

@@ -468,6 +468,31 @@ public sealed class GetCompetitorPointsShareRankingsTests : ParallelSeededAccept
         await euroFan.Then_the_response_problem_details_extensions_should_include(key: "maxYear", value: 2022);
     }
 
+    [Test]
+    [ApiVersion1Point0AndUp]
+    public async Task Should_fail_on_illegal_competing_country_code_value(string apiVersion)
+    {
+        EuroFan euroFan = new(EuroFanKernel.Create(SystemUnderTest, apiVersion));
+
+        // Given
+        euroFan.Given_I_want_to_retrieve_a_page_of_competitor_points_share_rankings(competingCountryCode: "!");
+
+        // When
+        await euroFan.When_I_send_my_request();
+
+        // Then
+        await euroFan.Then_my_request_should_FAIL_with_status_code(422);
+        await euroFan.Then_the_response_problem_details_should_match(
+            status: 422,
+            title: "Illegal competing country code value",
+            detail: "Competing country code value must be a string of 2 upper-case letters."
+        );
+        await euroFan.Then_the_response_problem_details_extensions_should_include(
+            key: "competingCountryCode",
+            value: "!"
+        );
+    }
+
     private sealed class EuroFan(EuroFanKernel kernel) : EuroFanActor<GetCompetitorPointsShareRankingsResponse>
     {
         private protected override EuroFanKernel Kernel { get; } = kernel;

@@ -15,6 +15,8 @@ internal static class V1EndpointNames
     internal static class CompetitorRankings
     {
         internal const string GetCompetitorPointsAverageRankings = "PublicApi.V1.GetCompetitorPointsAverageRankings";
+        internal const string GetCompetitorPointsConsensusRankings =
+            "PublicApi.V1.GetCompetitorPointsConsensusRankings";
         internal const string GetCompetitorPointsShareRankings = "PublicApi.V1.GetCompetitorPointsShareRankings";
     }
 

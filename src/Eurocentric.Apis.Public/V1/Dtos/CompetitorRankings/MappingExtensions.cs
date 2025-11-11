@@ -22,6 +22,22 @@ internal static class MappingExtensions
         };
     }
 
+    internal static CompetitorPointsConsensusMetadata ToDto(this PointsConsensusMetadata row)
+    {
+        return new CompetitorPointsConsensusMetadata
+        {
+            MinYear = row.MinYear,
+            MaxYear = row.MaxYear,
+            ContestStage = row.ContestStage?.ToApiContestStageFilter(),
+            CompetingCountryCode = row.CompetingCountryCode,
+            PageIndex = row.PageIndex,
+            PageSize = row.PageSize,
+            Descending = row.Descending,
+            TotalItems = row.TotalItems,
+            TotalPages = row.TotalPages,
+        };
+    }
+
     internal static CompetitorPointsShareMetadata ToDto(this PointsShareMetadata row)
     {
         return new CompetitorPointsShareMetadata
@@ -56,6 +72,27 @@ internal static class MappingExtensions
             TotalPoints = row.TotalPoints,
             PointsAwards = row.PointsAwards,
             VotingCountries = row.VotingCountries,
+        };
+    }
+
+    internal static CompetitorPointsConsensusRanking ToDto(this PointsConsensusRanking row)
+    {
+        return new CompetitorPointsConsensusRanking
+        {
+            Rank = row.Rank,
+            ContestYear = row.ContestYear,
+            ContestStage = row.ContestStage.ToApiContestStage(),
+            RunningOrderSpot = row.RunningOrderSpot,
+            CountryCode = row.CountryCode,
+            CountryName = row.CountryName,
+            FinishingPosition = row.FinishingPosition,
+            ActName = row.ActName,
+            SongTitle = row.SongTitle,
+            PointsConsensus = row.PointsConsensus,
+            VectorDimensions = row.VectorDimensions,
+            JuryVectorLength = row.JuryVectorLength,
+            TelevoteVectorLength = row.TelevoteVectorLength,
+            VectorDotProduct = row.VectorDotProduct,
         };
     }
 
