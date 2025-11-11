@@ -18,7 +18,7 @@ internal sealed class CompetitorRankingsGateway(SingleThenListSprocRunner sprocR
             .Success<PointsAverageQuery, IDomainError>(query)
             .Ensure(RankingsInvariants.LegalBroadcastFiltering)
             .Ensure(RankingsInvariants.LegalCompetingCountryFiltering)
-            .Ensure(RankingsInvariants.LegalPaginationSettings)
+            .Ensure(RankingsInvariants.LegalPaginationOverrides)
             .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
     }
 
@@ -31,7 +31,7 @@ internal sealed class CompetitorRankingsGateway(SingleThenListSprocRunner sprocR
             .Success<PointsShareQuery, IDomainError>(query)
             .Ensure(RankingsInvariants.LegalBroadcastFiltering)
             .Ensure(RankingsInvariants.LegalCompetingCountryFiltering)
-            .Ensure(RankingsInvariants.LegalPaginationSettings)
+            .Ensure(RankingsInvariants.LegalPaginationOverrides)
             .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
     }
 

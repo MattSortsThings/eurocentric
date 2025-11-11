@@ -6,6 +6,8 @@ internal static class Sprocs
     {
         internal const string GetCompetingCountryPointsAverageRankings =
             "dbo.usp_get_competing_country_points_average_rankings";
+        internal const string GetCompetingCountryPointsConsensusRankings =
+            "dbo.usp_get_competing_country_points_consensus_rankings";
         internal const string GetCompetingCountryPointsShareRankings =
             "dbo.usp_get_competing_country_points_share_rankings";
 

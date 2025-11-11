@@ -22,6 +22,22 @@ internal static class MappingExtensions
         };
     }
 
+    internal static CompetingCountryPointsConsensusMetadata ToDto(this PointsConsensusMetadata row)
+    {
+        return new CompetingCountryPointsConsensusMetadata
+        {
+            MinYear = row.MinYear,
+            MaxYear = row.MaxYear,
+            ContestStage = row.ContestStage?.ToApiContestStageFilter(),
+            VotingCountryCode = row.VotingCountryCode,
+            PageIndex = row.PageIndex,
+            PageSize = row.PageSize,
+            Descending = row.Descending,
+            TotalItems = row.TotalItems,
+            TotalPages = row.TotalPages,
+        };
+    }
+
     internal static CompetingCountryPointsShareMetadata ToDto(this PointsShareMetadata row)
     {
         return new CompetingCountryPointsShareMetadata
@@ -49,6 +65,24 @@ internal static class MappingExtensions
             PointsAverage = row.PointsAverage,
             TotalPoints = row.TotalPoints,
             PointsAwards = row.PointsAwards,
+            Broadcasts = row.Broadcasts,
+            Contests = row.Contests,
+            VotingCountries = row.VotingCountries,
+        };
+    }
+
+    internal static CompetingCountryPointsConsensusRanking ToDto(this PointsConsensusRanking row)
+    {
+        return new CompetingCountryPointsConsensusRanking
+        {
+            Rank = row.Rank,
+            CountryCode = row.CountryCode,
+            CountryName = row.CountryName,
+            PointsConsensus = row.PointsConsensus,
+            VectorDimensions = row.VectorDimensions,
+            JuryVectorLength = row.JuryVectorLength,
+            TelevoteVectorLength = row.TelevoteVectorLength,
+            VectorDotProduct = row.VectorDotProduct,
             Broadcasts = row.Broadcasts,
             Contests = row.Contests,
             VotingCountries = row.VotingCountries,

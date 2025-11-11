@@ -18,7 +18,7 @@ internal sealed class VotingCountryRankingsGateway(SingleThenListSprocRunner spr
         return await Result
             .Success<PointsAverageQuery, IDomainError>(query)
             .Ensure(RankingsInvariants.LegalBroadcastFiltering)
-            .Ensure(RankingsInvariants.LegalPaginationSettings)
+            .Ensure(RankingsInvariants.LegalPaginationOverrides)
             .Ensure(RankingsInvariants.LegalCompetingCountryFiltering)
             .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
     }
@@ -31,7 +31,7 @@ internal sealed class VotingCountryRankingsGateway(SingleThenListSprocRunner spr
         return await Result
             .Success<PointsShareQuery, IDomainError>(query)
             .Ensure(RankingsInvariants.LegalBroadcastFiltering)
-            .Ensure(RankingsInvariants.LegalPaginationSettings)
+            .Ensure(RankingsInvariants.LegalPaginationOverrides)
             .Ensure(RankingsInvariants.LegalCompetingCountryFiltering)
             .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
     }

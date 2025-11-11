@@ -6,7 +6,7 @@ namespace Eurocentric.Domain.Analytics.Rankings.Common;
 
 public static class RankingsInvariants
 {
-    public static UnitResult<IDomainError> LegalPaginationSettings(IOptionalPaginationOverrides overrides)
+    public static UnitResult<IDomainError> LegalPaginationOverrides(IOptionalPaginationOverrides overrides)
     {
         UnitResult<IDomainError> result = UnitResult.Success<IDomainError>();
 
