@@ -105,7 +105,7 @@ AS
 -- Returns (2 of 2):
 -- =================
 -- A list of 0, 1, or multiple rankings rows with the following columns:
---  - rank INT
+--  - rank BIGINT
 --      - The voting country's rank based on descending points share.
 --  - country_code NCHAR(2)
 --      - The voting country's ISO 3166-1 alpha-2 country code.

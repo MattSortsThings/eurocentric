@@ -104,7 +104,7 @@ AS
 -- Returns (2 of 2):
 -- =================
 -- A list of 0, 1, or multiple rankings rows with the following columns:
---  - rank INT
+--  - rank BIGINT
 --      - The competitor's rank based on descending points average.
 --  - contest_year INT
 --      - The contest year of the broadcast.
