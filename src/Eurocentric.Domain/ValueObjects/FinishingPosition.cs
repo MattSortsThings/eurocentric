@@ -35,7 +35,7 @@ public sealed class FinishingPosition : Int32AtomicValueObject
     /// <returns>A finite sequence of new <see cref="FinishingPosition" /> instances.</returns>
     public static IEnumerable<FinishingPosition> CreateSequence(int count)
     {
-        ArgumentOutOfRangeException.ThrowIfNegative(count, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
 
         return Enumerable.Range(1, count).Select(value => new FinishingPosition(value));
     }
