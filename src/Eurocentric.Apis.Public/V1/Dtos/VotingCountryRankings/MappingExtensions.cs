@@ -22,6 +22,22 @@ internal static class MappingExtensions
         };
     }
 
+    internal static VotingCountryPointsConsensusMetadata ToDto(this PointsConsensusMetadata row)
+    {
+        return new VotingCountryPointsConsensusMetadata
+        {
+            CompetingCountryCode = row.CompetingCountryCode,
+            MinYear = row.MinYear,
+            MaxYear = row.MaxYear,
+            ContestStage = row.ContestStage?.ToApiContestStageFilter(),
+            PageIndex = row.PageIndex,
+            PageSize = row.PageSize,
+            Descending = row.Descending,
+            TotalItems = row.TotalItems,
+            TotalPages = row.TotalPages,
+        };
+    }
+
     internal static VotingCountryPointsShareMetadata ToDto(this PointsShareMetadata row)
     {
         return new VotingCountryPointsShareMetadata
@@ -51,6 +67,24 @@ internal static class MappingExtensions
             PointsAwards = row.PointsAwards,
             Broadcasts = row.Broadcasts,
             Contests = row.Contests,
+        };
+    }
+
+    internal static VotingCountryPointsConsensusRanking ToDto(this PointsConsensusRanking row)
+    {
+        return new VotingCountryPointsConsensusRanking
+        {
+            Rank = row.Rank,
+            CountryCode = row.CountryCode,
+            CountryName = row.CountryName,
+            PointsConsensus = row.PointsConsensus,
+            VectorDimensions = row.VectorDimensions,
+            JuryVectorLength = row.JuryVectorLength,
+            TelevoteVectorLength = row.TelevoteVectorLength,
+            VectorDotProduct = row.VectorDotProduct,
+            Broadcasts = row.Broadcasts,
+            Contests = row.Contests,
+            CompetingCountries = row.CompetingCountries,
         };
     }
 
