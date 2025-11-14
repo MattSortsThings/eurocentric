@@ -11,6 +11,19 @@ internal sealed class RankingsDynamicParameters : DynamicParameters
     {
         RankingsDynamicParameters dp = new();
 
+        Populate(dp, query);
+
+        return dp;
+    }
+
+    private static void Populate<T>(RankingsDynamicParameters dp, T query)
+        where T : class
+    {
+        if (query is IRequiredCompetingCountryFiltering rcc)
+        {
+            dp.PopulateFrom(rcc);
+        }
+
         if (query is IOptionalBroadcastFiltering ob)
         {
             dp.PopulateFrom(ob);
@@ -36,12 +49,10 @@ internal sealed class RankingsDynamicParameters : DynamicParameters
             dp.PopulateFrom(ovm);
         }
 
-        if (query is IRequiredCompetingCountryFiltering rcc)
+        if (query is IRequiredPointsValueRange rpv)
         {
-            dp.PopulateFrom(rcc);
+            dp.PopulateFrom(rpv);
         }
-
-        return dp;
     }
 
     private void PopulateFrom(IOptionalBroadcastFiltering filtering)
@@ -137,5 +148,12 @@ internal sealed class RankingsDynamicParameters : DynamicParameters
             size: 2,
             direction: ParameterDirection.Input
         );
+    }
+
+    private void PopulateFrom(IRequiredPointsValueRange range)
+    {
+        Add("@min_points", range.MinPoints, DbType.Int32, ParameterDirection.Input);
+
+        Add("@max_points", range.MaxPoints, DbType.Int32, ParameterDirection.Input);
     }
 }

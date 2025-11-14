@@ -8,6 +8,8 @@ internal static class V1EndpointNames
             "PublicApi.V1.GetCompetingCountryPointsAverageRankings";
         internal const string GetCompetingCountryPointsConsensusRankings =
             "PublicApi.V1.GetCompetingCountryPointsConsensusRankings";
+        internal const string GetCompetingCountryPointsInRangeRankings =
+            "PublicApi.V1.GetCompetingCountryPointsInRangeRankings";
         internal const string GetCompetingCountryPointsShareRankings =
             "PublicApi.V1.GetCompetingCountryPointsShareRankings";
     }

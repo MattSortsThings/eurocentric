@@ -4,10 +4,20 @@ using Eurocentric.Domain.V0.Queries.Rankings.Common;
 namespace Eurocentric.Domain.Analytics.Rankings.CompetingCountries;
 
 /// <summary>
-///     Metadata describing an executed competing country points share rankings query.
+///     Metadata describing an executed competing country points in range rankings query.
 /// </summary>
-public sealed record PointsShareMetadata : PaginatedMetadata
+public sealed record PointsInRangeMetadata : PaginatedMetadata
 {
+    /// <summary>
+    ///     The required inclusive minimum points value.
+    /// </summary>
+    public int MinPoints { get; init; }
+
+    /// <summary>
+    ///     The required inclusive maximum points value.
+    /// </summary>
+    public int MaxPoints { get; init; }
+
     /// <summary>
     ///     The optional inclusive minimum contest year filter value.
     /// </summary>

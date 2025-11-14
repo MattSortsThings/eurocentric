@@ -1,0 +1,45 @@
+using Eurocentric.Domain.Analytics.Rankings.Common;
+using Eurocentric.Domain.Enums;
+
+namespace Eurocentric.Domain.Analytics.Rankings.CompetingCountries;
+
+/// <summary>
+///     Parameters for a competing country points in range rankings query.
+/// </summary>
+public abstract record PointsInRangeQuery
+    : IOptionalBroadcastFiltering,
+        IOptionalPaginationOverrides,
+        IOptionalVotingCountryFiltering,
+        IOptionalVotingMethodFiltering,
+        IRequiredPointsValueRange
+{
+    /// <inheritdoc />
+    public int? MinYear { get; init; }
+
+    /// <inheritdoc />
+    public int? MaxYear { get; init; }
+
+    /// <inheritdoc />
+    public ContestStageFilter? ContestStage { get; init; }
+
+    /// <inheritdoc />
+    public bool? Descending { get; init; }
+
+    /// <inheritdoc />
+    public int? PageIndex { get; init; }
+
+    /// <inheritdoc />
+    public int? PageSize { get; init; }
+
+    /// <inheritdoc />
+    public string? VotingCountryCode { get; init; }
+
+    /// <inheritdoc />
+    public VotingMethodFilter? VotingMethod { get; init; }
+
+    /// <inheritdoc />
+    public int MinPoints { get; init; }
+
+    /// <inheritdoc />
+    public int MaxPoints { get; init; }
+}

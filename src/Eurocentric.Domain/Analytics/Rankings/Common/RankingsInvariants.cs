@@ -53,4 +53,11 @@ public static class RankingsInvariants
             ? RankingsErrors.IllegalCompetingCountryCodeValue(filtering.CompetingCountryCode)
             : UnitResult.Success<IDomainError>();
     }
+
+    public static UnitResult<IDomainError> LegalPointsValueRange(IRequiredPointsValueRange range)
+    {
+        return range is { MinPoints: var minPoints, MaxPoints: var maxPoints } && maxPoints < minPoints
+            ? RankingsErrors.IllegalPointsValueRange(minPoints, maxPoints)
+            : UnitResult.Success<IDomainError>();
+    }
 }

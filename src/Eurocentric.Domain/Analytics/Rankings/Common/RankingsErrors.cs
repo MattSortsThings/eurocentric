@@ -53,4 +53,18 @@ public static class RankingsErrors
             Extensions = new Dictionary<string, object?> { { nameof(minYear), minYear }, { nameof(maxYear), maxYear } },
         };
     }
+
+    public static UnprocessableError IllegalPointsValueRange(int minPoints, int maxPoints)
+    {
+        return new UnprocessableError
+        {
+            Title = "Illegal points value range",
+            Detail = "Maximum points value must be greater than or equal to minimum points value.",
+            Extensions = new Dictionary<string, object?>
+            {
+                { nameof(minPoints), minPoints },
+                { nameof(maxPoints), maxPoints },
+            },
+        };
+    }
 }

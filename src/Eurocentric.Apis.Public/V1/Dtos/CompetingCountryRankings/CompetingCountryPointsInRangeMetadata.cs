@@ -3,10 +3,20 @@ using Eurocentric.Apis.Public.V1.Enums;
 namespace Eurocentric.Apis.Public.V1.Dtos.CompetingCountryRankings;
 
 /// <summary>
-///     Metadata describing an executed competing country points share rankings query.
+///     Metadata describing an executed competing country points in range rankings query.
 /// </summary>
-public sealed record CompetingCountryPointsShareMetadata
+public sealed record CompetingCountryPointsInRangeMetadata
 {
+    /// <summary>
+    ///     The required inclusive minimum points value.
+    /// </summary>
+    public int MinPoints { get; init; }
+
+    /// <summary>
+    ///     The required inclusive maximum points value.
+    /// </summary>
+    public int MaxPoints { get; init; }
+
     /// <summary>
     ///     The optional inclusive minimum contest year filter value.
     /// </summary>
