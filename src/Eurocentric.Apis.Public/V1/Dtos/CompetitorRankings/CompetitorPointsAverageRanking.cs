@@ -18,7 +18,7 @@ public sealed record CompetitorPointsAverageRanking
     public int ContestYear { get; init; }
 
     /// <summary>
-    ///     The broadcast's stage in in the contest.
+    ///     The broadcast's stage in the contest.
     /// </summary>
     public ContestStage ContestStage { get; init; }
 

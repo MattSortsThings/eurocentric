@@ -1,14 +1,14 @@
-using Eurocentric.Domain.Enums;
+using Eurocentric.Apis.Public.V1.Enums;
 
-namespace Eurocentric.Domain.Analytics.Rankings.Competitors;
+namespace Eurocentric.Apis.Public.V1.Dtos.CompetitorRankings;
 
 /// <summary>
-///     A single competitor points average rankings row.
+///     A single competitor points in range rankings row.
 /// </summary>
-public sealed record PointsAverageRanking
+public sealed record CompetitorPointsInRangeRanking
 {
     /// <summary>
-    ///     The competitor's rank based on descending points average.
+    ///     The competitor's rank based on descending points in range.
     /// </summary>
     public int Rank { get; init; }
 
@@ -53,14 +53,15 @@ public sealed record PointsAverageRanking
     public string SongTitle { get; init; } = string.Empty;
 
     /// <summary>
-    ///     The average individual points value the competitor received in the broadcast.
+    ///     The frequency of points awards within the specified value range the competitor received in their broadcast,
+    ///     relative to the number of points awards the competitor received.
     /// </summary>
-    public decimal PointsAverage { get; init; }
+    public decimal PointsInRange { get; init; }
 
     /// <summary>
-    ///     The sum total points the competitor received in the broadcast.
+    ///     The frequency of points awards within the specified value range the competitor received in their broadcast.
     /// </summary>
-    public int TotalPoints { get; init; }
+    public int PointsAwardsInRange { get; init; }
 
     /// <summary>
     ///     The number of points awards in the queried filtered voting data for the competitor.

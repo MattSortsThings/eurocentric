@@ -23,6 +23,14 @@ public sealed partial class EuroFanKernel
                 .AddQueryParameters(queryParams);
         }
 
+        public RestRequest GetCompetitorPointsInRangeRankings(IReadOnlyDictionary<string, object?> queryParams)
+        {
+            return GetRequest("/public/api/{apiVersion}/competitor-rankings/points-in-range")
+                .UseDemoApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddQueryParameters(queryParams);
+        }
+
         public RestRequest GetCompetitorPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams)
         {
             return GetRequest("/public/api/{apiVersion}/competitor-rankings/points-share")

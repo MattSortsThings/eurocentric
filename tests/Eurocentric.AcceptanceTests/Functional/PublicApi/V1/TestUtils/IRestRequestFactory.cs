@@ -29,6 +29,8 @@ public interface IRestRequestFactory
 
         RestRequest GetCompetitorPointsConsensusRankings(IReadOnlyDictionary<string, object?> queryParams);
 
+        RestRequest GetCompetitorPointsInRangeRankings(IReadOnlyDictionary<string, object?> queryParams);
+
         RestRequest GetCompetitorPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams);
     }
 

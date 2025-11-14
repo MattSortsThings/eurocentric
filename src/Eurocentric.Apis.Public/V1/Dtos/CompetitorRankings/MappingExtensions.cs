@@ -38,6 +38,25 @@ internal static class MappingExtensions
         };
     }
 
+    internal static CompetitorPointsInRangeMetadata ToDto(this PointsInRangeMetadata row)
+    {
+        return new CompetitorPointsInRangeMetadata
+        {
+            MinPoints = row.MinPoints,
+            MaxPoints = row.MaxPoints,
+            MinYear = row.MinYear,
+            MaxYear = row.MaxYear,
+            ContestStage = row.ContestStage?.ToApiContestStageFilter(),
+            CompetingCountryCode = row.CompetingCountryCode,
+            VotingMethod = row.VotingMethod?.ToApiVotingMethodFilter(),
+            PageIndex = row.PageIndex,
+            PageSize = row.PageSize,
+            Descending = row.Descending,
+            TotalItems = row.TotalItems,
+            TotalPages = row.TotalPages,
+        };
+    }
+
     internal static CompetitorPointsShareMetadata ToDto(this PointsShareMetadata row)
     {
         return new CompetitorPointsShareMetadata
@@ -93,6 +112,26 @@ internal static class MappingExtensions
             JuryVectorLength = row.JuryVectorLength,
             TelevoteVectorLength = row.TelevoteVectorLength,
             VectorDotProduct = row.VectorDotProduct,
+        };
+    }
+
+    internal static CompetitorPointsInRangeRanking ToDto(this PointsInRangeRanking row)
+    {
+        return new CompetitorPointsInRangeRanking
+        {
+            Rank = row.Rank,
+            ContestYear = row.ContestYear,
+            ContestStage = row.ContestStage.ToApiContestStage(),
+            RunningOrderSpot = row.RunningOrderSpot,
+            CountryCode = row.CountryCode,
+            CountryName = row.CountryName,
+            FinishingPosition = row.FinishingPosition,
+            ActName = row.ActName,
+            SongTitle = row.SongTitle,
+            PointsInRange = row.PointsInRange,
+            PointsAwardsInRange = row.PointsAwardsInRange,
+            PointsAwards = row.PointsAwards,
+            VotingCountries = row.VotingCountries,
         };
     }
 
