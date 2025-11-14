@@ -3,10 +3,16 @@ using System.ComponentModel.DataAnnotations;
 using Eurocentric.Apis.Public.V1.Enums;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Eurocentric.Apis.Public.V1.Features.CompetingCountryRankings;
+namespace Eurocentric.Apis.Public.V1.Features.VotingCountryRankings;
 
-public sealed record GetCompetingCountryPointsInRangeRankingsRequest
+public sealed record GetVotingCountryPointsInRangeRankingsRequest
 {
+    [Required]
+    [RegularExpression("^[A-Z]{2}$")]
+    [FromQuery(Name = "competingCountryCode")]
+    [Description("Filters voting data by competing country code.")]
+    public required string CompetingCountryCode { get; init; }
+
     [FromQuery(Name = "minPoints")]
     [Description("Specifies the inclusive minimum points value.")]
     public required int MinPoints { get; init; }
@@ -27,13 +33,7 @@ public sealed record GetCompetingCountryPointsInRangeRankingsRequest
     [Description("Filters voting data by contest stage.")]
     public ContestStageFilter? ContestStage { get; init; }
 
-    [RegularExpression("^[A-Z]{2}$")]
-    [FromQuery(Name = "votingCountryCode")]
-    [Description("Filters voting data by voting country code.")]
-    public string? VotingCountryCode { get; init; }
-
     [FromQuery(Name = "votingMethod")]
-    [Description("Filters voting data by voting method.")]
     public VotingMethodFilter? VotingMethod { get; init; }
 
     [DefaultValue(0)]

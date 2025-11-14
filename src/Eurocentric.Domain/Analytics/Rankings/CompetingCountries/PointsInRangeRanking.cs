@@ -21,7 +21,7 @@ public sealed record PointsInRangeRanking
     public string CountryName { get; init; } = string.Empty;
 
     /// <summary>
-    ///     The frequency of points awards  within the specified value range the competing country received across broadcasts,
+    ///     The frequency of points awards within the specified value range the competing country received across broadcasts,
     ///     relative to the number of points awards the competing country received.
     /// </summary>
     public decimal PointsInRange { get; init; }

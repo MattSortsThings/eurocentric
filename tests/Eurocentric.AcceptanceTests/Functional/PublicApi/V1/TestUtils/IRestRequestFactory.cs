@@ -47,6 +47,8 @@ public interface IRestRequestFactory
 
         RestRequest GetVotingCountryPointsConsensusRankings(IReadOnlyDictionary<string, object?> queryParams);
 
+        RestRequest GetVotingCountryPointsInRangeRankings(IReadOnlyDictionary<string, object?> queryParams);
+
         RestRequest GetVotingCountryPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams);
     }
 }
