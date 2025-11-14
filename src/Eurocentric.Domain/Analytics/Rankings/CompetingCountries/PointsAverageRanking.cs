@@ -31,22 +31,22 @@ public sealed record PointsAverageRanking
     public int TotalPoints { get; init; }
 
     /// <summary>
-    ///     The quantity of points awards the competing country received across broadcasts.
+    ///     The number of points awards in the queried filtered voting data for the competing country.
     /// </summary>
     public int PointsAwards { get; init; }
 
     /// <summary>
-    ///     The number of unique broadcasts in the queried voting data for the competing country.
+    ///     The number of unique broadcasts in the queried filtered voting data for the competing country.
     /// </summary>
     public int Broadcasts { get; init; }
 
     /// <summary>
-    ///     The number of unique contests in the queried voting data for the competing country.
+    ///     The number of unique contests in the queried filtered voting data for the competing country.
     /// </summary>
     public int Contests { get; init; }
 
     /// <summary>
-    ///     The number of unique voting countries in the queried voting data for the competing country.
+    ///     The number of unique voting countries in the queried filtered voting data for the competing country.
     /// </summary>
     public int VotingCountries { get; init; }
 }

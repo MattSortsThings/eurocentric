@@ -21,7 +21,7 @@ public sealed record PointsShareRanking
     public string CountryName { get; init; } = string.Empty;
 
     /// <summary>
-    ///     The sum total points the voting country gave to the specified competing country across broadcasts as a
+    ///     The sum total points the voting country gave to the specified competing country across broadcasts, as a
     ///     fraction of the available points.
     /// </summary>
     public decimal PointsShare { get; init; }
@@ -38,17 +38,17 @@ public sealed record PointsShareRanking
     public int AvailablePoints { get; init; }
 
     /// <summary>
-    ///     The quantity of points awards the competing country gave to the specified competing country across broadcasts.
+    ///     The number of points awards in the queried filtered voting data for the voting country.
     /// </summary>
     public int PointsAwards { get; init; }
 
     /// <summary>
-    ///     The number of unique broadcasts in the queried voting data for the voting country.
+    ///     The number of unique broadcasts in the queried filtered voting data for the voting country.
     /// </summary>
     public int Broadcasts { get; init; }
 
     /// <summary>
-    ///     The number of unique contests in the queried voting data for the voting country.
+    ///     The number of unique contests in the queried filtered voting data for the voting country.
     /// </summary>
     public int Contests { get; init; }
 }

@@ -31,7 +31,7 @@ public sealed record CompetingCountryPointsConsensusRanking
     public decimal PointsConsensus { get; init; }
 
     /// <summary>
-    ///     The number of vector dimensions in the comparison.
+    ///     The number of vector dimensions in the queried filtered voting data for the competing country.
     /// </summary>
     public int VectorDimensions { get; init; }
 
@@ -51,17 +51,17 @@ public sealed record CompetingCountryPointsConsensusRanking
     public decimal VectorDotProduct { get; init; }
 
     /// <summary>
-    ///     The number of unique broadcasts in the queried voting data for the competing country.
+    ///     The number of unique broadcasts in the queried filtered voting data for the competing country.
     /// </summary>
     public int Broadcasts { get; init; }
 
     /// <summary>
-    ///     The number of unique contests in the queried voting data for the competing country.
+    ///     The number of unique contests in the queried filtered voting data for the competing country.
     /// </summary>
     public int Contests { get; init; }
 
     /// <summary>
-    ///     The number of unique voting countries in the queried voting data for the competing country.
+    ///     The number of unique voting countries in the queried filtered voting data for the competing country.
     /// </summary>
     public int VotingCountries { get; init; }
 }

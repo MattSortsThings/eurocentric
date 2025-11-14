@@ -18,7 +18,7 @@ public sealed record CompetitorPointsConsensusRanking
     public int ContestYear { get; init; }
 
     /// <summary>
-    ///     The broadcast's stage in its contest.
+    ///     The broadcast's stage in the contest.
     /// </summary>
     public ContestStage ContestStage { get; init; }
 
@@ -59,7 +59,7 @@ public sealed record CompetitorPointsConsensusRanking
     public decimal PointsConsensus { get; init; }
 
     /// <summary>
-    ///     The number of vector dimensions in the comparison.
+    ///     The number of vector dimensions in the queried filtered voting data for the competitor.
     /// </summary>
     public int VectorDimensions { get; init; }
 

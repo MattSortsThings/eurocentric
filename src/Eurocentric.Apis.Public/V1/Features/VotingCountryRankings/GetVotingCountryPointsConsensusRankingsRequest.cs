@@ -36,6 +36,6 @@ public sealed record GetVotingCountryPointsConsensusRankingsRequest
 
     [DefaultValue(false)]
     [FromQuery(Name = "descending")]
-    [Description("Sets the pre-pagination initial sort to descending rank (true) or ascending rank (false)")]
+    [Description("Specifies descending rank (true) or ascending rank (false) initial sort before pagination.")]
     public bool? Descending { get; init; }
 }

@@ -18,7 +18,7 @@ public sealed record CompetitorPointsAverageRanking
     public int ContestYear { get; init; }
 
     /// <summary>
-    ///     The broadcast's stage in its contest.
+    ///     The broadcast's stage in in the contest.
     /// </summary>
     public ContestStage ContestStage { get; init; }
 
@@ -63,12 +63,12 @@ public sealed record CompetitorPointsAverageRanking
     public int TotalPoints { get; init; }
 
     /// <summary>
-    ///     The quantity of points awards the competitor received in the broadcast.
+    ///     The number of points awards in the queried filtered voting data for the competitor.
     /// </summary>
     public int PointsAwards { get; init; }
 
     /// <summary>
-    ///     The number of unique voting countries in the queried voting data for the competitor.
+    ///     The number of unique voting countries in the queried filtered voting data for the competitor.
     /// </summary>
     public int VotingCountries { get; init; }
 }

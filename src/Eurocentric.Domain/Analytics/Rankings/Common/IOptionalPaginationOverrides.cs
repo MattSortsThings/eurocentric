@@ -16,8 +16,8 @@ public interface IOptionalPaginationOverrides
     int? PageSize { get; }
 
     /// <summary>
-    ///     Sets the pre-pagination initial sort to descending rank (<see langword="true" />) or ascending rank (
-    ///     <see langword="false" />) when not <see langword="null" />.
+    ///     Specifies descending rank (<see langword="true" />) or ascending rank (<see langword="false" />) initial sort
+    ///     before pagination when not <see langword="null" />.
     /// </summary>
     bool? Descending { get; }
 }

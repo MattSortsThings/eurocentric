@@ -18,7 +18,7 @@ public sealed record PointsShareRanking
     public int ContestYear { get; init; }
 
     /// <summary>
-    ///     The broadcast's stage in its contest.
+    ///     The broadcast's stage in the contest.
     /// </summary>
     public ContestStage ContestStage { get; init; }
 
@@ -53,7 +53,7 @@ public sealed record PointsShareRanking
     public string SongTitle { get; init; } = string.Empty;
 
     /// <summary>
-    ///     The sum total points the competitor received in the broadcast as a fraction of the available points.
+    ///     The sum total points the competitor received in the broadcast, as a fraction of the available points.
     /// </summary>
     public decimal PointsShare { get; init; }
 
@@ -63,17 +63,17 @@ public sealed record PointsShareRanking
     public int TotalPoints { get; init; }
 
     /// <summary>
-    ///     The maximum available points the competitor could have received in the broadcast.
+    ///     The maximum available points the competitor could have received.
     /// </summary>
     public int AvailablePoints { get; init; }
 
     /// <summary>
-    ///     The quantity of points awards the competitor received in the broadcast.
+    ///     The number of points awards in the queried filtered voting data for the competitor.
     /// </summary>
     public int PointsAwards { get; init; }
 
     /// <summary>
-    ///     The number of unique voting countries in the queried voting data for the competitor.
+    ///     The number of unique voting countries in the queried filtered voting data for the competitor.
     /// </summary>
     public int VotingCountries { get; init; }
 }
