@@ -39,9 +39,9 @@ This document is part of the [launch specification](../README.md#launch-specific
       - [fp08: Get competitor points share rankings](#fp08-get-competitor-points-share-rankings)
     - [Listings](#listings)
       - [fp09: Get broadcast result listings](#fp09-get-broadcast-result-listings)
-      - [fp10: Get country points given listings](#fp10-get-country-points-given-listings)
-      - [fp11: Get country points received listings](#fp11-get-country-points-received-listings)
-      - [fp12: Get country result listings](#fp12-get-country-result-listings)
+      - [fp10: Get voting country points listings](#fp10-get-voting-country-points-listings)
+      - [fp11: Get competing country points listings](#fp11-get-competing-country-points-listings)
+      - [fp12: Get competing country result listings](#fp12-get-competing-country-result-listings)
     - [Queryables](#queryables)
       - [fp13: Get queryable broadcasts](#fp13-get-queryable-broadcasts)
       - [fp14: Get queryable contests](#fp14-get-queryable-contests)
@@ -441,10 +441,10 @@ This document is part of the [launch specification](../README.md#launch-specific
     - the query metadata
 - So that I see how all the competitors fared in the broadcast, including the best and worst results.
 
-#### fp10: Get country points given listings
+#### fp10: Get voting country points listings
 
 - As a EuroFan
-- I want to retrieve a list of all the points given by a single country in a single broadcast
+- I want to retrieve a list of all the points given by a single voting country in a single broadcast
   - specifying
     - the country code
     - the contest year
@@ -455,21 +455,25 @@ This document is part of the [launch specification](../README.md#launch-specific
         - the points value
         - the competing country code
         - the competing country name
+        - the act name
+        - the song title
       - ordered by descending points value, then by competing country code
     - a complete list of the televote points given by the country in the broadcast
       - for each
         - the points value
         - the competing country code
         - the competing country name
+        - the act name
+        - the song title
       - ordered by descending points value, then by competing country code
     - the query metadata
 - So that I see all the points given by the country, including the highest and lowest points
   - and I can compare the jury and televote points.
 
-#### fp11: Get country points received listings
+#### fp11: Get competing country points listings
 
 - As a EuroFan
-- I want to retrieve a list of all the points received by a single country in a single broadcast
+- I want to retrieve a list of all the points received by a single competing country in a single broadcast
   - specifying
     - the country code
     - the contest year
@@ -487,14 +491,14 @@ This document is part of the [launch specification](../README.md#launch-specific
         - the voting country code
         - the voting country name
       - ordered by descending points value, then by voting country code
-    - the query metadata
+    - the query metadata, including a summary of the competitor
 - So that I see all the points received by the country, including the highest and lowest points
   - and I can compare the jury and televote points.
 
-#### fp12: Get country result listings
+#### fp12: Get competing country result listings
 
 - As a EuroFan
-- I want to retrieve a list of all the results achieved by a single country
+- I want to retrieve a list of all the results achieved by a single competing country
   - specifying
     - the country code
   - retrieving
@@ -502,7 +506,6 @@ This document is part of the [launch specification](../README.md#launch-specific
       - for each
         - the broadcast date
         - the contest year
-        - the city name
         - the contest stage
         - the running order spot
         - the act name
@@ -511,6 +514,8 @@ This document is part of the [launch specification](../README.md#launch-specific
         - the televote points
         - the total points
         - the finishing position
+        - the jury rank
+        - the televote rank
       - ordered by broadcast date
 - So that I see all the results achieved by the country, including its best and worst results.
 
