@@ -712,8 +712,8 @@ public sealed class GetCompetingCountryPointsListingsTests : ParallelSeededAccep
 
         // Given
         euroFan.Given_I_want_to_retrieve_competing_country_points_listings(
-            "!",
             contestYear: 2023,
+            competingCountryCode: "!",
             contestStage: "GrandFinal"
         );
 

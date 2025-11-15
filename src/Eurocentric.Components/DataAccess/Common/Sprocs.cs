@@ -23,6 +23,10 @@ internal static class Sprocs
         internal const string GetCompetitorPointsInRangeRankings = "dbo.usp_get_competitor_points_in_range_rankings";
         internal const string GetCompetitorPointsShareRankings = "dbo.usp_get_competitor_points_share_rankings";
 
+        internal const string GetVotingCountryJuryPointsListings = "dbo.usp_get_voting_country_jury_points_listings";
+        internal const string GetVotingCountryTelevotePointsListings =
+            "dbo.usp_get_voting_country_televote_points_listings";
+
         internal const string GetVotingCountryPointsAverageRankings =
             "dbo.usp_get_voting_country_points_average_rankings";
         internal const string GetVotingCountryPointsConsensusRankings =

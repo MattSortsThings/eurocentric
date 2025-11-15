@@ -19,6 +19,11 @@ internal sealed class ListingsDynamicParameters : DynamicParameters
     private static void Populate<T>(ListingsDynamicParameters dp, T query)
         where T : class
     {
+        if (query is IRequiredVotingCountryFiltering rvc)
+        {
+            dp.PopulateFrom(rvc);
+        }
+
         if (query is IRequiredBroadcastFiltering rb)
         {
             dp.PopulateFrom(rb);
@@ -48,6 +53,17 @@ internal sealed class ListingsDynamicParameters : DynamicParameters
         Add(
             "@competing_country_code",
             filtering.CompetingCountryCode,
+            DbType.StringFixedLength,
+            size: 2,
+            direction: ParameterDirection.Input
+        );
+    }
+
+    private void PopulateFrom(IRequiredVotingCountryFiltering filtering)
+    {
+        Add(
+            "@voting_country_code",
+            filtering.VotingCountryCode,
             DbType.StringFixedLength,
             size: 2,
             direction: ParameterDirection.Input

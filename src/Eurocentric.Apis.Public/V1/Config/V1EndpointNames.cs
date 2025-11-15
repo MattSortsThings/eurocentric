@@ -26,6 +26,7 @@ internal static class V1EndpointNames
     internal static class Listings
     {
         internal const string GetCompetingCountryPointsListings = "PublicApi.V1.GetCompetingCountryPointsListings";
+        internal const string GetVotingCountryPointsListings = "PublicApi.V1.GetVotingCountryPointsListings";
     }
 
     internal static class Queryables

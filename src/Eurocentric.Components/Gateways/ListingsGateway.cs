@@ -19,6 +19,17 @@ internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGa
             .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
     }
 
+    public async Task<Result<VotingCountryPointsListings, IDomainError>> GetVotingCountryPointsListingsAsync(
+        VotingCountryPointsQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await Result
+            .Success<VotingCountryPointsQuery, IDomainError>(query)
+            .Ensure(ListingsInvariants.LegalVotingCountryFiltering)
+            .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
+    }
+
     private async Task<Result<CompetingCountryPointsListings, IDomainError>> RunSprocAsync(
         CompetingCountryPointsQuery query,
         CancellationToken cancellationToken = default
@@ -45,6 +56,30 @@ internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGa
         return new CompetingCountryPointsListings(juryListings, televoteListings, metadata);
     }
 
+    private async Task<Result<VotingCountryPointsListings, IDomainError>> RunSprocAsync(
+        VotingCountryPointsQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        ListingsDynamicParameters dynamicParameters = ListingsDynamicParameters.From(query);
+
+        List<VotingCountryPointsListing> juryListings = await sprocRunner.ExecuteAsync<VotingCountryPointsListing>(
+            Sprocs.Dbo.GetVotingCountryJuryPointsListings,
+            dynamicParameters,
+            cancellationToken
+        );
+
+        List<VotingCountryPointsListing> televoteListings = await sprocRunner.ExecuteAsync<VotingCountryPointsListing>(
+            Sprocs.Dbo.GetVotingCountryTelevotePointsListings,
+            dynamicParameters,
+            cancellationToken
+        );
+
+        VotingCountryPointsMetadata metadata = MapToMetadata(query);
+
+        return new VotingCountryPointsListings(juryListings, televoteListings, metadata);
+    }
+
     private static CompetingCountryPointsMetadata MapToMetadata(CompetingCountryPointsQuery query)
     {
         return new CompetingCountryPointsMetadata
@@ -52,6 +87,16 @@ internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGa
             ContestYear = query.ContestYear,
             ContestStage = query.ContestStage,
             CompetingCountryCode = query.CompetingCountryCode,
+        };
+    }
+
+    private static VotingCountryPointsMetadata MapToMetadata(VotingCountryPointsQuery query)
+    {
+        return new VotingCountryPointsMetadata
+        {
+            ContestYear = query.ContestYear,
+            ContestStage = query.ContestStage,
+            VotingCountryCode = query.VotingCountryCode,
         };
     }
 }

@@ -39,6 +39,8 @@ public interface IRestRequestFactory
     interface IListingsEndpoints
     {
         RestRequest GetCompetingCountryPointsListings(IReadOnlyDictionary<string, object?> queryParams);
+
+        RestRequest GetVotingCountryPointsListings(IReadOnlyDictionary<string, object?> queryParams);
     }
 
     interface IQueryablesEndpoints

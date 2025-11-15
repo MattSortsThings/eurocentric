@@ -14,5 +14,13 @@ public sealed partial class EuroFanKernel
                 .AddUrlSegment("apiVersion", apiVersion)
                 .AddQueryParameters(queryParams);
         }
+
+        public RestRequest GetVotingCountryPointsListings(IReadOnlyDictionary<string, object?> queryParams)
+        {
+            return GetRequest("/public/api/{apiVersion}/listings/voting-country-points")
+                .UseDemoApiKey()
+                .AddUrlSegment("apiVersion", apiVersion)
+                .AddQueryParameters(queryParams);
+        }
     }
 }

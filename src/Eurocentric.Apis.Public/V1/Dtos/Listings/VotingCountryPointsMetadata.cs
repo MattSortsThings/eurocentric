@@ -3,9 +3,9 @@ using Eurocentric.Apis.Public.V1.Enums;
 namespace Eurocentric.Apis.Public.V1.Dtos.Listings;
 
 /// <summary>
-///     Metadata describing an executed competing country points listings query.
+///     Metadata describing an executed voting country points listings query.
 /// </summary>
-public sealed record CompetingCountryPointsMetadata
+public sealed record VotingCountryPointsMetadata
 {
     /// <summary>
     ///     The required contest year filter value.
@@ -18,7 +18,7 @@ public sealed record CompetingCountryPointsMetadata
     public ContestStage ContestStage { get; init; }
 
     /// <summary>
-    ///     The required competing country code filter value.
+    ///     The required voting country code filter value.
     /// </summary>
-    public string CompetingCountryCode { get; init; } = string.Empty;
+    public string VotingCountryCode { get; init; } = string.Empty;
 }
