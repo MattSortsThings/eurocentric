@@ -426,18 +426,18 @@ This document is part of the [launch specification](../README.md#launch-specific
   - retrieving
     - a complete list of broadcast results
       - for each
-        - the finishing position
         - the running order spot
         - the country code
         - the country name
         - the act name
         - the song title
         - the jury points
-        - the televote points
-        - the total points
         - the jury rank
+        - the televote points
         - the televote rank
-      - ordered by finishing position
+        - the overall points
+        - the finishing position
+      - ordered by running order spot
     - the query metadata
 - So that I see how all the competitors fared in the broadcast, including the best and worst results.
 

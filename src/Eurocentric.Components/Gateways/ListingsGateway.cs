@@ -8,6 +8,11 @@ namespace Eurocentric.Components.Gateways;
 
 internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGateway
 {
+    public async Task<Result<BroadcastResultListings, IDomainError>> GetBroadcastResultListingsAsync(
+        BroadcastResultQuery query,
+        CancellationToken cancellationToken = default
+    ) => await RunSprocAsync(query, cancellationToken);
+
     public async Task<Result<CompetingCountryPointsListings, IDomainError>> GetCompetingCountryPointsListingsAsync(
         CompetingCountryPointsQuery query,
         CancellationToken cancellationToken = default
@@ -28,6 +33,24 @@ internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGa
             .Success<VotingCountryPointsQuery, IDomainError>(query)
             .Ensure(ListingsInvariants.LegalVotingCountryFiltering)
             .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
+    }
+
+    private async Task<Result<BroadcastResultListings, IDomainError>> RunSprocAsync(
+        BroadcastResultQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        ListingsDynamicParameters dynamicParameters = ListingsDynamicParameters.From(query);
+
+        List<BroadcastResultListing> resultListings = await sprocRunner.ExecuteAsync<BroadcastResultListing>(
+            Sprocs.Dbo.GetBroadcastResultListings,
+            dynamicParameters,
+            cancellationToken
+        );
+
+        BroadcastResultMetadata metadata = MapToMetadata(query);
+
+        return new BroadcastResultListings(resultListings, metadata);
     }
 
     private async Task<Result<CompetingCountryPointsListings, IDomainError>> RunSprocAsync(
@@ -79,6 +102,9 @@ internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGa
 
         return new VotingCountryPointsListings(juryListings, televoteListings, metadata);
     }
+
+    private static BroadcastResultMetadata MapToMetadata(BroadcastResultQuery query) =>
+        new() { ContestYear = query.ContestYear, ContestStage = query.ContestStage };
 
     private static CompetingCountryPointsMetadata MapToMetadata(CompetingCountryPointsQuery query)
     {

@@ -4,36 +4,49 @@ internal static class Sprocs
 {
     internal static class Dbo
     {
+        internal const string GetBroadcastResultListings = "dbo.usp_get_broadcast_result_listings";
+
         internal const string GetCompetingCountryJuryPointsListings =
             "dbo.usp_get_competing_country_jury_points_listings";
-        internal const string GetCompetingCountryTelevotePointsListings =
-            "dbo.usp_get_competing_country_televote_points_listings";
 
         internal const string GetCompetingCountryPointsAverageRankings =
             "dbo.usp_get_competing_country_points_average_rankings";
+
         internal const string GetCompetingCountryPointsConsensusRankings =
             "dbo.usp_get_competing_country_points_consensus_rankings";
+
         internal const string GetCompetingCountryPointsInRangeRankings =
             "dbo.usp_get_competing_country_points_in_range_rankings";
+
         internal const string GetCompetingCountryPointsShareRankings =
             "dbo.usp_get_competing_country_points_share_rankings";
 
+        internal const string GetCompetingCountryTelevotePointsListings =
+            "dbo.usp_get_competing_country_televote_points_listings";
+
         internal const string GetCompetitorPointsAverageRankings = "dbo.usp_get_competitor_points_average_rankings";
+
         internal const string GetCompetitorPointsConsensusRankings = "dbo.usp_get_competitor_points_consensus_rankings";
+
         internal const string GetCompetitorPointsInRangeRankings = "dbo.usp_get_competitor_points_in_range_rankings";
+
         internal const string GetCompetitorPointsShareRankings = "dbo.usp_get_competitor_points_share_rankings";
 
         internal const string GetVotingCountryJuryPointsListings = "dbo.usp_get_voting_country_jury_points_listings";
-        internal const string GetVotingCountryTelevotePointsListings =
-            "dbo.usp_get_voting_country_televote_points_listings";
 
         internal const string GetVotingCountryPointsAverageRankings =
             "dbo.usp_get_voting_country_points_average_rankings";
+
         internal const string GetVotingCountryPointsConsensusRankings =
             "dbo.usp_get_voting_country_points_consensus_rankings";
+
         internal const string GetVotingCountryPointsInRangeRankings =
             "dbo.usp_get_voting_country_points_in_range_rankings";
+
         internal const string GetVotingCountryPointsShareRankings = "dbo.usp_get_voting_country_points_share_rankings";
+
+        internal const string GetVotingCountryTelevotePointsListings =
+            "dbo.usp_get_voting_country_televote_points_listings";
     }
 
     internal static class V0

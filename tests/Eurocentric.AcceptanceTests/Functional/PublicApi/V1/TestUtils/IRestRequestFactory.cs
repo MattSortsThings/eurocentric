@@ -38,6 +38,8 @@ public interface IRestRequestFactory
 
     interface IListingsEndpoints
     {
+        RestRequest GetBroadcastResultListings(IReadOnlyDictionary<string, object?> queryParams);
+
         RestRequest GetCompetingCountryPointsListings(IReadOnlyDictionary<string, object?> queryParams);
 
         RestRequest GetVotingCountryPointsListings(IReadOnlyDictionary<string, object?> queryParams);
