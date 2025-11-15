@@ -23,6 +23,11 @@ internal static class V1EndpointNames
         internal const string GetCompetitorPointsShareRankings = "PublicApi.V1.GetCompetitorPointsShareRankings";
     }
 
+    internal static class Listings
+    {
+        internal const string GetCompetingCountryPointsListings = "PublicApi.V1.GetCompetingCountryPointsListings";
+    }
+
     internal static class Queryables
     {
         internal const string GetQueryableBroadcasts = "PublicApi.V1.GetQueryableBroadcasts";

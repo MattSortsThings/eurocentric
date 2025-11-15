@@ -8,6 +8,8 @@ public interface IRestRequestFactory
 
     ICompetitorRankingsEndpoints CompetitorRankings { get; }
 
+    IListingsEndpoints Listings { get; }
+
     IQueryablesEndpoints Queryables { get; }
 
     IVotingCountryRankingsEndpoints VotingCountryRankings { get; }
@@ -32,6 +34,11 @@ public interface IRestRequestFactory
         RestRequest GetCompetitorPointsInRangeRankings(IReadOnlyDictionary<string, object?> queryParams);
 
         RestRequest GetCompetitorPointsShareRankings(IReadOnlyDictionary<string, object?> queryParams);
+    }
+
+    interface IListingsEndpoints
+    {
+        RestRequest GetCompetingCountryPointsListings(IReadOnlyDictionary<string, object?> queryParams);
     }
 
     interface IQueryablesEndpoints

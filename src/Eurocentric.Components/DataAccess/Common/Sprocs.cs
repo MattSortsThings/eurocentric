@@ -4,6 +4,11 @@ internal static class Sprocs
 {
     internal static class Dbo
     {
+        internal const string GetCompetingCountryJuryPointsListings =
+            "dbo.usp_get_competing_country_jury_points_listings";
+        internal const string GetCompetingCountryTelevotePointsListings =
+            "dbo.usp_get_competing_country_televote_points_listings";
+
         internal const string GetCompetingCountryPointsAverageRankings =
             "dbo.usp_get_competing_country_points_average_rankings";
         internal const string GetCompetingCountryPointsConsensusRankings =

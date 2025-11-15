@@ -1,6 +1,7 @@
 using Eurocentric.Apis.Public.V1.Config;
 using Eurocentric.Apis.Public.V1.Features.CompetingCountryRankings;
 using Eurocentric.Apis.Public.V1.Features.CompetitorRankings;
+using Eurocentric.Apis.Public.V1.Features.Listings;
 using Eurocentric.Apis.Public.V1.Features.Queryables;
 using Eurocentric.Apis.Public.V1.Features.VotingCountryRankings;
 using Eurocentric.Components.EndpointMapping;
@@ -33,6 +34,8 @@ internal static class EndpointRouteBuilderExtensions
             .Map<GetCompetitorPointsConsensusRankings.EndpointMapper>()
             .Map<GetCompetitorPointsInRangeRankings.EndpointMapper>()
             .Map<GetCompetitorPointsShareRankings.EndpointMapper>();
+
+        v1Group.Map<GetCompetingCountryPointsListings.EndpointMapper>();
 
         v1Group
             .Map<GetQueryableBroadcasts.EndpointMapper>()
