@@ -15,7 +15,6 @@ using SlimMessageBus;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 using QueryableCountryDto = Eurocentric.Apis.Public.V1.Dtos.Queryables.QueryableCountry;
 using QueryableCountryRow = Eurocentric.Domain.Analytics.Queryables.QueryableCountry;
-using Response = Eurocentric.Apis.Public.V1.Features.Queryables.GetQueryableCountriesResponse;
 
 namespace Eurocentric.Apis.Public.V1.Features.Queryables;
 
@@ -26,11 +25,11 @@ internal static class GetQueryableCountries
         CancellationToken ct = default
     ) => await bus.DispatchAsync(new Query(), MapToOk, ct);
 
-    private static Ok<Response> MapToOk(QueryableCountryRow[] rows)
+    private static Ok<GetQueryableCountriesResponse> MapToOk(QueryableCountryRow[] rows)
     {
         QueryableCountryDto[] dtos = rows.Select(qc => qc.ToDto()).ToArray();
 
-        return TypedResults.Ok(new Response(dtos));
+        return TypedResults.Ok(new GetQueryableCountriesResponse(dtos));
     }
 
     internal sealed class EndpointMapper : IEndpointMapper
@@ -44,7 +43,7 @@ internal static class GetQueryableCountries
                 .WithSummary("Get all queryable countries")
                 .WithDescription("Retrieves a list of all the queryable countries, ordered by country code.")
                 .WithTags(V1Tags.Queryables)
-                .Produces<Response>();
+                .Produces<GetQueryableCountriesResponse>();
         }
     }
 

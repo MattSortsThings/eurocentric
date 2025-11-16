@@ -15,7 +15,6 @@ using SlimMessageBus;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 using QueryableBroadcastDto = Eurocentric.Apis.Public.V1.Dtos.Queryables.QueryableBroadcast;
 using QueryableBroadcastRow = Eurocentric.Domain.Analytics.Queryables.QueryableBroadcast;
-using Response = Eurocentric.Apis.Public.V1.Features.Queryables.GetQueryableBroadcastsResponse;
 
 namespace Eurocentric.Apis.Public.V1.Features.Queryables;
 
@@ -26,11 +25,11 @@ internal static class GetQueryableBroadcasts
         CancellationToken ct = default
     ) => await bus.DispatchAsync(new Query(), MapToOk, ct);
 
-    private static Ok<Response> MapToOk(QueryableBroadcastRow[] rows)
+    private static Ok<GetQueryableBroadcastsResponse> MapToOk(QueryableBroadcastRow[] rows)
     {
         QueryableBroadcastDto[] dtos = rows.Select(qc => qc.ToDto()).ToArray();
 
-        return TypedResults.Ok(new Response(dtos));
+        return TypedResults.Ok(new GetQueryableBroadcastsResponse(dtos));
     }
 
     internal sealed class EndpointMapper : IEndpointMapper
@@ -44,7 +43,7 @@ internal static class GetQueryableBroadcasts
                 .WithSummary("Get all queryable broadcasts")
                 .WithDescription("Retrieves a list of all the queryable broadcasts, ordered by broadcast date.")
                 .WithTags(V1Tags.Queryables)
-                .Produces<Response>();
+                .Produces<GetQueryableBroadcastsResponse>();
         }
     }
 

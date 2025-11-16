@@ -1,4 +1,3 @@
-using Azure;
 using CSharpFunctionalExtensions;
 using Eurocentric.Apis.Public.V1.Config;
 using Eurocentric.Apis.Public.V1.Dtos.Listings;
@@ -72,7 +71,7 @@ internal static class GetBroadcastResultListings
                     """
                 )
                 .WithTags(V1Tags.Listings)
-                .Produces<Response>()
+                .Produces<GetBroadcastResultListingsResponse>()
                 .ProducesProblem(StatusCodes.Status400BadRequest);
         }
     }

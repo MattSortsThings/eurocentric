@@ -1,4 +1,3 @@
-using Azure;
 using CSharpFunctionalExtensions;
 using Eurocentric.Apis.Public.V1.Config;
 using Eurocentric.Apis.Public.V1.Dtos.Listings;
@@ -79,7 +78,7 @@ internal static class GetCompetingCountryPointsListings
                     """
                 )
                 .WithTags(V1Tags.Listings)
-                .Produces<Response>()
+                .Produces<GetCompetingCountryPointsListingsResponse>()
                 .ProducesProblem(StatusCodes.Status400BadRequest)
                 .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
         }

@@ -15,7 +15,6 @@ using SlimMessageBus;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 using QueryableContestDto = Eurocentric.Apis.Public.V1.Dtos.Queryables.QueryableContest;
 using QueryableContestRow = Eurocentric.Domain.Analytics.Queryables.QueryableContest;
-using Response = Eurocentric.Apis.Public.V1.Features.Queryables.GetQueryableContestsResponse;
 
 namespace Eurocentric.Apis.Public.V1.Features.Queryables;
 
@@ -26,11 +25,11 @@ internal static class GetQueryableContests
         CancellationToken ct = default
     ) => await bus.DispatchAsync(new Query(), MapToOk, ct);
 
-    private static Ok<Response> MapToOk(QueryableContestRow[] rows)
+    private static Ok<GetQueryableContestsResponse> MapToOk(QueryableContestRow[] rows)
     {
         QueryableContestDto[] dtos = rows.Select(qc => qc.ToDto()).ToArray();
 
-        return TypedResults.Ok(new Response(dtos));
+        return TypedResults.Ok(new GetQueryableContestsResponse(dtos));
     }
 
     internal sealed class EndpointMapper : IEndpointMapper
@@ -44,7 +43,7 @@ internal static class GetQueryableContests
                 .WithSummary("Get all queryable contests")
                 .WithDescription("Retrieves a list of all the queryable contests, ordered by contest year.")
                 .WithTags(V1Tags.Queryables)
-                .Produces<Response>();
+                .Produces<GetQueryableContestsResponse>();
         }
     }
 
