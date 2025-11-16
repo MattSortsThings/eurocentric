@@ -46,3 +46,6 @@ jobs:
 
       - name: Test solution
         run: dotnet test --solution ${{ env.SOLUTION_PATH }} -c Debug --no-restore --no-build
+
+      - name: Build Docker image
+        run: docker build -t mjtantony/eurocentric-webapp .
