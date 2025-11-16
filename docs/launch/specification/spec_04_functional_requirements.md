@@ -504,19 +504,19 @@ This document is part of the [launch specification](../README.md#launch-specific
   - retrieving
     - a complete list of results for the country
       - for each
-        - the broadcast date
         - the contest year
         - the contest stage
         - the running order spot
         - the act name
         - the song title
         - the jury points
+        - the jury rank
         - the televote points
+        - the televote rank
         - the total points
         - the finishing position
-        - the jury rank
-        - the televote rank
-      - ordered by broadcast date
+        - the number of competitors
+      - ordered by contest year, then by contest stage
 - So that I see all the results achieved by the country, including its best and worst results.
 
 ### Queryables
