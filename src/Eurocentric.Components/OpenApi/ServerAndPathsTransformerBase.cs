@@ -44,6 +44,8 @@ public abstract class ServerAndPathsTransformerBase : IOpenApiDocumentTransforme
             ? existing.Url?.TrimEnd('/') + "/" + ReleaseUriSegments.TrimStart('/')
             : ReleaseUriSegments;
 
+        updatedServerUrl = updatedServerUrl.Replace("http://", "https://");
+
         document.Servers = new List<OpenApiServer> { new() { Url = updatedServerUrl } };
     }
 }

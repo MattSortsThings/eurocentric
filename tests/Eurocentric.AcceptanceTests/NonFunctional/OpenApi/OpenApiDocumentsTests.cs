@@ -53,7 +53,7 @@ public sealed class OpenApiDocumentsTests : ParallelSeededAcceptanceTest
 
         (string serverUrl, string[] paths) = await ExtractServerUrlAndAllPathsAsync(response.Content);
 
-        await Assert.That(serverUrl).EndsWith(serverUrlSuffix);
+        await Assert.That(serverUrl).EndsWith(serverUrlSuffix).And.StartsWith("https://");
 
         await Assert.That(paths).DoesNotContain(path => path.Contains(serverUrlSuffix));
     }
