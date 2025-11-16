@@ -6,6 +6,10 @@ using BroadcastResultMetadataDto = Eurocentric.Apis.Public.V1.Dtos.Listings.Broa
 using BroadcastResultMetadataRow = Eurocentric.Domain.Analytics.Listings.BroadcastResultMetadata;
 using CompetingCountryPointsMetadataDto = Eurocentric.Apis.Public.V1.Dtos.Listings.CompetingCountryPointsMetadata;
 using CompetingCountryPointsMetadataRow = Eurocentric.Domain.Analytics.Listings.CompetingCountryPointsMetadata;
+using CompetingCountryResultListingDto = Eurocentric.Apis.Public.V1.Dtos.Listings.CompetingCountryResultListing;
+using CompetingCountryResultListingRow = Eurocentric.Domain.Analytics.Listings.CompetingCountryResultListing;
+using CompetingCountryResultMetadataDto = Eurocentric.Apis.Public.V1.Dtos.Listings.CompetingCountryResultMetadata;
+using CompetingCountryResultMetadataRow = Eurocentric.Domain.Analytics.Listings.CompetingCountryResultMetadata;
 using VotingCountryPointsMetadataDto = Eurocentric.Apis.Public.V1.Dtos.Listings.VotingCountryPointsMetadata;
 using VotingCountryPointsMetadataRow = Eurocentric.Domain.Analytics.Listings.VotingCountryPointsMetadata;
 
@@ -21,6 +25,9 @@ internal static class MappingExtensions
             ContestStage = row.ContestStage.ToApiContestStage(),
         };
     }
+
+    internal static CompetingCountryResultMetadataDto ToDto(this CompetingCountryResultMetadataRow row) =>
+        new() { CompetingCountryCode = row.CompetingCountryCode };
 
     internal static CompetingCountryPointsMetadataDto ToDto(this CompetingCountryPointsMetadataRow row)
     {
@@ -57,6 +64,25 @@ internal static class MappingExtensions
             TelevoteRank = row.TelevoteRank,
             OverallPoints = row.OverallPoints,
             FinishingPosition = row.FinishingPosition,
+        };
+    }
+
+    internal static CompetingCountryResultListingDto ToDto(this CompetingCountryResultListingRow row)
+    {
+        return new CompetingCountryResultListingDto
+        {
+            ContestYear = row.ContestYear,
+            ContestStage = row.ContestStage.ToApiContestStage(),
+            RunningOrderSpot = row.RunningOrderSpot,
+            ActName = row.ActName,
+            SongTitle = row.SongTitle,
+            JuryPoints = row.JuryPoints,
+            JuryRank = row.JuryRank,
+            TelevotePoints = row.TelevotePoints,
+            TelevoteRank = row.TelevoteRank,
+            OverallPoints = row.OverallPoints,
+            FinishingPosition = row.FinishingPosition,
+            Competitors = row.Competitors,
         };
     }
 

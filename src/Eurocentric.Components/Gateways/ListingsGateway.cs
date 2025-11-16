@@ -13,6 +13,17 @@ internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGa
         CancellationToken cancellationToken = default
     ) => await RunSprocAsync(query, cancellationToken);
 
+    public async Task<Result<CompetingCountryResultListings, IDomainError>> GetCompetingCountryResultListingsAsync(
+        CompetingCountryResultQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await Result
+            .Success<CompetingCountryResultQuery, IDomainError>(query)
+            .Ensure(ListingsInvariants.LegalCompetingCountryFiltering)
+            .Bind(queryParams => RunSprocAsync(queryParams, cancellationToken));
+    }
+
     public async Task<Result<CompetingCountryPointsListings, IDomainError>> GetCompetingCountryPointsListingsAsync(
         CompetingCountryPointsQuery query,
         CancellationToken cancellationToken = default
@@ -51,6 +62,25 @@ internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGa
         BroadcastResultMetadata metadata = MapToMetadata(query);
 
         return new BroadcastResultListings(resultListings, metadata);
+    }
+
+    private async Task<Result<CompetingCountryResultListings, IDomainError>> RunSprocAsync(
+        CompetingCountryResultQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        ListingsDynamicParameters dynamicParameters = ListingsDynamicParameters.From(query);
+
+        List<CompetingCountryResultListing> resultListings =
+            await sprocRunner.ExecuteAsync<CompetingCountryResultListing>(
+                Sprocs.Dbo.GetCompetingCountryResultListings,
+                dynamicParameters,
+                cancellationToken
+            );
+
+        CompetingCountryResultMetadata metadata = MapToMetadata(query);
+
+        return new CompetingCountryResultListings(resultListings, metadata);
     }
 
     private async Task<Result<CompetingCountryPointsListings, IDomainError>> RunSprocAsync(
@@ -105,6 +135,9 @@ internal sealed class ListingsGateway(ListSprocRunner sprocRunner) : IListingsGa
 
     private static BroadcastResultMetadata MapToMetadata(BroadcastResultQuery query) =>
         new() { ContestYear = query.ContestYear, ContestStage = query.ContestStage };
+
+    private static CompetingCountryResultMetadata MapToMetadata(CompetingCountryResultQuery query) =>
+        new() { CompetingCountryCode = query.CompetingCountryCode };
 
     private static CompetingCountryPointsMetadata MapToMetadata(CompetingCountryPointsQuery query)
     {

@@ -42,6 +42,8 @@ public interface IRestRequestFactory
 
         RestRequest GetCompetingCountryPointsListings(IReadOnlyDictionary<string, object?> queryParams);
 
+        RestRequest GetCompetingCountryResultListings(IReadOnlyDictionary<string, object?> queryParams);
+
         RestRequest GetVotingCountryPointsListings(IReadOnlyDictionary<string, object?> queryParams);
     }
 

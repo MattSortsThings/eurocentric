@@ -21,6 +21,8 @@ internal static class Sprocs
         internal const string GetCompetingCountryPointsShareRankings =
             "dbo.usp_get_competing_country_points_share_rankings";
 
+        internal const string GetCompetingCountryResultListings = "dbo.usp_get_competing_country_result_listings";
+
         internal const string GetCompetingCountryTelevotePointsListings =
             "dbo.usp_get_competing_country_televote_points_listings";
 
