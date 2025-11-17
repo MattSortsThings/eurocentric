@@ -25,3 +25,11 @@ Asked Copilot to explain how to combine multiple existing authorization policies
 ## 2025/11/02: Dependency injection
 
 Asked Copilot to demonstrate several patterns for registering a given service class as each of the interfaces that it implements.
+
+## 2025/11/16: Docker and CI
+
+Asked Copilot to walk me through the steps of containerizing the web app, pushing the image to Docker Hub, and deploying it to the Azure Web App service, all as part of the same GitHub action. This was my first significant experience of working with Docker.
+
+## 2025/11/17: OpenAPI query
+
+Asked Copilot why integer DTO property types were being represented as string types in my OpenAPI documents. Copilot suggested several possible reasons, none of which were applicable but it was good to rule them out. I then searched the official ASP.NET Core GitHub repository and found an [identical issue](https://github.com/dotnet/aspnetcore/issues/64145) with a one-line fix.
