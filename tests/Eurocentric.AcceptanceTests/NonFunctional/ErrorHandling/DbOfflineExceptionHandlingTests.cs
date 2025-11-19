@@ -17,7 +17,7 @@ public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
         // Arrange
         await SystemUnderTest.ExecuteScopedAsync(BackDoorOperations.PauseDbAsync);
 
-        RestRequest getRankingsRequest = GetRequest("/public/api/v0.2/competing-country-rankings/points-average")
+        RestRequest getRankingsRequest = GetRequest("/public/api/v1.0/competing-country-rankings/points-average")
             .UseSecretApiKey();
 
         // Act
@@ -39,7 +39,7 @@ public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
                     + "Please retry after the interval specified in the \"Retry-After\" header."
             )
             .And.HasStatus(StatusCodes.Status503ServiceUnavailable)
-            .And.HasInstance("GET /public/api/v0.2/competing-country-rankings/points-average")
+            .And.HasInstance("GET /public/api/v1.0/competing-country-rankings/points-average")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.6.4");
     }
 
@@ -50,7 +50,7 @@ public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
         // Arrange
         await SystemUnderTest.ExecuteScopedAsync(BackDoorOperations.PauseDbAsync);
 
-        RestRequest getCountriesRequest = GetRequest("/admin/api/v0.2/countries").UseSecretApiKey();
+        RestRequest getCountriesRequest = GetRequest("/admin/api/v1.0/countries").UseSecretApiKey();
 
         // Act
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(getCountriesRequest);
@@ -69,7 +69,7 @@ public sealed class DbOfflineExceptionHandlingTests : SerialCleanAcceptanceTest
                     + "Please retry after the interval specified in the \"Retry-After\" header."
             )
             .And.HasStatus(StatusCodes.Status503ServiceUnavailable)
-            .And.HasInstance("GET /admin/api/v0.2/countries")
+            .And.HasInstance("GET /admin/api/v1.0/countries")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.6.4");
     }
 

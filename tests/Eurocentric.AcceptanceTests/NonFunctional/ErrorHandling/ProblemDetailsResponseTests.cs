@@ -16,7 +16,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
         // Arrange
         Guid nonExistentCountryId = Guid.Parse("01234567-abcd-abcd-abcd-000000000000");
 
-        RestRequest getCountryRequest = GetRequest("/admin/api/v0.1/countries/{countryId}")
+        RestRequest getCountryRequest = GetRequest("/admin/api/v1.0/countries/{countryId}")
             .UseSecretApiKey()
             .AddUrlSegment("countryId", nonExistentCountryId);
 
@@ -33,7 +33,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
             .HasTitle("Country not found")
             .And.HasDetail("The requested country does not exist.")
             .And.HasStatus(StatusCodes.Status404NotFound)
-            .And.HasInstance("GET /admin/api/v0.1/countries/01234567-abcd-abcd-abcd-000000000000")
+            .And.HasInstance("GET /admin/api/v1.0/countries/01234567-abcd-abcd-abcd-000000000000")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.5")
             .And.HasExtension("countryId", nonExistentCountryId);
     }
@@ -45,7 +45,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
         // Guid
         Guid countryWithContestRolesId = Guid.Parse("01979615-1e4c-7ba1-868b-018ce12e1c0c");
 
-        RestRequest deleteCountryRequest = DeleteRequest("/admin/api/v0.1/countries/{countryId}")
+        RestRequest deleteCountryRequest = DeleteRequest("/admin/api/v1.0/countries/{countryId}")
             .UseSecretApiKey()
             .AddUrlSegment("countryId", countryWithContestRolesId);
 
@@ -59,10 +59,10 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
 
         await Assert
             .That(problem.Data)
-            .HasTitle("Country deletion not allowed")
-            .And.HasDetail("The requested country has a role in one or more contests.")
+            .HasTitle("Country deletion not permitted")
+            .And.HasDetail("The requested country has one or more contest roles.")
             .And.HasStatus(StatusCodes.Status409Conflict)
-            .And.HasInstance("DELETE /admin/api/v0.1/countries/01979615-1e4c-7ba1-868b-018ce12e1c0c")
+            .And.HasInstance("DELETE /admin/api/v1.0/countries/01979615-1e4c-7ba1-868b-018ce12e1c0c")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.10")
             .And.HasExtension("countryId", countryWithContestRolesId);
     }
@@ -74,7 +74,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
         // Arrange
         const int illegalPageSizeValue = 999999;
 
-        RestRequest getRankingsRequest = GetRequest("/public/api/v0.2/competing-country-rankings/points-average")
+        RestRequest getRankingsRequest = GetRequest("/public/api/v1.0/competing-country-rankings/points-average")
             .UseSecretApiKey()
             .AddQueryParameter("pageSize", illegalPageSizeValue);
 
@@ -91,7 +91,7 @@ public sealed class ProblemDetailsResponseTests : ParallelSeededAcceptanceTest
             .HasTitle("Illegal page size value")
             .And.HasDetail("Page size value must be an integer between 1 and 100.")
             .And.HasStatus(StatusCodes.Status422UnprocessableEntity)
-            .And.HasInstance("GET /public/api/v0.2/competing-country-rankings/points-average?pageSize=999999")
+            .And.HasInstance("GET /public/api/v1.0/competing-country-rankings/points-average?pageSize=999999")
             .And.HasType("https://tools.ietf.org/html/rfc9110#section-15.5.21")
             .And.HasExtension("pageSize", illegalPageSizeValue);
     }
