@@ -1,4 +1,3 @@
-using Eurocentric.Components.Gateways.V0;
 using Eurocentric.Domain.Analytics.Listings;
 using Eurocentric.Domain.Analytics.Queryables;
 using Eurocentric.Domain.Analytics.Rankings.CompetingCountries;
@@ -20,8 +19,6 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddGateways(this IServiceCollection services)
     {
-        services.AddV0Gateways();
-
         services
             .AddScoped<ICompetingCountryRankingsGateway, CompetingCountryRankingsGateway>()
             .AddScoped<ICompetitorRankingsGateway, CompetitorRankingsGateway>()

@@ -1,4 +1,3 @@
-using Eurocentric.Components.Repositories.V0;
 using Eurocentric.Domain.Aggregates.Broadcasts;
 using Eurocentric.Domain.Aggregates.Contests;
 using Eurocentric.Domain.Aggregates.Countries;
@@ -19,8 +18,6 @@ public static class DependencyInjection
     /// <returns>The same <see cref="IServiceCollection" /> instance, so that method invocations can be chained.</returns>
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddV0Repositories();
-
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services

@@ -24,9 +24,6 @@ public static class BackDoorOperations
         await dbContext.Broadcasts.ExecuteDeleteAsync();
         await dbContext.Contests.ExecuteDeleteAsync();
         await dbContext.Countries.ExecuteDeleteAsync();
-        await dbContext.V0Broadcasts.ExecuteDeleteAsync();
-        await dbContext.V0Contests.ExecuteDeleteAsync();
-        await dbContext.V0Countries.ExecuteDeleteAsync();
     }
 
     public static Func<IServiceProvider, Task> ExecuteSqlFromScriptAsync(string scriptPath)
