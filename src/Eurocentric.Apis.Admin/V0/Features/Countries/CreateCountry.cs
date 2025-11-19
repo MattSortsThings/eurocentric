@@ -5,8 +5,9 @@ using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 using Eurocentric.Apis.Admin.V0.Enums;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Aggregates.Countries;
 using Eurocentric.Domain.Core;
-using Eurocentric.Domain.V0.Aggregates.Countries;
+using Eurocentric.Domain.ValueObjects;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
-using CountryAggregate = Eurocentric.Domain.V0.Aggregates.Countries.Country;
+using CountryAggregate = Eurocentric.Domain.Aggregates.Countries.Country;
 using CountryDto = Eurocentric.Apis.Admin.V0.Dtos.Countries.Country;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
@@ -32,7 +33,10 @@ internal static class CreateCountry
     {
         return request.CountryType switch
         {
-            CountryType.Real or CountryType.Pseudo => new Command(request.CountryCode, request.CountryName),
+            CountryType.Real or CountryType.Pseudo => new Command(
+                CountryCode.FromValue(request.CountryCode),
+                CountryName.FromValue(request.CountryName)
+            ),
             _ => throw new InvalidEnumArgumentException($"Invalid CountryType enum value: {request.CountryType}."),
         };
     }
@@ -68,19 +72,28 @@ internal static class CreateCountry
         }
     }
 
-    internal sealed record Command(string CountryCode, string CountryName) : ICommand<CountryAggregate>;
+    internal sealed record Command(
+        Result<CountryCode, IDomainError> ErrorOrCountryCode,
+        Result<CountryName, IDomainError> ErrorOrCountryName
+    ) : ICommand<CountryAggregate>;
 
     [UsedImplicitly]
-    internal sealed class CommandHandler(ICountryReadRepository readRepository, ICountryWriteRepository writeRepository)
-        : ICommandHandler<Command, CountryAggregate>
+    internal sealed class CommandHandler(
+        ICountryRepository countryRepository,
+        ICountryIdFactory idFactory,
+        IUnitOfWork unitOfWork
+    ) : ICommandHandler<Command, CountryAggregate>
     {
         public async Task<Result<CountryAggregate, IDomainError>> OnHandle(Command command, CancellationToken ct)
         {
             return await CountryAggregate
-                .Create(command.CountryCode, command.CountryName)
-                .Ensure(CountryRules.HasUniqueCountryCode(readRepository.GetQueryable()))
-                .Tap(writeRepository.Add)
-                .Tap(_ => writeRepository.SaveChangesAsync(ct))
+                .Create()
+                .WithCountryCode(command.ErrorOrCountryCode)
+                .WithCountryName(command.ErrorOrCountryName)
+                .Build(idFactory.Create)
+                .Ensure(CountryInvariants.HasUniqueCountryCode(countryRepository.GetUntrackedQueryable()))
+                .Tap(countryRepository.Add)
+                .Tap(() => unitOfWork.SaveChangesAsync(ct))
                 .Map(country => country);
         }
     }

@@ -1,7 +1,7 @@
 using Eurocentric.Apis.Admin.V0.Enums;
 using ContestRoleDto = Eurocentric.Apis.Admin.V0.Dtos.Countries.ContestRole;
-using ContestRoleValueObject = Eurocentric.Domain.V0.Aggregates.Countries.ContestRole;
-using CountryAggregate = Eurocentric.Domain.V0.Aggregates.Countries.Country;
+using ContestRoleValueObject = Eurocentric.Domain.ValueObjects.ContestRole;
+using CountryAggregate = Eurocentric.Domain.Aggregates.Countries.Country;
 using CountryDto = Eurocentric.Apis.Admin.V0.Dtos.Countries.Country;
 
 namespace Eurocentric.Apis.Admin.V0.Dtos.Countries;
@@ -12,9 +12,9 @@ internal static class MappingExtensions
     {
         return new CountryDto
         {
-            Id = aggregate.Id,
-            CountryCode = aggregate.CountryCode,
-            CountryName = aggregate.CountryName,
+            Id = aggregate.Id.Value,
+            CountryCode = aggregate.CountryCode.Value,
+            CountryName = aggregate.CountryName.Value,
             ContestRoles = aggregate.ContestRoles.Select(MapToDto).ToArray(),
         };
     }
@@ -22,7 +22,7 @@ internal static class MappingExtensions
     private static ContestRoleDto MapToDto(ContestRoleValueObject valueObject) =>
         new()
         {
-            ContestId = valueObject.ContestId,
+            ContestId = valueObject.ContestId.Value,
             ContestRoleType = valueObject.ContestRoleType.ToApiContestRoleType(),
         };
 }

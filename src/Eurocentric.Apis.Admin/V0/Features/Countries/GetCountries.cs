@@ -3,8 +3,8 @@ using Eurocentric.Apis.Admin.V0.Config;
 using Eurocentric.Apis.Admin.V0.Dtos.Countries;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Aggregates.Countries;
 using Eurocentric.Domain.Core;
-using Eurocentric.Domain.V0.Aggregates.Countries;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
-using CountryAggregate = Eurocentric.Domain.V0.Aggregates.Countries.Country;
+using CountryAggregate = Eurocentric.Domain.Aggregates.Countries.Country;
 using CountryDto = Eurocentric.Apis.Admin.V0.Dtos.Countries.Country;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
@@ -53,6 +53,6 @@ internal static class GetCountries
     internal sealed class QueryHandler(ICountryReadRepository readRepository) : IQueryHandler<Query, CountryAggregate[]>
     {
         public async Task<Result<CountryAggregate[], IDomainError>> OnHandle(Query _, CancellationToken ct) =>
-            await readRepository.GetAllAsync(ct);
+            await readRepository.GetAllUntrackedAsync(country => country.CountryCode, ct);
     }
 }

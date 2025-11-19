@@ -70,8 +70,8 @@ public sealed class DeleteCountryTests : SerialCleanAcceptanceTest
         await admin.Then_my_request_should_FAIL_with_status_code(409);
         await admin.Then_the_response_problem_details_should_match(
             status: 409,
-            title: "Country deletion not allowed",
-            detail: "The requested country has a role in one or more contests."
+            title: "Country deletion not permitted",
+            detail: "The requested country has one or more contest roles."
         );
         await admin.Then_the_response_problem_details_should_include_my_existing_country_ID();
         await admin.Then_my_existing_country_should_be_the_only_existing_country_in_the_system();
