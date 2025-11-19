@@ -7,54 +7,52 @@ namespace Eurocentric.AcceptanceTests.Functional.AdminApi.V1.TestUtils;
 
 public static partial class Shortcuts
 {
-    public static async IAsyncEnumerable<Country> CreateMultipleCountriesAsync(
-        this AdminKernel kernel,
-        params string[] countryCodes
-    )
+    extension(AdminKernel kernel)
     {
-        foreach (string countryCode in countryCodes)
+        public async IAsyncEnumerable<Country> CreateMultipleCountriesAsync(params string[] countryCodes)
         {
-            yield return await kernel.CreateACountryAsync(countryCode: countryCode, countryName: "CountryName");
+            foreach (string countryCode in countryCodes)
+            {
+                yield return await kernel.CreateACountryAsync(countryCode: countryCode, countryName: "CountryName");
+            }
         }
-    }
 
-    public static async Task<Country> CreateACountryAsync(
-        this AdminKernel kernel,
-        string countryName = "",
-        string countryCode = ""
-    )
-    {
-        RestRequest request = kernel.Requests.Countries.CreateCountry(
-            new CreateCountryRequest { CountryCode = countryCode, CountryName = countryName }
-        );
+        public async Task<Country> CreateACountryAsync(string countryName = "", string countryCode = "")
+        {
+            RestRequest request = kernel.Requests.Countries.CreateCountry(
+                new CreateCountryRequest { CountryCode = countryCode, CountryName = countryName }
+            );
 
-        ProblemOrResponse<CreateCountryResponse> response = await kernel.Client.SendAsync<CreateCountryResponse>(
-            request
-        );
+            ProblemOrResponse<CreateCountryResponse> response = await kernel.Client.SendAsync<CreateCountryResponse>(
+                request
+            );
 
-        return response.AsResponse.Data!.Country;
-    }
+            return response.AsResponse.Data!.Country;
+        }
 
-    public static async Task DeleteACountryAsync(this AdminKernel kernel, Guid countryId)
-    {
-        RestRequest request = kernel.Requests.Countries.DeleteCountry(countryId);
-        _ = await kernel.Client.SendAsync(request);
-    }
+        public async Task DeleteACountryAsync(Guid countryId)
+        {
+            RestRequest request = kernel.Requests.Countries.DeleteCountry(countryId);
+            _ = await kernel.Client.SendAsync(request);
+        }
 
-    public static async Task<Country> GetACountryAsync(this AdminKernel kernel, Guid countryId)
-    {
-        RestRequest request = kernel.Requests.Countries.GetCountry(countryId);
-        ProblemOrResponse<GetCountryResponse> response = await kernel.Client.SendAsync<GetCountryResponse>(request);
+        public async Task<Country> GetACountryAsync(Guid countryId)
+        {
+            RestRequest request = kernel.Requests.Countries.GetCountry(countryId);
+            ProblemOrResponse<GetCountryResponse> response = await kernel.Client.SendAsync<GetCountryResponse>(request);
 
-        return response.AsResponse.Data!.Country;
-    }
+            return response.AsResponse.Data!.Country;
+        }
 
-    public static async Task<Country[]> GetAllCountriesAsync(this AdminKernel kernel)
-    {
-        RestRequest request = kernel.Requests.Countries.GetCountries();
+        public async Task<Country[]> GetAllCountriesAsync()
+        {
+            RestRequest request = kernel.Requests.Countries.GetCountries();
 
-        ProblemOrResponse<GetCountriesResponse> response = await kernel.Client.SendAsync<GetCountriesResponse>(request);
+            ProblemOrResponse<GetCountriesResponse> response = await kernel.Client.SendAsync<GetCountriesResponse>(
+                request
+            );
 
-        return response.AsResponse.Data!.Countries;
+            return response.AsResponse.Data!.Countries;
+        }
     }
 }
