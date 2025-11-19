@@ -1,8 +1,8 @@
 using Eurocentric.Apis.Public.V0.Enums;
 using BroadcastResultListingDto = Eurocentric.Apis.Public.V0.Dtos.Listings.BroadcastResultListing;
-using BroadcastResultListingRecord = Eurocentric.Domain.V0.Queries.Listings.BroadcastResultListing;
+using BroadcastResultListingRecord = Eurocentric.Domain.Analytics.Listings.BroadcastResultListing;
 using BroadcastResultMetadataDto = Eurocentric.Apis.Public.V0.Dtos.Listings.BroadcastResultMetadata;
-using BroadcastResultMetadataRecord = Eurocentric.Domain.V0.Queries.Listings.BroadcastResultMetadata;
+using BroadcastResultMetadataRecord = Eurocentric.Domain.Analytics.Listings.BroadcastResultMetadata;
 
 namespace Eurocentric.Apis.Public.V0.Dtos.Listings;
 

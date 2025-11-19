@@ -1,10 +1,10 @@
 using Eurocentric.Apis.Public.V0.Enums;
 using QueryableBroadcastDto = Eurocentric.Apis.Public.V0.Dtos.Queryables.QueryableBroadcast;
-using QueryableBroadcastRecord = Eurocentric.Domain.V0.Queries.Queryables.QueryableBroadcast;
+using QueryableBroadcastRecord = Eurocentric.Domain.Analytics.Queryables.QueryableBroadcast;
 using QueryableContestDto = Eurocentric.Apis.Public.V0.Dtos.Queryables.QueryableContest;
-using QueryableContestRecord = Eurocentric.Domain.V0.Queries.Queryables.QueryableContest;
+using QueryableContestRecord = Eurocentric.Domain.Analytics.Queryables.QueryableContest;
 using QueryableCountryDto = Eurocentric.Apis.Public.V0.Dtos.Queryables.QueryableCountry;
-using QueryableCountryRecord = Eurocentric.Domain.V0.Queries.Queryables.QueryableCountry;
+using QueryableCountryRecord = Eurocentric.Domain.Analytics.Queryables.QueryableCountry;
 
 namespace Eurocentric.Apis.Public.V0.Dtos.Queryables;
 

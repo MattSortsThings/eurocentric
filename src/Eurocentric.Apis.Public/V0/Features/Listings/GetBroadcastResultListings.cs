@@ -4,8 +4,8 @@ using Eurocentric.Apis.Public.V0.Dtos.Listings;
 using Eurocentric.Apis.Public.V0.Enums;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Analytics.Listings;
 using Eurocentric.Domain.Core;
-using Eurocentric.Domain.V0.Queries.Listings;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -15,9 +15,9 @@ using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 using ListingDto = Eurocentric.Apis.Public.V0.Dtos.Listings.BroadcastResultListing;
-using ListingRecord = Eurocentric.Domain.V0.Queries.Listings.BroadcastResultListing;
+using ListingRecord = Eurocentric.Domain.Analytics.Listings.BroadcastResultListing;
 using MetadataDto = Eurocentric.Apis.Public.V0.Dtos.Listings.BroadcastResultMetadata;
-using MetadataRecord = Eurocentric.Domain.V0.Queries.Listings.BroadcastResultMetadata;
+using MetadataRecord = Eurocentric.Domain.Analytics.Listings.BroadcastResultMetadata;
 
 namespace Eurocentric.Apis.Public.V0.Features.Listings;
 

@@ -1,5 +1,5 @@
 using Eurocentric.Apis.Public.V0.Enums;
-using Eurocentric.Domain.V0.Queries.Rankings.CompetingCountries;
+using Eurocentric.Domain.Analytics.Rankings.CompetingCountries;
 
 namespace Eurocentric.Apis.Public.V0.Dtos.Rankings.CompetingCountries;
 

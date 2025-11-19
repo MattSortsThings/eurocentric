@@ -3,8 +3,8 @@ using Eurocentric.Apis.Public.V0.Config;
 using Eurocentric.Apis.Public.V0.Dtos.Queryables;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Analytics.Queryables;
 using Eurocentric.Domain.Core;
-using Eurocentric.Domain.V0.Queries.Queryables;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Routing;
 using SlimMessageBus;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 using QueryableContestDto = Eurocentric.Apis.Public.V0.Dtos.Queryables.QueryableContest;
-using QueryableContestRecord = Eurocentric.Domain.V0.Queries.Queryables.QueryableContest;
+using QueryableContestRecord = Eurocentric.Domain.Analytics.Queryables.QueryableContest;
 
 namespace Eurocentric.Apis.Public.V0.Features.Queryables;
 
