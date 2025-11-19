@@ -16,7 +16,11 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
-        await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
+        await Assert
+            .That(problemOrResponse)
+            .IsResponse()
+            .And.HasHeader("api-supported-versions", "1.0")
+            .And.HasHeader("api-deprecated-versions", "0.1, 0.2");
     }
 
     [Test]
@@ -29,7 +33,11 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
-        await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
+        await Assert
+            .That(problemOrResponse)
+            .IsResponse()
+            .And.HasHeader("api-supported-versions", "1.0")
+            .And.HasHeader("api-deprecated-versions", "0.1, 0.2");
     }
 
     [Test]
@@ -42,7 +50,11 @@ public sealed class ApiVersioningTests : ParallelSeededAcceptanceTest
         ProblemOrResponse problemOrResponse = await SystemUnderTest.SendAsync(request);
 
         // Assert
-        await Assert.That(problemOrResponse).IsResponse().And.HasHeader("api-supported-versions", "0.1, 0.2, 1.0");
+        await Assert
+            .That(problemOrResponse)
+            .IsResponse()
+            .And.HasHeader("api-supported-versions", "1.0")
+            .And.HasHeader("api-deprecated-versions", "0.1, 0.2");
     }
 
     [Test]
