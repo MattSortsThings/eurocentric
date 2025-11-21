@@ -31,7 +31,7 @@ internal static class DeleteCountry
         {
             routeBuilder
                 .MapDelete("countries/{countryId:guid}", ExecuteAsync)
-                .WithName(V1Endpoints.Countries.DeleteCountry)
+                .WithName(V1EndpointNames.Countries.DeleteCountry)
                 .AddedInVersion1Point0()
                 .WithSummary("Delete a country")
                 .WithDescription("Permanently deletes the requested country.")

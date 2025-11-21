@@ -31,7 +31,7 @@ internal static class DeleteBroadcast
         {
             routeBuilder
                 .MapDelete("broadcasts/{broadcastId:guid}", ExecuteAsync)
-                .WithName(V1Endpoints.Broadcasts.DeleteBroadcast)
+                .WithName(V1EndpointNames.Broadcasts.DeleteBroadcast)
                 .AddedInVersion1Point0()
                 .WithSummary("Delete a broadcast")
                 .WithDescription("Permanently deletes the requested broadcast.")

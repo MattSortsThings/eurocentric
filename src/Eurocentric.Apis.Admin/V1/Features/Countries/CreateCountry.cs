@@ -44,7 +44,7 @@ internal static class CreateCountry
 
         return TypedResults.CreatedAtRoute(
             new CreateCountryResponse(countryDto),
-            V1Endpoints.Countries.GetCountry,
+            V1EndpointNames.Countries.GetCountry,
             new RouteValueDictionary { { nameof(countryId), countryId } }
         );
     }
@@ -55,7 +55,7 @@ internal static class CreateCountry
         {
             routeBuilder
                 .MapPost("countries", ExecuteAsync)
-                .WithName(V1Endpoints.Countries.CreateCountry)
+                .WithName(V1EndpointNames.Countries.CreateCountry)
                 .AddedInVersion1Point0()
                 .WithSummary("Create a country")
                 .WithDescription("Creates a new country from the request body.")

@@ -75,7 +75,7 @@ internal static class CreateContest
 
         return TypedResults.CreatedAtRoute(
             new CreateContestResponse(contestDto),
-            V1Endpoints.Contests.GetContest,
+            V1EndpointNames.Contests.GetContest,
             new RouteValueDictionary { { nameof(contestId), contestId } }
         );
     }
@@ -86,7 +86,7 @@ internal static class CreateContest
         {
             routeBuilder
                 .MapPost("contests", ExecuteAsync)
-                .WithName(V1Endpoints.Contests.CreateContest)
+                .WithName(V1EndpointNames.Contests.CreateContest)
                 .AddedInVersion1Point0()
                 .WithSummary("Create a contest")
                 .WithDescription("Creates a new contest from the request body.")

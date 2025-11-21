@@ -1,12 +1,10 @@
-using Eurocentric.Components.OpenApi;
-
 namespace Eurocentric.Apis.Public.V1.Dtos.Queryables;
 
 /// <summary>
 ///     A queryable contest.
 /// </summary>
 /// <remarks>A contest is queryable once all three of its child broadcasts have been created and completed.</remarks>
-public sealed record QueryableContest : ISchemaExampleProvider<QueryableContest>
+public sealed record QueryableContest
 {
     /// <summary>
     ///     The year in which the contest is held.
@@ -27,13 +25,4 @@ public sealed record QueryableContest : ISchemaExampleProvider<QueryableContest>
     ///     A boolean value indicating whether the contest uses the "Rest of the World" televote.
     /// </summary>
     public bool UsesRestOfWorldTelevote { get; init; }
-
-    public static QueryableContest CreateExample() =>
-        new()
-        {
-            ContestYear = 2025,
-            CityName = "Basel",
-            Participants = 37,
-            UsesRestOfWorldTelevote = true,
-        };
 }

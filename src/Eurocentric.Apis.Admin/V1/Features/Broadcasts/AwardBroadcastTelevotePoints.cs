@@ -39,7 +39,7 @@ internal static class AwardBroadcastTelevotePoints
         {
             routeBuilder
                 .MapPatch("broadcasts/{broadcastId:guid}/award-televote", ExecuteAsync)
-                .WithName(V1Endpoints.Broadcasts.AwardBroadcastTelevotePoints)
+                .WithName(V1EndpointNames.Broadcasts.AwardBroadcastTelevotePoints)
                 .AddedInVersion1Point0()
                 .WithSummary("Award televote points in a broadcast")
                 .WithDescription("Awards the points from a televote to the competitors in the requested broadcast.")

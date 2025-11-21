@@ -38,7 +38,7 @@ internal static class GetBroadcasts
         {
             routeBuilder
                 .MapGet("broadcasts", ExecuteAsync)
-                .WithName(V1Endpoints.Broadcasts.GetBroadcasts)
+                .WithName(V1EndpointNames.Broadcasts.GetBroadcasts)
                 .AddedInVersion1Point0()
                 .WithSummary("Get all broadcasts")
                 .WithDescription("Retrieves a list of all existing broadcasts, ordered by broadcast date.")

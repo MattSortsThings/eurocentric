@@ -1,12 +1,10 @@
 using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 using Eurocentric.Apis.Admin.V1.Enums;
-using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Contests;
 
 public sealed record CreateContestBroadcastResponse(Broadcast Broadcast)
-    : ISchemaExampleProvider<CreateContestBroadcastResponse>
 {
     public static CreateContestBroadcastResponse CreateExample()
     {

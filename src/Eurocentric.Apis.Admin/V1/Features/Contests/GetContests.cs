@@ -38,7 +38,7 @@ internal static class GetContests
         {
             routeBuilder
                 .MapGet("contests", ExecuteAsync)
-                .WithName(V1Endpoints.Contests.GetContests)
+                .WithName(V1EndpointNames.Contests.GetContests)
                 .AddedInVersion1Point0()
                 .WithSummary("Get all contests")
                 .WithDescription("Retrieves a list of all existing contests, ordered by contest year.")

@@ -1,6 +1,6 @@
 namespace Eurocentric.Apis.Admin.V1.Config;
 
-internal static class V1Endpoints
+internal static class V1EndpointNames
 {
     internal static class Broadcasts
     {

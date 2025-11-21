@@ -50,7 +50,7 @@ internal static class CreateContestBroadcast
 
         return TypedResults.CreatedAtRoute(
             new CreateContestBroadcastResponse(broadcastDto),
-            V1Endpoints.Broadcasts.GetBroadcast,
+            V1EndpointNames.Broadcasts.GetBroadcast,
             new RouteValueDictionary { { nameof(broadcastId), broadcastId } }
         );
     }
@@ -64,7 +64,7 @@ internal static class CreateContestBroadcast
         {
             routeBuilder
                 .MapPost("contests/{contestId:guid}/broadcasts", ExecuteAsync)
-                .WithName(V1Endpoints.Contests.CreateContestBroadcast)
+                .WithName(V1EndpointNames.Contests.CreateContestBroadcast)
                 .AddedInVersion1Point0()
                 .WithSummary("Create a broadcast for contest")
                 .WithDescription("Creates a new broadcast for the requested contest.")

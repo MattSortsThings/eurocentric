@@ -42,7 +42,7 @@ internal static class GetBroadcast
         {
             routeBuilder
                 .MapGet("broadcasts/{broadcastId:guid}", ExecuteAsync)
-                .WithName(V1Endpoints.Broadcasts.GetBroadcast)
+                .WithName(V1EndpointNames.Broadcasts.GetBroadcast)
                 .AddedInVersion1Point0()
                 .WithSummary("Get a broadcast")
                 .WithDescription("Retrieves the requested broadcast.")

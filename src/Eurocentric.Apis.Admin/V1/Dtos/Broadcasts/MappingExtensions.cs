@@ -14,9 +14,9 @@ using TelevoteEntity = Eurocentric.Domain.Aggregates.Broadcasts.Televote;
 
 namespace Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 
-public static class MappingExtensions
+internal static class MappingExtensions
 {
-    public static BroadcastDto ToDto(this BroadcastAggregate aggregate)
+    internal static BroadcastDto ToDto(this BroadcastAggregate aggregate)
     {
         return new BroadcastDto
         {

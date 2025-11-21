@@ -1,9 +1,8 @@
 using Eurocentric.Apis.Public.V0.Enums;
-using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Public.V0.Dtos.Listings;
 
-public sealed record BroadcastResultMetadata : ISchemaExampleProvider<BroadcastResultMetadata>
+public sealed record BroadcastResultMetadata
 {
     /// <summary>
     ///     The year in which the contest is held.
@@ -14,7 +13,4 @@ public sealed record BroadcastResultMetadata : ISchemaExampleProvider<BroadcastR
     ///     The broadcast's stage in its parent contest.
     /// </summary>
     public ContestStage ContestStage { get; init; }
-
-    public static BroadcastResultMetadata CreateExample() =>
-        new() { ContestYear = 2025, ContestStage = ContestStage.GrandFinal };
 }

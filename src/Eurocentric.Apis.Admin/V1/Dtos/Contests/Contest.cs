@@ -1,12 +1,11 @@
 using Eurocentric.Apis.Admin.V1.Enums;
-using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Admin.V1.Dtos.Contests;
 
 /// <summary>
 ///     Represents a contest.
 /// </summary>
-public sealed record Contest : ISchemaExampleProvider<Contest>
+public sealed record Contest
 {
     /// <summary>
     ///     The contest's ID.
@@ -47,17 +46,4 @@ public sealed record Contest : ISchemaExampleProvider<Contest>
     ///     An array of all the contest's participants.
     /// </summary>
     public Participant[] Participants { get; init; } = [];
-
-    public static Contest CreateExample() =>
-        new()
-        {
-            Id = Guid.Parse("756edfe8-b713-463e-8279-7eeb9e3a45c1"),
-            ContestYear = 2025,
-            CityName = "Basel",
-            ContestRules = ContestRules.Liverpool,
-            Queryable = true,
-            ChildBroadcasts = [ChildBroadcast.CreateExample()],
-            GlobalTelevote = GlobalTelevote.CreateExample(),
-            Participants = [Participant.CreateExample()],
-        };
 }

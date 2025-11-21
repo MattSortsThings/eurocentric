@@ -1,9 +1,6 @@
-using Eurocentric.Apis.Admin.V1.Config;
-using Eurocentric.Components.OpenApi;
-
 namespace Eurocentric.Apis.Admin.V1.Features.Broadcasts;
 
-public sealed record AwardBroadcastTelevotePointsRequest : ISchemaExampleProvider<AwardBroadcastTelevotePointsRequest>
+public sealed record AwardBroadcastTelevotePointsRequest
 {
     /// <summary>
     ///     The voting country ID of the televote to award points.
@@ -14,11 +11,4 @@ public sealed record AwardBroadcastTelevotePointsRequest : ISchemaExampleProvide
     ///     The competing country IDs in rank order from first to last.
     /// </summary>
     public required Guid[] RankedCompetingCountryIds { get; init; }
-
-    public static AwardBroadcastTelevotePointsRequest CreateExample() =>
-        new()
-        {
-            VotingCountryId = V1ExampleValues.CountryId1Of2,
-            RankedCompetingCountryIds = [V1ExampleValues.CountryId2Of2],
-        };
 }

@@ -42,7 +42,7 @@ internal static class GetContest
         {
             routeBuilder
                 .MapGet("contests/{contestId:guid}", ExecuteAsync)
-                .WithName(V1Endpoints.Contests.GetContest)
+                .WithName(V1EndpointNames.Contests.GetContest)
                 .AddedInVersion1Point0()
                 .WithSummary("Get a contest")
                 .WithDescription("Retrieves the requested contest.")

@@ -31,7 +31,7 @@ internal static class DeleteContest
         {
             routeBuilder
                 .MapDelete("contests/{contestId:guid}", ExecuteAsync)
-                .WithName(V1Endpoints.Contests.DeleteContest)
+                .WithName(V1EndpointNames.Contests.DeleteContest)
                 .AddedInVersion1Point0()
                 .WithSummary("Delete a contest")
                 .WithDescription("Permanently deletes the requested contest.")

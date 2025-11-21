@@ -10,9 +10,9 @@ using ParticipantEntity = Eurocentric.Domain.Aggregates.Contests.Participant;
 
 namespace Eurocentric.Apis.Admin.V1.Dtos.Contests;
 
-public static class MappingExtensions
+internal static class MappingExtensions
 {
-    public static ContestDto ToDto(this ContestAggregate aggregate)
+    internal static ContestDto ToDto(this ContestAggregate aggregate)
     {
         return new ContestDto
         {

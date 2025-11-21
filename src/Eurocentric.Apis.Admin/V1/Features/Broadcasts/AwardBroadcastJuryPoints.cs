@@ -39,7 +39,7 @@ internal static class AwardBroadcastJuryPoints
         {
             routeBuilder
                 .MapPatch("broadcasts/{broadcastId:guid}/award-jury", ExecuteAsync)
-                .WithName(V1Endpoints.Broadcasts.AwardBroadcastJuryPoints)
+                .WithName(V1EndpointNames.Broadcasts.AwardBroadcastJuryPoints)
                 .AddedInVersion1Point0()
                 .WithSummary("Award jury points in a broadcast")
                 .WithDescription("Awards the points from a jury to the competitors in the requested broadcast.")
