@@ -20,7 +20,7 @@ public sealed class V0Point1DocumentRegistrar : IOpenApiDocumentRegistrar
             .AddDocumentTransformer<InfoTransformer>()
             .AddDocumentTransformer<ServerAndPathsTransformer>()
             .AddOperationTransformer<ProblemDetailsResponseExampleTransformer>()
-            .AddSchemaTransformer<SchemaExampleTransformer>();
+            .AddSchemaTransformer<DtoSchemaExampleTransformer>();
     }
 
     private sealed class InfoTransformer : InfoTransformerBase

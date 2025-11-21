@@ -10,10 +10,10 @@ using Microsoft.OpenApi;
 namespace Eurocentric.Components.OpenApi;
 
 /// <summary>
-///     Adds an example for a schema type.
+///     Adds OpenAPI examples for configured request/response DTO schema types.
 /// </summary>
 /// <param name="jsonOptions">Contains JSON serialization options.</param>
-public abstract class SchemaExampleTransformerBase(IOptions<JsonOptions> jsonOptions) : IOpenApiSchemaTransformer
+public abstract class DtoSchemaExampleTransformerBase(IOptions<JsonOptions> jsonOptions) : IOpenApiSchemaTransformer
 {
     private readonly JsonSerializerOptions _jsonSerializerOptions = jsonOptions.Value.SerializerOptions;
 
@@ -24,7 +24,7 @@ public abstract class SchemaExampleTransformerBase(IOptions<JsonOptions> jsonOpt
 
     public Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken _)
     {
-        if (schema.Example is null && TryGetDtoExample(context.JsonTypeInfo, out JsonNode? example))
+        if (schema.Example is null && TryGetExample(context.JsonTypeInfo, out JsonNode? example))
         {
             schema.Example = example;
         }
@@ -32,7 +32,7 @@ public abstract class SchemaExampleTransformerBase(IOptions<JsonOptions> jsonOpt
         return Task.CompletedTask;
     }
 
-    private bool TryGetDtoExample(JsonTypeInfo typeInfo, out JsonNode? example)
+    private bool TryGetExample(JsonTypeInfo typeInfo, out JsonNode? example)
     {
         if (
             typeInfo.Type is { IsArray: false, IsValueType: false } type

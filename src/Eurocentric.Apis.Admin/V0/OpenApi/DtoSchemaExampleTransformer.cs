@@ -4,8 +4,8 @@ using Microsoft.Extensions.Options;
 
 namespace Eurocentric.Apis.Admin.V0.OpenApi;
 
-internal sealed class SchemaExampleTransformer(IOptions<JsonOptions> jsonOptions)
-    : SchemaExampleTransformerBase(jsonOptions)
+internal sealed class DtoSchemaExampleTransformer(IOptions<JsonOptions> jsonOptions)
+    : DtoSchemaExampleTransformerBase(jsonOptions)
 {
     private const string Namespace = "Eurocentric.Apis.Admin.V0";
 
