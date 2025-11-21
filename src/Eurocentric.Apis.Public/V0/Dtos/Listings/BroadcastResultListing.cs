@@ -1,9 +1,11 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Public.V0.Dtos.Listings;
 
 /// <summary>
 ///     Describes the result achieved by a single competitor in a specified broadcast.
 /// </summary>
-public sealed record BroadcastResultListing
+public sealed record BroadcastResultListing : IDtoSchemaExampleProvider<BroadcastResultListing>
 {
     /// <summary>
     ///     The competitor's finishing position.
@@ -59,4 +61,20 @@ public sealed record BroadcastResultListing
     ///     The competitor's rank based on total televote points received.
     /// </summary>
     public int TelevoteRank { get; init; }
+
+    public static BroadcastResultListing CreateExample() =>
+        new()
+        {
+            RunningOrderSpot = 1,
+            CountryCode = "AA",
+            CountryName = "CountryName",
+            ActName = "ActName",
+            SongTitle = "SongTitle",
+            JuryPoints = 100,
+            TelevotePoints = 100,
+            OverallPoints = 200,
+            JuryRank = 1,
+            TelevoteRank = 1,
+            FinishingPosition = 1,
+        };
 }

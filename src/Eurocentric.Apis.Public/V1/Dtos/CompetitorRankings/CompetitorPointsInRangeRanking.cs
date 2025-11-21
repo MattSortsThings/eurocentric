@@ -1,11 +1,12 @@
 using Eurocentric.Apis.Public.V1.Enums;
+using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Public.V1.Dtos.CompetitorRankings;
 
 /// <summary>
 ///     A single competitor points in range rankings row.
 /// </summary>
-public sealed record CompetitorPointsInRangeRanking
+public sealed record CompetitorPointsInRangeRanking : IDtoSchemaExampleProvider<CompetitorPointsInRangeRanking>
 {
     /// <summary>
     ///     The competitor's rank based on descending points in range.
@@ -72,4 +73,20 @@ public sealed record CompetitorPointsInRangeRanking
     ///     The number of unique voting countries in the queried filtered voting data for the competitor.
     /// </summary>
     public int VotingCountries { get; init; }
+
+    public static CompetitorPointsInRangeRanking CreateExample() =>
+        new()
+        {
+            Rank = 1,
+            ContestYear = 2025,
+            ContestStage = ContestStage.GrandFinal,
+            CountryCode = "AA",
+            CountryName = "CountryName",
+            ActName = "ActName",
+            SongTitle = "SongTitle",
+            PointsInRange = 0.666667m,
+            PointsAwardsInRange = 50,
+            PointsAwards = 75,
+            VotingCountries = 38,
+        };
 }

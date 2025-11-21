@@ -1,11 +1,12 @@
 using Eurocentric.Apis.Public.V1.Enums;
+using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Public.V1.Dtos.CompetitorRankings;
 
 /// <summary>
 ///     A single competitor points consensus rankings row.
 /// </summary>
-public sealed record CompetitorPointsConsensusRanking
+public sealed record CompetitorPointsConsensusRanking : IDtoSchemaExampleProvider<CompetitorPointsConsensusRanking>
 {
     /// <summary>
     ///     The competitor's rank based on descending points consensus.
@@ -77,4 +78,21 @@ public sealed record CompetitorPointsConsensusRanking
     ///     The dot product of the normalized jury points vector and the normalized televote points vector.
     /// </summary>
     public decimal VectorDotProduct { get; init; }
+
+    public static CompetitorPointsConsensusRanking CreateExample() =>
+        new()
+        {
+            Rank = 1,
+            ContestYear = 2025,
+            ContestStage = ContestStage.GrandFinal,
+            CountryCode = "AA",
+            CountryName = "CountryName",
+            ActName = "ActName",
+            SongTitle = "SongTitle",
+            PointsConsensus = 0.8m,
+            VectorDotProduct = 25.0m,
+            JuryVectorLength = 5.0m,
+            TelevoteVectorLength = 6.25m,
+            VectorDimensions = 37,
+        };
 }

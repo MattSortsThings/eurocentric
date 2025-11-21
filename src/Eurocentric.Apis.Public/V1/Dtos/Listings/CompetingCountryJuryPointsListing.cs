@@ -1,9 +1,11 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Public.V1.Dtos.Listings;
 
 /// <summary>
 ///     A single competing country jury points listings row.
 /// </summary>
-public sealed record CompetingCountryJuryPointsListing
+public sealed record CompetingCountryJuryPointsListing : IDtoSchemaExampleProvider<CompetingCountryJuryPointsListing>
 {
     /// <summary>
     ///     The value of the jury points award the competing country received from the voting country.
@@ -19,4 +21,12 @@ public sealed record CompetingCountryJuryPointsListing
     ///     The voting country's short UK English name.
     /// </summary>
     public string VotingCountryName { get; init; } = string.Empty;
+
+    public static CompetingCountryJuryPointsListing CreateExample() =>
+        new()
+        {
+            PointsValue = 10,
+            VotingCountryCode = "AA",
+            VotingCountryName = "CountryName",
+        };
 }

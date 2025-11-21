@@ -1,11 +1,12 @@
 using Eurocentric.Apis.Public.V1.Enums;
+using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Public.V1.Dtos.Listings;
 
 /// <summary>
 ///     A single competing country result listings row.
 /// </summary>
-public sealed record CompetingCountryResultListing
+public sealed record CompetingCountryResultListing : IDtoSchemaExampleProvider<CompetingCountryResultListing>
 {
     /// <summary>
     ///     The contest year of the broadcast.
@@ -66,4 +67,20 @@ public sealed record CompetingCountryResultListing
     ///     The number of competitors in the broadcast.
     /// </summary>
     public int Competitors { get; init; }
+
+    public static CompetingCountryResultListing CreateExample() =>
+        new()
+        {
+            ContestYear = 2025,
+            ContestStage = ContestStage.GrandFinal,
+            RunningOrderSpot = 1,
+            ActName = "ActName",
+            SongTitle = "SongTitle",
+            JuryPoints = 100,
+            TelevotePoints = 100,
+            OverallPoints = 200,
+            JuryRank = 1,
+            TelevoteRank = 1,
+            FinishingPosition = 1,
+        };
 }

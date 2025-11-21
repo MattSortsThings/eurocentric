@@ -1,9 +1,12 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Public.V1.Dtos.Listings;
 
 /// <summary>
 ///     A single competing country televote points listings row.
 /// </summary>
 public sealed record CompetingCountryTelevotePointsListing
+    : IDtoSchemaExampleProvider<CompetingCountryTelevotePointsListing>
 {
     /// <summary>
     ///     The value of the jury points award the competing country received from the voting country.
@@ -19,4 +22,12 @@ public sealed record CompetingCountryTelevotePointsListing
     ///     The voting country's short UK English name.
     /// </summary>
     public string VotingCountryName { get; init; } = string.Empty;
+
+    public static CompetingCountryTelevotePointsListing CreateExample() =>
+        new()
+        {
+            PointsValue = 10,
+            VotingCountryCode = "AA",
+            VotingCountryName = "CountryName",
+        };
 }

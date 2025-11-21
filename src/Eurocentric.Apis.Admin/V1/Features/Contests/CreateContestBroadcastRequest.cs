@@ -1,8 +1,10 @@
+using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Apis.Admin.V1.Enums;
+using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Contests;
 
-public sealed record CreateContestBroadcastRequest
+public sealed record CreateContestBroadcastRequest : IDtoSchemaExampleProvider<CreateContestBroadcastRequest>
 {
     /// <summary>
     ///     The date on which the broadcast is televised.
@@ -19,4 +21,12 @@ public sealed record CreateContestBroadcastRequest
     ///     <see langword="null" /> values.
     /// </summary>
     public required Guid?[] CompetingCountryIds { get; init; }
+
+    public static CreateContestBroadcastRequest CreateExample() =>
+        new()
+        {
+            ContestStage = ContestStage.GrandFinal,
+            BroadcastDate = DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd"),
+            CompetingCountryIds = [V1ExampleIds.CountryA],
+        };
 }

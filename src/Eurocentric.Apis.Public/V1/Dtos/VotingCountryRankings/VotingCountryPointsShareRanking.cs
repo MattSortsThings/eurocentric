@@ -1,9 +1,11 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
 /// <summary>
 ///     A single voting country points share rankings row.
 /// </summary>
-public sealed record VotingCountryPointsShareRanking
+public sealed record VotingCountryPointsShareRanking : IDtoSchemaExampleProvider<VotingCountryPointsShareRanking>
 {
     /// <summary>
     ///     The voting country's rank based on descending points share.
@@ -51,4 +53,18 @@ public sealed record VotingCountryPointsShareRanking
     ///     The number of unique contests in the queried filtered voting data for the voting country.
     /// </summary>
     public int Contests { get; init; }
+
+    public static VotingCountryPointsShareRanking CreateExample() =>
+        new()
+        {
+            Rank = 1,
+            CountryCode = "AA",
+            CountryName = "CountryName",
+            PointsShare = 0.75m,
+            TotalPoints = 36,
+            AvailablePoints = 48,
+            PointsAwards = 4,
+            Broadcasts = 4,
+            Contests = 2,
+        };
 }

@@ -1,9 +1,12 @@
+using Eurocentric.Apis.Admin.V1.Config;
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Admin.V1.Dtos.Countries;
 
 /// <summary>
 ///     Represents a country or pseudo-country.
 /// </summary>
-public sealed record Country
+public sealed record Country : IDtoSchemaExampleProvider<Country>
 {
     /// <summary>
     ///     The country's ID.
@@ -24,4 +27,13 @@ public sealed record Country
     ///     An array of all the country's contest roles.
     /// </summary>
     public ContestRole[] ContestRoles { get; init; } = [];
+
+    public static Country CreateExample() =>
+        new()
+        {
+            Id = V1ExampleIds.CountryA,
+            CountryCode = "AT",
+            CountryName = "Austria",
+            ContestRoles = [ContestRole.CreateExample()],
+        };
 }

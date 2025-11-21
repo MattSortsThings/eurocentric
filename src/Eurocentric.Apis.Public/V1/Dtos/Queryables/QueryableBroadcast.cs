@@ -1,4 +1,5 @@
 using Eurocentric.Apis.Public.V1.Enums;
+using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Public.V1.Dtos.Queryables;
 
@@ -6,7 +7,7 @@ namespace Eurocentric.Apis.Public.V1.Dtos.Queryables;
 ///     A queryable broadcast.
 /// </summary>
 /// <remarks>A broadcast is queryable if its parent contest is queryable.</remarks>
-public sealed record QueryableBroadcast
+public sealed record QueryableBroadcast : IDtoSchemaExampleProvider<QueryableBroadcast>
 {
     /// <summary>
     ///     The date on which the broadcast is televised.
@@ -42,4 +43,18 @@ public sealed record QueryableBroadcast
     ///     The number of televotes in the broadcast.
     /// </summary>
     public int Televotes { get; init; }
+
+    public static QueryableBroadcast CreateExample()
+    {
+        return new QueryableBroadcast
+        {
+            BroadcastDate = DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd"),
+            ContestYear = 2025,
+            CityName = "Basel",
+            ContestStage = ContestStage.GrandFinal,
+            Competitors = 26,
+            Juries = 36,
+            Televotes = 37,
+        };
+    }
 }

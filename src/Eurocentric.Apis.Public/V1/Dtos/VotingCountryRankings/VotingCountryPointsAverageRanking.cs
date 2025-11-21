@@ -1,9 +1,11 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
 /// <summary>
 ///     A single voting country points average rankings row.
 /// </summary>
-public sealed record VotingCountryPointsAverageRanking
+public sealed record VotingCountryPointsAverageRanking : IDtoSchemaExampleProvider<VotingCountryPointsAverageRanking>
 {
     /// <summary>
     ///     The voting country's rank based on descending points average.
@@ -44,4 +46,17 @@ public sealed record VotingCountryPointsAverageRanking
     ///     The number of unique contests in the queried filtered voting data for the voting country.
     /// </summary>
     public int Contests { get; init; }
+
+    public static VotingCountryPointsAverageRanking CreateExample() =>
+        new()
+        {
+            Rank = 1,
+            CountryCode = "AA",
+            CountryName = "CountryName",
+            PointsAverage = 9.5m,
+            TotalPoints = 38,
+            PointsAwards = 4,
+            Broadcasts = 4,
+            Contests = 2,
+        };
 }

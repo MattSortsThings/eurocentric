@@ -1,3 +1,5 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 
 /// <summary>
@@ -8,6 +10,7 @@ namespace Eurocentric.Apis.Public.V1.Dtos.VotingCountryRankings;
 ///     [1.0, 10.0] to use in vector calculations.
 /// </remarks>
 public sealed record VotingCountryPointsConsensusRanking
+    : IDtoSchemaExampleProvider<VotingCountryPointsConsensusRanking>
 {
     /// <summary>
     ///     The voting country's rank based on descending points consensus.
@@ -64,4 +67,19 @@ public sealed record VotingCountryPointsConsensusRanking
     ///     The number of unique competing countries in the queried filtered voting data for the voting country.
     /// </summary>
     public int CompetingCountries { get; init; }
+
+    public static VotingCountryPointsConsensusRanking CreateExample() =>
+        new()
+        {
+            Rank = 1,
+            CountryCode = "AA",
+            CountryName = "CountryName",
+            PointsConsensus = 0.8m,
+            VectorDotProduct = 10.0m,
+            JuryVectorLength = 1.0m,
+            TelevoteVectorLength = 1.25m,
+            VectorDimensions = 2,
+            Broadcasts = 4,
+            Contests = 2,
+        };
 }

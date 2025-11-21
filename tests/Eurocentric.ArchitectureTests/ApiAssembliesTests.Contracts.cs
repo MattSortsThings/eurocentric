@@ -1,3 +1,5 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.ArchitectureTests;
 
 public sealed partial class ApiAssembliesTests
@@ -44,6 +46,23 @@ public sealed partial class ApiAssembliesTests
     {
         // Arrange
         ClassRule rule = Classes().That().Are(DtoClasses).Should().BeImmutable().AndShould().BeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task DTO_classes_should_implement_IDtoSchemaExampleProvider()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That()
+            .Are(DtoClasses)
+            .Should()
+            .ImplementInterface(typeof(IDtoSchemaExampleProvider<>));
 
         // Act
         IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);

@@ -1,9 +1,12 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Public.V1.Dtos.CompetingCountryRankings;
 
 /// <summary>
 ///     A single competing country points in range rankings row.
 /// </summary>
 public sealed record CompetingCountryPointsInRangeRanking
+    : IDtoSchemaExampleProvider<CompetingCountryPointsInRangeRanking>
 {
     /// <summary>
     ///     The competing country's rank based on descending points in range.
@@ -50,4 +53,18 @@ public sealed record CompetingCountryPointsInRangeRanking
     ///     The number of unique voting countries in the queried filtered voting data for the competing country.
     /// </summary>
     public int VotingCountries { get; init; }
+
+    public static CompetingCountryPointsInRangeRanking CreateExample() =>
+        new()
+        {
+            Rank = 1,
+            CountryCode = "AA",
+            CountryName = "CountryName",
+            PointsInRange = 0.75m,
+            PointsAwardsInRange = 150,
+            PointsAwards = 200,
+            Broadcasts = 4,
+            Contests = 2,
+            VotingCountries = 50,
+        };
 }

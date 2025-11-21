@@ -1,11 +1,13 @@
+using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Apis.Admin.V1.Enums;
+using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 
 /// <summary>
 ///     Represents a broadcast.
 /// </summary>
-public sealed record Broadcast
+public sealed record Broadcast : IDtoSchemaExampleProvider<Broadcast>
 {
     /// <summary>
     ///     The broadcast's ID.
@@ -46,4 +48,16 @@ public sealed record Broadcast
     ///     An array of all the broadcast's televotes.
     /// </summary>
     public Televote[] Televotes { get; init; } = [];
+
+    public static Broadcast CreateExample() =>
+        new()
+        {
+            Id = V1ExampleIds.Broadcast,
+            BroadcastDate = DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd"),
+            ParentContestId = V1ExampleIds.Contest,
+            ContestStage = ContestStage.GrandFinal,
+            Competitors = [Competitor.CreateExample()],
+            Juries = [Jury.CreateExample()],
+            Televotes = [Televote.CreateExample()],
+        };
 }

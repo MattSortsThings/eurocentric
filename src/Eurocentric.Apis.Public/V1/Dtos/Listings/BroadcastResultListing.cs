@@ -1,9 +1,11 @@
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Public.V1.Dtos.Listings;
 
 /// <summary>
 ///     A single broadcast result listings row.
 /// </summary>
-public sealed record BroadcastResultListing
+public sealed record BroadcastResultListing : IDtoSchemaExampleProvider<BroadcastResultListing>
 {
     /// <summary>
     ///     The competitor's running order spot in the broadcast.
@@ -59,4 +61,20 @@ public sealed record BroadcastResultListing
     ///     The competitor's finishing position in the broadcast.
     /// </summary>
     public int FinishingPosition { get; init; }
+
+    public static BroadcastResultListing CreateExample() =>
+        new()
+        {
+            RunningOrderSpot = 1,
+            CountryCode = "AA",
+            CountryName = "CountryName",
+            ActName = "ActName",
+            SongTitle = "SongTitle",
+            JuryPoints = 100,
+            TelevotePoints = 100,
+            OverallPoints = 200,
+            JuryRank = 1,
+            TelevoteRank = 1,
+            FinishingPosition = 1,
+        };
 }

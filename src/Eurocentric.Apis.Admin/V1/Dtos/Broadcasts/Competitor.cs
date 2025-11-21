@@ -1,9 +1,12 @@
+using Eurocentric.Apis.Admin.V1.Config;
+using Eurocentric.Components.OpenApi;
+
 namespace Eurocentric.Apis.Admin.V1.Dtos.Broadcasts;
 
 /// <summary>
 ///     Represents a competitor in a broadcast
 /// </summary>
-public sealed record Competitor
+public sealed record Competitor : IDtoSchemaExampleProvider<Competitor>
 {
     /// <summary>
     ///     The ID of the competing country.
@@ -29,4 +32,14 @@ public sealed record Competitor
     ///     An array of all the televote awards received by the competitor.
     /// </summary>
     public TelevoteAward[] TelevoteAwards { get; init; } = [];
+
+    public static Competitor CreateExample() =>
+        new()
+        {
+            RunningOrderSpot = 1,
+            CompetingCountryId = V1ExampleIds.CountryA,
+            FinishingPosition = 1,
+            JuryAwards = [JuryAward.CreateExample()],
+            TelevoteAwards = [TelevoteAward.CreateExample()],
+        };
 }

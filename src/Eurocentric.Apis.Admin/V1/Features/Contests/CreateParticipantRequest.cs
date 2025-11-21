@@ -1,8 +1,10 @@
+using Eurocentric.Apis.Admin.V1.Config;
 using Eurocentric.Apis.Admin.V1.Enums;
+using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.Apis.Admin.V1.Features.Contests;
 
-public sealed record CreateParticipantRequest
+public sealed record CreateParticipantRequest : IDtoSchemaExampleProvider<CreateParticipantRequest>
 {
     public required Guid ParticipatingCountryId { get; init; }
 
@@ -11,6 +13,15 @@ public sealed record CreateParticipantRequest
     public required string ActName { get; init; }
 
     public required string SongTitle { get; init; }
+
+    public static CreateParticipantRequest CreateExample() =>
+        new()
+        {
+            ParticipatingCountryId = V1ExampleIds.CountryA,
+            ActName = "JJ",
+            SongTitle = "Wasted Love",
+            SemiFinalDraw = SemiFinalDraw.SemiFinal2,
+        };
 
     public void Deconstruct(
         out Guid participatingCountryId,

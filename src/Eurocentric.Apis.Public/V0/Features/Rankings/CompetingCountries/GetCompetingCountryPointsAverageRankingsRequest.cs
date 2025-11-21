@@ -23,14 +23,14 @@ public sealed record GetCompetingCountryPointsAverageRankingsRequest
     public VotingMethodFilter? VotingMethod { get; init; }
 
     [FromQuery(Name = "pageIndex")]
-    [DefaultValue(PaginationDefaults.PageIndex)]
+    [DefaultValue(V0PaginationDefaults.PageIndex)]
     public int? PageIndex { get; init; }
 
     [FromQuery(Name = "pageSize")]
-    [DefaultValue(PaginationDefaults.PageSize)]
+    [DefaultValue(V0PaginationDefaults.PageSize)]
     public int? PageSize { get; init; }
 
     [FromQuery(Name = "descending")]
-    [DefaultValue(PaginationDefaults.Descending)]
+    [DefaultValue(V0PaginationDefaults.Descending)]
     public bool? Descending { get; init; }
 }
