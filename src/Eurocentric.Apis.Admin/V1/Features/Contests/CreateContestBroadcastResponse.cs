@@ -13,4 +13,16 @@ public sealed record CreateContestBroadcastResponse(Broadcast Broadcast)
                 Competitors = [Competitor.CreateExample() with { JuryAwards = [], TelevoteAwards = [] }],
             }
         );
+
+    public bool Equals(CreateContestBroadcastResponse? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        return ReferenceEquals(this, other) || Broadcast.Equals(other.Broadcast);
+    }
+
+    public override int GetHashCode() => Broadcast.GetHashCode();
 }

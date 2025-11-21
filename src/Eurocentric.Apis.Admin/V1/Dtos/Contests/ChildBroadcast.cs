@@ -26,4 +26,23 @@ public sealed record ChildBroadcast : IDtoSchemaExampleProvider<ChildBroadcast>
 
     public static ChildBroadcast CreateExample() =>
         new() { ChildBroadcastId = V1ExampleIds.Broadcast, ContestStage = ContestStage.GrandFinal };
+
+    public bool Equals(ChildBroadcast? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ChildBroadcastId.Equals(other.ChildBroadcastId)
+            && ContestStage == other.ContestStage
+            && Completed == other.Completed;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(ChildBroadcastId, (int)ContestStage, Completed);
 }

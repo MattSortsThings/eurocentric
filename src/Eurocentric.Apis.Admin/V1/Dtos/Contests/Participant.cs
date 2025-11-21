@@ -37,4 +37,25 @@ public sealed record Participant : IDtoSchemaExampleProvider<Participant>
             SongTitle = "Wasted Love",
             SemiFinalDraw = SemiFinalDraw.SemiFinal2,
         };
+
+    public bool Equals(Participant? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ParticipatingCountryId.Equals(other.ParticipatingCountryId)
+            && SemiFinalDraw == other.SemiFinalDraw
+            && ActName == other.ActName
+            && SongTitle == other.SongTitle;
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(ParticipatingCountryId, (int)SemiFinalDraw, ActName, SongTitle);
 }

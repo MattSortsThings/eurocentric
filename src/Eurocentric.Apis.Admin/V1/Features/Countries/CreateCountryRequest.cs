@@ -15,4 +15,21 @@ public sealed record CreateCountryRequest : IDtoSchemaExampleProvider<CreateCoun
     public required string CountryName { get; init; }
 
     public static CreateCountryRequest CreateExample() => new() { CountryCode = "AT", CountryName = "Austria" };
+
+    public bool Equals(CreateCountryRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return CountryCode == other.CountryCode && CountryName == other.CountryName;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(CountryCode, CountryName);
 }

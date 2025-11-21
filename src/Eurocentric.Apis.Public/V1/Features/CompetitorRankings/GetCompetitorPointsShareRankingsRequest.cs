@@ -42,4 +42,38 @@ public sealed record GetCompetitorPointsShareRankingsRequest
     [FromQuery(Name = "descending")]
     [Description("Specifies descending rank (true) or ascending rank (false) initial sort before pagination.")]
     public bool? Descending { get; init; }
+
+    public bool Equals(GetCompetitorPointsShareRankingsRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return MinYear == other.MinYear
+            && MaxYear == other.MaxYear
+            && ContestStage == other.ContestStage
+            && CompetingCountryCode == other.CompetingCountryCode
+            && VotingMethod == other.VotingMethod
+            && PageIndex == other.PageIndex
+            && PageSize == other.PageSize
+            && Descending == other.Descending;
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(
+            MinYear,
+            MaxYear,
+            ContestStage,
+            CompetingCountryCode,
+            VotingMethod,
+            PageIndex,
+            PageSize,
+            Descending
+        );
 }

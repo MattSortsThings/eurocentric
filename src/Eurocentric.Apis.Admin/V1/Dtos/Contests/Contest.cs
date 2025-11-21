@@ -59,4 +59,45 @@ public sealed record Contest : IDtoSchemaExampleProvider<Contest>
             GlobalTelevote = GlobalTelevote.CreateExample(),
             Participants = [Participant.CreateExample()],
         };
+
+    public bool Equals(Contest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Id.Equals(other.Id)
+            && ContestYear == other.ContestYear
+            && CityName == other.CityName
+            && ContestRules == other.ContestRules
+            && Queryable == other.Queryable
+            && ChildBroadcasts
+                .OrderBy(broadcast => broadcast.ChildBroadcastId)
+                .SequenceEqual(other.ChildBroadcasts.OrderBy(broadcast => broadcast.ChildBroadcastId))
+            && (
+                (GlobalTelevote is null && other.GlobalTelevote is null)
+                || (GlobalTelevote is not null && GlobalTelevote.Equals(other.GlobalTelevote))
+            )
+            && Participants
+                .OrderBy(participant => participant.ParticipatingCountryId)
+                .SequenceEqual(other.Participants.OrderBy(participant => participant.ParticipatingCountryId));
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(
+            Id,
+            ContestYear,
+            CityName,
+            (int)ContestRules,
+            Queryable,
+            ChildBroadcasts,
+            GlobalTelevote,
+            Participants
+        );
 }

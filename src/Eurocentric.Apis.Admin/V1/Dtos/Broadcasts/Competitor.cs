@@ -42,4 +42,30 @@ public sealed record Competitor : IDtoSchemaExampleProvider<Competitor>
             JuryAwards = [JuryAward.CreateExample()],
             TelevoteAwards = [TelevoteAward.CreateExample()],
         };
+
+    public bool Equals(Competitor? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return CompetingCountryId.Equals(other.CompetingCountryId)
+            && RunningOrderSpot == other.RunningOrderSpot
+            && FinishingPosition == other.FinishingPosition
+            && JuryAwards
+                .OrderBy(award => award.VotingCountryId)
+                .SequenceEqual(other.JuryAwards.OrderBy(award => award.VotingCountryId))
+            && TelevoteAwards
+                .OrderBy(award => award.VotingCountryId)
+                .SequenceEqual(other.TelevoteAwards.OrderBy(award => award.VotingCountryId));
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(CompetingCountryId, RunningOrderSpot, FinishingPosition, JuryAwards, TelevoteAwards);
 }

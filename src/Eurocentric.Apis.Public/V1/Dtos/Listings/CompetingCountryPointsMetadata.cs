@@ -30,4 +30,23 @@ public sealed record CompetingCountryPointsMetadata : IDtoSchemaExampleProvider<
             ContestStage = ContestStage.GrandFinal,
             CompetingCountryCode = "AT",
         };
+
+    public bool Equals(CompetingCountryPointsMetadata? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ContestYear == other.ContestYear
+            && ContestStage == other.ContestStage
+            && CompetingCountryCode == other.CompetingCountryCode;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(ContestYear, (int)ContestStage, CompetingCountryCode);
 }

@@ -19,4 +19,21 @@ public sealed record Jury : IDtoSchemaExampleProvider<Jury>
     public bool PointsAwarded { get; init; }
 
     public static Jury CreateExample() => new() { VotingCountryId = V1ExampleIds.CountryA };
+
+    public bool Equals(Jury? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return VotingCountryId.Equals(other.VotingCountryId) && PointsAwarded == other.PointsAwarded;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(VotingCountryId, PointsAwarded);
 }

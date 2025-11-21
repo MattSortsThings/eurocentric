@@ -57,4 +57,28 @@ public sealed record QueryableBroadcast : IDtoSchemaExampleProvider<QueryableBro
             Televotes = 37,
         };
     }
+
+    public bool Equals(QueryableBroadcast? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return BroadcastDate.Equals(other.BroadcastDate)
+            && ContestYear == other.ContestYear
+            && CityName == other.CityName
+            && ContestStage == other.ContestStage
+            && Competitors == other.Competitors
+            && Juries == other.Juries
+            && Televotes == other.Televotes;
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(BroadcastDate, ContestYear, CityName, (int)ContestStage, Competitors, Juries, Televotes);
 }

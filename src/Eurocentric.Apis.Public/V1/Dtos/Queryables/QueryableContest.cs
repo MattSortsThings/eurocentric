@@ -38,4 +38,24 @@ public sealed record QueryableContest : IDtoSchemaExampleProvider<QueryableConte
             UsesRestOfWorldTelevote = true,
         };
     }
+
+    public bool Equals(QueryableContest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ContestYear == other.ContestYear
+            && CityName == other.CityName
+            && Participants == other.Participants
+            && UsesRestOfWorldTelevote == other.UsesRestOfWorldTelevote;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(ContestYear, CityName, Participants, UsesRestOfWorldTelevote);
 }

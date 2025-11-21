@@ -30,4 +30,23 @@ public sealed record CompetingCountryTelevotePointsListing
             VotingCountryCode = "AA",
             VotingCountryName = "CountryName",
         };
+
+    public bool Equals(CompetingCountryTelevotePointsListing? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return PointsValue == other.PointsValue
+            && VotingCountryCode == other.VotingCountryCode
+            && VotingCountryName == other.VotingCountryName;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(PointsValue, VotingCountryCode, VotingCountryName);
 }

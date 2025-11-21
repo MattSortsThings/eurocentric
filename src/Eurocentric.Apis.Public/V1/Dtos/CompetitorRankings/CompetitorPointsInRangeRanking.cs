@@ -89,4 +89,51 @@ public sealed record CompetitorPointsInRangeRanking : IDtoSchemaExampleProvider<
             PointsAwards = 75,
             VotingCountries = 38,
         };
+
+    public bool Equals(CompetitorPointsInRangeRanking? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Rank == other.Rank
+            && ContestYear == other.ContestYear
+            && ContestStage == other.ContestStage
+            && RunningOrderSpot == other.RunningOrderSpot
+            && CountryCode == other.CountryCode
+            && CountryName == other.CountryName
+            && FinishingPosition == other.FinishingPosition
+            && ActName == other.ActName
+            && SongTitle == other.SongTitle
+            && PointsInRange == other.PointsInRange
+            && PointsAwardsInRange == other.PointsAwardsInRange
+            && PointsAwards == other.PointsAwards
+            && VotingCountries == other.VotingCountries;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(Rank);
+        hashCode.Add(ContestYear);
+        hashCode.Add((int)ContestStage);
+        hashCode.Add(RunningOrderSpot);
+        hashCode.Add(CountryCode);
+        hashCode.Add(CountryName);
+        hashCode.Add(FinishingPosition);
+        hashCode.Add(ActName);
+        hashCode.Add(SongTitle);
+        hashCode.Add(PointsInRange);
+        hashCode.Add(PointsAwardsInRange);
+        hashCode.Add(PointsAwards);
+        hashCode.Add(VotingCountries);
+
+        return hashCode.ToHashCode();
+    }
 }

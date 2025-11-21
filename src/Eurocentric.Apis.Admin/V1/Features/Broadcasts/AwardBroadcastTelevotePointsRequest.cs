@@ -18,4 +18,22 @@ public sealed record AwardBroadcastTelevotePointsRequest
 
     public static AwardBroadcastTelevotePointsRequest CreateExample() =>
         new() { VotingCountryId = V1ExampleIds.CountryB, RankedCompetingCountryIds = [V1ExampleIds.CountryA] };
+
+    public bool Equals(AwardBroadcastTelevotePointsRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return VotingCountryId.Equals(other.VotingCountryId)
+            && RankedCompetingCountryIds.SequenceEqual(other.RankedCompetingCountryIds);
+    }
+
+    public override int GetHashCode() => HashCode.Combine(VotingCountryId, RankedCompetingCountryIds);
 }

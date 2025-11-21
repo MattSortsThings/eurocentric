@@ -13,4 +13,21 @@ public sealed record CompetingCountryResultMetadata : IDtoSchemaExampleProvider<
     public string CompetingCountryCode { get; init; } = string.Empty;
 
     public static CompetingCountryResultMetadata CreateExample() => new() { CompetingCountryCode = "AT" };
+
+    public bool Equals(CompetingCountryResultMetadata? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return CompetingCountryCode == other.CompetingCountryCode;
+    }
+
+    public override int GetHashCode() => CompetingCountryCode.GetHashCode();
 }

@@ -60,4 +60,44 @@ public sealed record Broadcast : IDtoSchemaExampleProvider<Broadcast>
             Juries = [Jury.CreateExample()],
             Televotes = [Televote.CreateExample()],
         };
+
+    public bool Equals(Broadcast? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Id.Equals(other.Id)
+            && BroadcastDate.Equals(other.BroadcastDate)
+            && ParentContestId.Equals(other.ParentContestId)
+            && ContestStage == other.ContestStage
+            && Completed == other.Completed
+            && Competitors
+                .OrderBy(competitor => competitor.CompetingCountryId)
+                .SequenceEqual(other.Competitors.OrderBy(competitor => competitor.CompetingCountryId))
+            && Juries
+                .OrderBy(jury => jury.VotingCountryId)
+                .SequenceEqual(other.Juries.OrderBy(jury => jury.VotingCountryId))
+            && Televotes
+                .OrderBy(televote => televote.VotingCountryId)
+                .SequenceEqual(other.Televotes.OrderBy(vote => vote.VotingCountryId));
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(
+            Id,
+            BroadcastDate,
+            ParentContestId,
+            (int)ContestStage,
+            Completed,
+            Competitors,
+            Juries,
+            Televotes
+        );
 }

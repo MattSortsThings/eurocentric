@@ -29,4 +29,23 @@ public sealed record CreateContestBroadcastRequest : IDtoSchemaExampleProvider<C
             BroadcastDate = DateOnly.ParseExact("2025-05-17", "yyyy-MM-dd"),
             CompetingCountryIds = [V1ExampleIds.CountryA],
         };
+
+    public bool Equals(CreateContestBroadcastRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return BroadcastDate.Equals(other.BroadcastDate)
+            && ContestStage == other.ContestStage
+            && CompetingCountryIds.Equals(other.CompetingCountryIds);
+    }
+
+    public override int GetHashCode() => HashCode.Combine(BroadcastDate, (int)ContestStage, CompetingCountryIds);
 }

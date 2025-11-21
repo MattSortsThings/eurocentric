@@ -83,4 +83,49 @@ public sealed record CompetingCountryResultListing : IDtoSchemaExampleProvider<C
             TelevoteRank = 1,
             FinishingPosition = 1,
         };
+
+    public bool Equals(CompetingCountryResultListing? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ContestYear == other.ContestYear
+            && ContestStage == other.ContestStage
+            && RunningOrderSpot == other.RunningOrderSpot
+            && ActName == other.ActName
+            && SongTitle == other.SongTitle
+            && JuryPoints == other.JuryPoints
+            && JuryRank == other.JuryRank
+            && TelevotePoints == other.TelevotePoints
+            && TelevoteRank == other.TelevoteRank
+            && OverallPoints == other.OverallPoints
+            && FinishingPosition == other.FinishingPosition
+            && Competitors == other.Competitors;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(ContestYear);
+        hashCode.Add((int)ContestStage);
+        hashCode.Add(RunningOrderSpot);
+        hashCode.Add(ActName);
+        hashCode.Add(SongTitle);
+        hashCode.Add(JuryPoints);
+        hashCode.Add(JuryRank);
+        hashCode.Add(TelevotePoints);
+        hashCode.Add(TelevoteRank);
+        hashCode.Add(OverallPoints);
+        hashCode.Add(FinishingPosition);
+        hashCode.Add(Competitors);
+
+        return hashCode.ToHashCode();
+    }
 }

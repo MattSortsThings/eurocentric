@@ -6,4 +6,24 @@ public sealed record GetVotingCountryPointsListingsResponse(
     VotingCountryJuryPointsListing[] JuryPointsListings,
     VotingCountryTelevotePointsListing[] TelevotePointsListings,
     VotingCountryPointsMetadata Metadata
-);
+)
+{
+    public bool Equals(GetVotingCountryPointsListingsResponse? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return JuryPointsListings.SequenceEqual(other.JuryPointsListings)
+            && TelevotePointsListings.SequenceEqual(other.TelevotePointsListings)
+            && Metadata.Equals(other.Metadata);
+    }
+
+    public override int GetHashCode() => HashCode.Combine(JuryPointsListings, TelevotePointsListings, Metadata);
+}

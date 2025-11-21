@@ -1,3 +1,4 @@
+using Eurocentric.ArchitectureTests.TestUtils;
 using Eurocentric.Components.OpenApi;
 
 namespace Eurocentric.ArchitectureTests;
@@ -72,6 +73,23 @@ public sealed partial class ApiAssembliesTests
     }
 
     [Test]
+    public async Task DTO_classes_should_declare_generic_Equals_method()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That()
+            .Are(DtoClasses)
+            .Should()
+            .FollowCustomCondition(new ClassDeclaresGenericEqualsMethodCondition());
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
     public async Task Feature_request_classes_should_be_public()
     {
         // Arrange
@@ -98,6 +116,23 @@ public sealed partial class ApiAssembliesTests
     }
 
     [Test]
+    public async Task Feature_request_classes_should_declare_generic_Equals_method()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That()
+            .Are(FeatureRequestClasses)
+            .Should()
+            .FollowCustomCondition(new ClassDeclaresGenericEqualsMethodCondition());
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
     public async Task Feature_response_classes_should_be_public()
     {
         // Arrange
@@ -115,6 +150,23 @@ public sealed partial class ApiAssembliesTests
     {
         // Arrange
         ClassRule rule = Classes().That().Are(FeatureResponseClasses).Should().BeImmutable().AndShould().BeRecord();
+
+        // Act
+        IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);
+
+        // Assert
+        await Assert.That(result).ContainsOnly(Passed);
+    }
+
+    [Test]
+    public async Task Feature_response_classes_should_declare_generic_Equals_method()
+    {
+        // Arrange
+        ClassRule rule = Classes()
+            .That()
+            .Are(FeatureResponseClasses)
+            .Should()
+            .FollowCustomCondition(new ClassDeclaresGenericEqualsMethodCondition());
 
         // Act
         IEnumerable<EvaluationResult> result = rule.Evaluate(ArchitectureUnderTest);

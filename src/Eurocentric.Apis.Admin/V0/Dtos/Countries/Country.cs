@@ -36,4 +36,26 @@ public sealed record Country : IDtoSchemaExampleProvider<Country>
             CountryName = "Austria",
             ContestRoles = [ContestRole.CreateExample()],
         };
+
+    public bool Equals(Country? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Id.Equals(other.Id)
+            && CountryCode == other.CountryCode
+            && CountryName == other.CountryName
+            && ContestRoles
+                .OrderBy(role => role.ContestId)
+                .SequenceEqual(other.ContestRoles.OrderBy(role => role.ContestId));
+    }
+
+    public override int GetHashCode() => HashCode.Combine(Id, CountryCode, CountryName, ContestRoles);
 }

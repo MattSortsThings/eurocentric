@@ -19,4 +19,21 @@ public sealed record QueryableCountry : IDtoSchemaExampleProvider<QueryableCount
     public string CountryName { get; init; } = string.Empty;
 
     public static QueryableCountry CreateExample() => new() { CountryCode = "AT", CountryName = "Austria" };
+
+    public bool Equals(QueryableCountry? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return CountryCode == other.CountryCode && CountryName == other.CountryName;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(CountryCode, CountryName);
 }

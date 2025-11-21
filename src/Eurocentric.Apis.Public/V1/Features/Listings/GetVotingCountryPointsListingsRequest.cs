@@ -22,4 +22,23 @@ public sealed record GetVotingCountryPointsListingsRequest
     [FromQuery(Name = "votingCountryCode")]
     [Description("Filters voting data by voting country code.")]
     public required string VotingCountryCode { get; init; }
+
+    public bool Equals(GetVotingCountryPointsListingsRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ContestYear == other.ContestYear
+            && ContestStage == other.ContestStage
+            && VotingCountryCode == other.VotingCountryCode;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(ContestYear, (int)ContestStage, VotingCountryCode);
 }

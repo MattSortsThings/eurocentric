@@ -50,4 +50,45 @@ public sealed record GetVotingCountryPointsInRangeRankingsRequest
     [FromQuery(Name = "descending")]
     [Description("Specifies descending rank (true) or ascending rank (false) initial sort before pagination.")]
     public bool? Descending { get; init; }
+
+    public bool Equals(GetVotingCountryPointsInRangeRankingsRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return CompetingCountryCode == other.CompetingCountryCode
+            && MinPoints == other.MinPoints
+            && MaxPoints == other.MaxPoints
+            && MinYear == other.MinYear
+            && MaxYear == other.MaxYear
+            && ContestStage == other.ContestStage
+            && VotingMethod == other.VotingMethod
+            && PageIndex == other.PageIndex
+            && PageSize == other.PageSize
+            && Descending == other.Descending;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(CompetingCountryCode);
+        hashCode.Add(MinPoints);
+        hashCode.Add(MaxPoints);
+        hashCode.Add(MinYear);
+        hashCode.Add(MaxYear);
+        hashCode.Add(ContestStage);
+        hashCode.Add(VotingMethod);
+        hashCode.Add(PageIndex);
+        hashCode.Add(PageSize);
+        hashCode.Add(Descending);
+
+        return hashCode.ToHashCode();
+    }
 }

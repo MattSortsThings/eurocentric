@@ -42,4 +42,38 @@ public sealed record GetVotingCountryPointsAverageRankingsRequest
     [FromQuery(Name = "descending")]
     [Description("Specifies descending rank (true) or ascending rank (false) initial sort before pagination.")]
     public bool? Descending { get; init; }
+
+    public bool Equals(GetVotingCountryPointsAverageRankingsRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return CompetingCountryCode == other.CompetingCountryCode
+            && MinYear == other.MinYear
+            && MaxYear == other.MaxYear
+            && ContestStage == other.ContestStage
+            && VotingMethod == other.VotingMethod
+            && PageIndex == other.PageIndex
+            && PageSize == other.PageSize
+            && Descending == other.Descending;
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(
+            CompetingCountryCode,
+            MinYear,
+            MaxYear,
+            ContestStage,
+            VotingMethod,
+            PageIndex,
+            PageSize,
+            Descending
+        );
 }

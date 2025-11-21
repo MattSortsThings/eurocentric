@@ -14,4 +14,16 @@ public sealed record GlobalTelevote : IDtoSchemaExampleProvider<GlobalTelevote>
     public Guid VotingCountryId { get; init; }
 
     public static GlobalTelevote CreateExample() => new() { VotingCountryId = V1ExampleIds.CountryC };
+
+    public bool Equals(GlobalTelevote? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        return ReferenceEquals(this, other) || VotingCountryId.Equals(other.VotingCountryId);
+    }
+
+    public override int GetHashCode() => VotingCountryId.GetHashCode();
 }

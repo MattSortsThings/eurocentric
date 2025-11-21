@@ -95,4 +95,53 @@ public sealed record CompetitorPointsConsensusRanking : IDtoSchemaExampleProvide
             TelevoteVectorLength = 6.25m,
             VectorDimensions = 37,
         };
+
+    public bool Equals(CompetitorPointsConsensusRanking? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Rank == other.Rank
+            && ContestYear == other.ContestYear
+            && ContestStage == other.ContestStage
+            && RunningOrderSpot == other.RunningOrderSpot
+            && CountryCode == other.CountryCode
+            && CountryName == other.CountryName
+            && FinishingPosition == other.FinishingPosition
+            && ActName == other.ActName
+            && SongTitle == other.SongTitle
+            && PointsConsensus == other.PointsConsensus
+            && VectorDimensions == other.VectorDimensions
+            && JuryVectorLength == other.JuryVectorLength
+            && TelevoteVectorLength == other.TelevoteVectorLength
+            && VectorDotProduct == other.VectorDotProduct;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(Rank);
+        hashCode.Add(ContestYear);
+        hashCode.Add((int)ContestStage);
+        hashCode.Add(RunningOrderSpot);
+        hashCode.Add(CountryCode);
+        hashCode.Add(CountryName);
+        hashCode.Add(FinishingPosition);
+        hashCode.Add(ActName);
+        hashCode.Add(SongTitle);
+        hashCode.Add(PointsConsensus);
+        hashCode.Add(VectorDimensions);
+        hashCode.Add(JuryVectorLength);
+        hashCode.Add(TelevoteVectorLength);
+        hashCode.Add(VectorDotProduct);
+
+        return hashCode.ToHashCode();
+    }
 }

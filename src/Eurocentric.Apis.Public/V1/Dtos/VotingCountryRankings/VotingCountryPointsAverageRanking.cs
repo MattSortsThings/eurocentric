@@ -59,4 +59,38 @@ public sealed record VotingCountryPointsAverageRanking : IDtoSchemaExampleProvid
             Broadcasts = 4,
             Contests = 2,
         };
+
+    public bool Equals(VotingCountryPointsAverageRanking? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Rank == other.Rank
+            && CountryCode == other.CountryCode
+            && CountryName == other.CountryName
+            && PointsAverage == other.PointsAverage
+            && TotalPoints == other.TotalPoints
+            && PointsAwards == other.PointsAwards
+            && Broadcasts == other.Broadcasts
+            && Contests == other.Contests;
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(
+            Rank,
+            CountryCode,
+            CountryName,
+            PointsAverage,
+            TotalPoints,
+            PointsAwards,
+            Broadcasts,
+            Contests
+        );
 }

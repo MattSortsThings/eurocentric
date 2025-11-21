@@ -67,4 +67,43 @@ public sealed record CompetingCountryPointsInRangeRanking
             Contests = 2,
             VotingCountries = 50,
         };
+
+    public bool Equals(CompetingCountryPointsInRangeRanking? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Rank == other.Rank
+            && CountryCode == other.CountryCode
+            && CountryName == other.CountryName
+            && PointsInRange == other.PointsInRange
+            && PointsAwardsInRange == other.PointsAwardsInRange
+            && PointsAwards == other.PointsAwards
+            && Broadcasts == other.Broadcasts
+            && Contests == other.Contests
+            && VotingCountries == other.VotingCountries;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(Rank);
+        hashCode.Add(CountryCode);
+        hashCode.Add(CountryName);
+        hashCode.Add(PointsInRange);
+        hashCode.Add(PointsAwardsInRange);
+        hashCode.Add(PointsAwards);
+        hashCode.Add(Broadcasts);
+        hashCode.Add(Contests);
+        hashCode.Add(VotingCountries);
+
+        return hashCode.ToHashCode();
+    }
 }

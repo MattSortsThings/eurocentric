@@ -82,4 +82,47 @@ public sealed record VotingCountryPointsConsensusRanking
             Broadcasts = 4,
             Contests = 2,
         };
+
+    public bool Equals(VotingCountryPointsConsensusRanking? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Rank == other.Rank
+            && CountryCode == other.CountryCode
+            && CountryName == other.CountryName
+            && PointsConsensus == other.PointsConsensus
+            && VectorDimensions == other.VectorDimensions
+            && JuryVectorLength == other.JuryVectorLength
+            && TelevoteVectorLength == other.TelevoteVectorLength
+            && VectorDotProduct == other.VectorDotProduct
+            && Broadcasts == other.Broadcasts
+            && Contests == other.Contests
+            && CompetingCountries == other.CompetingCountries;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(Rank);
+        hashCode.Add(CountryCode);
+        hashCode.Add(CountryName);
+        hashCode.Add(PointsConsensus);
+        hashCode.Add(VectorDimensions);
+        hashCode.Add(JuryVectorLength);
+        hashCode.Add(TelevoteVectorLength);
+        hashCode.Add(VectorDotProduct);
+        hashCode.Add(Broadcasts);
+        hashCode.Add(Contests);
+        hashCode.Add(CompetingCountries);
+
+        return hashCode.ToHashCode();
+    }
 }

@@ -77,4 +77,47 @@ public sealed record BroadcastResultListing : IDtoSchemaExampleProvider<Broadcas
             TelevoteRank = 1,
             FinishingPosition = 1,
         };
+
+    public bool Equals(BroadcastResultListing? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return FinishingPosition == other.FinishingPosition
+            && RunningOrderSpot == other.RunningOrderSpot
+            && CountryCode == other.CountryCode
+            && CountryName == other.CountryName
+            && ActName == other.ActName
+            && SongTitle == other.SongTitle
+            && JuryPoints == other.JuryPoints
+            && TelevotePoints == other.TelevotePoints
+            && OverallPoints == other.OverallPoints
+            && JuryRank == other.JuryRank
+            && TelevoteRank == other.TelevoteRank;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(FinishingPosition);
+        hashCode.Add(RunningOrderSpot);
+        hashCode.Add(CountryCode);
+        hashCode.Add(CountryName);
+        hashCode.Add(ActName);
+        hashCode.Add(SongTitle);
+        hashCode.Add(JuryPoints);
+        hashCode.Add(TelevotePoints);
+        hashCode.Add(OverallPoints);
+        hashCode.Add(JuryRank);
+        hashCode.Add(TelevoteRank);
+
+        return hashCode.ToHashCode();
+    }
 }

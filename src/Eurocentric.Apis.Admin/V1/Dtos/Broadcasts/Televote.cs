@@ -19,4 +19,21 @@ public sealed record Televote : IDtoSchemaExampleProvider<Televote>
     public bool PointsAwarded { get; init; }
 
     public static Televote CreateExample() => new() { VotingCountryId = V1ExampleIds.CountryA };
+
+    public bool Equals(Televote? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return VotingCountryId.Equals(other.VotingCountryId) && PointsAwarded == other.PointsAwarded;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(VotingCountryId, PointsAwarded);
 }

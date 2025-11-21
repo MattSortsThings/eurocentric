@@ -69,4 +69,45 @@ public sealed record CompetitorPointsAverageMetadata : IDtoSchemaExampleProvider
             TotalItems = 500,
             TotalPages = 50,
         };
+
+    public bool Equals(CompetitorPointsAverageMetadata? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return MinYear == other.MinYear
+            && MaxYear == other.MaxYear
+            && ContestStage == other.ContestStage
+            && CompetingCountryCode == other.CompetingCountryCode
+            && VotingMethod == other.VotingMethod
+            && PageIndex == other.PageIndex
+            && PageSize == other.PageSize
+            && Descending == other.Descending
+            && TotalItems == other.TotalItems
+            && TotalPages == other.TotalPages;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(MinYear);
+        hashCode.Add(MaxYear);
+        hashCode.Add(ContestStage);
+        hashCode.Add(CompetingCountryCode);
+        hashCode.Add(VotingMethod);
+        hashCode.Add(PageIndex);
+        hashCode.Add(PageSize);
+        hashCode.Add(Descending);
+        hashCode.Add(TotalItems);
+        hashCode.Add(TotalPages);
+
+        return hashCode.ToHashCode();
+    }
 }

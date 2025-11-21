@@ -25,4 +25,28 @@ public sealed record CreateContestRequest : IDtoSchemaExampleProvider<CreateCont
             GlobalTelevoteVotingCountryId = V1ExampleIds.CountryC,
             Participants = [CreateParticipantRequest.CreateExample()],
         };
+
+    public bool Equals(CreateContestRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ContestRules == other.ContestRules
+            && ContestYear == other.ContestYear
+            && CityName == other.CityName
+            && Nullable.Equals(GlobalTelevoteVotingCountryId, other.GlobalTelevoteVotingCountryId)
+            && Participants
+                .OrderBy(participant => participant.ParticipatingCountryId)
+                .SequenceEqual(other.Participants.OrderBy(participant => participant.ParticipatingCountryId));
+    }
+
+    public override int GetHashCode() =>
+        HashCode.Combine((int)ContestRules, ContestYear, CityName, GlobalTelevoteVotingCountryId, Participants);
 }

@@ -29,4 +29,23 @@ public sealed record VotingCountryJuryPointsListing : IDtoSchemaExampleProvider<
             CompetingCountryCode = "AA",
             CompetingCountryName = "CountryName",
         };
+
+    public bool Equals(VotingCountryJuryPointsListing? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return PointsValue == other.PointsValue
+            && CompetingCountryCode == other.CompetingCountryCode
+            && CompetingCountryName == other.CompetingCountryName;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(PointsValue, CompetingCountryCode, CompetingCountryName);
 }

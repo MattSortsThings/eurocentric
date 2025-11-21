@@ -16,4 +16,21 @@ public sealed record GetBroadcastResultListingsRequest
     [FromQuery(Name = "contestStage")]
     [Description("Filters voting data by contest stage.")]
     public required ContestStage ContestStage { get; init; }
+
+    public bool Equals(GetBroadcastResultListingsRequest? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ContestYear == other.ContestYear && ContestStage == other.ContestStage;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(ContestYear, (int)ContestStage);
 }
