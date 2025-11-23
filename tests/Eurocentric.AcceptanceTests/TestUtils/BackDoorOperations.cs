@@ -5,8 +5,25 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.AcceptanceTests.TestUtils;
 
+/// <summary>
+///     Operations to be executed on the web application fixture's scoped service provider.
+/// </summary>
 public static class BackDoorOperations
 {
+    private static IEnumerable<string> GetSeedingScriptPathsInOrder()
+    {
+        yield return "Eurocentric.AcceptanceTests.TestUtils.Scripts.seed_dbo_1_of_5_50_countries.sql";
+        yield return "Eurocentric.AcceptanceTests.TestUtils.Scripts.seed_dbo_2_of_5_2021_contest_not_queryable.sql";
+        yield return "Eurocentric.AcceptanceTests.TestUtils.Scripts.seed_dbo_3_of_5_2022_contest_queryable.sql";
+        yield return "Eurocentric.AcceptanceTests.TestUtils.Scripts.seed_dbo_4_of_5_2023_contest_queryable.sql";
+        yield return "Eurocentric.AcceptanceTests.TestUtils.Scripts.seed_dbo_5_of_5_2024_contest_not_queryable.sql";
+    }
+
+    /// <summary>
+    ///     Asynchronously pauses the test database container fixture.
+    /// </summary>
+    /// <param name="serviceProvider">The web application fixture's scoped service provider.</param>
+    /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
     public static async Task PauseDbAsync(IServiceProvider serviceProvider)
     {
         DbContainerFixtureSwitcher switcher = serviceProvider.GetRequiredService<DbContainerFixtureSwitcher>();
@@ -14,6 +31,12 @@ public static class BackDoorOperations
         await switcher.PauseAsync();
     }
 
+    /// <summary>
+    ///     Asynchronously ensures the test database container fixture is unpaused then deletes all records from the test
+    ///     database.
+    /// </summary>
+    /// <param name="serviceProvider">The web application fixture's scoped service provider.</param>
+    /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
     public static async Task ResetDbAsync(IServiceProvider serviceProvider)
     {
         DbContainerFixtureSwitcher switcher = serviceProvider.GetRequiredService<DbContainerFixtureSwitcher>();
@@ -26,16 +49,19 @@ public static class BackDoorOperations
         await dbContext.Countries.ExecuteDeleteAsync();
     }
 
-    public static Func<IServiceProvider, Task> ExecuteSqlFromScriptAsync(string scriptPath)
+    /// <summary>
+    ///     Asynchronously populates the test database with seed data.
+    /// </summary>
+    /// <param name="serviceProvider">The web application fixture's scoped service provider.</param>
+    /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
+    public static async Task SeedDbAsync(IServiceProvider serviceProvider)
     {
-        string sql = ReadEmbeddedResource(scriptPath);
+        await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
 
-        return async serviceProvider =>
+        foreach (string resourcePath in GetSeedingScriptPathsInOrder())
         {
-            await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
-
-            await dbContext.Database.ExecuteSqlRawAsync(sql);
-        };
+            await dbContext.Database.ExecuteSqlRawAsync(ReadEmbeddedResource(resourcePath));
+        }
     }
 
     private static string ReadEmbeddedResource(string resourcePath)

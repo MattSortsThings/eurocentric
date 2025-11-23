@@ -10,9 +10,6 @@ public abstract class ParallelSeededAcceptanceTest
 
     public sealed class SeededWebAppFixture : WebAppFixture
     {
-        private const string DboSeedingScriptPath = "Eurocentric.AcceptanceTests.TestUtils.Scripts.dbo_seeding.sql";
-
-        private protected override async Task SeedDbAsync() =>
-            await ExecuteScopedAsync(BackDoorOperations.ExecuteSqlFromScriptAsync(DboSeedingScriptPath));
+        private protected override async Task SeedDbAsync() => await ExecuteScopedAsync(BackDoorOperations.SeedDbAsync);
     }
 }
