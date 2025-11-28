@@ -23,7 +23,7 @@
     <PackageVersion Include="Scalar.AspNetCore" Version="2.11.0" />
     <PackageVersion Include="SlimMessageBus" Version="3.0.0" />
     <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.5" />
-    <PackageVersion Include="Testcontainers.MsSql" Version="4.8.1" />
+    <PackageVersion Include="Testcontainers.MsSql" Version="4.9.0" />
     <PackageVersion Include="TngTech.ArchUnitNET" Version="0.12.3" />
     <PackageVersion Include="TUnit" Version="1.2.11" />
   </ItemGroup>
