@@ -3,6 +3,9 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
+    <PackageVersion Include="CSharpFunctionalExtensions.Analyzers" Version="1.4.1" />
     <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
+    <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.6" />
   </ItemGroup>
 </Project>

@@ -1,3 +1,10 @@
+using Eurocentric.Apis.Admin;
+using Eurocentric.Apis.Public;
+using Eurocentric.Components.HttpJson;
+using Eurocentric.Components.Messaging;
+using AdminApiMiddleware = Eurocentric.Apis.Admin.Middleware;
+using PublicApiMiddleware = Eurocentric.Apis.Public.Middleware;
+
 namespace Eurocentric.WebApp;
 
 /// <summary>
@@ -14,7 +21,8 @@ internal static class Startup
     /// </returns>
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        _ = builder.Services;
+        builder.Services.AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly)
+            .ConfigureHttpJsonOptions();
 
         return builder;
     }
@@ -30,7 +38,8 @@ internal static class Startup
     {
         app.UseHttpsRedirection();
 
-        app.MapGet("ping", () => TypedResults.Ok("You don't have to tell me twice! But during the Stone Age..."));
+        app.UsePlaceholderAdminApiEndpoint();
+        app.UsePlaceholderPublicApiEndpoint();
 
         return app;
     }
