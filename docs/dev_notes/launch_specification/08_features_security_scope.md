@@ -33,4 +33,4 @@ This document is part of the [launch specification](../README.md#launch-specific
 
 **Details:**
 
-- Admin API endpoints can only be accessed by an authenticated client assigned the "reader" role.
+- Public API endpoints can only be accessed by an authenticated client assigned the "reader" role.
