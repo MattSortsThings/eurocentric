@@ -14,7 +14,7 @@ This document is part of the [launch specification](../README.md#launch-specific
 
 **Endpoint:**
 
-```http
+```http request
 GET /openapi/{docName}.json
 ```
 
@@ -30,7 +30,7 @@ GET /openapi/{docName}.json
 
 **Endpoint:**
 
-```http
+```http request
 GET /docs/{docName}
 ```
 

@@ -39,7 +39,7 @@ This document is part of the [launch specification](../README.md#launch-specific
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/competitors/points-average
 ```
 
@@ -73,7 +73,7 @@ GET /public/api/v1.0/rankings/competitors/points-average
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/competitors/points-in-range
 ```
 
@@ -110,7 +110,7 @@ GET /public/api/v1.0/rankings/competitors/points-in-range
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/competitors/points-share
 ```
 
@@ -144,7 +144,7 @@ GET /public/api/v1.0/rankings/competitors/points-share
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/competitors/points-similarity
 ```
 
@@ -179,7 +179,7 @@ GET /public/api/v1.0/rankings/competitors/points-similarity
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/countries/given-points-average
 ```
 
@@ -215,7 +215,7 @@ GET /public/api/v1.0/rankings/countries/given-points-average
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/countries/given-points-in-range
 ```
 
@@ -253,7 +253,7 @@ GET /public/api/v1.0/rankings/countries/given-points-in-range
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/countries/given-points-share
 ```
 
@@ -289,7 +289,7 @@ GET /public/api/v1.0/rankings/countries/given-points-share
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/countries/given-points-similarity
 ```
 
@@ -324,7 +324,7 @@ GET /public/api/v1.0/rankings/countries/given-points-similarity
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/countries/received-points-average
 ```
 
@@ -359,7 +359,7 @@ GET /public/api/v1.0/rankings/countries/received-points-average
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/countries/received-points-in-range
 ```
 
@@ -397,7 +397,7 @@ GET /public/api/v1.0/rankings/countries/received-points-in-range
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/countries/received-points-share
 ```
 
@@ -432,7 +432,7 @@ GET /public/api/v1.0/rankings/countries/received-points-share
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/countries/received-points-similarity
 ```
 
@@ -468,7 +468,7 @@ GET /public/api/v1.0/rankings/countries/received-points-similarity
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/points-awards
 ```
 
@@ -495,7 +495,7 @@ GET /public/api/v1.0/points-awards
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/queryables/broadcasts
 ```
 
@@ -514,7 +514,7 @@ GET /public/api/v1.0/queryables/broadcasts
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/queryables/contests
 ```
 
@@ -533,7 +533,7 @@ GET /public/api/v1.0/queryables/contests
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/queryables/countries
 ```
 
@@ -552,7 +552,7 @@ GET /public/api/v1.0/queryables/countries
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/scoreboard-rows
 ```
 
@@ -576,7 +576,7 @@ GET /public/api/v1.0/scoreboard-rows
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/segments/points-average
 ```
 
@@ -611,7 +611,7 @@ GET /public/api/v1.0/rankings/segments/points-average
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/segments/points-in-range
 ```
 
@@ -649,7 +649,7 @@ GET /public/api/v1.0/rankings/segments/points-in-range
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/segments/points-share
 ```
 
@@ -684,7 +684,7 @@ GET /public/api/v1.0/rankings/segments/points-share
 
 **Endpoint:**
 
-```http
+```http request
 GET /public/api/v1.0/rankings/segments/points-similarity
 ```
 

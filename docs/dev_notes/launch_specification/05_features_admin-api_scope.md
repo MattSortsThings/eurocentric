@@ -32,7 +32,7 @@ This document is part of the [launch specification](../README.md#launch-specific
 
 **Endpoint:**
 
-```http
+```http request
 PATCH /admin/api/v1.0/broadcasts/{broadcastId}/award-jury-points
 ```
 
@@ -50,7 +50,7 @@ PATCH /admin/api/v1.0/broadcasts/{broadcastId}/award-jury-points
 
 **Endpoint:**
 
-```http
+```http request
 PATCH /admin/api/v1.0/broadcasts/{broadcastId}/award-televote-points
 ```
 
@@ -68,7 +68,7 @@ PATCH /admin/api/v1.0/broadcasts/{broadcastId}/award-televote-points
 
 **Endpoint:**
 
-```http
+```http request
 DELETE /admin/api/v1.0/broadcasts/{broadcastId}
 ```
 
@@ -85,7 +85,7 @@ DELETE /admin/api/v1.0/broadcasts/{broadcastId}
 
 **Endpoint:**
 
-```http
+```http request
 GET /admin/api/v1.0/broadcasts/{broadcastId}
 ```
 
@@ -101,8 +101,8 @@ GET /admin/api/v1.0/broadcasts/{broadcastId}
 
 **Endpoint:**
 
-```http
-DELETE /admin/api/v1.0/broadcasts
+```http request
+GET /admin/api/v1.0/broadcasts
 ```
 
 **User story:**
@@ -118,7 +118,7 @@ DELETE /admin/api/v1.0/broadcasts
 
 **Endpoint:**
 
-```http
+```http request
 POST /admin/api/v1.0/contests
 ```
 
@@ -148,7 +148,7 @@ POST /admin/api/v1.0/contests
 
 **Endpoint:**
 
-```http
+```http request
 POST /admin/api/v1.0/contests/{contestId}/broadcasts
 ```
 
@@ -171,7 +171,7 @@ POST /admin/api/v1.0/contests/{contestId}/broadcasts
 
 **Endpoint:**
 
-```http
+```http request
 DELETE /admin/api/v1.0/contests/{contestId}
 ```
 
@@ -188,7 +188,7 @@ DELETE /admin/api/v1.0/contests/{contestId}
 
 **Endpoint:**
 
-```http
+```http request
 GET /admin/api/v1.0/contests/{contestId}
 ```
 
@@ -204,7 +204,7 @@ GET /admin/api/v1.0/contests/{contestId}
 
 **Endpoint:**
 
-```http
+```http request
 GET /admin/api/v1.0/contests
 ```
 
@@ -262,7 +262,7 @@ GET /admin/api/v1.0/contests
 
 **Endpoint:**
 
-```http
+```http request
 POST /admin/api/v1.0/countries
 ```
 
@@ -282,7 +282,7 @@ POST /admin/api/v1.0/countries
 
 **Endpoint:**
 
-```http
+```http request
 DELETE /admin/api/v1.0/countries/{countryId}
 ```
 
@@ -299,7 +299,7 @@ DELETE /admin/api/v1.0/countries/{countryId}
 
 **Endpoint:**
 
-```http
+```http request
 GET /admin/api/v1.0/countries
 ```
 
@@ -314,7 +314,7 @@ GET /admin/api/v1.0/countries
 
 **Endpoint:**
 
-```http
+```http request
 GET /admin/api/v1.0/countries/{countryId}
 ```
 
