@@ -1,0 +1,170 @@
+[
+  {
+    "CountryCode": "AL",
+    "CountryName": "Albania"
+  },
+  {
+    "CountryCode": "AM",
+    "CountryName": "Armenia"
+  },
+  {
+    "CountryCode": "AU",
+    "CountryName": "Australia"
+  },
+  {
+    "CountryCode": "AT",
+    "CountryName": "Austria"
+  },
+  {
+    "CountryCode": "AZ",
+    "CountryName": "Azerbaijan"
+  },
+  {
+    "CountryCode": "BY",
+    "CountryName": "Belarus"
+  },
+  {
+    "CountryCode": "BE",
+    "CountryName": "Belgium"
+  },
+  {
+    "CountryCode": "BA",
+    "CountryName": "Bosnia & Herzegovina"
+  },
+  {
+    "CountryCode": "BG",
+    "CountryName": "Bulgaria"
+  },
+  {
+    "CountryCode": "HR",
+    "CountryName": "Croatia"
+  },
+  {
+    "CountryCode": "CY",
+    "CountryName": "Cyprus"
+  },
+  {
+    "CountryCode": "CZ",
+    "CountryName": "Czechia"
+  },
+  {
+    "CountryCode": "DK",
+    "CountryName": "Denmark"
+  },
+  {
+    "CountryCode": "EE",
+    "CountryName": "Estonia"
+  },
+  {
+    "CountryCode": "FI",
+    "CountryName": "Finland"
+  },
+  {
+    "CountryCode": "FR",
+    "CountryName": "France"
+  },
+  {
+    "CountryCode": "GE",
+    "CountryName": "Georgia"
+  },
+  {
+    "CountryCode": "DE",
+    "CountryName": "Germany"
+  },
+  {
+    "CountryCode": "GR",
+    "CountryName": "Greece"
+  },
+  {
+    "CountryCode": "HU",
+    "CountryName": "Hungary"
+  },
+  {
+    "CountryCode": "LV",
+    "CountryName": "Latvia"
+  },
+  {
+    "CountryCode": "LT",
+    "CountryName": "Lithuania"
+  },
+  {
+    "CountryCode": "LU",
+    "CountryName": "Luxembourg"
+  },
+  {
+    "CountryCode": "MT",
+    "CountryName": "Malta"
+  },
+  {
+    "CountryCode": "MD",
+    "CountryName": "Moldova"
+  },
+  {
+    "CountryCode": "ME",
+    "CountryName": "Montenegro"
+  },
+  {
+    "CountryCode": "NL",
+    "CountryName": "Netherlands"
+  },
+  {
+    "CountryCode": "MK",
+    "CountryName": "North Macedonia"
+  },
+  {
+    "CountryCode": "NO",
+    "CountryName": "Norway"
+  },
+  {
+    "CountryCode": "PL",
+    "CountryName": "Poland"
+  },
+  {
+    "CountryCode": "PT",
+    "CountryName": "Portugal"
+  },
+  {
+    "CountryCode": "RO",
+    "CountryName": "Romania"
+  },
+  {
+    "CountryCode": "RU",
+    "CountryName": "Russia"
+  },
+  {
+    "CountryCode": "SM",
+    "CountryName": "San Marino"
+  },
+  {
+    "CountryCode": "RS",
+    "CountryName": "Serbia"
+  },
+  {
+    "CountryCode": "SI",
+    "CountryName": "Slovenia"
+  },
+  {
+    "CountryCode": "ES",
+    "CountryName": "Spain"
+  },
+  {
+    "CountryCode": "SE",
+    "CountryName": "Sweden"
+  },
+  {
+    "CountryCode": "CH",
+    "CountryName": "Switzerland"
+  },
+  {
+    "CountryCode": "UA",
+    "CountryName": "Ukraine"
+  },
+  {
+    "CountryCode": "GB",
+    "CountryName": "United Kingdom"
+  },
+  {
+    "CountryCode": "XX",
+    "CountryName": "Rest of the World"
+  }
+]
