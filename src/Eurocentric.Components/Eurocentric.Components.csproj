@@ -7,6 +7,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.Tests.Architecture" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Domain\Eurocentric.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
