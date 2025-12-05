@@ -21,7 +21,8 @@ internal static class Startup
     /// </returns>
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly)
+        builder
+            .Services.AddMessaging(typeof(AdminApiMiddleware).Assembly, typeof(PublicApiMiddleware).Assembly)
             .ConfigureHttpJsonOptions();
 
         return builder;
