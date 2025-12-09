@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Eurocentric.Tests.Unit</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Eurocentric.Apis.Admin\Eurocentric.Apis.Admin.csproj" />
+    <ProjectReference Include="..\..\src\Eurocentric.Apis.Public\Eurocentric.Apis.Public.csproj" />
+    <ProjectReference Include="..\..\src\Eurocentric.Components\Eurocentric.Components.csproj" />
+    <ProjectReference Include="..\..\src\Eurocentric.Domain\Eurocentric.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="TUnit" />
+  </ItemGroup>
+</Project>
