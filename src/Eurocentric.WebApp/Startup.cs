@@ -1,3 +1,6 @@
+using Eurocentric.Apis.Admin;
+using Eurocentric.Apis.Public;
+
 namespace Eurocentric.WebApp;
 
 /// <summary>
@@ -26,7 +29,8 @@ internal static class Startup
     {
         app.UseHttpsRedirection();
 
-        app.MapGet("ping", () => TypedResults.Ok("You don't have to tell me twice! But during the Stone Age..."));
+        app.UseAdminApiEndpoints();
+        app.UsePublicApiEndpoints();
 
         return app;
     }
