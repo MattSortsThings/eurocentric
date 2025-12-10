@@ -1,5 +1,6 @@
 using Eurocentric.Apis.Admin;
 using Eurocentric.Apis.Public;
+using Eurocentric.Components.DataAccess;
 
 namespace Eurocentric.WebApp;
 
@@ -15,7 +16,7 @@ internal static class Startup
     /// <returns>The original <see cref="WebApplicationBuilder" /> instance, so that method invocations should be chained.</returns>
     internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        _ = builder.Services;
+        builder.Services.AddDataAccess();
 
         return builder;
     }

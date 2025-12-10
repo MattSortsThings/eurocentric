@@ -13,4 +13,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Domain\Eurocentric.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EFCore.CheckConstraints" />
+    <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
 </Project>

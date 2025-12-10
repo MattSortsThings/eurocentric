@@ -14,5 +14,9 @@ public abstract class ArchitectureTests
         )
         .Build();
 
-    private protected IObjectProvider<IType> IgnoredTypes = Types().That().HaveName("Program");
+    private protected readonly IObjectProvider<IType> IgnoredTypes = Types()
+        .That()
+        .HaveName("Program")
+        .Or()
+        .ResideInNamespace("Eurocentric.Components.DataAccess.EfCore.Migrations");
 }
