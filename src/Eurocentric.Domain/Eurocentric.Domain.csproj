@@ -7,4 +7,12 @@
     <InternalsVisibleTo Include="Eurocentric.Tests.Architecture" />
     <InternalsVisibleTo Include="Eurocentric.Tests.Unit" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" />
+    <PackageReference Include="CSharpFunctionalExtensions.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SlimMessageBus" />
+  </ItemGroup>
 </Project>
