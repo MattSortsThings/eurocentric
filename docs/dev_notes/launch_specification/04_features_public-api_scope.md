@@ -52,7 +52,7 @@ GET /public/api/v1.0/rankings/competitors/points-average
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
@@ -89,7 +89,7 @@ GET /public/api/v1.0/rankings/competitors/points-in-range
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
@@ -123,7 +123,7 @@ GET /public/api/v1.0/rankings/competitors/points-share
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
@@ -157,7 +157,7 @@ GET /public/api/v1.0/rankings/competitors/points-similarity
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
     - the pagination page size (int, default value = 10)
@@ -194,7 +194,7 @@ GET /public/api/v1.0/rankings/countries/given-points-average
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
@@ -232,7 +232,7 @@ GET /public/api/v1.0/rankings/countries/given-points-in-range
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
@@ -268,7 +268,7 @@ GET /public/api/v1.0/rankings/countries/given-points-share
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
@@ -304,7 +304,7 @@ GET /public/api/v1.0/rankings/countries/given-points-similarity
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
     - the pagination page size (int, default value = 10)
@@ -337,7 +337,7 @@ GET /public/api/v1.0/rankings/countries/received-points-average
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
     - by voting country code (string)
   - optionally overriding
@@ -375,7 +375,7 @@ GET /public/api/v1.0/rankings/countries/received-points-in-range
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
     - by voting country code (string)
   - optionally overriding
@@ -410,7 +410,7 @@ GET /public/api/v1.0/rankings/countries/received-points-share
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
     - by voting country code (string)
   - optionally overriding
@@ -445,7 +445,7 @@ GET /public/api/v1.0/rankings/countries/received-points-similarity
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting country code (string)
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
@@ -589,7 +589,7 @@ GET /public/api/v1.0/rankings/segments/points-average
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
     - by voting country code (string)
   - optionally overriding
@@ -627,7 +627,7 @@ GET /public/api/v1.0/rankings/segments/points-in-range
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
     - by voting country code (string)
   - optionally overriding
@@ -662,7 +662,7 @@ GET /public/api/v1.0/rankings/segments/points-share
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting method (enum, values = \{'Any', 'Televote', 'Jury'\}, default value = 'Any')
     - by voting country code (string)
   - optionally overriding
@@ -697,7 +697,7 @@ GET /public/api/v1.0/rankings/segments/points-similarity
   - optionally filtering the queried voting data
     - by minimum contest year (int, default value = 2016)
     - by maximum contest year (int, default value = current year)
-    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinal1', 'SemiFinal2', 'SemiFinals1And2'\}, default value = 'All')
+    - by contest stages (enum, values = \{'All', 'GrandFinal', 'SemiFinals', 'SemiFinal1', 'SemiFinal2'\}, default value = 'All')
     - by voting country code (string)
   - optionally overriding
     - the rank order (enum, values = \{'HighestToLowest', 'LowestToHighest'\}, default value = 'HighestToLowest')
