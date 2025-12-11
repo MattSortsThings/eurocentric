@@ -1,4 +1,4 @@
-namespace Eurocentric.Domain.Queries.Enums;
+namespace Eurocentric.Domain.Enums;
 
 /// <summary>
 ///     Specifies the rank order.

@@ -1,9 +1,9 @@
-namespace Eurocentric.Domain.Queries.Enums;
+namespace Eurocentric.Domain.Enums;
 
 /// <summary>
 ///     Specifies the voting method filter applied to the queryable voting data.
 /// </summary>
-public enum VotingMethod
+public enum VotingMethodFilter
 {
     /// <summary>
     ///     Filters the queryable voting data to points awarded by any method (i.e. no filter).

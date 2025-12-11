@@ -1,9 +1,9 @@
-namespace Eurocentric.Domain.Queries.Enums;
+namespace Eurocentric.Domain.Enums;
 
 /// <summary>
 ///     Specifies the contest stages filter applied to the queryable voting data.
 /// </summary>
-public enum ContestStages
+public enum ContestStagesFilter
 {
     /// <summary>
     ///     Filters the queryable voting data to points awarded in all contest stages (i.e. no filter).
