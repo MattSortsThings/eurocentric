@@ -1,3 +1,4 @@
+using Eurocentric.Domain.Abstractions.Errors;
 using Assembly = System.Reflection.Assembly;
 
 namespace Eurocentric.Tests.Architecture.Utils;
@@ -14,9 +15,15 @@ public abstract class ArchitectureTests
         )
         .Build();
 
-    private protected readonly IObjectProvider<IType> IgnoredTypes = Types()
+    private protected static readonly IObjectProvider<IType> IgnoredTypes = Types()
         .That()
         .HaveName("Program")
         .Or()
         .ResideInNamespace("Eurocentric.Components.DataAccess.EfCore.Migrations");
+
+    private protected static readonly IObjectProvider<IType> DomainAssemblyTypes = Types()
+        .That()
+        .ResideInAssembly(typeof(IDomainError).Assembly)
+        .And()
+        .AreNot(IgnoredTypes);
 }
