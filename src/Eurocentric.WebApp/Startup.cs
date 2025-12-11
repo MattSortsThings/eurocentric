@@ -1,6 +1,9 @@
 using Eurocentric.Apis.Admin;
 using Eurocentric.Apis.Public;
 using Eurocentric.Components.DataAccess;
+using Eurocentric.Components.Endpoints;
+using Eurocentric.Components.HttpJson;
+using Eurocentric.Components.Messaging;
 
 namespace Eurocentric.WebApp;
 
@@ -16,7 +19,10 @@ internal static class Startup
     /// <returns>The original <see cref="WebApplicationBuilder" /> instance, so that method invocations should be chained.</returns>
     internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDataAccess();
+        builder
+            .Services.AddDataAccess()
+            .AddMessaging(typeof(AdminApiEndpoints).Assembly, typeof(PublicApiEndpoints).Assembly)
+            .ConfigureHttpJsonOptions();
 
         return builder;
     }
@@ -30,8 +36,7 @@ internal static class Startup
     {
         app.UseHttpsRedirection();
 
-        app.UseAdminApiEndpoints();
-        app.UsePublicApiEndpoints();
+        app.Map<AdminApiEndpoints>().Map<PublicApiEndpoints>();
 
         return app;
     }
