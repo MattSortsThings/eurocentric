@@ -42,7 +42,10 @@ public sealed class WebAppFixture : WebApplicationFactory<Program>, IAsyncInitia
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
         await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        _ = await dbContext.Database.CanConnectAsync();
+
+        await dbContext.V0Broadcasts.ExecuteDeleteAsync();
+        await dbContext.V0Contests.ExecuteDeleteAsync();
+        await dbContext.V0Countries.ExecuteDeleteAsync();
     }
 
     /// <inheritdoc />
