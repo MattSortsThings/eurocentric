@@ -5,10 +5,18 @@ namespace Eurocentric.Tests.Architecture;
 public sealed class UniversalTests : ArchitectureTests
 {
     [Test]
-    public async Task Public_classes_should_be_sealed()
+    public async Task Public_non_abstract_classes_should_be_sealed()
     {
         // Arrange
-        ClassRule rule = Classes().That().ArePublic().And().AreNot(IgnoredTypes).Should().BeSealed();
+        ClassRule rule = Classes()
+            .That()
+            .ArePublic()
+            .And()
+            .AreNotAbstract()
+            .And()
+            .AreNot(IgnoredTypes)
+            .Should()
+            .BeSealed();
 
         // Act
         IEnumerable<EvaluationResult> results = rule.Evaluate(ArchitectureUnderTest);
