@@ -21,8 +21,8 @@ public enum DomainErrorType
     Conflict,
 
     /// <summary>
-    ///     The error arose because the request was impossible, irrespective of the current state of all existing
+    ///     The error arose because the request was illegal, irrespective of the current state of all existing
     ///     aggregates.
     /// </summary>
-    Unprocessable,
+    IllegalRequest,
 }
