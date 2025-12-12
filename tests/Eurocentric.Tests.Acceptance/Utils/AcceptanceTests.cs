@@ -6,8 +6,8 @@ namespace Eurocentric.Tests.Acceptance.Utils;
 [ParallelLimiter<ParallelLimit>]
 public abstract class AcceptanceTests
 {
-    [ClassDataSource<WebAppFixture>(Shared = SharedType.PerClass)]
-    public required IWebAppFixture SystemUnderTest { get; init; }
+    [ClassDataSource<WebApp>(Shared = SharedType.PerClass)]
+    public required WebApp SystemUnderTest { get; init; }
 
     [After(Test)]
     public async ValueTask ResetAsync() => await SystemUnderTest.EraseAllDataAsync();

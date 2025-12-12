@@ -6,7 +6,7 @@ namespace Eurocentric.Tests.Acceptance.Utils;
 /// <summary>
 ///     A Microsoft SQL Server instance running inside a container.
 /// </summary>
-public sealed class DbContainerFixture : IAsyncDisposable, IAsyncInitializer
+public sealed class DbContainer : IAsyncDisposable, IAsyncInitializer
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().WithCleanUp(true).Build();
 

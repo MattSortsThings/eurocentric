@@ -19,15 +19,15 @@ namespace Eurocentric.Tests.Acceptance.Utils;
 ///     The web application creates its test database when its <see cref="InitializeAsync" /> method is invoked. It
 ///     deletes its test database when its <see cref="DisposeAsync" /> method is invoked.
 /// </remarks>
-public sealed class WebAppFixture : WebApplicationFactory<Program>, IAsyncInitializer, IWebAppFixture
+public sealed class WebApp : WebApplicationFactory<Program>, IAsyncInitializer, IWebAppBackDoor, IWebAppRestClient
 {
     private readonly string _testDbName = "db_" + Guid.NewGuid().ToString("N");
 
     /// <summary>
     ///     A shared Microsoft SQL Server instance running inside a container.
     /// </summary>
-    [ClassDataSource<DbContainerFixture>(Shared = SharedType.PerTestSession)]
-    public required DbContainerFixture DbContainer { get; init; }
+    [ClassDataSource<DbContainer>(Shared = SharedType.PerTestSession)]
+    public required DbContainer DbContainer { get; init; }
 
     /// <inheritdoc />
     public async Task InitializeAsync()
@@ -35,17 +35,6 @@ public sealed class WebAppFixture : WebApplicationFactory<Program>, IAsyncInitia
         _ = Server;
 
         await MigrateTestDbAsync();
-    }
-
-    /// <inheritdoc />
-    public async Task EraseAllDataAsync()
-    {
-        await using AsyncServiceScope scope = Services.CreateAsyncScope();
-        await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        await dbContext.V0Broadcasts.ExecuteDeleteAsync();
-        await dbContext.V0Contests.ExecuteDeleteAsync();
-        await dbContext.V0Countries.ExecuteDeleteAsync();
     }
 
     /// <inheritdoc />
@@ -95,6 +84,50 @@ public sealed class WebAppFixture : WebApplicationFactory<Program>, IAsyncInitia
         return response.IsSuccessful
             ? response
             : await restClient.Deserialize<ProblemDetails>(response, CancellationToken.None);
+    }
+
+    /// <inheritdoc />
+    public async Task SendSafeRequestAsync(RestRequest request)
+    {
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        IRestClient restClient = scope.ServiceProvider.GetRequiredService<IRestClient>();
+
+        RestResponse response = await restClient.ExecuteAsync(
+            request,
+            TestContext.Current?.Execution.CancellationToken ?? CancellationToken.None
+        );
+
+        await Assert.That(response.IsSuccessful).IsTrue();
+    }
+
+    /// <inheritdoc />
+    public async Task<T> SendSafeRequestAsync<T>(RestRequest request)
+        where T : class
+    {
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        IRestClient restClient = scope.ServiceProvider.GetRequiredService<IRestClient>();
+
+        RestResponse<T> response = await restClient.ExecuteAsync<T>(
+            request,
+            TestContext.Current?.Execution.CancellationToken ?? CancellationToken.None
+        );
+
+        await Assert.That(response.IsSuccessful).IsTrue();
+
+        return response.Data!;
+    }
+
+    /// <summary>
+    ///     Asynchronously erases all data from the web application's database.
+    /// </summary>
+    public async Task EraseAllDataAsync()
+    {
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        await dbContext.V0Broadcasts.ExecuteDeleteAsync();
+        await dbContext.V0Contests.ExecuteDeleteAsync();
+        await dbContext.V0Countries.ExecuteDeleteAsync();
     }
 
     /// <inheritdoc />
