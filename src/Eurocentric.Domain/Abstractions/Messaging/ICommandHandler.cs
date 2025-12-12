@@ -1,3 +1,5 @@
+using CSharpFunctionalExtensions;
+using Eurocentric.Domain.Abstractions.Errors;
 using SlimMessageBus;
 
 namespace Eurocentric.Domain.Abstractions.Messaging;
@@ -7,5 +9,5 @@ namespace Eurocentric.Domain.Abstractions.Messaging;
 /// </summary>
 /// <typeparam name="TCommand">The command type.</typeparam>
 /// <typeparam name="TValue">The successful return value type.</typeparam>
-public interface ICommandHandler<in TCommand, TValue> : IRequestHandler<TCommand>
+public interface ICommandHandler<in TCommand, TValue> : IRequestHandler<TCommand, Result<TValue, IDomainError>>
     where TCommand : ICommand<TValue>;

@@ -1,3 +1,5 @@
+using CSharpFunctionalExtensions;
+using Eurocentric.Domain.Abstractions.Errors;
 using SlimMessageBus;
 
 namespace Eurocentric.Domain.Abstractions.Messaging;
@@ -7,5 +9,5 @@ namespace Eurocentric.Domain.Abstractions.Messaging;
 /// </summary>
 /// <typeparam name="TQuery">The query type.</typeparam>
 /// <typeparam name="TValue">The successful return value type.</typeparam>
-public interface IQueryHandler<in TQuery, TValue> : IRequestHandler<TQuery>
+public interface IQueryHandler<in TQuery, TValue> : IRequestHandler<TQuery, Result<TValue, IDomainError>>
     where TQuery : IQuery<TValue>;
