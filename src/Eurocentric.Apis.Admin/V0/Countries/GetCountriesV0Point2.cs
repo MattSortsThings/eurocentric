@@ -17,7 +17,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V0.Countries;
 
-internal static class GetCountries
+internal static class GetCountriesV0Point2
 {
     private static async Task<IResult> ExecuteAsync(
         [FromServices] IRequestResponseBus bus,
@@ -37,8 +37,8 @@ internal static class GetCountries
         public void Map(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
-                .MapGet("v0.1/countries", ExecuteAsync)
-                .WithName(EndpointIds.Countries.GetCountries)
+                .MapGet("v0.2/countries", ExecuteAsync)
+                .WithName(EndpointIds.Countries.GetCountriesV0Point2)
                 .WithSummary("Get all countries")
                 .WithDescription("Retrieves a list of all existing countries, ordered by country code.")
                 .WithTags(EndpointTags.Countries)

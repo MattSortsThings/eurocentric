@@ -5,5 +5,6 @@ public sealed class V0Point1UpwardAttribute : DataSourceGeneratorAttribute<strin
     protected override IEnumerable<Func<string>> GenerateDataSources(DataGeneratorMetadata dataGeneratorMetadata)
     {
         yield return () => "v0.1";
+        yield return () => "v0.2";
     }
 }

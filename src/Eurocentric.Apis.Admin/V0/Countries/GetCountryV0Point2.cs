@@ -17,7 +17,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V0.Countries;
 
-internal static class GetCountry
+internal static class GetCountryV0Point2
 {
     private static async Task<IResult> ExecuteAsync(
         [FromRoute(Name = "countryId")] Guid countryId,
@@ -40,8 +40,8 @@ internal static class GetCountry
         public void Map(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
-                .MapGet("v0.1/countries/{countryId:guid}", ExecuteAsync)
-                .WithName(EndpointIds.Countries.GetCountry)
+                .MapGet("v0.2/countries/{countryId:guid}", ExecuteAsync)
+                .WithName(EndpointIds.Countries.GetCountryV0Point2)
                 .WithSummary("Get a country")
                 .WithDescription("Retrieves the requested country.")
                 .WithTags(EndpointTags.Countries)

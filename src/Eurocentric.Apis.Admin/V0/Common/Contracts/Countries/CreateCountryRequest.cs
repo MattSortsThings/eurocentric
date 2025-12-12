@@ -4,7 +4,7 @@ using Eurocentric.Apis.Admin.V0.Common.Enums;
 namespace Eurocentric.Apis.Admin.V0.Common.Contracts.Countries;
 
 /// <summary>
-///     Request body for the <see cref="EndpointIds.Countries.CreateCountry" /> endpoint.
+///     Request body for the <see cref="EndpointIds.Countries.CreateCountryV0Point1" /> endpoint.
 /// </summary>
 public sealed record CreateCountryRequest
 {

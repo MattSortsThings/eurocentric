@@ -15,7 +15,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V0.Countries;
 
-internal static class DeleteCountry
+internal static class DeleteCountryV0Point2
 {
     private static async Task<IResult> ExecuteAsync(
         [FromRoute(Name = "countryId")] Guid countryId,
@@ -36,8 +36,8 @@ internal static class DeleteCountry
         public void Map(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
-                .MapDelete("v0.1/countries/{countryId:guid}", ExecuteAsync)
-                .WithName(EndpointIds.Countries.DeleteCountry)
+                .MapDelete("v0.2/countries/{countryId:guid}", ExecuteAsync)
+                .WithName(EndpointIds.Countries.DeleteCountryV0Point2)
                 .WithSummary("Delete a country")
                 .WithDescription("Deletes the requested country.")
                 .WithTags(EndpointTags.Countries)

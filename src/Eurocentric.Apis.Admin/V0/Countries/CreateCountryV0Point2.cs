@@ -19,7 +19,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Eurocentric.Apis.Admin.V0.Countries;
 
-internal static class CreateCountry
+internal static class CreateCountryV0Point2
 {
     private static async Task<IResult> ExecuteAsync(
         [FromBody] CreateCountryRequest request,
@@ -52,7 +52,7 @@ internal static class CreateCountry
 
         return TypedResults.CreatedAtRoute(
             country.ToCreateCountryResponse(),
-            EndpointIds.Countries.GetCountry,
+            EndpointIds.Countries.GetCountryV0Point2,
             new RouteValueDictionary { { nameof(countryId), countryId } }
         );
     }
@@ -62,8 +62,8 @@ internal static class CreateCountry
         public void Map(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
-                .MapPost("v0.1/countries", ExecuteAsync)
-                .WithName(EndpointIds.Countries.CreateCountry)
+                .MapPost("v0.2/countries", ExecuteAsync)
+                .WithName(EndpointIds.Countries.CreateCountryV0Point2)
                 .WithSummary("Create a country")
                 .WithDescription("Creates a new country.")
                 .WithTags(EndpointTags.Countries)
