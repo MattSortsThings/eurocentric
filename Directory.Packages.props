@@ -17,6 +17,6 @@
     <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.6" />
     <PackageVersion Include="Testcontainers.MsSql" Version="4.9.0" />
     <PackageVersion Include="TngTech.ArchUnitNET" Version="0.13.0" />
-    <PackageVersion Include="TUnit" Version="1.5.37" />
+    <PackageVersion Include="TUnit" Version="1.5.48" />
   </ItemGroup>
 </Project>
