@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Eurocentric.WebApp</RootNamespace>
+    <UserSecretsId>de8cfd56-1367-403a-bd81-08063df8f404</UserSecretsId>
+  </PropertyGroup>
+</Project>
