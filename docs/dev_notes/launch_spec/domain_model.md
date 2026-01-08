@@ -1,6 +1,6 @@
 # Domain model
 
-This document is part of the `Eurocentric` [launch specification](README.md).
+This document is part of the *Eurocentric* [launch specification](README.md).
 
 - [Domain model](#domain-model)
   - [Enums](#enums)
@@ -109,7 +109,7 @@ This document is part of the `Eurocentric` [launch specification](README.md).
 ### `FinishingPosition` value object
 
 - A `FinishingPosition` value object is an `(int Value)`.
-- It represents a competitor's position in the running order of their broadcast.
+- It represents a competitor's finishing position in their broadcast.
 
 ### `PointsValue` value object
 
