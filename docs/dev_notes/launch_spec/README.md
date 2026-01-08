@@ -6,3 +6,4 @@ This directory contains the launch specification documents for *Eurocentric*.
 - [Real world context](real_world_context.md)
 - [Domain model](domain_model.md)
 - [Domain transactions](domain_transactions.md)
+- [Domain invariants](domain_invariants.md)
