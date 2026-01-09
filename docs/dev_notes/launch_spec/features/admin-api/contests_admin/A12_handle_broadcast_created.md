@@ -16,7 +16,7 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 
 **HandleBroadcastCreated event handler...**
 
-- should add broadcast memo to parent contest when GrandFinal broadcast created
-- should add broadcast memo to parent contest when SemiFinal1 broadcast created
-- should add broadcast memo to parent contest when SemiFinal2 broadcast created
+- should add broadcast memo to parent contest when child broadcast 1 of 1 created
+- should add broadcast memo to parent contest when child broadcast 2 of 2 created
+- should add broadcast memo to parent contest when child broadcast 3 of 3 created
 - should update no contests when broadcast creation fails
