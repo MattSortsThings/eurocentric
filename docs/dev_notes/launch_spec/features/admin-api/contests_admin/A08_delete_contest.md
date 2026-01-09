@@ -31,7 +31,7 @@ DELETE /admin/api/{apiVersion}/contests/{contestId}
 
 ## Acceptance criteria
 
-**DeleteCountry endpoint...**
+**DeleteContest endpoint...**
 
 - should succeed with 204 and delete requested contest
 - should fail with 404 and ProblemDetails on ContestNotFound
