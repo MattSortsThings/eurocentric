@@ -51,7 +51,7 @@ This document is part of the *Eurocentric* [launch specification](README.md).
 - The Admin creates a new `Contest`, specifying:
   - the contest year,
   - the city name,
-  - whether the Semi-Finals are televote-only,
+  - the Semi-Final voting rules,
   - the optional global televote voting country ID,
   - the participants, for each:
     - the participating country ID
@@ -93,7 +93,7 @@ This document is part of the *Eurocentric* [launch specification](README.md).
   - the contest ID,
   - the contest stage,
   - the broadcast date,
-  - a dictionary of running order spots and competing country IDs.
+  - the competing country IDs in running order, with a disqualified competitor represented by a null value.
 
 **Primary effects:**
 
