@@ -16,5 +16,5 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 
 **HandleContestCreated event handler...**
 
-- should remove contest role from all participant and global televote countries when contest deleted
+- should remove matching contest role from all participating and voting countries when contest deleted
 - should update no countries when contest deletion fails
