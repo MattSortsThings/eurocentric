@@ -57,6 +57,6 @@ GET /public/api/{apiVersion}/broadcasts
 
 **GetQueryableBroadcasts endpoint...**
 
-- should succeed with 200 and all queryable broadcasts in broadcast date order
-- should succeed with 200 and empty list when no broadcasts are queryable
-- should succeed with 200 and empty list when no data exists
+- should succeed with 200 and return all queryable broadcasts in broadcast date order
+- should succeed with 200 and return empty list when no broadcasts are queryable
+- should succeed with 200 and return empty list when no data exists
