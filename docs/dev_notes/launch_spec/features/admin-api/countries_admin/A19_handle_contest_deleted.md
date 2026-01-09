@@ -14,7 +14,7 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 
 ## Acceptance criteria
 
-**HandleContestCreated event handler...**
+**HandleContestDeleted event handler...**
 
 - should remove contest role from every participating country when contest without global televote deleted
 - should remove contest role from every voting and participating country when contest with global televote deleted
