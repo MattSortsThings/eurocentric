@@ -10,7 +10,7 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 
 - **As the Admin**, when I am awarding the final set of points in a broadcast
 - **I want** the parent contest to update itself by replacing the broadcast memo referencing the completed broadcast, which may in turn complete the contest
-- **So that** the Public API's queryable voting data is always up to date.
+- **So that** the Public API's queryable voting data is always up to date
 
 ## Acceptance criteria
 

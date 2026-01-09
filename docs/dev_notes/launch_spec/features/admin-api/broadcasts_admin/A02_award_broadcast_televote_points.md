@@ -13,7 +13,7 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 
 - **As the Admin**
 - **I want** award a set of points from a televote to the competitors in a broadcast
-- **So that** I can add to the voting data that will eventually be queryable using the Public API.
+- **So that** I can add to the voting data that will eventually be queryable using the Public API
 
 ## API contract
 
