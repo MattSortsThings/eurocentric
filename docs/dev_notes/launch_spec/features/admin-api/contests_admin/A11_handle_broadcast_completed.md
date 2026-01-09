@@ -14,7 +14,7 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 
 ## Acceptance criteria
 
-**HandleBroadcastCreated event handler...**
+**HandleBroadcastCompleted event handler...**
 
 - should replace broadcast memo in parent contest when child broadcast 1 of 1 completed
 - should replace broadcast memo in parent contest when child broadcast 1 of 2 completed
