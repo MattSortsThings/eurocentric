@@ -18,18 +18,18 @@ This document is part of the *Eurocentric* [launch specification](README.md).
 
 The following invariants apply to domain value objects.
 
-| Type                   | Value must be                                                                  |
-|:-----------------------|:-------------------------------------------------------------------------------|
-| `ActName`              | a non-empty, non-whitespace, single-line string of no more than 100 characters |
-| `BroadcastDate`        | a date with a year between 2016 and 2050                                       |
-| `CityName`             | a non-empty, non-whitespace, single-line string of no more than 100 characters |
-| `ContestYear`          | an integer between 2016 and 2050                                               |
-| `CountryCode`          | a string of 2 upper-case letters                                               |
-| `CountryName`          | a non-empty, non-whitespace, single-line string of no more than 100 characters |
-| `FinishingPosition`    | an integer &geq; 1                                                             |
-| `PointsValue`          | an integer &geq; 0                                                             |
-| `RunningOrderPosition` | an integer &geq; 1                                                             |
-| `SongTitle`            | a non-empty, non-whitespace, single-line string of no more than 100 characters |
+| Type                   | Value must be                                                                                                              |
+|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------|
+| `ActName`              | a non-empty, non-whitespace, single-line string of no more than 100 characters, that does not begin or end with whitespace |
+| `BroadcastDate`        | a date with a year between 2016 and 2050                                                                                   |
+| `CityName`             | a non-empty, non-whitespace, single-line string of no more than 100 characters, that does not begin or end with whitespace |
+| `ContestYear`          | an integer between 2016 and 2050                                                                                           |
+| `CountryCode`          | a string of 2 upper-case letters                                                                                           |
+| `CountryName`          | a non-empty, non-whitespace, single-line string of no more than 100 characters, that does not begin or end with whitespace |
+| `FinishingPosition`    | an integer &geq; 1                                                                                                         |
+| `PointsValue`          | an integer &geq; 0                                                                                                         |
+| `RunningOrderPosition` | an integer &geq; 1                                                                                                         |
+| `SongTitle`            | a non-empty, non-whitespace, single-line string of no more than 100 characters, that does not begin or end with whitespace |
 
 ## Transaction invariants
 

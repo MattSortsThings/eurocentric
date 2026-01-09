@@ -68,6 +68,13 @@ num_newlines_after_statement = 2
 space_between_data_type_and_parameters = true
 space_between_parameters_in_data_type = true
 
+##################
+# Markdown files #
+##################
+
+[*.md]
+indent_size = 2
+
 ##############
 # JSON files #
 ##############
