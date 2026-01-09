@@ -13,7 +13,7 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 
 - **As the Admin**
 - **I want** to delete a specific country
-- **So that** all trace of the deleted country is removed, and I am free to create a new country with the same country code if I wish.
+- **So that** all trace of the deleted country is removed, and I am free to create a new country with the same country code if I wish
 
 ## API contract
 

@@ -1,8 +1,8 @@
-# A14: Create country
+# A14 Create country
 
 This document is part of the *Eurocentric* [launch specification](../../../README.md).
 
-- [A14: Create country](#A14-create-country)
+- [A14 Create country](#a14-create-country)
   - [User story](#user-story)
   - [API contract](#api-contract)
     - [HTTP request](#http-request)
@@ -13,7 +13,7 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 
 - **As the Admin**
 - **I want** to create a new country
-- **So that** the country can have roles in contests I will go on to create.
+- **So that** the country can have roles in contests I will go on to create
 
 ## API contract
 
