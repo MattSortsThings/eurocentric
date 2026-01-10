@@ -20,7 +20,7 @@ This document is part of the *Eurocentric* [launch specification](../../../READM
 ### HTTP request
 
 ```http request
-GET /admin/api/{apiVersion}/endpoint-usage-metrics
+GET /admin/api/{apiVersion}/observability/endpoint-usage-metrics
 ```
 
 **Query params:**
