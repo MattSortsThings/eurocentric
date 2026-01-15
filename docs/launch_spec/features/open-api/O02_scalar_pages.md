@@ -1,4 +1,4 @@
-# D02 Scalar pages
+# O02 Scalar pages
 
 This document is part of the [*Eurocentric* launch specification](../../README.md).
 
