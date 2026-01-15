@@ -1,4 +1,4 @@
-# P07 get broadcast segment points share rankings
+# P07 Get broadcast segment points share rankings
 
 This document is part of the [*Eurocentric* launch specification](../../README.md).
 
