@@ -7,6 +7,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.UnitTests" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Riok.Mapperly" />
     <PackageReference Include="SlimMessageBus.Host.Memory" />
   </ItemGroup>

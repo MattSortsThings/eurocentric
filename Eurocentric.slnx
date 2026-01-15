@@ -6,6 +6,10 @@
     <Project Path="src/Eurocentric.Domain/Eurocentric.Domain.csproj" />
     <Project Path="src/Eurocentric.WebApp/Eurocentric.WebApp.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests/.editorconfig" />
+    <Project Path="tests/Eurocentric.UnitTests/Eurocentric.UnitTests.csproj" />
+  </Folder>
   <Folder Name="/_sln/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
