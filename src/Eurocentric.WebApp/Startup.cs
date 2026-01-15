@@ -1,3 +1,9 @@
+using Eurocentric.Apis.Admin;
+using Eurocentric.Apis.Public;
+using Eurocentric.Components.EndpointMapping;
+using Eurocentric.Components.HttpJson;
+using Eurocentric.Components.Messaging;
+
 namespace Eurocentric.WebApp;
 
 /// <summary>
@@ -12,7 +18,9 @@ internal static class Startup
     /// <returns>The original <see cref="WebApplicationBuilder" /> instance.</returns>
     internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        _ = builder.Services;
+        builder
+            .Services.AddHttpJsonConfiguration()
+            .AddMessaging(typeof(AdminApiEndpoints).Assembly, typeof(PublicApiEndpoints).Assembly);
 
         return builder;
     }
@@ -28,7 +36,7 @@ internal static class Startup
 
         app.UseStatusCodePages();
 
-        app.MapGet("ping", () => TypedResults.Ok("You don't have to tell me twice! But during the Stone Age..."));
+        app.Map<AdminApiEndpoints>().Map<PublicApiEndpoints>();
 
         return app;
     }
