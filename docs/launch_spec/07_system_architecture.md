@@ -118,13 +118,13 @@ public enum DomainErrorType
   Intrinsic   // maps to status code 422 Unprocessable Entity
 }
 
-public abstract record DomainError
+public sealed record DomainError
 {
+  public required DomainErrorType Type { get; init; }
+
   public required string Title { get; init; }
 
   public required string Description { get; init; }
-
-  public required DomainErrorType Type { get; init; }
 
   public IReadOnlyDictionary<string, object?>? AdditionalData { get; init; }
 }
