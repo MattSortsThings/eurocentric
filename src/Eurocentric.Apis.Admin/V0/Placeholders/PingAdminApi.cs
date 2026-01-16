@@ -54,7 +54,7 @@ internal static partial class PingAdminApi
             await Task.CompletedTask;
 
             const string apiName = "Admin API";
-            List<string> items = BlobbyGenerator.Generate(3);
+            List<string> items = BlobbyGenerator.Generate(4);
 
             return new Result(apiName, items);
         }

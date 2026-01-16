@@ -25,7 +25,10 @@ public static class PingAdminApiTests
             await Assert
                 .That(response.GetSuccessRestResponse().Data)
                 .HasProperty(pa => pa.ApiName, "Admin API")
-                .And.Member(pa => pa.Items, collection => collection.IsEquivalentTo(["Blobby", "Blobby", "Blobby"]));
+                .And.Member(
+                    pa => pa.Items,
+                    collection => collection.IsEquivalentTo(["Blobby", "Blobby", "Blobby", "Blobby"])
+                );
         }
     }
 }
