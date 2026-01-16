@@ -28,7 +28,8 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting("ConnectionStrings:Default", SharedDbContainer.GetNamedDbConnectionString(_testDbName));
+        builder.UseSetting("AzureSqlDb:ConnectionString", SharedDbContainer.GetNamedDbConnectionString(_testDbName));
+        builder.UseSetting("AzureSqlDb:MaxRetries", "0");
         builder.ConfigureServices(AddRestClient);
     }
 
