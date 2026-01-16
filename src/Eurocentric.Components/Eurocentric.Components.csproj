@@ -11,6 +11,8 @@
     <InternalsVisibleTo Include="Eurocentric.UnitTests" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
     <PackageReference Include="Riok.Mapperly" />
     <PackageReference Include="SlimMessageBus.Host.Memory" />
   </ItemGroup>

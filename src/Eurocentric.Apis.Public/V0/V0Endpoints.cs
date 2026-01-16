@@ -1,7 +1,7 @@
-using Eurocentric.Apis.Public.V0.Features.Placeholders;
 using Eurocentric.Components.EndpointMapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using PingPublicApi = Eurocentric.Apis.Public.V0.Placeholders.PingPublicApi;
 
 namespace Eurocentric.Apis.Public.V0;
 

@@ -10,10 +10,10 @@ using Riok.Mapperly.Abstractions;
 using SlimMessageBus;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
-namespace Eurocentric.Apis.Public.V0.Features.Placeholders;
+namespace Eurocentric.Apis.Admin.V0.Placeholders;
 
 [Mapper]
-internal static partial class PingPublicApi
+internal static partial class PingAdminApi
 {
     private static async Task<IResult> ExecuteAsync(
         [FromServices] IRequestResponseBus bus,
@@ -27,7 +27,7 @@ internal static partial class PingPublicApi
             : TypedResults.InternalServerError("Request failed");
     }
 
-    private static partial PingPublicApiResponseBody MapToResponseBody(this Result result);
+    private static partial PingAdminApiResponseBody MapToResponseBody(this Result result);
 
     internal sealed class Endpoint : IEndpointMapper
     {
@@ -35,10 +35,10 @@ internal static partial class PingPublicApi
         {
             builder
                 .MapGet("ping", ExecuteAsync)
-                .WithSummary("Ping Public API")
-                .WithName("PublicApi.V0.PingPublicApi")
-                .WithDisplayName("PublicApi:V0:PingPublicApi")
-                .Produces<PingPublicApiResponseBody>();
+                .WithSummary("Ping Admin API")
+                .WithName("AdminApi.V0.PingAdminApi")
+                .WithDisplayName("AdminApi:V0:PingAdminApi")
+                .Produces<PingAdminApiResponseBody>();
         }
     }
 
@@ -53,7 +53,7 @@ internal static partial class PingPublicApi
         {
             await Task.CompletedTask;
 
-            const string apiName = "Public API";
+            const string apiName = "Admin API";
             List<string> items = BlobbyGenerator.Generate(3);
 
             return new Result(apiName, items);
