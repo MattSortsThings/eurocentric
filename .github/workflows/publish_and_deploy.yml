@@ -32,3 +32,6 @@ jobs:
 
       - name: Restore solution
         run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: Build solution
+        run: dotnet build ${{ env.SOLUTION_PATH }} -c Debug --no-restore
