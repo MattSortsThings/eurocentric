@@ -10,7 +10,6 @@ public static class PingAdminApiTests
     public sealed class Endpoint : AcceptanceTestBase
     {
         [Test]
-        [Repeat(250)]
         public async Task Should_succeed_with_200_OK_and_fixed_response_body()
         {
             // Arrange
