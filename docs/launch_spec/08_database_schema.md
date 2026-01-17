@@ -37,6 +37,7 @@ erDiagram
 **Notes:**
 
 - all columns are `NOT NULL` unless otherwise specified
+- `country.country_code` is a `CHAR(2)` because a country code value must be a string of 2 upper-case ASCII letters
 - `country_contest_role.row_id` is generated on add
 
 ## `Contest` aggregate tables
@@ -54,9 +55,9 @@ erDiagram
     UNIQUEIDENTIFIER global_televote_voting_country_id
   }
 
-  contest_competitor {
+  contest_participant {
     UNIQUEIDENTIFIER contest_id PK,FK
-    UNIQUEIDENTIFIER competing_country_id PK
+    UNIQUEIDENTIFIER participating_country_id PK
     VARCHAR(10) semi_final_draw "IN ('SemiFinal1', 'SemiFinal2')"
     NVARCHAR(200) act_name
     NVARCHAR(200) song_title
@@ -70,7 +71,7 @@ erDiagram
     BIT completed
   }
 
-  contest ||--|{ contest_competitor : owns
+  contest ||--|{ contest_participant : owns
   contest ||--o{ contest_broadcast_memo : owns
 ```
 
