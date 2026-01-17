@@ -1,5 +1,7 @@
 using CSharpFunctionalExtensions;
 using Eurocentric.Components.EndpointMapping;
+using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Errors;
 using Eurocentric.Domain.Placeholders;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
@@ -20,14 +22,14 @@ internal static partial class PingAdminApi
         CancellationToken cancellationToken = default
     )
     {
-        Result<Result> result = await bus.Send(new Query(), cancellationToken: cancellationToken);
+        Result<QueryResult, DomainError> result = await bus.Send(new Query(), cancellationToken: cancellationToken);
 
         return result.IsSuccess
             ? TypedResults.Ok(result.Value.MapToResponseBody())
             : TypedResults.InternalServerError("Request failed");
     }
 
-    private static partial PingAdminApiResponseBody MapToResponseBody(this Result result);
+    private static partial PingAdminApiResponseBody MapToResponseBody(this QueryResult result);
 
     internal sealed class Endpoint : IEndpointMapper
     {
@@ -42,21 +44,21 @@ internal static partial class PingAdminApi
         }
     }
 
-    internal readonly record struct Result(string ApiName, List<string> Items);
+    internal readonly record struct QueryResult(string ApiName, List<string> Items);
 
-    internal sealed record Query : IRequest<Result<Result>>;
+    internal sealed record Query : IQuery<QueryResult>;
 
     [UsedImplicitly(Reason = "Messaging")]
-    internal sealed class QueryHandler : IRequestHandler<Query, Result<Result>>
+    internal sealed class QueryHandler : IQueryHandler<Query, QueryResult>
     {
-        public async Task<Result<Result>> OnHandle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<QueryResult, DomainError>> OnHandle(Query _, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
             const string apiName = "Admin API";
-            List<string> items = BlobbyGenerator.Generate(4);
+            List<string> messages = BlobbyGenerator.Generate(4);
 
-            return new Result(apiName, items);
+            return new QueryResult(apiName, messages);
         }
     }
 }
