@@ -6,18 +6,13 @@ This document is part of the [*Eurocentric* launch specification](README.md).
   - [SDK](#sdk)
   - [Assembly architecture](#assembly-architecture)
   - [API feature organization](#api-feature-organization)
+  - [Domain errors](#domain-errors)
   - [Request handling workflow](#request-handling-workflow)
-    - [HTTP requests and responses](#http-requests-and-responses)
-      - [GET endpoint](#get-endpoint)
-      - [POST endpoint](#post-endpoint)
-      - [PATCH endpoint](#patch-endpoint)
-      - [DELETE endpoint](#delete-endpoint)
-    - [Internal requests and results](#internal-requests-and-results)
-      - [Query](#query)
-      - [Command](#command)
-      - [Unit Command](#unit-command)
-    - [Domain errors](#domain-errors)
-    - [Exceptions](#exceptions)
+    - [GET endpoint feature](#get-endpoint-feature)
+    - [POST endpoint feature](#post-endpoint-feature)
+    - [PATCH endpoint feature](#patch-endpoint-feature)
+    - [DELETE endpoint feature](#delete-endpoint-feature)
+  - [Exceptions](#exceptions)
   - [Logging points](#logging-points)
   - [Third-party libraries](#third-party-libraries)
 
@@ -53,7 +48,7 @@ e["Eurocentric.Domain"]:2 space
 
 ## API feature organization
 
-API feature source code is organized using the **Vertical Slice** architecture.
+API feature source code is organized using the **Vertical Slice** architecture and the **Request-Endpoint-Response (REPR)** pattern.
 
 All types specific to a single feature are located in the same namespace.
 
@@ -61,53 +56,9 @@ A feature has a single, static, internal `{FeatureName}` class, which contains a
 
 The only exceptions to the above are the endpoint request body, query parameters, and response body record types that make up the feature's API contract, each of which is a public, non-nested type named `{FeatureName}RequestBody`, `{FeatureName}QueryParameters`, or `{FeatureName}ResponseBody`.
 
-## Request handling workflow
+## Domain errors
 
-Every client request is handled using a standard workflow, based on the **Railway-Oriented Programming (ROP)** design.
-
-### HTTP requests and responses
-
-The client sends an HTTP request to an endpoint. The client receives *either* a successful HTTP response *or* an unsuccessful HTTP response with a `ProblemDetails` object.
-
-There are 4 endpoint types.
-
-#### GET endpoint
-
-A GET endpoint executes a query on the system without changing its state. An HTTP request has the `GET` method, a path, and an optional query string. A successful HTTP response has status code `200 OK`, and an endpoint-specific response body object.
-
-#### POST endpoint
-
-A POST endpoint executes a command on the system that creates a new aggregate and returns a representation of the created aggregate. An HTTP request has the `POST` method, a path, and an endpoint-specific request body object. A successful HTTP response has status code `201 Created`, a `"Location"` header, and an endpoint-specific response body object.
-
-#### PATCH endpoint
-
-A PATCH endpoint executes a command on the system that updates an existing aggregate. An HTTP request has the `PATCH` method, a path, and an endpoint-specific request body object. A successful HTTP response has status code `204 No Content`.
-
-#### DELETE endpoint
-
-A DELETE endpoint executes a command on the system that deletes an existing aggregate. An HTTP request has the `DELETE` method, and a path. A successful HTTP response has status code `204 No Content`.
-
-### Internal requests and results
-
-An HTTP request that has been successfully authenticated, authorized, and parsed ultimately reaches the endpoint route handler. The route handler maps the HTTP request to an internal request and places it on the system bus to be handled. The result is *either* successful or unsuccessful. An unsuccessful result always has a `DomainError` object.
-
-There are 3 internal request types.
-
-#### Query
-
-A query is sent by a GET endpoint route handler. The query *either* succeeds and returns an instance of the endpoint's response body type, which the route handler sends as an HTTP response with status code `200 OK`, *or* fails and returns a `DomainError`, which the route handler maps to a `ProblemDetails` object and sends as an unsuccessful HTTP response.
-
-#### Command
-
-A command is sent by a POST endpoint route handler. The command *either* succeeds and returns an instance of the endpoint's response body type, which the route handler sends as an HTTP response with status code `201 Created`, *or* fails and returns a `DomainError`, which the route handler maps to a `ProblemDetails` object and sends as an unsuccessful HTTP response.
-
-#### Unit Command
-
-A unit command is sent by a PATCH or DELETE endpoint route handler. The unit command *either* succeeds and returns no value, which causes the route handler to send an HTTP response with status code `204 No Content`, *or* fails and returns a `DomainError`, which the route handler maps to a `ProblemDetails` object and sends as an unsuccessful HTTP response.
-
-### Domain errors
-
-The `DomainError` record type represents an HTTP request that is authenticated, *and* authorized, *and* well-formed, *and* does not throw a server-side exception, but fails due to a client error. The following types are defined:
+The `DomainError` record type represents a request that has been handled on the server, and which has failed due to a client error. The following types are defined:
 
 ```csharp
 public enum DomainErrorType
@@ -130,9 +81,253 @@ public sealed record DomainError
 }
 ```
 
-### Exceptions
+## Request handling workflow
 
-Any exception thrown on the server is caught by exception handling middleware and mapped to a `ProblemDetails` object that describes the exception without exposing any internal system logic. The `ProblemDetails` object is sent to the client as an unsuccessful HTTP response.
+Every *admin-api* or *public-api* endpoint feature uses the same request handling workflow, based on the **Railway-Oriented Programming (ROP)** template. An HTTP request *either* succeeds and returns the feature-specific success HTTP response *or* fails and returns a failure HTTP response with a `ProblemDetails` response body. The four types of API endpoints are outlined below.
+
+### GET endpoint feature
+
+A GET endpoint feature executes a query on the system data without changing its state.
+
+An HTTP request comprises:
+
+- the path
+- the `GET` method
+- an optional query string, based on a `{FeatureName}QueryParameters` object
+
+A success HTTP response comprises:
+
+- a `{FeatureName}ResponseBody` object
+- status code `200 OK`
+
+A failure HTTP response comprises:
+
+- a `ProblemDetails` response body object
+- an unsuccessful status code
+
+The feature's internal types are:
+
+- a `QueryResult` struct type
+- a `Query` record type, which *either* succeeds and returns a `QueryResult` value *or* fails and returns a `DomainError` object
+- a `QueryHandler` class
+
+The sequence diagram below outlines the GET endpoint request handling workflow, assuming that the HTTP request is well-formed, authenticated, and authorized.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor User
+  participant RP as Request Pipeline
+  participant ERH as Endpoint<br/>Route Handler
+  participant MB AS Message Bus
+  participant QH as Query Handler
+
+  User ->> RP: sends HTTP request
+  RP ->> ERH: forwards HTTP request
+  ERH ->> ERH: maps HTTP request to query
+  ERH ->> MB: sends query
+  MB ->> QH: forwards query
+  QH ->> QH: handles query
+  alt query succeeds
+    QH ->> MB: sends query result
+    MB ->> ERH: forwards query result
+    ERH ->> ERH: maps query result to response body
+    ERH ->> RP: sends success HTTP response
+  else query fails
+    QH ->> MB: sends domain error
+    MB ->> ERH: forwards domain error
+    ERH ->> ERH: maps domain error to problem details
+    ERH ->> RP: sends failure HTTP response
+  end
+  RP ->> User: forwards HTTP response
+```
+
+### POST endpoint feature
+
+A POST endpoint feature executes a command that creates a new aggregate in the system and returns a summary of the created aggregate. A successful command may generate one or more domain events, which are handled as part of the same transaction.
+
+An HTTP request comprises:
+
+- the path
+- a `{FeatureName}RequestBody` object
+- the `POST` method
+
+A success HTTP response comprises:
+
+- a `{FeatureName}ResponseBody` object
+- a `Location` header
+- status code `201 Created`
+
+A failure HTTP response comprises:
+
+- a `ProblemDetails` response body object
+- an unsuccessful status code
+
+The feature's internal types are:
+
+- a `CommandResult` struct type
+- a `Command` record type, which *either* succeeds and returns a `CommandResult` value *or* fails and returns a `DomainError` object
+- a `CommandHandler` class
+
+The sequence diagram below outlines the POST endpoint request handling workflow, assuming that the HTTP request is well-formed, authenticated, and authorized.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor User
+  participant RP as Request Pipeline
+  participant ERH as Endpoint<br/>Route Handler
+  participant MB AS Message Bus
+  participant CH as Command Handler
+  participant UOW as Unit Of Work
+
+  User ->> RP: sends HTTP request
+  RP ->> ERH: forwards HTTP request
+  ERH ->> ERH: maps HTTP request to command
+  ERH ->> MB: sends command
+  MB ->> CH: forwards command
+  CH ->> CH: handles command
+  alt command succeeds
+    CH ->> UOW: requests commit
+    UOW ->> UOW: dispatches domain events
+    UOW ->> UOW: domain events handled
+    UOW ->> UOW: saves changes to database
+    UOW ->> CH: reports commit
+    CH ->> MB: sends command result
+    MB ->> ERH: forwards command result
+    ERH ->> ERH: maps command result to response body
+    ERH ->> RP: sends success HTTP response
+  else command fails
+    CH ->> MB: sends domain error
+    MB ->> ERH: forwards domain error
+    ERH ->> ERH: maps domain error to problem details
+    ERH ->> RP: sends failure HTTP response
+  end
+  RP ->> User: forwards HTTP response
+```
+
+### PATCH endpoint feature
+
+A PATCH endpoint feature executes a unit command that updates a requested aggregate in the system and does not return a value. A successful unit command may generate one or more domain events, which are handled as part of the same transaction.
+
+An HTTP request comprises:
+
+- the path
+- a `{FeatureName}RequestBody` object
+- the `PATCH` method
+
+A success HTTP response comprises:
+
+- status code `204 No Content`
+
+A failure HTTP response comprises:
+
+- a `ProblemDetails` response body object
+- an unsuccessful status code
+
+The feature's internal types are:
+
+- a `UnitCommand` record type, which *either* succeeds and returns no value *or* fails and returns a `DomainError` object
+- a `UnitCommandHandler` class
+
+The sequence diagram below outlines the PATCH endpoint request handling workflow, assuming that the HTTP request is well-formed, authenticated, and authorized.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor User
+  participant RP as Request Pipeline
+  participant ERH as Endpoint<br/>Route Handler
+  participant MB AS Message Bus
+  participant UCH as Unit<br/>Command Handler
+  participant UOW as Unit Of Work
+
+  User ->> RP: sends HTTP request
+  RP ->> ERH: forwards HTTP request
+  ERH ->> ERH: maps HTTP request to unit command
+  ERH ->> MB: sends unit command
+  MB ->> UCH: forwards unit command
+  UCH ->> UCH: handles unit command
+  alt unit command succeeds
+    UCH ->> UOW: requests commit
+    UOW ->> UOW: dispatches domain events
+    UOW ->> UOW: domain events handled
+    UOW ->> UOW: saves changes to database
+    UOW ->> UCH: reports commit
+    UCH ->> MB: sends success
+    MB ->> ERH: forwards success
+    ERH ->> RP: sends success HTTP response
+  else unit command fails
+    UCH ->> MB: sends domain error
+    MB ->> ERH: forwards domain error
+    ERH ->> ERH: maps domain error to problem details
+    ERH ->> RP: sends failure HTTP response
+  end
+  RP ->> User: forwards HTTP response
+```
+
+### DELETE endpoint feature
+
+A DELETE endpoint feature executes a unit command that deletes a requested aggregate from the system and does not return a value. A successful unit command may generate one or more domain events, which are handled as part of the same transaction.
+
+An HTTP request comprises:
+
+- the path
+- the `DELETE` method
+
+A success HTTP response comprises:
+
+- status code `204 No Content`
+
+A failure HTTP response comprises:
+
+- a `ProblemDetails` response body object
+- an unsuccessful status code
+
+The feature's internal types are:
+
+- a `UnitCommand` record type, which *either* succeeds and returns no value *or* fails and returns a `DomainError` object
+- a `UnitCommandHandler` class
+
+The sequence diagram below outlines the DELETE endpoint request handling workflow, assuming that the HTTP request is well-formed, authenticated, and authorized.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor User
+  participant RP as Request Pipeline
+  participant ERH as Endpoint<br/>Route Handler
+  participant MB AS Message Bus
+  participant UCH as Unit<br/>Command Handler
+  participant UOW as Unit Of Work
+
+  User ->> RP: sends HTTP request
+  RP ->> ERH: forwards HTTP request
+  ERH ->> ERH: maps HTTP request to unit command
+  ERH ->> MB: sends unit command
+  MB ->> UCH: forwards unit command
+  UCH ->> UCH: handles unit command
+  alt unit command succeeds
+    UCH ->> UOW: requests commit
+    UOW ->> UOW: dispatches domain events
+    UOW ->> UOW: domain events handled
+    UOW ->> UOW: saves changes to database
+    UOW ->> UCH: reports commit
+    UCH ->> MB: sends success
+    MB ->> ERH: forwards success
+    ERH ->> RP: sends success HTTP response
+  else unit command fails
+    UCH ->> MB: sends domain error
+    MB ->> ERH: forwards domain error
+    ERH ->> ERH: maps domain error to problem details
+    ERH ->> RP: sends failure HTTP response
+  end
+  RP ->> User: forwards HTTP response
+```
+
+## Exceptions
+
+Any exception thrown on the server is caught by exception handling middleware and mapped to a `ProblemDetails` object that describes the exception without exposing any internal system logic. The `ProblemDetails` object is sent to the client as A failure HTTP response.
 
 | Exception type                |  HTTP response status code  |
 |:------------------------------|:---------------------------:|
@@ -161,7 +356,6 @@ The following key third-party libraries are used in the `Eurocentric.Domain` cla
 | Library                    | Role                                    |
 |:---------------------------|:----------------------------------------|
 | CSharpFunctionalExtensions | Errors and results                      |
-| SlimMessageBus             | Application command and query contracts |
 
 The following key third-party libraries are used in the `Eurocentric.Components` class library:
 
@@ -172,7 +366,6 @@ The following key third-party libraries are used in the `Eurocentric.Components`
 | EFCore.CheckConstraints                  | Database configuration                              |
 | EntityFrameworkCore.Exceptions.SqlServer | Database exceptions                                 |
 | Microsoft.AspNetCore.OpenApi             | OpenAPI document generation                         |
-| Microsoft.EntityFrameworkCore            | Database configuration and domain model data access |
 | Microsoft.EntityFrameworkCore.SqlServer  | Database configuration and domain model data access |
 | Riok.Mapperly                            | Mapping from domain types to API response types     |
 | Scalar.AspNetCore                        | OpenAPI documentation UI pages                      |
