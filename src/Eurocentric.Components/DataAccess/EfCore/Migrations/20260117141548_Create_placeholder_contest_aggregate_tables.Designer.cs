@@ -4,6 +4,7 @@ using Eurocentric.Components.DataAccess.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eurocentric.Components.DataAccess.EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260117141548_Create_placeholder_contest_aggregate_tables")]
+    partial class Create_placeholder_contest_aggregate_tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,56 +25,6 @@ namespace Eurocentric.Components.DataAccess.EfCore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Eurocentric.Domain.Aggregates.Placeholders.Broadcast", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("broadcast_id");
-
-                    b.Property<DateOnly>("BroadcastDate")
-                        .HasColumnType("date")
-                        .HasColumnName("broadcast_date");
-
-                    b.Property<bool>("Completed")
-                        .HasColumnType("bit")
-                        .HasColumnName("completed");
-
-                    b.Property<string>("ContestStage")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(10)")
-                        .HasColumnName("contest_stage");
-
-                    b.Property<Guid>("ParentContestId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("parent_contest_id");
-
-                    b.Property<string>("VotingRules")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(15)")
-                        .HasColumnName("voting_rules");
-
-                    b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
-
-                    b.HasAlternateKey("BroadcastDate");
-
-                    b.HasAlternateKey("ParentContestId", "ContestStage");
-
-                    b.ToTable("broadcast", "placeholder", t =>
-                        {
-                            t.HasCheckConstraint("CK_broadcast_broadcast_date", "[broadcast_date] BETWEEN '2016-01-01' AND '2050-12-31'");
-
-                            t.HasCheckConstraint("CK_broadcast_contest_stage_Enum", "[contest_stage] IN ('GrandFinal', 'SemiFinal1', 'SemiFinal2')");
-
-                            t.HasCheckConstraint("CK_broadcast_voting_rules_Enum", "[voting_rules] IN ('TelevoteAndJury', 'TelevoteOnly')");
-                        });
-                });
 
             modelBuilder.Entity("Eurocentric.Domain.Aggregates.Placeholders.Contest", b =>
                 {
@@ -162,166 +115,6 @@ namespace Eurocentric.Components.DataAccess.EfCore.Migrations
                         {
                             t.HasCheckConstraint("CK_country_country_type_Enum", "[country_type] IN ('Real', 'Pseudo')");
                         });
-                });
-
-            modelBuilder.Entity("Eurocentric.Domain.Aggregates.Placeholders.Broadcast", b =>
-                {
-                    b.OwnsMany("Eurocentric.Domain.Aggregates.Placeholders.Competitor", "Competitors", b1 =>
-                        {
-                            b1.Property<Guid>("BroadcastId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("broadcast_id");
-
-                            b1.Property<Guid>("CompetingCountryId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("competitor_country_id");
-
-                            b1.Property<string>("BroadcastHalf")
-                                .IsRequired()
-                                .HasMaxLength(6)
-                                .IsUnicode(false)
-                                .HasColumnType("varchar(6)")
-                                .HasColumnName("broadcast_half");
-
-                            b1.Property<int>("FinishingSpot")
-                                .HasColumnType("int")
-                                .HasColumnName("finishing_spot");
-
-                            b1.Property<int>("PerformingSpot")
-                                .HasColumnType("int")
-                                .HasColumnName("performing_spot");
-
-                            b1.HasKey("BroadcastId", "CompetingCountryId");
-
-                            SqlServerKeyBuilderExtensions.IsClustered(b1.HasKey("BroadcastId", "CompetingCountryId"));
-
-                            b1.HasIndex("BroadcastId", "PerformingSpot")
-                                .IsUnique();
-
-                            b1.ToTable("broadcast_competitor", "placeholder", t =>
-                                {
-                                    t.HasCheckConstraint("CK_broadcast_competitor_broadcast_half_Enum", "[broadcast_half] IN ('First', 'Second')");
-
-                                    t.HasCheckConstraint("CK_broadcast_competitor_finishing_spot", "[finishing_spot] >= 1");
-
-                                    t.HasCheckConstraint("CK_broadcast_competitor_performing_spot", "[performing_spot] >= 1");
-                                });
-
-                            b1.WithOwner()
-                                .HasForeignKey("BroadcastId");
-
-                            b1.OwnsMany("Eurocentric.Domain.Aggregates.Placeholders.PointsAward", "PointsAwards", b2 =>
-                                {
-                                    b2.Property<int>("RowId")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("int")
-                                        .HasColumnName("row_id");
-
-                                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b2.Property<int>("RowId"));
-
-                                    b2.Property<Guid>("BroadcastId")
-                                        .HasColumnType("uniqueidentifier")
-                                        .HasColumnName("broadcast_id");
-
-                                    b2.Property<Guid>("CompetingCountryId")
-                                        .HasColumnType("uniqueidentifier")
-                                        .HasColumnName("competing_country_id");
-
-                                    b2.Property<int>("PointsValue")
-                                        .HasColumnType("int")
-                                        .HasColumnName("points_value");
-
-                                    b2.Property<Guid>("VotingCountryId")
-                                        .HasColumnType("uniqueidentifier")
-                                        .HasColumnName("voting_country_id");
-
-                                    b2.Property<string>("VotingMethod")
-                                        .IsRequired()
-                                        .HasMaxLength(8)
-                                        .IsUnicode(false)
-                                        .HasColumnType("varchar(8)")
-                                        .HasColumnName("voting_method");
-
-                                    b2.HasKey("RowId");
-
-                                    SqlServerKeyBuilderExtensions.IsClustered(b2.HasKey("RowId"));
-
-                                    b2.HasIndex("CompetingCountryId");
-
-                                    b2.HasIndex("VotingCountryId");
-
-                                    b2.HasIndex("BroadcastId", "CompetingCountryId", "VotingCountryId", "VotingMethod")
-                                        .IsUnique();
-
-                                    b2.ToTable("broadcast_competitor_points_award", "placeholder", t =>
-                                        {
-                                            t.HasCheckConstraint("CK_broadcast_competitor_points_award_country_ids", "[competing_country_id] <> [voting_country_id]");
-
-                                            t.HasCheckConstraint("CK_broadcast_competitor_points_award_points_value", "[points_value] >= 0");
-
-                                            t.HasCheckConstraint("CK_broadcast_competitor_points_award_voting_method_Enum", "[voting_method] IN ('Televote', 'Jury')");
-                                        });
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("BroadcastId", "CompetingCountryId");
-                                });
-
-                            b1.Navigation("PointsAwards");
-                        });
-
-                    b.OwnsMany("Eurocentric.Domain.Aggregates.Placeholders.Jury", "Juries", b1 =>
-                        {
-                            b1.Property<Guid>("BroadcastId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("broadcast_id");
-
-                            b1.Property<Guid>("VotingCountryId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("voting_country_id");
-
-                            b1.Property<bool>("PointsAwarded")
-                                .HasColumnType("bit")
-                                .HasColumnName("points_awarded");
-
-                            b1.HasKey("BroadcastId", "VotingCountryId");
-
-                            SqlServerKeyBuilderExtensions.IsClustered(b1.HasKey("BroadcastId", "VotingCountryId"));
-
-                            b1.ToTable("broadcast_jury", "placeholder");
-
-                            b1.WithOwner()
-                                .HasForeignKey("BroadcastId");
-                        });
-
-                    b.OwnsMany("Eurocentric.Domain.Aggregates.Placeholders.Televote", "Televotes", b1 =>
-                        {
-                            b1.Property<Guid>("BroadcastId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("broadcast_id");
-
-                            b1.Property<Guid>("VotingCountryId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("voting_country_id");
-
-                            b1.Property<bool>("PointsAwarded")
-                                .HasColumnType("bit")
-                                .HasColumnName("points_awarded");
-
-                            b1.HasKey("BroadcastId", "VotingCountryId");
-
-                            SqlServerKeyBuilderExtensions.IsClustered(b1.HasKey("BroadcastId", "VotingCountryId"));
-
-                            b1.ToTable("broadcast_televote", "placeholder");
-
-                            b1.WithOwner()
-                                .HasForeignKey("BroadcastId");
-                        });
-
-                    b.Navigation("Competitors");
-
-                    b.Navigation("Juries");
-
-                    b.Navigation("Televotes");
                 });
 
             modelBuilder.Entity("Eurocentric.Domain.Aggregates.Placeholders.Contest", b =>
