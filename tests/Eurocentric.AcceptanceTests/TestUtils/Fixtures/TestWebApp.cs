@@ -18,6 +18,7 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
         SetTestDbName();
         StartServer();
         await CreateTestDbAsync();
+        await MigrateTestDbAsync();
     }
 
     public override async ValueTask DisposeAsync()
