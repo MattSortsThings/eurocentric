@@ -22,5 +22,11 @@ internal sealed class V0Endpoints : IEndpointMapper
             .Map<DeleteCountryV0Point1.Endpoint>()
             .Map<GetCountryV0Point1.Endpoint>()
             .Map<GetCountriesV0Point1.Endpoint>();
+
+        v0Group
+            .Map<CreateCountryV0Point2.Endpoint>()
+            .Map<DeleteCountryV0Point2.Endpoint>()
+            .Map<GetCountryV0Point2.Endpoint>()
+            .Map<GetCountriesV0Point2.Endpoint>();
     }
 }
