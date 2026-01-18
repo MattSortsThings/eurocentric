@@ -1,9 +1,24 @@
+using Eurocentric.Components.DataAccess.EFCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
 
 public sealed partial class TestWebApp
 {
+    /// <inheritdoc />
+    public async Task EraseAllDataAsync()
+    {
+        await ExecuteScopedAsync(static async serviceProvider =>
+        {
+            await using AppDbContext dbContext = serviceProvider.GetRequiredService<AppDbContext>();
+
+            const string sql = "EXECUTE [placeholder].[usp_erase_all_data];";
+
+            await dbContext.Database.ExecuteSqlRawAsync(sql).ConfigureAwait(false);
+        });
+    }
+
     /// <inheritdoc />
     public void ExecuteScoped(Action<IServiceProvider> func)
     {

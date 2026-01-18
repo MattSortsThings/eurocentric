@@ -1,3 +1,4 @@
+using Eurocentric.AcceptanceTests.TestUtils.Contracts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using TUnit.Core.Interfaces;
@@ -9,14 +10,15 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
     [ClassDataSource<DbContainer>(Shared = SharedType.PerTestSession)]
     public required DbContainer SingletonDbContainer { get; init; }
 
-    private string TestId { get; set; } = string.Empty;
+    [ClassDataSource<SqlBatchProvider>(Shared = SharedType.PerTestSession)]
+    public required SqlBatchProvider SingletonSqlBatchProvider { get; init; }
 
     public async Task InitializeAsync()
     {
-        SetTestId();
-        SetTestDbNameFromTestId();
         StartServer();
         await CreateTestDbAsync();
+        await MigrateTestDbAsync();
+        await CreateTestDbSprocsAsync();
     }
 
     public override async ValueTask DisposeAsync()
@@ -24,8 +26,6 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
         await DropTestDbAsync();
         await base.DisposeAsync();
     }
-
-    private void SetTestId() => TestId = TestContext.Current?.Id ?? Guid.NewGuid().ToString();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
-namespace Eurocentric.AcceptanceTests.TestUtils;
+namespace Eurocentric.AcceptanceTests.TestUtils.Contracts;
 
 /// <summary>
 ///     The discriminated union of <i>either</i> a success REST response with a raw response body <i>or</i> a failure

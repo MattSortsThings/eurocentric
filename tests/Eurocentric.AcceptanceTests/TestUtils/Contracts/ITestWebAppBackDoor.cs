@@ -1,10 +1,16 @@
-namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
+namespace Eurocentric.AcceptanceTests.TestUtils.Contracts;
 
 /// <summary>
 ///     Allows the user to interact with the test web app directly, bypassing its API endpoints.
 /// </summary>
 public interface ITestWebAppBackDoor
 {
+    /// <summary>
+    ///     Erases all data from the test web app's database.
+    /// </summary>
+    /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
+    Task EraseAllDataAsync();
+
     /// <summary>
     ///     Executes the provided function on the test web app's service provider within a new synchronous service scope.
     /// </summary>

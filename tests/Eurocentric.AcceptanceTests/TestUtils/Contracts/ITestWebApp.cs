@@ -1,4 +1,4 @@
-namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
+namespace Eurocentric.AcceptanceTests.TestUtils.Contracts;
 
 /// <summary>
 ///     Allows the user to interact with the test web app.

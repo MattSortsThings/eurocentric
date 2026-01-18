@@ -1,3 +1,4 @@
+using Eurocentric.AcceptanceTests.TestUtils.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -7,9 +8,6 @@ using HttpJsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
 
-/// <summary>
-///     An in-memory test web app using a shared containerized SQL Server instance.
-/// </summary>
 public sealed partial class TestWebApp
 {
     /// <inheritdoc />
