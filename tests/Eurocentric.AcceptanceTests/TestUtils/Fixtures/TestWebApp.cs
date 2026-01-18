@@ -4,21 +4,19 @@ using TUnit.Core.Interfaces;
 
 namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
 
-/// <summary>
-///     An in-memory test web app using a shared containerized SQL Server instance.
-/// </summary>
 public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncInitializer, ITestWebApp
 {
     [ClassDataSource<DbContainer>(Shared = SharedType.PerTestSession)]
-    public required DbContainer SharedDbContainer { get; init; }
+    public required DbContainer SingletonDbContainer { get; init; }
+
+    private string TestId { get; set; } = string.Empty;
 
     public async Task InitializeAsync()
     {
         SetTestId();
-        SetTestDbName();
+        SetTestDbNameFromTestId();
         StartServer();
         await CreateTestDbAsync();
-        await MigrateTestDbAsync();
     }
 
     public override async ValueTask DisposeAsync()
@@ -27,12 +25,11 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
         await base.DisposeAsync();
     }
 
+    private void SetTestId() => TestId = TestContext.Current?.Id ?? Guid.NewGuid().ToString();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting("AzureSqlDb:ConnectionString", SharedDbContainer.GetNamedDbConnectionString(_testDbName));
-        builder.UseSetting("AzureSqlDb:MaxRetries", "0");
+        ReplaceAzureSqlDbSettings(builder);
         builder.ConfigureServices(AddRestClient);
     }
-
-    private void SetTestId() => _testId = TestContext.Current!.Id;
 }

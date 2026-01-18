@@ -6,11 +6,11 @@ namespace Eurocentric.AcceptanceTests.Features.AdminApi.V0.Placeholders;
 
 public static class PingAdminApiTests
 {
-    [Category("placeholder")]
     public sealed class Endpoint : AcceptanceTestBase
     {
         [Test]
-        public async Task Should_succeed_with_200_OK_and_fixed_response_body()
+        [Repeat(250)]
+        public async Task Should_return_200_OK_and_fixed_response()
         {
             // Arrange
             RestRequest request = new("/admin/api/v0/ping");
@@ -27,7 +27,7 @@ public static class PingAdminApiTests
                 .HasProperty(pa => pa.ApiName, "Admin API")
                 .And.Member(
                     pa => pa.Items,
-                    collection => collection.IsEquivalentTo(["Blobby", "Blobby", "Blobby", "Blobby"])
+                    collection => collection.Count().IsEqualTo(4).And.ContainsOnly(v => v == "Blobby")
                 );
         }
     }

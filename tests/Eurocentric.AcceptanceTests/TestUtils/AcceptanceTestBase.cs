@@ -10,10 +10,6 @@ namespace Eurocentric.AcceptanceTests.TestUtils;
 [ParallelLimiter<ParallelLimit>]
 public abstract class AcceptanceTestBase
 {
-    /// <summary>
-    ///     A test-specific web app using its own isolated test database, which is created in an empty state before the test
-    ///     starts and disposed of after the test completes.
-    /// </summary>
     [ClassDataSource<TestWebApp>(Shared = SharedType.None)]
     public required ITestWebApp SystemUnderTest { get; init; }
 }

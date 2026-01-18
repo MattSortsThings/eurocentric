@@ -1,46 +1,21 @@
-using System.Data;
-using Dapper;
-using Eurocentric.Components.DataAccess.EFCore;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
 
 public sealed partial class TestWebApp
 {
-    private string _testDbName = string.Empty;
-    private string _testId = string.Empty;
+    private string TestDbName { get; set; } = string.Empty;
 
-    private void SetTestDbName() => _testDbName = "db_" + _testId.Replace("-", string.Empty);
+    private void SetTestDbNameFromTestId() => TestDbName = "test_db_" + TestId.Replace("-", "_");
 
-    private async Task CreateTestDbAsync()
+    private void ReplaceAzureSqlDbSettings(IWebHostBuilder builder)
     {
-        string sql = $"CREATE DATABASE [{_testDbName}]";
-
-        await using SqlConnection dbConnection = new(SharedDbContainer.GetMasterDbConnectionString());
-        await dbConnection.OpenAsync().ConfigureAwait(false);
-        await dbConnection.ExecuteAsync(sql, commandType: CommandType.Text).ConfigureAwait(false);
-        await dbConnection.CloseAsync().ConfigureAwait(false);
+        builder.UseSetting("AzureSqlDb:ConnectionString", SingletonDbContainer.GetNamedDbConnectionString(TestDbName));
+        builder.UseSetting("AzureSqlDb:MaxRetries", "0");
     }
 
-    private async Task MigrateTestDbAsync()
-    {
-        await using AsyncServiceScope scope = Services.CreateAsyncScope();
-        await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await dbContext.Database.MigrateAsync();
-    }
+    private async Task CreateTestDbAsync() =>
+        await SingletonDbContainer.RestoreNamedDbFromSourceDbBackupAsync(TestDbName);
 
-    private async Task DropTestDbAsync()
-    {
-        string sql = $"""
-            ALTER DATABASE [{_testDbName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-            DROP DATABASE [{_testDbName}];
-            """;
-
-        await using SqlConnection dbConnection = new(SharedDbContainer.GetMasterDbConnectionString());
-        await dbConnection.OpenAsync().ConfigureAwait(false);
-        await dbConnection.ExecuteAsync(sql, commandType: CommandType.Text).ConfigureAwait(false);
-        await dbConnection.CloseAsync().ConfigureAwait(false);
-    }
+    private async Task DropTestDbAsync() => await SingletonDbContainer.DropNamedDbAsync(TestDbName);
 }

@@ -1,6 +1,8 @@
 using CSharpFunctionalExtensions;
+using Eurocentric.Components.DataAccess.EFCore;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Domain.Aggregates.Placeholders;
 using Eurocentric.Domain.Errors;
 using Eurocentric.Domain.Placeholders;
 using JetBrains.Annotations;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Riok.Mapperly.Abstractions;
 using SlimMessageBus;
 using IResult = Microsoft.AspNetCore.Http.IResult;
@@ -49,11 +52,16 @@ internal static partial class PingAdminApi
     internal sealed record Query : IQuery<QueryResult>;
 
     [UsedImplicitly(Reason = "Messaging")]
-    internal sealed class QueryHandler : IQueryHandler<Query, QueryResult>
+    internal sealed class QueryHandler(AppDbContext dbContext) : IQueryHandler<Query, QueryResult>
     {
         public async Task<Result<QueryResult, DomainError>> OnHandle(Query _, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            int countryCount = await dbContext.Set<Country>().AsNoTracking().CountAsync(cancellationToken);
+
+            if (countryCount != 0)
+            {
+                throw new InvalidOperationException("Illegal country count!");
+            }
 
             const string apiName = "Admin API";
             List<string> messages = BlobbyGenerator.Generate(4);

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 
-namespace Eurocentric.AcceptanceTests.TestUtils;
+namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
 
 /// <summary>
 ///     Allows the user to interact with the test web app using its API endpoints.

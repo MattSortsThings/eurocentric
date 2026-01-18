@@ -1,4 +1,4 @@
-namespace Eurocentric.AcceptanceTests.TestUtils;
+namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
 
 /// <summary>
 ///     Allows the user to interact with the test web app directly, bypassing its API endpoints.
@@ -21,7 +21,7 @@ public interface ITestWebAppBackDoor
     ///     An asynchronous function that operates on the service provider and does not return a value.
     /// </param>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
-    Task ExecuteScoped(Func<IServiceProvider, Task> func);
+    Task ExecuteScopedAsync(Func<IServiceProvider, Task> func);
 
     /// <summary>
     ///     Executes the provided function on the test web app's service provider within a new asynchronous
@@ -33,5 +33,5 @@ public interface ITestWebAppBackDoor
     ///     A <see cref="Task" /> representing the asynchronous operation. The task's result is the value returned
     ///     by the function.
     /// </returns>
-    Task<T> ExecuteScoped<T>(Func<IServiceProvider, Task<T>> func);
+    Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> func);
 }

@@ -6,11 +6,11 @@ namespace Eurocentric.AcceptanceTests.Features.PublicApi.V0.Placeholders;
 
 public static class PingPublicApiTests
 {
-    [Category("placeholder")]
     public sealed class Endpoint : AcceptanceTestBase
     {
         [Test]
-        public async Task Should_succeed_with_200_OK_and_fixed_response_body()
+        [Repeat(250)]
+        public async Task Should_return_200_OK_and_fixed_response()
         {
             // Arrange
             RestRequest request = new("/public/api/v0/ping");
@@ -24,8 +24,11 @@ public static class PingPublicApiTests
 
             await Assert
                 .That(response.GetSuccessRestResponse().Data)
-                .HasProperty(pp => pp.ApiName, "Public API")
-                .And.Member(pp => pp.Items, collection => collection.IsEquivalentTo(["Blobby", "Blobby", "Blobby"]));
+                .HasProperty(pa => pa.ApiName, "Public API")
+                .And.Member(
+                    pa => pa.Items,
+                    collection => collection.Count().IsEqualTo(3).And.ContainsOnly(v => v == "Blobby")
+                );
         }
     }
 }
