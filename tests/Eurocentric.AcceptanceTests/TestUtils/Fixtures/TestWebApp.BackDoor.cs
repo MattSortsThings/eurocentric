@@ -7,7 +7,7 @@ namespace Eurocentric.AcceptanceTests.TestUtils.Fixtures;
 public sealed partial class TestWebApp
 {
     /// <inheritdoc />
-    public async Task EraseAllDataAsync()
+    public async Task ResetAsync()
     {
         await ExecuteScopedAsync(static async serviceProvider =>
         {

@@ -12,5 +12,5 @@ public abstract class AcceptanceTestBase
     public required ITestWebApp SystemUnderTest { get; init; }
 
     [After(Test)]
-    public async Task ResetTestWebAppAsync() => await SystemUnderTest.EraseAllDataAsync();
+    public async Task ResetTestWebAppAsync() => await SystemUnderTest.ResetAsync();
 }

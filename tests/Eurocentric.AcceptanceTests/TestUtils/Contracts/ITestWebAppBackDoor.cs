@@ -6,10 +6,10 @@ namespace Eurocentric.AcceptanceTests.TestUtils.Contracts;
 public interface ITestWebAppBackDoor
 {
     /// <summary>
-    ///     Erases all data from the test web app's database.
+    ///     Resets the test web app to its initial state, erasing all data from the test database.
     /// </summary>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
-    Task EraseAllDataAsync();
+    Task ResetAsync();
 
     /// <summary>
     ///     Executes the provided function on the test web app's service provider within a new synchronous service scope.
