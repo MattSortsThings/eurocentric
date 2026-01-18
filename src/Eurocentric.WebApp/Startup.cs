@@ -4,6 +4,7 @@ using Eurocentric.Components.DataAccess;
 using Eurocentric.Components.EndpointMapping;
 using Eurocentric.Components.HttpJson;
 using Eurocentric.Components.Messaging;
+using Eurocentric.Components.Repositories;
 
 namespace Eurocentric.WebApp;
 
@@ -22,7 +23,8 @@ internal static class Startup
         builder
             .Services.AddDataAccess()
             .AddHttpJsonConfiguration()
-            .AddMessaging(typeof(AdminApiEndpoints).Assembly, typeof(PublicApiEndpoints).Assembly);
+            .AddMessaging(typeof(AdminApiEndpoints).Assembly, typeof(PublicApiEndpoints).Assembly)
+            .AddRepositories();
 
         return builder;
     }
