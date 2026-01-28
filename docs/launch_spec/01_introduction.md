@@ -18,7 +18,7 @@ The system is a web application that hosts two separate web APIs - the Public AP
 
 The Public API exposes a large number of GET endpoints, each of which allows the user to execute an analytical query on voting data stored in the system database.
 
-The Admin API exposes GET/POST/PATCH/DELETE endpoints that collectively allow the user to populate the system with queryable voting data and monitor its use.
+The Admin API exposes GET/POST/PATCH/DELETE endpoints that collectively allow the user to populate the system with its queryable voting data and monitor its use.
 
 ## The queryable voting data
 
@@ -26,7 +26,7 @@ The Admin API populates the system with voting data split across three aggregate
 
 A Contest is queryable if and only if all 3 of its child Broadcasts have been created and all their points have been awarded.
 
-A Broadcast is queryable if and only if its parent Contest is Queryable.
+A Broadcast is queryable if and only if its parent Contest is queryable.
 
 A Country is queryable if and only if it has a role in one or more queryable Contests.
 
@@ -34,13 +34,13 @@ A Country is queryable if and only if it has a role in one or more queryable Con
 
 The system operates in the following context:
 
-- A user communicates with the system using HTTP requests and responses to and from its APIs
-- The language of the system is UK English
-- The web application is published to Docker Hub as a Docker image
-- The containerized web application is hosted in the cloud as an Azure Container App
-- The system database is hosted in the cloud as an Azure SQL Database
-- The web application and the system database use free or very low-cost service tiers
-- Due to service tier limitations, the web application and the system database will scale to zero when they are not in use
+- A user communicates with the system using HTTP requests and responses to and from its APIs.
+- The language of the system is UK English.
+- The web application is published to Docker Hub as a Docker image.
+- The containerized web application is hosted in the cloud as an Azure Container App.
+- The system database is hosted in the cloud as an Azure SQL Database.
+- The web application and the system database use free or very low-cost service tiers.
+- Due to service tier limitations, the web application and the system database will scale to zero when they are not in use.
 
 ## Feature scopes
 
