@@ -122,7 +122,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 ### `ActName` value object
 
 - An `ActName` value object is a `(string Value)` that represents an act's official name.
-- Its string `Value` must not be empty or whitespace, must not be longer than 200 characters, must not contain a line-break, and must not begin or end with whitespace.
+- Its string `Value` must not be empty or whitespace, must not be longer than 100 characters, must not contain a line-break, and must not begin or end with whitespace.
 
 ### `CountryCode` value object
 
@@ -132,17 +132,17 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 ### `CityName` value object
 
 - A `CityName` value object is a `(string Value)` that represents a city's short UK English name.
-- Its string `Value` must not be empty or whitespace, must not be longer than 200 characters, must not contain a line-break, and must not begin or end with whitespace.
+- Its string `Value` must not be empty or whitespace, must not be longer than 100 characters, must not contain a line-break, and must not begin or end with whitespace.
 
 ### `CountryName` value object
 
 - A `CountryName` value object is a `(string Value)` that represents a country's short UK English name.
-- Its string `Value` must not be empty or whitespace, must not be longer than 200 characters, must not contain a line-break, and must not begin or end with whitespace.
+- Its string `Value` must not be empty or whitespace, must not be longer than 100 characters, must not contain a line-break, and must not begin or end with whitespace.
 
 ### `SongTitle` value object
 
 - A `SongTitle` value object is a `(string Value)` that represents a song's official title.
-- Its string `Value` must not be empty or whitespace, must not be longer than 200 characters, must not contain a line-break, and must not begin or end with whitespace.
+- Its string `Value` must not be empty or whitespace, must not be longer than 100 characters, must not contain a line-break, and must not begin or end with whitespace.
 
 ## Compound value objects
 
