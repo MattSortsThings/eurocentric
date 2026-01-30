@@ -34,7 +34,7 @@ This document is part of the [*Eurocentric* launch specification](../../../READM
 ### HTTP request
 
 ```http request
-GET /public/api/{apiVersion}/rankings/voting-countries/points-average
+GET /public/api/{apiVersion}/voting-country-rankings/points-average
 ```
 
 **Notes:**
