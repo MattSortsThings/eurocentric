@@ -92,10 +92,10 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-share
       "countryCode": "AA",
       "countryName": "Country Name",
       "pointsShare": 0.5,
-      "totalPoints": 6000,
-      "maxPossiblePoints": 12000,
-      "pointsAwards": 1000,
-      "votingCountries": 40,
+      "totalPoints": 60,
+      "maxPossiblePoints": 120,
+      "pointsAwards": 10,
+      "votingCountries": 1,
       "broadcasts": 10,
       "contests": 5
     }

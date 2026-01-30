@@ -90,10 +90,10 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-average
       "rank": 1,
       "countryCode": "AA",
       "countryName": "Country Name",
-      "pointsAverage": 5.75,
-      "totalPoints": 5750,
-      "pointsAwards": 1000,
-      "votingCountries": 40,
+      "pointsAverage": 5.5,
+      "totalPoints": 55,
+      "pointsAwards": 10,
+      "votingCountries": 1,
       "broadcasts": 10,
       "contests": 5
     }
