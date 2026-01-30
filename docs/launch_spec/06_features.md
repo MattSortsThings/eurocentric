@@ -112,7 +112,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ### Voting country rankings
 
-- P16. Get voting country points average rankings
+- [P16. Get voting country points average rankings](features/public-api/voting-country-rankings/P16_get_voting_country_points_average_rankings.md)
 - P17. Get voting country points in range rankings
 - P18. Get voting country points share rankings
 - P19. Get voting country points similarity rankings
