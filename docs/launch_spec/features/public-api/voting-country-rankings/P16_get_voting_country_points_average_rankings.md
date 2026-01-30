@@ -41,23 +41,18 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-average
 
 - `apiVersion` is a major-minor API version URL segment, e.g. `"v1.0"`.
 
-**Required query parameters:**
-
-| Name                   |  Type  | Details                                                                             |
-|:-----------------------|:------:|:------------------------------------------------------------------------------------|
-| `competingCountryCode` | string | Specifies the competing country code. Must be string of 2 upper-case ASCII letters. |
-
 **Optional query parameters:**
 
-| Name                |      Type       | Details                                                                                                                                                                                                        |
-|:--------------------|:---------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `startContestYear`  |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Defaults to 2016.                                                                                    |
-| `endContestYear`    |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear` when both are provided. Defaults to 2050.          |
-| `contestStages`     | string[] (enum) | Filters the queryable contest data by contest stage(s). Enum values are `{ SemiFinal1, SemiFinal2, GrandFinal }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values. |
-| `votingMethods`     | string[] (enum) | Filters the queryable contest data by voting method(s). Enum values are `{ Televote, Jury }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values.                     |
-| `rankOrdering`      |  string (enum)  | Sets the rank ordering behaviour when provided. Enum values are `{ DescendingMetric, AscendingMetric }`. Defaults to `DescendingMetric`.                                                                       |
-| `pageSize`          |       int       | Sets the pagination page size. Must be integer between 1 and 100. Defaults to 10.                                                                                                                              |
-| `pageIndex`         |       int       | Sets the pagination page index. Must be non-negative integer. Defaults to 0.                                                                                                                                   |
+| Name                   |      Type       | Details                                                                                                                                                                                                        |
+|:-----------------------|:---------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `competingCountryCode` |     string      | Specifies the competing country code. Must be string of 2 upper-case ASCII letters. Defaults to `"CH"`.                                                                                                        |                                                                                                        |
+| `startContestYear`     |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Defaults to 2016.                                                                                    |
+| `endContestYear`       |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear` when both are provided. Defaults to 2050.          |
+| `contestStages`        | string[] (enum) | Filters the queryable contest data by contest stage(s). Enum values are `{ SemiFinal1, SemiFinal2, GrandFinal }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values. |
+| `votingMethods`        | string[] (enum) | Filters the queryable contest data by voting method(s). Enum values are `{ Televote, Jury }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values.                     |
+| `rankOrdering`         |  string (enum)  | Sets the rank ordering behaviour when provided. Enum values are `{ DescendingMetric, AscendingMetric }`. Defaults to `DescendingMetric`.                                                                       |
+| `pageSize`             |       int       | Sets the pagination page size. Must be integer between 1 and 100. Defaults to 10.                                                                                                                              |
+| `pageIndex`            |       int       | Sets the pagination page index. Must be non-negative integer. Defaults to 0.                                                                                                                                   |
 
 ### HTTP response
 
@@ -68,7 +63,7 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-average
 ```json
 {
   "metadata": {
-    "competingCountryCode": "ZZ",
+    "competingCountryCode": "CH",
     "contestYearRange": {
       "startContestYear": 2016,
       "endContestYear": 2026
@@ -117,11 +112,11 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-average
 
 - [ ] Should_succeed_with_200_OK_and_metadata_and_rankings_when_minimal_query_is_valid
 - [ ] Should_succeed_with_200_OK_and_metadata_and_rankings_when_complex_query_is_valid
-- [ ] Should_succeed_with_competingCountryCode_CH
-- [ ] Should_succeed_with_competingCountryCode_FI
-- [ ] Should_succeed_with_competingCountryCode_GB
-- [ ] Should_succeed_with_competingCountryCode_MK
-- [ ] Should_succeed_with_competingCountryCode_SI
+- [ ] Should_succeed_when_specifying_competingCountryCode_CH
+- [ ] Should_succeed_when_specifying_competingCountryCode_FI
+- [ ] Should_succeed_when_specifying_competingCountryCode_GB
+- [ ] Should_succeed_when_specifying_competingCountryCode_MK
+- [ ] Should_succeed_when_specifying_competingCountryCode_SI
 - [ ] Should_succeed_when_filtering_by_startContestYear_2023
 - [ ] Should_succeed_when_filtering_by_endContestYear_2022
 - [ ] Should_succeed_when_filtering_by_startContestYear_2016_endContestYear_2050
@@ -154,7 +149,6 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-average
 
 **GetVotingCountryPointsAverageRankings endpoint...**
 
-- [ ] Should_fail_when_competingCountryCode_is_not_provided
 - [ ] Should_fail_when_competingCountryCode_is_empty_or_whitespace
 - [ ] Should_fail_when_competingCountryCode_length_is_not_2_chars
 - [ ] Should_fail_when_competingCountryCode_contains_non_ASCII_letter_upper_char
