@@ -165,10 +165,10 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
 
 **GetCompetingCountryPointsInRangeRankings endpoint...**
 
-- [ ] Should_fail_when_minPoints_is_less_than_0_or_greater_than_12
 - [ ] Should_fail_when_minPoints_is_not_provided
-- [ ] Should_fail_when_maxPoints_is_less_than_0_or_greater_than_12
+- [ ] Should_fail_when_minPoints_is_less_than_0_or_greater_than_12
 - [ ] Should_fail_when_maxPoints_is_not_provided
+- [ ] Should_fail_when_maxPoints_is_less_than_0_or_greater_than_12
 - [ ] Should_fail_when_maxPoints_is_less_than_minPoints
 - [ ] Should_fail_when_startContestYear_is_less_than_2016_or_greater_than_2050
 - [ ] Should_fail_when_endContestYear_is_less_than_2016_or_greater_than_2050

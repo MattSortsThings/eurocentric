@@ -171,10 +171,10 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-in-range
 - [ ] Should_fail_when_competingCountryCode_is_empty_or_whitespace
 - [ ] Should_fail_when_competingCountryCode_length_is_not_2_chars
 - [ ] Should_fail_when_competingCountryCode_contains_non_ASCII_letter_upper_char
-- [ ] Should_fail_when_minPoints_is_less_than_0_or_greater_than_12
 - [ ] Should_fail_when_minPoints_is_not_provided
-- [ ] Should_fail_when_maxPoints_is_less_than_0_or_greater_than_12
+- [ ] Should_fail_when_minPoints_is_less_than_0_or_greater_than_12
 - [ ] Should_fail_when_maxPoints_is_not_provided
+- [ ] Should_fail_when_maxPoints_is_less_than_0_or_greater_than_12
 - [ ] Should_fail_when_maxPoints_is_less_than_minPoints
 - [ ] Should_fail_when_startContestYear_is_less_than_2016_or_greater_than_2050
 - [ ] Should_fail_when_endContestYear_is_less_than_2016_or_greater_than_2050
