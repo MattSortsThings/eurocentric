@@ -41,6 +41,10 @@ GET /admin/api/{apiVersion}/countries
 }
 ```
 
+**Notes:**
+
+- `countries` is ordered by `country.countryCode`.
+
 ## Acceptance criteria
 
 ### Happy path
