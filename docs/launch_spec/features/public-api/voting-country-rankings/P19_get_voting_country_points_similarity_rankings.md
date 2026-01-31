@@ -17,12 +17,13 @@ This document is part of the [*Eurocentric* launch specification](../../../READM
 5. Group the filtered data by voting country.
 6. For each group, generate a televote vector and a jury vector, using each competing country in each broadcast as a vector dimension.
 7. For each group, calculate:
-   1. the number of unique competing countries.
-   2. the number of unique broadcasts.
-   3. the number of unique contests.
-   4. the televote vector length, rounded half-up to 6 decimal places.
-   5. the jury vector length, rounded half-up to 6 decimal places.
-   6. the vector dot product, rounded half-up to 6 decimal places.
+   1. the vector dot product, rounded half-up to 6 decimal places.
+   2. the televote vector length, rounded half-up to 6 decimal places.
+   3. the jury vector length, rounded half-up to 6 decimal places.
+   4. the number of vector dimensions.
+   5. the number of unique competing countries.
+   6. the number of unique broadcasts.
+   7. the number of unique contests.
 8. For each group, calculate the *points similarity* metric as (vector dot product)/((televote vector length) * jury vector length), rounded half-up to 6 decimal places.
 9. Rank all groups by descending or ascending *points similarity* metric, using non-dense ranking, equal metrics assigned equal rank.
 10. Sort rankings by rank (ascending) then by country code (ascending).

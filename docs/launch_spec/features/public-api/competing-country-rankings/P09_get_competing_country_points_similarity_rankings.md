@@ -17,11 +17,13 @@ This document is part of the [*Eurocentric* launch specification](../../../READM
 5. Group the filtered data by competing country.
 6. For each group, generate a televote vector and a jury vector, using each voting country in each broadcast as a vector dimension.
 7. For each group, calculate:
-   1. the number of unique broadcasts.
-   2. the number of unique contests.
-   3. the televote vector length, rounded half-up to 6 decimal places.
-   4. the jury vector length, rounded half-up to 6 decimal places.
-   5. the vector dot product, rounded half-up to 6 decimal places.
+   1. the vector dot product, rounded half-up to 6 decimal places.
+   2. the televote vector length, rounded half-up to 6 decimal places.
+   3. the jury vector length, rounded half-up to 6 decimal places.
+   4. the number of vector dimensions.
+   5. the number of unique voting countries.
+   6. the number of unique broadcasts.
+   7. the number of unique contests.
 8. For each group, calculate the *points similarity* metric as (vector dot product)/((televote vector length) * jury vector length), rounded half-up to 6 decimal places.
 9. Rank all groups by descending or ascending *points similarity* metric, using non-dense ranking, equal metrics assigned equal rank.
 10. Sort rankings by rank (ascending) then by country code (ascending).
@@ -53,7 +55,7 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
 | `endContestYear`    |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear`. Defaults to 2050.                                 |
 | `contestStages`     | string[] (enum) | Filters the queryable contest data by contest stage(s). Enum values are `{ SemiFinal1, SemiFinal2, GrandFinal }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values. |
 | `votingCountryCode` |     string      | Filters the queryable contest data by voting country code when provided. Must be string of 2 upper-case ASCII letters.                                                                                         |
-| `rankOrdering`      |  string (enum)  | Sets the rank ordering behaviour when provided. Enum values are `{ DescendingMetric, AscendingMetric }`. Defaults to `DescendingMetric`.                                                                       |
+| `rankOrdering`      |  string (enum)  | Sets the rank ordering behaviour. Enum values are `{ DescendingMetric, AscendingMetric }`. Defaults to `DescendingMetric`.                                                                                     |
 | `pageSize`          |       int       | Sets the pagination page size. Must be integer between 1 and 100. Defaults to 10.                                                                                                                              |
 | `pageIndex`         |       int       | Sets the pagination page index. Must be non-negative integer. Defaults to 0.                                                                                                                                   |
 
@@ -93,6 +95,7 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
       "televoteVectorLength": 10.0,
       "juryVectorLength": 20.0,
       "vectorDimensions": 10,
+      "votingCountries": 1,
       "broadcasts": 10,
       "contests": 5
     }
