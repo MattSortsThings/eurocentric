@@ -76,7 +76,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ### Broadcast competitor rankings
 
-- P01. Get broadcast competitor points average rankings
+- [P01. Get broadcast competitor points average rankings](features/public-api/broadcast-competitor-rankings/P01_get_broadcast_competitor_points_average_rankings.md)
 - P02. Get broadcast competitor points in range rankings
 - P03. Get broadcast competitor points share rankings
 - P04. Get broadcast competitor points similarity rankings
