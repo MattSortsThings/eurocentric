@@ -42,14 +42,19 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
 
 - `apiVersion` is a major-minor API version URL segment, e.g. `"v1.0"`.
 
+**Required query parameters:**
+
+| Name                |      Type       | Details                                                                                                               |
+|:--------------------|:---------------:|:----------------------------------------------------------------------------------------------------------------------|
+| `minPoints`         |       int       | Specifies the inclusive minimum points value. Must be integer between 0 and 12. Must not be greater than `maxPoints`. |
+| `maxPoints`         |       int       | Specifies the inclusive maximum points value. Must be integer between 0 and 12. Must not be less than `minPoints`.    |
+
 **Optional query parameters:**
 
 | Name                |      Type       | Details                                                                                                                                                                                                        |
 |:--------------------|:---------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `minPoints`         |       int       | Specifies the inclusive minimum points value. Must be integer between 0 and 12. Defaults to 1. Must be provided and not greater than `maxPoints` when `maxPoints` is provided.                                 |
-| `maxPoints`         |       int       | Specifies the inclusive maximum points value. Must be integer between 0 and 12. Defaults to 12. Must be provided and not less than `minPoints` when `minPoints` is provided.                                   |
-| `startContestYear`  |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Defaults to 2016.                                                                                    |
-| `endContestYear`    |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear` when both are provided. Defaults to 2050.          |
+| `startContestYear`  |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Must be less than or equal to `endContestYear`. Defaults to 2016.                                    |
+| `endContestYear`    |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear`. Defaults to 2050.                                 |
 | `contestStages`     | string[] (enum) | Filters the queryable contest data by contest stage(s). Enum values are `{ SemiFinal1, SemiFinal2, GrandFinal }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values. |
 | `votingMethods`     | string[] (enum) | Filters the queryable contest data by voting method(s). Enum values are `{ Televote, Jury }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values.                     |
 | `votingCountryCode` |     string      | Filters the queryable contest data by voting country code when provided. Must be string of 2 upper-case ASCII letters.                                                                                         |
@@ -72,7 +77,7 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
     },
     "contestYearRange": {
       "startContestYear": 2016,
-      "endContestYear": 2026
+      "endContestYear": 2050
     },
     "contestStages": [
       "SemiFinal1",
@@ -121,7 +126,7 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
 
 - [ ] Should_succeed_with_200_OK_and_metadata_and_rankings_when_minimal_query_is_valid
 - [ ] Should_succeed_with_200_OK_and_metadata_and_rankings_when_complex_query_is_valid
-- [ ] Should_succeed_when_specifying_minPoints_1_maxPoints_12_competingCountryCode_CH
+- [ ] Should_succeed_when_specifying_minPoints_1_maxPoints_12
 - [ ] Should_succeed_when_specifying_minPoints_0_maxPoints_0
 - [ ] Should_succeed_when_specifying_minPoints_1_maxPoints_7
 - [ ] Should_succeed_when_specifying_minPoints_8_maxPoints_12
@@ -161,12 +166,10 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
 
 **GetCompetingCountryPointsInRangeRankings endpoint...**
 
-- [ ] Should_fail_when_minPoints_is_less_than_0
-- [ ] Should_fail_when_minPoints_is_greater_than_12
-- [ ] Should_fail_when_minPoints_is_provided_without_maxPoints
-- [ ] Should_fail_when_maxPoints_is_less_than_0
-- [ ] Should_fail_when_maxPoints_is_greater_than_12
-- [ ] Should_fail_when_maxPoints_is_provided_without_minPoints
+- [ ] Should_fail_when_minPoints_is_less_than_0_or_greater_than_12
+- [ ] Should_fail_when_minPoints_is_not_provided
+- [ ] Should_fail_when_maxPoints_is_less_than_0_or_greater_than_12
+- [ ] Should_fail_when_maxPoints_is_not_provided
 - [ ] Should_fail_when_maxPoints_is_less_than_minPoints
 - [ ] Should_fail_when_startContestYear_is_less_than_2016_or_greater_than_2050
 - [ ] Should_fail_when_endContestYear_is_less_than_2016_or_greater_than_2050

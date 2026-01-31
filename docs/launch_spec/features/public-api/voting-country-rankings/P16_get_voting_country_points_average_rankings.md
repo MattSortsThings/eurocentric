@@ -41,13 +41,18 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-average
 
 - `apiVersion` is a major-minor API version URL segment, e.g. `"v1.0"`.
 
+**Required query parameters:**
+
+| Name                   |  Type  | Details                                                                             |
+|:-----------------------|:------:|:------------------------------------------------------------------------------------|
+| `competingCountryCode` | string | Specifies the competing country code. Must be string of 2 upper-case ASCII letters. |
+
 **Optional query parameters:**
 
 | Name                   |      Type       | Details                                                                                                                                                                                                        |
 |:-----------------------|:---------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `competingCountryCode` |     string      | Specifies the competing country code. Must be string of 2 upper-case ASCII letters. Defaults to `"CH"`.                                                                                                        |                                                                                                        |
-| `startContestYear`     |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Defaults to 2016.                                                                                    |
-| `endContestYear`       |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear` when both are provided. Defaults to 2050.          |
+| `startContestYear`     |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Must be less than or equal to `endContestYear`. Defaults to 2016.                                    |
+| `endContestYear`       |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear`. Defaults to 2050.                                 |
 | `contestStages`        | string[] (enum) | Filters the queryable contest data by contest stage(s). Enum values are `{ SemiFinal1, SemiFinal2, GrandFinal }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values. |
 | `votingMethods`        | string[] (enum) | Filters the queryable contest data by voting method(s). Enum values are `{ Televote, Jury }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values.                     |
 | `rankOrdering`         |  string (enum)  | Sets the rank ordering behaviour when provided. Enum values are `{ DescendingMetric, AscendingMetric }`. Defaults to `DescendingMetric`.                                                                       |
@@ -63,10 +68,10 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-average
 ```json
 {
   "metadata": {
-    "competingCountryCode": "CH",
+    "competingCountryCode": "ZZ",
     "contestYearRange": {
       "startContestYear": 2016,
-      "endContestYear": 2026
+      "endContestYear": 2050
     },
     "contestStages": [
       "SemiFinal1",
@@ -149,6 +154,7 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-average
 
 **GetVotingCountryPointsAverageRankings endpoint...**
 
+- [ ] Should_fail_when_competingCountryCode_is_not_provided
 - [ ] Should_fail_when_competingCountryCode_is_empty_or_whitespace
 - [ ] Should_fail_when_competingCountryCode_length_is_not_2_chars
 - [ ] Should_fail_when_competingCountryCode_contains_non_ASCII_letter_upper_char

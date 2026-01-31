@@ -46,8 +46,8 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-average
 
 | Name                |      Type       | Details                                                                                                                                                                                                        |
 |:--------------------|:---------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `startContestYear`  |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Defaults to 2016.                                                                                    |
-| `endContestYear`    |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear` when both are provided. Defaults to 2050.          |
+| `startContestYear`  |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Must be less than or equal to `endContestYear`. Defaults to 2016.                                    |
+| `endContestYear`    |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear`. Defaults to 2050.                                 |
 | `contestStages`     | string[] (enum) | Filters the queryable contest data by contest stage(s). Enum values are `{ SemiFinal1, SemiFinal2, GrandFinal }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values. |
 | `votingMethods`     | string[] (enum) | Filters the queryable contest data by voting method(s). Enum values are `{ Televote, Jury }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values.                     |
 | `votingCountryCode` |     string      | Filters the queryable contest data by voting country code when provided. Must be string of 2 upper-case ASCII letters.                                                                                         |
@@ -66,7 +66,7 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-average
   "metadata": {
     "contestYearRange": {
       "startContestYear": 2016,
-      "endContestYear": 2026
+      "endContestYear": 2050
     },
     "contestStages": [
       "SemiFinal1",

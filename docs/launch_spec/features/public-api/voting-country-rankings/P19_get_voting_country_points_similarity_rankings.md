@@ -50,9 +50,9 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-similarity
 
 | Name                   |      Type       | Details                                                                                                                                                                                                        |
 |:-----------------------|:---------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `competingCountryCode` |     string      | Specifies the competing country code when provided. Must be string of 2 upper-case ASCII letters.                                                                                                              |
-| `startContestYear`     |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Defaults to 2016.                                                                                    |
-| `endContestYear`       |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear` when both are provided. Defaults to 2050.          |
+| `competingCountryCode` |     string      | Filters the queryable voting data by competing country code when provided. Must be string of 2 upper-case ASCII letters.                                                                                       |
+| `startContestYear`     |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Must be less than or equal to `endContestYear`. Defaults to 2016.                                    |
+| `endContestYear`       |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear`. Defaults to 2050.                                 |
 | `contestStages`        | string[] (enum) | Filters the queryable contest data by contest stage(s). Enum values are `{ SemiFinal1, SemiFinal2, GrandFinal }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values. |
 | `rankOrdering`         |  string (enum)  | Sets the rank ordering behaviour. Enum values are `{ DescendingMetric, AscendingMetric }`. Defaults to `DescendingMetric`.                                                                                     |
 | `pageSize`             |       int       | Sets the pagination page size. Must be integer between 1 and 100. Defaults to 10.                                                                                                                              |
@@ -70,7 +70,7 @@ GET /public/api/{apiVersion}/voting-country-rankings/points-similarity
     "competingCountryCode": "CH",
     "contestYearRange": {
       "startContestYear": 2016,
-      "endContestYear": 2026
+      "endContestYear": 2050
     },
     "contestStages": [
       "SemiFinal1",
