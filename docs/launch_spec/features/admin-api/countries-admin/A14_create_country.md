@@ -63,15 +63,10 @@ Location: /admin/api/{apiVersion}/countries/{countryId}
 **CreateCountry endpoint...**
 
 - [ ] Should_fail_when_countryCode_is_not_unique
-- [ ] Should_fail_when_countryCode_is_not_provided
 - [ ] Should_fail_when_countryCode_is_empty_or_whitespace
 - [ ] Should_fail_when_countryCode_length_is_not_2_chars
 - [ ] Should_fail_when_countryCode_contains_non_ASCII_letter_upper_char
-- [ ] Should_fail_when_countryName_is_not_provided
 - [ ] Should_fail_when_countryName_is_empty_or_whitespace
-- [ ] Should_fail_when_countryName_is_longer_than_200_chars
+- [ ] Should_fail_when_countryName_is_longer_than_100_chars
 - [ ] Should_fail_when_countryName_contains_line_break
 - [ ] Should_fail_when_countryName_starts_or_ends_with_whitespace
-- [ ] Should_fail_when_countryType_is_not_provided
-- [ ] Should_fail_when_countryType_is_invalid_enum_string_value
-- [ ] Should_fail_when_countryType_is_invalid_enum_int_value
