@@ -31,7 +31,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 - [A02. Award broadcast televote points](features/admin-api/broadcasts-admin/A02_award_broadcast_televote_points.md)
 - [A03. Delete broadcast](features/admin-api/broadcasts-admin/A03_delete_broadcast.md)
 - [A04. Get broadcast](features/admin-api/broadcasts-admin/A04_get_broadcast.md)
-- A05. Get broadcasts
+- [A05. Get broadcasts](features/admin-api/broadcasts-admin/A05_get_broadcasts.md)
 
 ### Contests Admin
 
