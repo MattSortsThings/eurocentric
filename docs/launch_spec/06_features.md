@@ -88,7 +88,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 ### Competing country rankings
 
 - [P06. Get competing country points average rankings](features/public-api/competing-country-rankings/P06_get_competing_country_points_average_rankings.md)
-- P07. Get competing country points in range rankings
+- [P07. Get competing country points in range rankings](features/public-api/competing-country-rankings/P07_get_competing_country_points_in_range_rankings.md)
 - [P08. Get competing country points share rankings](features/public-api/competing-country-rankings/P08_get_competing_country_points_share_rankings.md)
 - [P09. Get competing country points similarity rankings](features/public-api/competing-country-rankings/P09_get_competing_country_points_similarity_rankings.md)
 
