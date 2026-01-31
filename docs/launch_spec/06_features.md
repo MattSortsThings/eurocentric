@@ -39,7 +39,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 - A07. Create contest child broadcast
 - [A08. Delete contest](features/admin-api/contests-admin/A08_delete_contest.md)
 - [A09. Get contest](features/admin-api/contests-admin/A09_get_contest.md)
-- A10. Get contests
+- [A10. Get contests](features/admin-api/contests-admin/A10_get_contests.md)
 - A11. Handle broadcast completed
 - A12. Handle broadcast created
 - A13. Handle broadcast deleted
