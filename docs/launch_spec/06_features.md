@@ -30,7 +30,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 - [A01. Award broadcast jury points](features/admin-api/broadcasts-admin/A01_award_broadcast_jury_points.md)
 - [A02. Award broadcast televote points](features/admin-api/broadcasts-admin/A02_award_broadcast_televote_points.md)
 - [A03. Delete broadcast](features/admin-api/broadcasts-admin/A03_delete_broadcast.md)
-- A04. Get broadcast
+- [A04. Get broadcast](features/admin-api/broadcasts-admin/A04_get_broadcast.md)
 - A05. Get broadcasts
 
 ### Contests Admin
