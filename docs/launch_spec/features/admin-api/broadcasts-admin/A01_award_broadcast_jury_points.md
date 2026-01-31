@@ -66,9 +66,11 @@ PATCH /admin/api/{apiVersion}/broadcasts/{broadcastId}/award-jury-points
 **AwardBroadcastJuryPoints endpoint...**
 
 - [ ] Should_fail_when_broadcast_does_not_exist
+- [ ] Should_fail_when_votingCountryId_is_not_provided
 - [ ] Should_fail_when_votingCountryId_matches_no_jury
 - [ ] Should_fail_when_votingCountryId_matches_jury_already_points_awarded
-- [ ] Should_fail_when_rankedCompetingCountryIds_is_empty
+- [ ] Should_fail_when_rankedCompetingCountryIds_is_not_provided
+- [ ] Should_fail_when_rankedCompetingCountryIds_is_empty_list
 - [ ] Should_fail_when_rankedCompetingCountryIds_contains_votingCountryId
 - [ ] Should_fail_when_rankedCompetingCountryIds_contains_duplicates
 - [ ] Should_fail_when_rankedCompetingCountryIds_item_matches_no_competitor
