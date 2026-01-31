@@ -49,7 +49,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 - A14. Create country
 - A15. Delete country
 - A16. Get countries
-- A17. Get country
+- [A17. Get country](features/admin-api/countries-admin/A17_get_country.md)
 - A18. Handle contest created
 - A19. Handle contest deleted
 
