@@ -27,8 +27,8 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ### Broadcasts Admin
 
-- A01. Award broadcast jury points
-- A02. Award broadcast televote points
+- [A01. Award broadcast jury points](features/admin-api/broadcasts-admin/A01_award_broadcast_jury_points.md)
+- [A02. Award broadcast televote points](features/admin-api/broadcasts-admin/A02_award_broadcast_televote_points.md)
 - A03. Delete broadcast
 - A04. Get broadcast
 - A05. Get broadcasts
