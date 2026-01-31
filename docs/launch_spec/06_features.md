@@ -36,7 +36,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 ### Contests Admin
 
 - [A06. Create contest](features/admin-api/contests-admin/A06_create_contest.md)
-- A07. Create contest child broadcast
+- [A07. Create contest child broadcast](features/admin-api/contests-admin/A07_create_contest_child_broadcast.md)
 - [A08. Delete contest](features/admin-api/contests-admin/A08_delete_contest.md)
 - [A09. Get contest](features/admin-api/contests-admin/A09_get_contest.md)
 - [A10. Get contests](features/admin-api/contests-admin/A10_get_contests.md)

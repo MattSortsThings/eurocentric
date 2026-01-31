@@ -82,6 +82,7 @@ Location: /admin/api/{apiVersion}/contests/{contestId}
 - `contest.queryable` is always `false` for a newly created contest aggregate.
 - `contest.broadcastMemos` is always empty or a newly created contest aggregate.
 - `contest.globalTelevote` may be null.
+- Any secondary effects are scoped to event handler features.
 
 ## Acceptance criteria
 
