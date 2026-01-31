@@ -3,7 +3,7 @@
 ## User story
 
 - **As the Admin**
-- **I want** to delete a broadcast from the system
+- **I want** to delete a single broadcast
 - **So that** no trace of the deleted broadcast remains, and the queryable voting data is always up-to-date, and I am free to create a new broadcast with the same broadcast date or contest year + stage if I wish.
 
 ## API contract
