@@ -14,15 +14,14 @@ This document is part of the [*Eurocentric* launch specification](../../../READM
 2. Filter the queryable voting data by contest year range, contest stage(s), voting method(s), and optionally by voting country.
 3. Group the filtered data by competing country.
 4. For each group, calculate:
-   1. The number of unique voting countries.
-   2. The number of unique broadcasts.
-   3. The number of unique contests.
-   4. The number of points awards.
-   5. The number of points awards in range.
-5. For each group, calculate the *points in range* metric as (points awards in range)/(points awards), rounded half-up to 6 decimal places.
-6. Rank all groups by descending or ascending *points in range* metric, using non-dense ranking, equal metrics assigned equal rank.
-7. Sort rankings by rank (ascending) then by country code (ascending).
-8. Apply pagination.
+   1. The number of points awards in range.
+   2. The number of points awards.
+   3. The number of unique voting countries.
+   4. The number of unique broadcasts.
+   5. The number of unique contests.
+5. Rank all groups by descending or ascending *points in range* metric, using non-dense ranking, equal metrics assigned equal rank.For each group, calculate the *points in range* metric as (points awards in range)/(points awards), rounded half-up to 6 decimal places.
+6. Sort rankings by rank (ascending) then by country code (ascending).
+7. Apply pagination.
 
 **Notes:**
 
