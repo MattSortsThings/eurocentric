@@ -47,7 +47,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 ### Countries Admin
 
 - A14. Create country
-- A15. Delete country
+- [A15. Delete country](features/admin-api/countries-admin/A15_delete_country.md)
 - [A16. Get countries](features/admin-api/countries-admin/A16_get_countries.md)
 - [A17. Get country](features/admin-api/countries-admin/A17_get_country.md)
 - A18. Handle contest created

@@ -22,7 +22,7 @@ DELETE /admin/api/{apiVersion}/broadcasts/{broadcastId}
 ### HTTP response
 
 ```http request
-204 NoContent
+204 No Content
 ```
 
 **Notes:**
