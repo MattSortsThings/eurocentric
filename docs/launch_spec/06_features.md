@@ -95,15 +95,15 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ### Queryable broadcasts
 
-- P11. Get queryable broadcasts
+- [P11. Get queryable broadcasts](features/public-api/queryable-broadcasts/P11_get_queryable_broadcasts.md)
 
 ### Queryable contests
 
-- P12. Get queryable contests
+- [P12. Get queryable contests](features/public-api/queryable-contests/P12_get_queryable_contests.md)
 
 ### Queryable countries
 
-- P13. Get queryable countries
+- [P13. Get queryable countries](features/public-api/queryable-countries/P13_get_queryable_countries.md)
 
 ### Scoreboard Rows
 
