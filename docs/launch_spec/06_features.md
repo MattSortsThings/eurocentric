@@ -90,8 +90,8 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ### Points Awards
 
-- P09. Get broadcast competing country points awards
-- P10. Get broadcast voting country points awards
+- [P09. Get broadcast competing country points awards](features/public-api/points-awards/P09_get_broadcast_competing_country_points_awards.md)
+- [P10. Get broadcast voting country points awards](features/public-api/points-awards/P10_get_broadcast_voting_country_points_awards.md)
 
 ### Queryable broadcasts
 
@@ -107,8 +107,8 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ### Scoreboard Rows
 
-- P14. Get broadcast scoreboard rows
-- P15. Get competing country scoreboard rows
+- [P14. Get broadcast scoreboard rows](features/public-api/scoreboard-rows/P14_get_broadcast_scoreboard_rows.md)
+- [P15. Get competing country scoreboard rows](features/public-api/scoreboard-rows/P15_get_competing_country_scoreboard_rows.md)
 
 ### Voting country rankings
 
