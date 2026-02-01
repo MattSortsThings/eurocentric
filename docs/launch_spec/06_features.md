@@ -65,7 +65,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ## *logging* feature scope
 
-- L01. Correlated log entries
+- [L01. Correlated log entries](features/logging/L01_correlated_log_entries.md)
 
 ## *open-api* feature scope
 
