@@ -40,9 +40,9 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 - [A08. Delete contest](features/admin-api/contests/A08_delete_contest.md)
 - [A09. Get contest](features/admin-api/contests/A09_get_contest.md)
 - [A10. Get contests](features/admin-api/contests/A10_get_contests.md)
-- A11. Handle broadcast completed
-- A12. Handle broadcast created
-- A13. Handle broadcast deleted
+- [A11. Handle broadcast completed](features/admin-api/contests/A11_handle_broadcast_completed.md)
+- [A12. Handle broadcast created](features/admin-api/contests/A12_handle_broadcast_created.md)
+- [A13. Handle broadcast deleted](features/admin-api/contests/A13_handle_broadcast_deleted.md)
 
 ### Countries
 
@@ -50,8 +50,8 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 - [A15. Delete country](features/admin-api/countries/A15_delete_country.md)
 - [A16. Get countries](features/admin-api/countries/A16_get_countries.md)
 - [A17. Get country](features/admin-api/countries/A17_get_country.md)
-- A18. Handle contest created
-- A19. Handle contest deleted
+- [A18. Handle contest created](features/admin-api/countries/A18_handle_contest_created.md)
+- [A19. Handle contest deleted](features/admin-api/countries/A19_handle_contest_deleted.md)
 
 ### Observability
 
