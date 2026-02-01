@@ -1,11 +1,11 @@
-# P07. Get competing country points in range rankings
+# P07. Get competing country points share rankings
 
 This document is part of the [*Eurocentric* launch specification](../../../README.md).
 
 ## User story
 
 - **As a EuroFan**
-- **I want** to get a page of competing countries ranked by their *points in range* metric, i.e. the relative frequency of points awards within a specific value range each country received across broadcasts
+- **I want** to get a page of competing countries ranked by their *points share* metric, i.e. the fraction of the maximum possible points each country received across broadcasts
 - **So that** I can learn from the rankings, and represent them in a chart or table, and import them into a spreadsheet, and get additional rankings pages.
 
 ## Query behaviour
@@ -14,14 +14,16 @@ This document is part of the [*Eurocentric* launch specification](../../../READM
 2. Filter the queryable voting data by contest year range, contest stage(s), voting method(s), and optionally by voting country.
 3. Group the filtered data by competing country.
 4. For each group, calculate:
-   1. The number of points awards in range.
-   2. The number of points awards.
-   3. The number of unique voting countries.
-   4. The number of unique broadcasts.
-   5. The number of unique contests.
-5. Rank all groups by descending or ascending *points in range* metric, using non-dense ranking, equal metrics assigned equal rank.For each group, calculate the *points in range* metric as (points awards in range)/(points awards), rounded half-up to 6 decimal places.
-6. Sort rankings by rank (ascending) then by country code (ascending).
-7. Apply pagination.
+   1. The sum total points received.
+   2. The maximum possible points.
+   3. The number of points awards.
+   4. The number of unique voting countries.
+   5. The number of unique broadcasts.
+   6. The number of unique contests.
+5. For each group, calculate the *points share* metric as (sum total points)/(maximum possible points), rounded half-up to 6 decimal places.
+6. Rank all groups by descending or ascending *points share* metric, using non-dense ranking, equal metrics assigned equal rank.
+7. Sort rankings by rank (ascending) then by country code (ascending).
+8. Apply pagination.
 
 **Notes:**
 
@@ -34,19 +36,12 @@ This document is part of the [*Eurocentric* launch specification](../../../READM
 ### HTTP request
 
 ```http request
-GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
+GET /public/api/{apiVersion}/competing-country-rankings/points-share
 ```
 
 **Notes:**
 
 - `apiVersion` is a major-minor API version URL segment, e.g. `"v1.0"`.
-
-**Required query parameters:**
-
-| Name                |      Type       | Details                                                                                                               |
-|:--------------------|:---------------:|:----------------------------------------------------------------------------------------------------------------------|
-| `minPoints`         |       int       | Specifies the inclusive minimum points value. Must be integer between 0 and 12. Must not be greater than `maxPoints`. |
-| `maxPoints`         |       int       | Specifies the inclusive maximum points value. Must be integer between 0 and 12. Must not be less than `minPoints`.    |
 
 **Optional query parameters:**
 
@@ -70,10 +65,6 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
 ```json
 {
   "metadata": {
-    "pointsValueRange": {
-      "minPoints": 1,
-      "maxPoints": 12
-    },
     "contestYearRange": {
       "startContestYear": 2016,
       "endContestYear": 2050
@@ -100,8 +91,9 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
       "rank": 1,
       "countryCode": "AA",
       "countryName": "Country Name",
-      "pointsInRange": 0.8,
-      "pointsAwardsInRange": 8,
+      "pointsShare": 0.5,
+      "totalPoints": 60,
+      "maxPossiblePoints": 120,
       "pointsAwards": 10,
       "votingCountries": 1,
       "broadcasts": 10,
@@ -115,20 +107,16 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
 
 - `metadata.votingCountryCode` may be null.
 - `rankings` is ordered by `rank` then by `countryCode`.
-- `ranking.pointsInRange` is a decimal (6 decimal places), calculated as `pointsAwardsInRange` / `pointsAwards`.
+- `ranking.pointsShare` is a decimal (6 decimal places), calculated as `totalPoints` / `pointsAwards`.
 
 ## Acceptance criteria
 
 ### Happy path
 
-**GetCompetingCountryPointsInRangeRankings endpoint...**
+**GetCompetingCountryPointsShareRankings endpoint...**
 
 - [ ] Should_succeed_with_200_OK_and_metadata_and_rankings_when_minimal_query_is_valid
 - [ ] Should_succeed_with_200_OK_and_metadata_and_rankings_when_complex_query_is_valid
-- [ ] Should_succeed_when_specifying_minPoints_1_maxPoints_12
-- [ ] Should_succeed_when_specifying_minPoints_0_maxPoints_0
-- [ ] Should_succeed_when_specifying_minPoints_1_maxPoints_7
-- [ ] Should_succeed_when_specifying_minPoints_8_maxPoints_12
 - [ ] Should_succeed_when_filtering_by_startContestYear_2023
 - [ ] Should_succeed_when_filtering_by_endContestYear_2022
 - [ ] Should_succeed_when_filtering_by_startContestYear_2016_endContestYear_2050
@@ -163,13 +151,8 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
 
 ### Sad path
 
-**GetCompetingCountryPointsInRangeRankings endpoint...**
+**GetCompetingCountryPointsShareRankings endpoint...**
 
-- [ ] Should_fail_when_minPoints_is_not_provided
-- [ ] Should_fail_when_minPoints_is_less_than_0_or_greater_than_12
-- [ ] Should_fail_when_maxPoints_is_not_provided
-- [ ] Should_fail_when_maxPoints_is_less_than_0_or_greater_than_12
-- [ ] Should_fail_when_maxPoints_is_less_than_minPoints
 - [ ] Should_fail_when_startContestYear_is_less_than_2016_or_greater_than_2050
 - [ ] Should_fail_when_endContestYear_is_less_than_2016_or_greater_than_2050
 - [ ] Should_fail_when_endContestYear_is_less_than_startContestYear

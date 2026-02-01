@@ -4,9 +4,9 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 - [6. Features](#6-features)
   - [*admin-api* feature scope](#admin-api-feature-scope)
-    - [Broadcasts Admin](#broadcasts-admin)
-    - [Contests Admin](#contests-admin)
-    - [Countries Admin](#countries-admin)
+    - [Broadcasts Admin](#broadcasts)
+    - [Contests Admin](#contests)
+    - [Countries Admin](#countries)
     - [Observability](#observability)
   - [*error-handling* feature scope](#error-handling-feature-scope)
   - [*logging* feature scope](#logging-feature-scope)
@@ -25,31 +25,31 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ## *admin-api* feature scope
 
-### Broadcasts Admin
+### Broadcasts
 
-- [A01. Award broadcast jury points](features/admin-api/broadcasts-admin/A01_award_broadcast_jury_points.md)
-- [A02. Award broadcast televote points](features/admin-api/broadcasts-admin/A02_award_broadcast_televote_points.md)
-- [A03. Delete broadcast](features/admin-api/broadcasts-admin/A03_delete_broadcast.md)
-- [A04. Get broadcast](features/admin-api/broadcasts-admin/A04_get_broadcast.md)
-- [A05. Get broadcasts](features/admin-api/broadcasts-admin/A05_get_broadcasts.md)
+- [A01. Award broadcast jury points](features/admin-api/broadcasts/A01_award_broadcast_jury_points.md)
+- [A02. Award broadcast televote points](features/admin-api/broadcasts/A02_award_broadcast_televote_points.md)
+- [A03. Delete broadcast](features/admin-api/broadcasts/A03_delete_broadcast.md)
+- [A04. Get broadcast](features/admin-api/broadcasts/A04_get_broadcast.md)
+- [A05. Get broadcasts](features/admin-api/broadcasts/A05_get_broadcasts.md)
 
-### Contests Admin
+### Contests
 
-- [A06. Create contest](features/admin-api/contests-admin/A06_create_contest.md)
-- [A07. Create contest child broadcast](features/admin-api/contests-admin/A07_create_contest_child_broadcast.md)
-- [A08. Delete contest](features/admin-api/contests-admin/A08_delete_contest.md)
-- [A09. Get contest](features/admin-api/contests-admin/A09_get_contest.md)
-- [A10. Get contests](features/admin-api/contests-admin/A10_get_contests.md)
+- [A06. Create contest](features/admin-api/contests/A06_create_contest.md)
+- [A07. Create contest child broadcast](features/admin-api/contests/A07_create_contest_child_broadcast.md)
+- [A08. Delete contest](features/admin-api/contests/A08_delete_contest.md)
+- [A09. Get contest](features/admin-api/contests/A09_get_contest.md)
+- [A10. Get contests](features/admin-api/contests/A10_get_contests.md)
 - A11. Handle broadcast completed
 - A12. Handle broadcast created
 - A13. Handle broadcast deleted
 
-### Countries Admin
+### Countries
 
-- [A14. Create country](features/admin-api/countries-admin/A14_create_country.md)
-- [A15. Delete country](features/admin-api/countries-admin/A15_delete_country.md)
-- [A16. Get countries](features/admin-api/countries-admin/A16_get_countries.md)
-- [A17. Get country](features/admin-api/countries-admin/A17_get_country.md)
+- [A14. Create country](features/admin-api/countries/A14_create_country.md)
+- [A15. Delete country](features/admin-api/countries/A15_delete_country.md)
+- [A16. Get countries](features/admin-api/countries/A16_get_countries.md)
+- [A17. Get country](features/admin-api/countries/A17_get_country.md)
 - A18. Handle contest created
 - A19. Handle contest deleted
 
@@ -81,29 +81,29 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 - [P03. Get broadcast competitor points share rankings](features/public-api/broadcast-competitor-rankings/P03_get_broadcast_competitor_points_share_rankings.md)
 - [P04. Get broadcast competitor points similarity rankings](features/public-api/broadcast-competitor-rankings/P04_get_broadcast_competitor_points_similarity_rankings.md)
 
-### Broadcasts
-
-- P05. Get queryable broadcasts
-
 ### Competing country rankings
 
-- [P06. Get competing country points average rankings](features/public-api/competing-country-rankings/P06_get_competing_country_points_average_rankings.md)
-- [P07. Get competing country points in range rankings](features/public-api/competing-country-rankings/P07_get_competing_country_points_in_range_rankings.md)
-- [P08. Get competing country points share rankings](features/public-api/competing-country-rankings/P08_get_competing_country_points_share_rankings.md)
-- [P09. Get competing country points similarity rankings](features/public-api/competing-country-rankings/P09_get_competing_country_points_similarity_rankings.md)
-
-### Contests
-
-- P10. Get queryable contests
-
-### Countries
-
-- P11. Get queryable countries
+- [P05. Get competing country points average rankings](features/public-api/competing-country-rankings/P05_get_competing_country_points_average_rankings.md)
+- [P06. Get competing country points in range rankings](features/public-api/competing-country-rankings/P06_get_competing_country_points_in_range_rankings.md)
+- [P07. Get competing country points share rankings](features/public-api/competing-country-rankings/P07_get_competing_country_points_share_rankings.md)
+- [P08. Get competing country points similarity rankings](features/public-api/competing-country-rankings/P08_get_competing_country_points_similarity_rankings.md)
 
 ### Points Awards
 
-- P12. Get broadcast competing country points awards
-- P13. Get broadcast voting country points awards
+- P09. Get broadcast competing country points awards
+- P10. Get broadcast voting country points awards
+
+### Queryable broadcasts
+
+- P11. Get queryable broadcasts
+
+### Queryable contests
+
+- P12. Get queryable contests
+
+### Queryable countries
+
+- P13. Get queryable countries
 
 ### Scoreboard Rows
 

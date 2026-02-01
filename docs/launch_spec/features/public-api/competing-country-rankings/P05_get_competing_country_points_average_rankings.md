@@ -1,4 +1,4 @@
-# P06. Get competing country points average rankings
+# P05. Get competing country points average rankings
 
 This document is part of the [*Eurocentric* launch specification](../../../README.md).
 

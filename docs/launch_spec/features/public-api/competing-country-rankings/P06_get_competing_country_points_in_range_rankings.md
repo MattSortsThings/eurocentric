@@ -1,37 +1,31 @@
-# P09. Get competing country points similarity rankings
+# P06. Get competing country points in range rankings
 
 This document is part of the [*Eurocentric* launch specification](../../../README.md).
 
 ## User story
 
 - **As a EuroFan**
-- **I want** to get a page of competing countries ranked by their *points similarity* metric, i.e. the cosine similarity between the televote and jury points awards each country received across broadcasts
+- **I want** to get a page of competing countries ranked by their *points in range* metric, i.e. the relative frequency of points awards within a specific value range each country received across broadcasts
 - **So that** I can learn from the rankings, and represent them in a chart or table, and import them into a spreadsheet, and get additional rankings pages.
 
 ## Query behaviour
 
 1. Start with the list of all points awards in all broadcasts in all queryable contests (the *queryable voting data*).
-2. Filter the queryable voting data to pairs of points awards given by a televote and a jury from the same voting country in the same broadcast.
-3. Normalize each points award value from an integer in the range \[0, 12\] to a decimal (6 decimal places) in the range \[1.0, 10.0\].
-4. Filter the normalized voting data by contest year range, contest stage(s), and optionally by voting country.
-5. Group the filtered data by competing country.
-6. For each group, generate a televote vector and a jury vector, using each voting country in each broadcast as a vector dimension.
-7. For each group, calculate:
-   1. the vector dot product, rounded half-up to 6 decimal places.
-   2. the televote vector length, rounded half-up to 6 decimal places.
-   3. the jury vector length, rounded half-up to 6 decimal places.
-   4. the number of vector dimensions.
-   5. the number of unique voting countries.
-   6. the number of unique broadcasts.
-   7. the number of unique contests.
-8. For each group, calculate the *points similarity* metric as (vector dot product)/((televote vector length) * jury vector length), rounded half-up to 6 decimal places.
-9. Rank all groups by descending or ascending *points similarity* metric, using non-dense ranking, equal metrics assigned equal rank.
-10. Sort rankings by rank (ascending) then by country code (ascending).
-11. Apply pagination.
+2. Filter the queryable voting data by contest year range, contest stage(s), voting method(s), and optionally by voting country.
+3. Group the filtered data by competing country.
+4. For each group, calculate:
+   1. The number of points awards in range.
+   2. The number of points awards.
+   3. The number of unique voting countries.
+   4. The number of unique broadcasts.
+   5. The number of unique contests.
+5. Rank all groups by descending or ascending *points in range* metric, using non-dense ranking, equal metrics assigned equal rank.For each group, calculate the *points in range* metric as (points awards in range)/(points awards), rounded half-up to 6 decimal places.
+6. Sort rankings by rank (ascending) then by country code (ascending).
+7. Apply pagination.
 
 **Notes:**
 
-- Competing countries with zero points award pairs in the filtered normalized queryable voting data are not ranked.
+- Competing countries with zero points awards in the filtered queryable voting data are not ranked.
 - Every ranking has a unique (rank, country code) tuple.
 - If the query parameters exclude all queryable voting data, zero rankings are generated and an empty page is returned.
 
@@ -40,12 +34,19 @@ This document is part of the [*Eurocentric* launch specification](../../../READM
 ### HTTP request
 
 ```http request
-GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
+GET /public/api/{apiVersion}/competing-country-rankings/points-in-range
 ```
 
 **Notes:**
 
 - `apiVersion` is a major-minor API version URL segment, e.g. `"v1.0"`.
+
+**Required query parameters:**
+
+| Name                |      Type       | Details                                                                                                               |
+|:--------------------|:---------------:|:----------------------------------------------------------------------------------------------------------------------|
+| `minPoints`         |       int       | Specifies the inclusive minimum points value. Must be integer between 0 and 12. Must not be greater than `maxPoints`. |
+| `maxPoints`         |       int       | Specifies the inclusive maximum points value. Must be integer between 0 and 12. Must not be less than `minPoints`.    |
 
 **Optional query parameters:**
 
@@ -54,6 +55,7 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
 | `startContestYear`  |       int       | Filters the queryable voting data by inclusive start contest year. Must be integer between 2016 and 2050. Must be less than or equal to `endContestYear`. Defaults to 2016.                                    |
 | `endContestYear`    |       int       | Filters the queryable voting data by inclusive end contest year. Must be integer between 2016 and 2050. Must be greater than or equal to `startContestYear`. Defaults to 2050.                                 |
 | `contestStages`     | string[] (enum) | Filters the queryable contest data by contest stage(s). Enum values are `{ SemiFinal1, SemiFinal2, GrandFinal }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values. |
+| `votingMethods`     | string[] (enum) | Filters the queryable contest data by voting method(s). Enum values are `{ Televote, Jury }`. Values must be passed separately. Duplicate values are ignored. Defaults to all enum values.                     |
 | `votingCountryCode` |     string      | Filters the queryable contest data by voting country code when provided. Must be string of 2 upper-case ASCII letters.                                                                                         |
 | `rankOrdering`      |  string (enum)  | Sets the rank ordering behaviour. Enum values are `{ DescendingMetric, AscendingMetric }`. Defaults to `DescendingMetric`.                                                                                     |
 | `pageSize`          |       int       | Sets the pagination page size. Must be integer between 1 and 100. Defaults to 10.                                                                                                                              |
@@ -68,6 +70,10 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
 ```json
 {
   "metadata": {
+    "pointsValueRange": {
+      "minPoints": 1,
+      "maxPoints": 12
+    },
     "contestYearRange": {
       "startContestYear": 2016,
       "endContestYear": 2050
@@ -76,6 +82,10 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
       "SemiFinal1",
       "SemiFinal2",
       "GrandFinal"
+    ],
+    "votingMethod": [
+      "Televote",
+      "Jury"
     ],
     "votingCountryCode": "ZZ",
     "rankOrdering": "DescendingMetric",
@@ -90,11 +100,9 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
       "rank": 1,
       "countryCode": "AA",
       "countryName": "Country Name",
-      "pointsSimilarity": 0.75,
-      "vectorDotProduct": 150.0,
-      "televoteVectorLength": 10.0,
-      "juryVectorLength": 20.0,
-      "vectorDimensions": 10,
+      "pointsInRange": 0.8,
+      "pointsAwardsInRange": 8,
+      "pointsAwards": 10,
       "votingCountries": 1,
       "broadcasts": 10,
       "contests": 5
@@ -107,19 +115,20 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
 
 - `metadata.votingCountryCode` may be null.
 - `rankings` is ordered by `rank` then by `countryCode`.
-- `ranking.pointsSimilarity` is a decimal (6 decimal places), calculated as `vectorDotProduct` / (`televoteVectorLength` * `juryVectorLength`).
-- `ranking.vectorDotProduct` is a decimal (6 decimal places).
-- `ranking.televoteVectorLength` is a decimal (6 decimal places).
-- `ranking.juryVectorLength` is a decimal (6 decimal places).
+- `ranking.pointsInRange` is a decimal (6 decimal places), calculated as `pointsAwardsInRange` / `pointsAwards`.
 
 ## Acceptance criteria
 
 ### Happy path
 
-**GetCompetingCountryPointsSimilarityRankings endpoint...**
+**GetCompetingCountryPointsInRangeRankings endpoint...**
 
 - [ ] Should_succeed_with_200_OK_and_metadata_and_rankings_when_minimal_query_is_valid
 - [ ] Should_succeed_with_200_OK_and_metadata_and_rankings_when_complex_query_is_valid
+- [ ] Should_succeed_when_specifying_minPoints_1_maxPoints_12
+- [ ] Should_succeed_when_specifying_minPoints_0_maxPoints_0
+- [ ] Should_succeed_when_specifying_minPoints_1_maxPoints_7
+- [ ] Should_succeed_when_specifying_minPoints_8_maxPoints_12
 - [ ] Should_succeed_when_filtering_by_startContestYear_2023
 - [ ] Should_succeed_when_filtering_by_endContestYear_2022
 - [ ] Should_succeed_when_filtering_by_startContestYear_2016_endContestYear_2050
@@ -132,6 +141,10 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
 - [ ] Should_succeed_when_filtering_by_contestStages_SemiFinal2_GrandFinal
 - [ ] Should_succeed_when_filtering_by_contestStages_SemiFinal1_SemiFinal2_GrandFinal
 - [ ] Should_succeed_when_filtering_by_contestStages_omitting_duplicate_values
+- [ ] Should_succeed_when_filtering_by_votingMethods_Televote
+- [ ] Should_succeed_when_filtering_by_votingMethods_Jury
+- [ ] Should_succeed_when_filtering_by_votingMethods_Televote_Jury
+- [ ] Should_succeed_when_filtering_by_votingMethods_omitting_duplicate_values
 - [ ] Should_succeed_when_filtering_by_votingCountryCode_CH
 - [ ] Should_succeed_when_filtering_by_votingCountryCode_GB
 - [ ] Should_succeed_when_filtering_by_votingCountryCode_SI
@@ -150,13 +163,20 @@ GET /public/api/{apiVersion}/competing-country-rankings/points-similarity
 
 ### Sad path
 
-**GetCompetingCountryPointsSimilarityRankings endpoint...**
+**GetCompetingCountryPointsInRangeRankings endpoint...**
 
+- [ ] Should_fail_when_minPoints_is_not_provided
+- [ ] Should_fail_when_minPoints_is_less_than_0_or_greater_than_12
+- [ ] Should_fail_when_maxPoints_is_not_provided
+- [ ] Should_fail_when_maxPoints_is_less_than_0_or_greater_than_12
+- [ ] Should_fail_when_maxPoints_is_less_than_minPoints
 - [ ] Should_fail_when_startContestYear_is_less_than_2016_or_greater_than_2050
 - [ ] Should_fail_when_endContestYear_is_less_than_2016_or_greater_than_2050
 - [ ] Should_fail_when_endContestYear_is_less_than_startContestYear
 - [ ] Should_fail_when_contestStages_is_invalid_enum_string_value
 - [ ] Should_fail_when_contestStages_is_invalid_enum_int_value
+- [ ] Should_fail_when_votingMethods_is_invalid_enum_string_value
+- [ ] Should_fail_when_votingMethods_is_invalid_enum_int_value
 - [ ] Should_fail_when_votingCountryCode_is_empty_or_whitespace
 - [ ] Should_fail_when_votingCountryCode_length_is_not_2_chars
 - [ ] Should_fail_when_votingCountryCode_contains_non_ASCII_letter_upper_char
