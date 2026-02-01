@@ -8,7 +8,7 @@
 
 ## Acceptance criteria
 
-**API endpoints...**
+**API endpoint...**
 
 - [ ] Should_return_404_NotFound_with_ProblemDetails_on_NotFound_domain_error
 - [ ] Should_return_409_Conflict_with_ProblemDetails_on_Extrinsic_domain_error

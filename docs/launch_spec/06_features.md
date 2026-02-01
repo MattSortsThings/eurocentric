@@ -124,5 +124,5 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ## *versioning* feature scope
 
-- V01. API version reporting
-- V02. API version URL segments
+- [V01. API version reporting](features/versioning/V01_api_version_reporting.md)
+- [V02. API version URL segments](features/versioning/V02_api_version_url_segments.md)
