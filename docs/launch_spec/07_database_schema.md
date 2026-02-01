@@ -210,6 +210,6 @@ erDiagram
 - All five tables have:
   - an index on `timestamp_utc`.
   - an index on `correlation_id`.
-  - an on-insert trigger that deletes all records with a `timestamp_utc` date more than 60 days earlier than the current date.
+  - an after-insert trigger that deletes all records with a `timestamp_utc` date more than 60 days earlier than the date of the inserted record.
 - In the `internal_result_log_entry` table:
   - `domain_error_metadata`, when not `NULL`, is a JSON-serialized `Dictionary<string, object>`.
