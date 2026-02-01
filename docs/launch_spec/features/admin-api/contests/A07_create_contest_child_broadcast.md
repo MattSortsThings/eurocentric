@@ -100,7 +100,7 @@ Location: /admin/api/{apiVersion}/broadcasts/{broadcastId}
 
 **CreateContestChildBroadcast endpoint...**
 
-- [ ] Should_succeed_with_201_Created_and_location_and_created_broadcast_when_request_is_valid
+- [ ] Should_succeed_with_201_Created_and_Location_and_created_broadcast_when_request_is_valid
 - [ ] Should_succeed_when_creating_TelevoteOnly_SemiFinal1_broadcast
 - [ ] Should_succeed_when_creating_TelevoteOnly_SemiFinal2_broadcast
 - [ ] Should_succeed_when_creating_TelevoteAndJury_SemiFinal1_broadcast

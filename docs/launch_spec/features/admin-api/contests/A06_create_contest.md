@@ -90,7 +90,7 @@ Location: /admin/api/{apiVersion}/contests/{contestId}
 
 **CreateContest endpoint...**
 
-- [ ] Should_succeed_with_201_Created_and_location_and_created_contest_when_request_is_valid
+- [ ] Should_succeed_with_201_Created_and_Location_and_created_contest_when_request_is_valid
 - [ ] Should_succeed_when_creating_contest_with_TelevoteAndJury_semiFinals_and_globalTelevote
 - [ ] Should_succeed_when_creating_contest_with_TelevoteAndJury_semiFinals_and_no_globalTelevote
 - [ ] Should_succeed_when_creating_contest_with_TelevoteOnly_semiFinals_and_globalTelevote

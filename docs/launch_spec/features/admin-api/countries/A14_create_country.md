@@ -52,7 +52,7 @@ Location: /admin/api/{apiVersion}/countries/{countryId}
 
 **CreateCountry endpoint...**
 
-- [ ] Should_succeed_with_201_Created_and_location_and_created_country_when_request_is_valid
+- [ ] Should_succeed_with_201_Created_and_Location_and_created_country_when_request_is_valid
 - [ ] Should_succeed_when_countryName_contains_punctuation
 - [ ] Should_succeed_when_countryName_contains_accented_letter
 - [ ] Should_succeed_when_countryType_is_Real

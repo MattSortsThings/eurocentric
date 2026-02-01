@@ -119,8 +119,8 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ## *security* feature scope
 
-- S01. API key authentication
-- S02. API key authorization
+- [S01. API key authentication](features/security/S01_api_key_authentication.md)
+- [S02. API key authorization](features/security/S02_api_key_authorization.md)
 
 ## *versioning* feature scope
 
