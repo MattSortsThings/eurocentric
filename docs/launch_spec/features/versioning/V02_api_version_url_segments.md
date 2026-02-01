@@ -8,16 +8,16 @@
 
 ## Acceptance criteria
 
-**Admin API endpoints...**
+**Admin API endpoint...**
 
-- [ ] Should_succeed_when_client_provides_API_version_supported_by_endpoint
-- [ ] Should_fail_when_client_provides_API_version_unsupported_by_endpoint
-- [ ] Should_fail_when_client_provides_API_version_unsupported_by_API
-- [ ] Should_fail_when_client_provides_malformed_API_version
+- [ ] Should_handle_request_when_client_uses_API_version_supported_by_endpoint
+- [ ] Should_fail_when_client_uses_API_version_unsupported_by_endpoint
+- [ ] Should_fail_when_client_uses_API_version_unsupported_by_API
+- [ ] Should_fail_when_client_uses_malformed_API_version
 
-**Public API endpoints...**
+**Public API endpoint...**
 
-- [ ] Should_succeed_when_client_provides_API_version_supported_by_endpoint
-- [ ] Should_fail_when_client_provides_API_version_unsupported_by_endpoint
-- [ ] Should_fail_when_client_provides_API_version_unsupported_by_API
-- [ ] Should_fail_when_client_provides_malformed_API_version
+- [ ] Should_handle_request_when_client_uses_API_version_supported_by_endpoint
+- [ ] Should_fail_when_client_uses_API_version_unsupported_by_endpoint
+- [ ] Should_fail_when_client_uses_API_version_unsupported_by_API
+- [ ] Should_fail_when_client_uses_malformed_API_version

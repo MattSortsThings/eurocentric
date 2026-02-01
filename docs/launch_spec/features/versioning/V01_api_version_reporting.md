@@ -8,22 +8,14 @@
 
 ## Acceptance criteria
 
-**Admin API V0 endpoint...**
+**Admin API endpoint...**
 
 - [ ] Should_report_all_Admin_API_versions_when_request_succeeds
-- [ ] Should_report_all_Admin_API_versions_when_request_fails
+- [ ] Should_report_all_Admin_API_versions_when_request_fails_on_server
+- [ ] Should_report_all_Admin_API_versions_when_client_uses_unsupported_API_version
 
-**Admin API V1 endpoint...**
+**Public API endpoint...**
 
 - [ ] Should_report_all_Admin_API_versions_when_request_succeeds
-- [ ] Should_report_all_Admin_API_versions_when_request_fails
-
-**Public API V0 endpoint...**
-
-- [ ] Should_report_all_Public_API_versions_when_request_succeeds
-- [ ] Should_report_all_Public_API_versions_when_request_fails
-
-**Public API V1 endpoint...**
-
-- [ ] Should_report_all_Public_API_versions_when_request_succeeds
-- [ ] Should_report_all_Public_API_versions_when_request_fails
+- [ ] Should_report_all_Admin_API_versions_when_request_fails_on_server
+- [ ] Should_report_all_Admin_API_versions_when_client_uses_unsupported_API_version

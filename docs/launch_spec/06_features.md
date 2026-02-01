@@ -69,8 +69,8 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ## *open-api* feature scope
 
-- O01. OpenAPI documents
-- O02. Scalar UI pages
+- [O01. OpenAPI documents](features/open-api/O01_open_api_documents.md)
+- [O02. Scalar UI pages](features/open-api/O02_scalar_ui_pages.md)
 
 ## *public-api* feature scope
 

@@ -8,13 +8,6 @@
 
 ## Acceptance criteria
 
-**Admin API V0 endpoint...**
-
-- [ ] Should_authenticate_request_using_demo_API_key
-- [ ] Should_authenticate_request_using_secret_API_key
-- [ ] Should_not_authenticate_request_using_unrecognized_API_key
-- [ ] Should_not_authenticate_request_using_no_API_key
-
 **Admin API endpoint...**
 
 - [ ] Should_authenticate_request_using_demo_API_key
@@ -22,14 +15,7 @@
 - [ ] Should_not_authenticate_request_using_unrecognized_API_key
 - [ ] Should_not_authenticate_request_using_no_API_key
 
-**Public API V0 endpoint...**
-
-- [ ] Should_authenticate_request_using_demo_API_key
-- [ ] Should_authenticate_request_using_secret_API_key
-- [ ] Should_not_authenticate_request_using_unrecognized_API_key
-- [ ] Should_not_authenticate_request_using_no_API_key
-
-**Public API V1 endpoint...**
+**Public API endpoint...**
 
 - [ ] Should_authenticate_request_using_demo_API_key
 - [ ] Should_authenticate_request_using_secret_API_key
