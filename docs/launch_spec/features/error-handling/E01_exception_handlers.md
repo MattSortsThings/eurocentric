@@ -11,6 +11,7 @@
 **API endpoint...**
 
 - [ ] Should_return_400_BadRequest_with_ProblemDetails_on_missing_required_query_param
+- [ ] Should_return_400_BadRequest_with_ProblemDetails_on_unparseable_required_guid_query_param
 - [ ] Should_return_400_BadRequest_with_ProblemDetails_on_invalid_enum_query_param_string_value
 - [ ] Should_return_400_BadRequest_with_ProblemDetails_on_invalid_enum_query_param_int_value
 - [ ] Should_return_400_BadRequest_with_ProblemDetails_on_missing_required_property

@@ -55,8 +55,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ### Observability
 
-- A20. Get endpoint usage metrics
-- A21. Get log entries
+- [A20. Get correlated log entries](features/admin-api/observability/A20_get_correlated_log_entries.md)
 
 ## *error-handling* feature scope
 
