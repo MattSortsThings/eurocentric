@@ -60,8 +60,8 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 ## *error-handling* feature scope
 
-- E01. Exception handlers
-- E02. Problem details
+- [E01. Exception handlers](features/error-handling/E01_exception_handlers.md)
+- [E02. Problem details](features/error-handling/E02_problem_details.md)
 
 ## *logging* feature scope
 
