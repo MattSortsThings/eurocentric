@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Eurocentric.Tests.Architecture" />
+    <InternalsVisibleTo Include="Eurocentric.Tests.Unit" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Components\Eurocentric.Components.csproj" />
