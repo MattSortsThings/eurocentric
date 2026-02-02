@@ -14,7 +14,7 @@ This document is part of the [*Eurocentric* launch specification](../../../READM
 ## User story
 
 - **As the Admin**
-- **I want** to create a new child broadcast for contest
+- **I want** to create a new child broadcast for a contest
 - **So that** I can start awarding points in the broadcast.
 
 ## API contract
