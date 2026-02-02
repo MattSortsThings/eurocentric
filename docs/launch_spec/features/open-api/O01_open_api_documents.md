@@ -1,8 +1,8 @@
-# O01. OpenApi documents
+# O01. OpenAPI documents
 
 This document is part of the [*Eurocentric* launch specification](../../../README.md).
 
-- [O01. OpenApi documents](#o01-openapi-documents)
+- [O01. OpenAPI documents](#o01-openapi-documents)
   - [User story](#user-story)
   - [Acceptance criteria](#acceptance-criteria)
     - [Happy path](#happy-path)
