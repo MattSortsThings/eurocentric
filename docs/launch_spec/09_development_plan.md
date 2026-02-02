@@ -4,7 +4,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 - [9 Development plan](#9-development-plan)
   - [Development phases](#development-phases)
-    - [Phase 1: Cross-cutting features](#phase-1-cross-cutting-features)
+    - [Phase 1: API framework](#phase-1-api-framework)
     - [Phase 2: Admin API v1.0](#phase-2-admin-api-v10)
     - [Phase 3: Public API v1.0](#phase-3-public-api-v10)
     - [Phase 4: Tidy-up](#phase-4-tidy-up)
@@ -21,7 +21,7 @@ This document is part of the [*Eurocentric* launch specification](README.md).
 
 Development is split into 4 phases.
 
-### Phase 1: Cross-cutting features
+### Phase 1: API framework
 
 Define versions 0.1 and 0.2 of the Admin API and the Public API, each with a few features. The features should be fully functional, using minimal placeholder domain types and a temporary database schema.
 
