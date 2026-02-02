@@ -4,6 +4,9 @@
     <RootNamespace>Eurocentric.Domain</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.Tests.Architecture" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" />
     <PackageReference Include="CSharpFunctionalExtensions.Analyzers">
       <PrivateAssets>all</PrivateAssets>

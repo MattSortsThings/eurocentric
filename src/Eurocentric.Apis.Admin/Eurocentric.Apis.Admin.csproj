@@ -4,6 +4,9 @@
     <RootNamespace>Eurocentric.Apis.Admin</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Eurocentric.Tests.Architecture" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Components\Eurocentric.Components.csproj" />
   </ItemGroup>
 </Project>
