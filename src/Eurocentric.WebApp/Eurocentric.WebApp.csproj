@@ -1,6 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-<OutputType>Exe</OutputType>
-<RootNamespace>Eurocentric.WebApp</RootNamespace>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Eurocentric.WebApp</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eurocentric.Apis.Admin\Eurocentric.Apis.Admin.csproj" />
+    <ProjectReference Include="..\Eurocentric.Apis.Public\Eurocentric.Apis.Public.csproj" />
+  </ItemGroup>
 </Project>
