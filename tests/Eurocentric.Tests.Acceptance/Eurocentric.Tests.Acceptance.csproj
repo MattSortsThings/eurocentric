@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Eurocentric.Tests.Acceptance</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Humanizer.Core" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="RestSharp" />
+    <PackageReference Include="Testcontainers.MsSql" />
+    <PackageReference Include="TUnit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Eurocentric.WebApp\Eurocentric.WebApp.csproj" />
+  </ItemGroup>
+</Project>
