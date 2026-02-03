@@ -1,0 +1,46 @@
+name: Publish and deploy Eurocentric web app
+
+env:
+  DOTNET_VERSION: '10.x.x'
+  SOLUTION_PATH: 'Eurocentric.slnx'
+
+on:
+  push:
+    branches: [ 'main' ]
+  workflow_dispatch:
+
+permissions:
+    contents: read
+    checks: write
+    id-token: write
+    pull-requests: write
+
+jobs:
+  publish_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup dependency caching for faster builds
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore solution
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: Build solution
+        run: dotnet build ${{ env.SOLUTION_PATH }} -c Debug --no-restore
+
+      - name: Test solution
+        run: dotnet test --solution ${{ env.SOLUTION_PATH }} -c Debug --no-restore --no-build
