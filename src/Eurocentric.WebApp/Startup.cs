@@ -1,5 +1,6 @@
 using Eurocentric.Apis.Admin;
 using Eurocentric.Apis.Public;
+using Eurocentric.Components.DataAccess;
 using Eurocentric.Components.Endpoints;
 using Eurocentric.Components.HttpJson;
 using Eurocentric.Components.Messaging;
@@ -19,7 +20,8 @@ internal static class Startup
     internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
         builder
-            .Services.AddHttpJsonConfiguration()
+            .Services.AddDataAccess()
+            .AddHttpJsonConfiguration()
             .AddMessaging(typeof(AdminApiEndpoints).Assembly, typeof(PublicApiEndpoints).Assembly);
 
         return builder;

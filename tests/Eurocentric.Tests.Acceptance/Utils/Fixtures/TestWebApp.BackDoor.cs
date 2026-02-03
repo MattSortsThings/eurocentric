@@ -1,3 +1,4 @@
+using Eurocentric.Components.DataAccess.EfCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Tests.Acceptance.Utils.Fixtures;
@@ -29,5 +30,14 @@ public sealed partial class TestWebApp
     }
 
     /// <inheritdoc />
-    public async Task ResetAsync() => await Task.Delay(TimeSpan.FromMilliseconds(100));
+    public async Task ResetAsync()
+    {
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+
+        await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        bool canConnect = await dbContext.Database.CanConnectAsync();
+
+        await Assert.That(canConnect).IsTrue();
+    }
 }

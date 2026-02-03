@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>Eurocentric.WebApp</RootNamespace>
+    <UserSecretsId>5930a039-358b-48b8-b1d6-a9d7623a76fb</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Eurocentric.Tests.Architecture" />
@@ -9,5 +10,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Apis.Admin\Eurocentric.Apis.Admin.csproj" />
     <ProjectReference Include="..\Eurocentric.Apis.Public\Eurocentric.Apis.Public.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

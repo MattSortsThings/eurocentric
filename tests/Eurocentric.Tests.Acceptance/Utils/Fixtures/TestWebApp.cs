@@ -17,12 +17,13 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
     public required DbContainer SingletonDbContainer { get; init; }
 
     /// <summary>
-    ///     Starts the server, then creates the test database.
+    ///     Starts the server, then creates the test database, then applies migrations.
     /// </summary>
     public async Task InitializeAsync()
     {
         StartServer();
         await CreateTestDbAsync();
+        await MigrateTestDbAsync();
     }
 
     /// <summary>
@@ -34,5 +35,9 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
         await base.DisposeAsync();
     }
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureServices(AddRestClient);
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        ReplaceDbConnectionSettings(builder);
+        builder.ConfigureServices(AddRestClient);
+    }
 }
