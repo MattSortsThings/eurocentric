@@ -1,4 +1,6 @@
 using Eurocentric.Components.DataAccess.EfCore;
+using Eurocentric.Domain.Placeholders.Aggregates;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Tests.Acceptance.Utils.Fixtures;
@@ -36,8 +38,8 @@ public sealed partial class TestWebApp
 
         await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        bool canConnect = await dbContext.Database.CanConnectAsync();
-
-        await Assert.That(canConnect).IsTrue();
+        await dbContext.Set<Broadcast>().ExecuteDeleteAsync();
+        await dbContext.Set<Contest>().ExecuteDeleteAsync();
+        await dbContext.Set<Country>().ExecuteDeleteAsync();
     }
 }
