@@ -1,10 +1,7 @@
 using System.Data;
 using Dapper;
-using Eurocentric.Components.DataAccess.EfCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Tests.Acceptance.Utils.Fixtures;
 
@@ -27,11 +24,30 @@ public sealed partial class TestWebApp
 
     private async Task MigrateTestDbAsync()
     {
-        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        await using SqlConnection sqlConnection = new(SingletonDbContainer.GetNamedDbConnectionString(TestDbName));
 
-        await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await sqlConnection.OpenAsync();
 
-        await dbContext.Database.MigrateAsync();
+        foreach (string sqlBatch in SingletonSqlBatchProvider.GetMigrationSqlBatches())
+        {
+            await sqlConnection.ExecuteAsync(sqlBatch, commandType: CommandType.Text).ConfigureAwait(false);
+        }
+
+        sqlConnection.Close();
+    }
+
+    private async Task AugmentTestDbAsync()
+    {
+        await using SqlConnection sqlConnection = new(SingletonDbContainer.GetNamedDbConnectionString(TestDbName));
+
+        await sqlConnection.OpenAsync();
+
+        foreach (string sqlBatch in SingletonSqlBatchProvider.GetAugmentationSqlBatches())
+        {
+            await sqlConnection.ExecuteAsync(sqlBatch, commandType: CommandType.Text).ConfigureAwait(false);
+        }
+
+        sqlConnection.Close();
     }
 
     private async Task DropTestDbAsync()
@@ -46,6 +62,19 @@ public sealed partial class TestWebApp
             """;
 
         await sqlConnection.ExecuteAsync(sql, commandType: CommandType.Text).ConfigureAwait(false);
+
+        sqlConnection.Close();
+    }
+
+    private async Task EraseAllDataInTestDbAsync()
+    {
+        await using SqlConnection sqlConnection = new(SingletonDbContainer.GetNamedDbConnectionString(TestDbName));
+
+        await sqlConnection.OpenAsync();
+
+        await sqlConnection
+            .ExecuteAsync("[placeholder].[usp_erase_all_data]", commandType: CommandType.StoredProcedure)
+            .ConfigureAwait(false);
 
         sqlConnection.Close();
     }

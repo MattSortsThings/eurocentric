@@ -1,6 +1,3 @@
-using Eurocentric.Components.DataAccess.EfCore;
-using Eurocentric.Domain.Placeholders.Aggregates;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Tests.Acceptance.Utils.Fixtures;
@@ -32,14 +29,5 @@ public sealed partial class TestWebApp
     }
 
     /// <inheritdoc />
-    public async Task ResetAsync()
-    {
-        await using AsyncServiceScope scope = Services.CreateAsyncScope();
-
-        await using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        await dbContext.Set<Broadcast>().ExecuteDeleteAsync();
-        await dbContext.Set<Contest>().ExecuteDeleteAsync();
-        await dbContext.Set<Country>().ExecuteDeleteAsync();
-    }
+    public async Task ResetAsync() => await EraseAllDataInTestDbAsync();
 }

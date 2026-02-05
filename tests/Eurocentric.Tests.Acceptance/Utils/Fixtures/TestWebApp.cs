@@ -17,13 +17,21 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
     public required DbContainer SingletonDbContainer { get; init; }
 
     /// <summary>
-    ///     Starts the server, then creates the test database, then applies migrations.
+    ///     A singleton SQL batch provider.
+    /// </summary>
+    [ClassDataSource<SqlBatchProvider>(Shared = SharedType.PerTestSession)]
+    public required SqlBatchProvider SingletonSqlBatchProvider { get; init; }
+
+    /// <summary>
+    ///     Starts the server, then creates the test database, then applies all source code migrations to the test database,
+    ///     then augments the test database with test sprocs.
     /// </summary>
     public async Task InitializeAsync()
     {
         StartServer();
         await CreateTestDbAsync();
         await MigrateTestDbAsync();
+        await AugmentTestDbAsync();
     }
 
     /// <summary>

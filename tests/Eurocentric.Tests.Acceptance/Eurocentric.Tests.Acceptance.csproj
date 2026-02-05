@@ -4,6 +4,9 @@
     <RootNamespace>Eurocentric.Tests.Acceptance</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Utils\Scripts\*.sql" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Humanizer.Core" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="RestSharp" />
