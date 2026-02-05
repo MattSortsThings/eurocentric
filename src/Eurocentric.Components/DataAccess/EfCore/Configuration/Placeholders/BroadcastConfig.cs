@@ -26,14 +26,16 @@ internal sealed class BroadcastConfig : IEntityTypeConfiguration<Broadcast>
             .HasColumnName("contest_stage")
             .HasConversion<string>()
             .HasMaxLength(10)
-            .IsRequired();
+            .IsRequired()
+            .IsUnicode(false);
 
         builder
             .Property(broadcast => broadcast.VotingFormat)
             .HasColumnName("voting_format")
             .HasConversion<string>()
             .HasMaxLength(15)
-            .IsRequired();
+            .IsRequired()
+            .IsUnicode(false);
 
         builder.Property(broadcast => broadcast.Completed).HasColumnName("completed").IsRequired();
 

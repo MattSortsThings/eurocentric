@@ -40,7 +40,8 @@ namespace Eurocentric.Components.DataAccess.EfCore.Migrations
                     b.Property<string>("ContestStage")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(10)")
                         .HasColumnName("contest_stage");
 
                     b.Property<Guid>("ParentContestId")
@@ -50,7 +51,8 @@ namespace Eurocentric.Components.DataAccess.EfCore.Migrations
                     b.Property<string>("VotingFormat")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(15)")
                         .HasColumnName("voting_format");
 
                     b.HasKey("Id");
@@ -65,9 +67,9 @@ namespace Eurocentric.Components.DataAccess.EfCore.Migrations
                         {
                             t.HasCheckConstraint("CK_broadcast_broadcast_date", "[broadcast_date] BETWEEN '2016-01-01' AND '2050-12-31'");
 
-                            t.HasCheckConstraint("CK_broadcast_contest_stage_Enum", "[contest_stage] IN (N'SemiFinal1', N'SemiFinal2', N'GrandFinal')");
+                            t.HasCheckConstraint("CK_broadcast_contest_stage_Enum", "[contest_stage] IN ('SemiFinal1', 'SemiFinal2', 'GrandFinal')");
 
-                            t.HasCheckConstraint("CK_broadcast_voting_format_Enum", "[voting_format] IN (N'TelevoteAndJury', N'TelevoteOnly')");
+                            t.HasCheckConstraint("CK_broadcast_voting_format_Enum", "[voting_format] IN ('TelevoteAndJury', 'TelevoteOnly')");
                         });
                 });
 

@@ -19,8 +19,18 @@ namespace Eurocentric.Components.DataAccess.EfCore.Migrations
                     broadcast_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     broadcast_date = table.Column<DateOnly>(type: "date", nullable: false),
                     parent_contest_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    contest_stage = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    voting_format = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    contest_stage = table.Column<string>(
+                        type: "varchar(10)",
+                        unicode: false,
+                        maxLength: 10,
+                        nullable: false
+                    ),
+                    voting_format = table.Column<string>(
+                        type: "varchar(15)",
+                        unicode: false,
+                        maxLength: 15,
+                        nullable: false
+                    ),
                     completed = table.Column<bool>(type: "bit", nullable: false),
                 },
                 constraints: table =>
@@ -37,11 +47,11 @@ namespace Eurocentric.Components.DataAccess.EfCore.Migrations
                     );
                     table.CheckConstraint(
                         "CK_broadcast_contest_stage_Enum",
-                        "[contest_stage] IN (N'SemiFinal1', N'SemiFinal2', N'GrandFinal')"
+                        "[contest_stage] IN ('SemiFinal1', 'SemiFinal2', 'GrandFinal')"
                     );
                     table.CheckConstraint(
                         "CK_broadcast_voting_format_Enum",
-                        "[voting_format] IN (N'TelevoteAndJury', N'TelevoteOnly')"
+                        "[voting_format] IN ('TelevoteAndJury', 'TelevoteOnly')"
                     );
                 }
             );
