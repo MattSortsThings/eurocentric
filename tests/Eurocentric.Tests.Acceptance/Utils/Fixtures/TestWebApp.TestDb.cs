@@ -1,7 +1,10 @@
 using System.Data;
 using Dapper;
+using Eurocentric.Components.DataAccess.Dapper;
+using Eurocentric.Tests.Acceptance.Utils.Constants;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Eurocentric.Tests.Acceptance.Utils.Fixtures;
 
@@ -68,15 +71,15 @@ public sealed partial class TestWebApp
 
     private async Task EraseAllDataInTestDbAsync()
     {
-        await using SqlConnection sqlConnection = new(SingletonDbContainer.GetNamedDbConnectionString(TestDbName));
+        await ExecuteScopedAsync(async serviceProvider =>
+        {
+            DbSprocRunner dbSprocRunner = serviceProvider.GetRequiredService<DbSprocRunner>();
 
-        await sqlConnection.OpenAsync();
-
-        await sqlConnection
-            .ExecuteAsync("[placeholder].[usp_erase_all_data]", commandType: CommandType.StoredProcedure)
-            .ConfigureAwait(false);
-
-        sqlConnection.Close();
+            await dbSprocRunner.ExecuteAsync(
+                DbSprocs.Placeholder.EraseAllData,
+                cancellationToken: TestContext.Current?.Execution.CancellationToken ?? CancellationToken.None
+            );
+        });
     }
 
     private void ReplaceDbConnectionSettings(IWebHostBuilder builder)
