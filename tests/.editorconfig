@@ -1,0 +1,21 @@
+############
+# C# files #
+############
+
+[*.cs]
+
+#### Resharper ####
+
+resharper_inconsistent_naming_highlighting = none
+
+#### Test class names ####
+
+dotnet_naming_symbols.test_classes.applicable_kinds = class
+dotnet_naming_symbols.test_classes.applicable_accessibilities = public
+
+dotnet_naming_style.pascal_with_underscores.capitalization = pascal_case
+dotnet_naming_style.pascal_with_underscores.word_separator = _
+
+dotnet_naming_rule.test_classes_use_pascal_with_underscores.symbols = test_classes
+dotnet_naming_rule.test_classes_use_pascal_with_underscores.style = pascal_with_underscores
+dotnet_naming_rule.test_classes_use_pascal_with_underscores.severity = none

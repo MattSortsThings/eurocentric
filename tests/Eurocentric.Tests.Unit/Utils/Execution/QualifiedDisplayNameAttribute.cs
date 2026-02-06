@@ -1,7 +1,6 @@
 using Humanizer;
-using Type = System.Type;
 
-namespace Eurocentric.Tests.Architecture.Utils;
+namespace Eurocentric.Tests.Unit.Utils.Execution;
 
 public sealed class QualifiedDisplayNameAttribute : DisplayNameFormatterAttribute
 {
@@ -12,14 +11,7 @@ public sealed class QualifiedDisplayNameAttribute : DisplayNameFormatterAttribut
     {
         Type classType = context.TestContext.ClassContext.ClassType;
 
-        string? outerName = classType
-            .DeclaringType?.Name.Replace("Tests", string.Empty)
-            .Humanize()
-            .Replace(" api ", " API ");
-
-        string innerName = classType.Name.Humanize();
-
-        return outerName is null ? $"{innerName} - " : $"{outerName} - {innerName}";
+        return classType.Name.Replace("Tests", string.Empty).Replace("_", " - ");
     }
 
     private static string FormatTestMethodAndParameters(DiscoveredTestContext context)

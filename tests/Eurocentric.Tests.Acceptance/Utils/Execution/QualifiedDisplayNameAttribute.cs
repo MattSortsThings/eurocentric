@@ -12,14 +12,12 @@ public sealed class QualifiedDisplayNameAttribute : DisplayNameFormatterAttribut
     {
         Type classType = context.TestContext.ClassContext.ClassType;
 
-        string? outerName = classType
-            .DeclaringType?.Name.Replace("Tests", string.Empty)
-            .Humanize()
-            .Replace(" api ", " API ");
-
-        string innerName = classType.Name.Humanize();
-
-        return outerName is null ? $"{innerName} - " : $"{outerName} - {innerName}";
+        return string.Join(
+            " - ",
+            classType
+                .Name.Split('_')
+                .Select(item => item.Replace("Tests", string.Empty).Humanize().Replace(" api ", " API "))
+        );
     }
 
     private static string FormatTestMethodAndParameters(DiscoveredTestContext context)

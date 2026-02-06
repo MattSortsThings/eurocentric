@@ -2,19 +2,18 @@ using ArchUnitNET.TUnit;
 
 namespace Eurocentric.Tests.Architecture.Assemblies.Any;
 
-public abstract partial class AnyAssemblyTests
+public sealed class AnyAssemblyTests_NonAbstractClasses : AnyAssemblyTests
 {
-    public sealed class NonAbstractClasses : AnyAssemblyTests
+    [Test]
+    public void Should_be_sealed()
     {
-        private static readonly IObjectProvider<Class> NonAbstractClassesInAnyAssembly = Classes()
+        Classes()
             .That()
             .Are(TypesInAnyAssembly)
             .And()
             .AreNotAbstract()
-            .As("non-abstract classes in any assembly");
-
-        [Test]
-        public void Should_be_sealed() =>
-            Classes().That().Are(NonAbstractClassesInAnyAssembly).Should().BeSealed().Check(ArchitectureUnderTest);
+            .Should()
+            .BeSealed()
+            .Check(ArchitectureUnderTest);
     }
 }

@@ -2,6 +2,7 @@ using Eurocentric.Apis.Admin;
 using Eurocentric.Apis.Public;
 using Eurocentric.Components.Endpoints;
 using Eurocentric.Domain.Placeholders;
+using Eurocentric.Tests.Architecture.Utils.Execution;
 using Assembly = System.Reflection.Assembly;
 
 namespace Eurocentric.Tests.Architecture.Utils;
@@ -55,7 +56,7 @@ public abstract class ArchitectureTests
         .AreNot(IgnoredTypes)
         .As("in Admin API assembly");
 
-    private protected static readonly IObjectProvider<IType> TypesInPublicApiAssemblyTypes = Types()
+    private protected static readonly IObjectProvider<IType> TypesInPublicApiAssembly = Types()
         .That()
         .ResideInAssembly(typeof(PublicApiEndpoints).Assembly)
         .And()

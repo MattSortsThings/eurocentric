@@ -1,6 +1,6 @@
 using TUnit.Core.Interfaces;
 
-namespace Eurocentric.Tests.Architecture.Utils;
+namespace Eurocentric.Tests.Architecture.Utils.Execution;
 
 /// <summary>
 ///     Imposes a limit on the number of tests that can be run in parallel.
