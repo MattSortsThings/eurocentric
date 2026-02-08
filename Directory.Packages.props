@@ -13,6 +13,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
+    <PackageVersion Include="Respawn" Version="7.0.0" />
     <PackageVersion Include="RestSharp" Version="113.1.0" />
     <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.3.6" />
     <PackageVersion Include="Testcontainers.MsSql" Version="4.10.0" />

@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Respawn" />
     <PackageReference Include="RestSharp" />
     <PackageReference Include="Testcontainers.MsSql" />
     <PackageReference Include="TUnit" />

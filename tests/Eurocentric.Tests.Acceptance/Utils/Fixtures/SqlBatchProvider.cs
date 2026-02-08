@@ -10,10 +10,12 @@ namespace Eurocentric.Tests.Acceptance.Utils.Fixtures;
 public sealed partial class SqlBatchProvider : IAsyncInitializer
 {
     private const string ScriptsDirectoryPath = "Eurocentric.Tests.Acceptance.Utils.Scripts";
-    private static readonly string[] MigrationFileNames = ["migrate_test_db.sql"];
-    private static readonly string[] AugmentationFileNames = ["create_placeholder_usp_erase_all_data.sql"];
-    private readonly List<string> _augmentationSqlBatches = [];
 
+    private static readonly string[] MigrationFileNames = ["migrate_test_db.sql"];
+
+    private static readonly string[] AugmentationFileNames = [];
+
+    private readonly List<string> _augmentationSqlBatches = [];
     private readonly List<string> _migrationSqlBatches = [];
 
     /// <summary>

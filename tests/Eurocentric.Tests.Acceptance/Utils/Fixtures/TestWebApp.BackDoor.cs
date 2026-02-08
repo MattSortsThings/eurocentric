@@ -29,5 +29,5 @@ public sealed partial class TestWebApp
     }
 
     /// <inheritdoc />
-    public async Task ResetAsync() => await EraseAllDataInTestDbAsync();
+    public async Task ResetAsync() => await RespawnTestDbAsync();
 }

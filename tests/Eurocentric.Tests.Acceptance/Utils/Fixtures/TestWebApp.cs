@@ -32,6 +32,7 @@ public sealed partial class TestWebApp : WebApplicationFactory<Program>, IAsyncI
         await CreateTestDbAsync();
         await MigrateTestDbAsync();
         await AugmentTestDbAsync();
+        await CreateTestDbRespawnerAsync();
     }
 
     /// <summary>

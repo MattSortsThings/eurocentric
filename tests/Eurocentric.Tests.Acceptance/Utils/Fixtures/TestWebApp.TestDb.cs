@@ -1,15 +1,15 @@
 using System.Data;
 using Dapper;
-using Eurocentric.Components.DataAccess.Dapper;
-using Eurocentric.Tests.Acceptance.Utils.Constants;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.DependencyInjection;
+using Respawn;
 
 namespace Eurocentric.Tests.Acceptance.Utils.Fixtures;
 
 public sealed partial class TestWebApp
 {
+    private Respawner? TestDbRespawner { get; set; }
+
     private string TestDbName { get; } = "db_" + Guid.NewGuid().ToString("D").Replace('-', '_');
 
     private async Task CreateTestDbAsync()
@@ -53,6 +53,17 @@ public sealed partial class TestWebApp
         sqlConnection.Close();
     }
 
+    private async Task CreateTestDbRespawnerAsync()
+    {
+        await using SqlConnection sqlConnection = new(SingletonDbContainer.GetNamedDbConnectionString(TestDbName));
+
+        await sqlConnection.OpenAsync();
+
+        TestDbRespawner = await Respawner.CreateAsync(sqlConnection);
+
+        sqlConnection.Close();
+    }
+
     private async Task DropTestDbAsync()
     {
         await using SqlConnection sqlConnection = new(SingletonDbContainer.GetMasterDbConnectionString());
@@ -69,17 +80,15 @@ public sealed partial class TestWebApp
         sqlConnection.Close();
     }
 
-    private async Task EraseAllDataInTestDbAsync()
+    private async Task RespawnTestDbAsync()
     {
-        await ExecuteScopedAsync(async serviceProvider =>
-        {
-            DbSprocRunner dbSprocRunner = serviceProvider.GetRequiredService<DbSprocRunner>();
+        await using SqlConnection sqlConnection = new(SingletonDbContainer.GetNamedDbConnectionString(TestDbName));
 
-            await dbSprocRunner.ExecuteAsync(
-                DbSprocs.Placeholder.EraseAllData,
-                cancellationToken: TestContext.Current?.Execution.CancellationToken ?? CancellationToken.None
-            );
-        });
+        await sqlConnection.OpenAsync();
+
+        await TestDbRespawner!.ResetAsync(sqlConnection);
+
+        sqlConnection.Close();
     }
 
     private void ReplaceDbConnectionSettings(IWebHostBuilder builder)
