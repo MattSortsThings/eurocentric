@@ -1,5 +1,6 @@
 using Eurocentric.Apis.Admin;
 using Eurocentric.Apis.Public;
+using Eurocentric.Components.AnalyticsGateways;
 using Eurocentric.Components.DataAccess;
 using Eurocentric.Components.Endpoints;
 using Eurocentric.Components.HttpJson;
@@ -20,7 +21,8 @@ internal static class Startup
     internal static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
         builder
-            .Services.AddDataAccess()
+            .Services.AddAnalyticsGateways()
+            .AddDataAccess()
             .AddHttpJsonConfiguration()
             .AddMessaging(typeof(AdminApiEndpoints).Assembly, typeof(PublicApiEndpoints).Assembly);
 

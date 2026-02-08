@@ -13,7 +13,14 @@ public sealed partial class SqlBatchProvider : IAsyncInitializer
 
     private static readonly string[] MigrationFileNames = ["migrate_test_db.sql"];
 
-    private static readonly string[] AugmentationFileNames = [];
+    private static readonly string[] AugmentationFileNames =
+    [
+        "create_placeholder_usp_add_2021_contest.sql",
+        "create_placeholder_usp_add_2022_contest.sql",
+        "create_placeholder_usp_add_2023_contest.sql",
+        "create_placeholder_usp_add_2024_contest.sql",
+        "create_placeholder_usp_add_all_53_countries.sql",
+    ];
 
     private readonly List<string> _augmentationSqlBatches = [];
     private readonly List<string> _migrationSqlBatches = [];

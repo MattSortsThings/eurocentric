@@ -180,3 +180,23 @@ CREATE INDEX [IX_broadcast_competitor_points_award_voting_country_id]
 GO
 INSERT  INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES                              (N'20260205063536_Create_placeholder_broadcast_aggregate_tables', N'10.0.2');
+
+
+GO
+CREATE TYPE [placeholder].[udtt_contest_stage] AS TABLE (
+    [contest_stage] VARCHAR (10) NOT NULL CHECK ([contest_stage] IN ('SemiFinal1', 'SemiFinal2', 'GrandFinal')));
+
+
+GO
+INSERT  INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES                              (N'20260208062526_Create_placeholder_udtt_contest_stage', N'10.0.2');
+
+
+GO
+CREATE TYPE [placeholder].[udtt_voting_method] AS TABLE (
+    [voting_method] VARCHAR (8) NOT NULL CHECK ([voting_method] IN ('Televote', 'Jury')));
+
+
+GO
+INSERT  INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES                              (N'20260208062724_Create_placeholder_udtt_voting_method', N'10.0.2');
