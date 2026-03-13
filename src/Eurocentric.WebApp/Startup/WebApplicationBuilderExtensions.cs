@@ -1,4 +1,5 @@
 using Eurocentric.Components.Configuration;
+using Eurocentric.Components.DataAccess;
 
 namespace Eurocentric.WebApp.Startup;
 
@@ -14,7 +15,10 @@ internal static class WebApplicationBuilderExtensions
     /// <returns>The original <see cref="WebApplicationBuilder" /> instance.</returns>
     public static WebApplicationBuilder ConfigureAllServices(this WebApplicationBuilder builder)
     {
-        builder.Services.ConfigureOptions<ConfigureDbConnectionOptions>().ConfigureOptions<ConfigureHttpJsonOptions>();
+        builder
+            .Services.AddDataAccess()
+            .ConfigureOptions<ConfigureDbConnectionOptions>()
+            .ConfigureOptions<ConfigureHttpJsonOptions>();
 
         return builder;
     }

@@ -21,4 +21,11 @@ public sealed record DbConnectionOptions
     ///     Gets or sets the maximum number of retries.
     /// </summary>
     public int MaxRetries { get; set; }
+
+    public void Deconstruct(out string connectionString, out int commandTimeoutInSeconds, out int maxRetries)
+    {
+        connectionString = ConnectionString;
+        commandTimeoutInSeconds = CommandTimeoutInSeconds;
+        maxRetries = MaxRetries;
+    }
 }
