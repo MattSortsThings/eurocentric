@@ -33,7 +33,10 @@ internal static class ServiceCollectionExtensions
             .UseAzureSql(
                 connectionString,
                 azureSqlOptions =>
-                    azureSqlOptions.EnableRetryOnFailure(maxRetries).CommandTimeout(commandTimeoutInSeconds)
+                    azureSqlOptions
+                        .EnableRetryOnFailure(maxRetries)
+                        .CommandTimeout(commandTimeoutInSeconds)
+                        .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
             )
             .UseEnumCheckConstraints()
             .UseExceptionProcessor();
