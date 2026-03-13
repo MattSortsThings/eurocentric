@@ -10,6 +10,9 @@
     <ProjectReference Include="..\Eurocentric.Domain\Eurocentric.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="EFCore.CheckConstraints" />
+    <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
     <PackageReference Include="Riok.Mapperly" />
     <PackageReference Include="SlimMessageBus.Host.Memory" />
   </ItemGroup>
