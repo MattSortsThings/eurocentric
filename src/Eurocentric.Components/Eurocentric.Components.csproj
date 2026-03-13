@@ -9,4 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Domain\Eurocentric.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Riok.Mapperly" />
+  </ItemGroup>
 </Project>
