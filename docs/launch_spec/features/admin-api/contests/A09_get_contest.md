@@ -28,8 +28,8 @@ GET /admin/api/{apiVersion}/contests/{contestId}
     "id": "00000000-0000-0000-0000-000000000000",
     "contestYear": 2025,
     "cityName": "CityName",
-    "semiFinalVotingFormat": "TelevoteOnly",
-    "grandFinalVotingFormat": "JuryAndTelevote",
+    "semiFinalBroadcastFormat": "TelevoteOnly",
+    "grandFinalBroadcastFormat": "JuryAndTelevote",
     "queryable": false,
     "globalTelevote": {
       "votingCountryId": "00000000-0000-0000-0000-000000000000"

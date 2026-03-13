@@ -20,7 +20,7 @@ POST /admin/api/{apiVersion}/contests
 {
   "contestYear": 2025,
   "cityName": "CityName",
-  "semiFinalVotingFormat": "TelevoteOnly",
+  "semiFinalBroadcastFormat": "TelevoteOnly",
   "globalTelevoteVotingCountryId": "00000000-0000-0000-0000-000000000000",
   "participants": [
     {
@@ -50,8 +50,8 @@ Location: {host}/admin/api/{apiVersion}/contests/{contestId}
     "id": "00000000-0000-0000-0000-000000000000",
     "contestYear": 2025,
     "cityName": "CityName",
-    "semiFinalVotingFormat": "TelevoteOnly",
-    "grandFinalVotingFormat": "JuryAndTelevote",
+    "semiFinalBroadcastFormat": "TelevoteOnly",
+    "grandFinalBroadcastFormat": "JuryAndTelevote",
     "queryable": false,
     "globalTelevote": {
       "votingCountryId": "00000000-0000-0000-0000-000000000000"
@@ -96,20 +96,20 @@ Location: {host}/admin/api/{apiVersion}/contests/{contestId}
 
 - [ ] Fails_when_contestYear_is_not_provided
 - [ ] Fails_when_cityName_is_not_provided
-- [ ] Fails_when_semiFinalVotingFormat_is_not_provided
+- [ ] Fails_when_semiFinalBroadcastFormat_is_not_provided
 - [ ] Fails_when_participants_is_not_provided
 - [ ] Fails_when_participant_participatingCountryId_is_not_provided
 - [ ] Fails_when_participant_semiFinalDraw_is_not_provided
 - [ ] Fails_when_participant_actName_is_not_provided
 - [ ] Fails_when_participant_songTitle_is_not_provided
-- [ ] Fails_when_semiFinalVotingFormat_is_invalid_enum_name
+- [ ] Fails_when_semiFinalBroadcastFormat_is_invalid_enum_name
 - [ ] Fails_when_participant_semiFinalDraw_is_invalid_enum_name
 
 ### Sad Path : Invalid Enum Argument
 
 **Endpoint...**
 
-- [ ] Fails_when_semiFinalVotingFormat_is_invalid_enum_int_value
+- [ ] Fails_when_semiFinalBroadcastFormat_is_invalid_enum_int_value
 - [ ] Fails_when_participant_semiFinalDraw_is_invalid_enum_int_value
 
 ### Sad Path : Country Not Found

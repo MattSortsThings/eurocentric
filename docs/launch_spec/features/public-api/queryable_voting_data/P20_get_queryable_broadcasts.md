@@ -29,7 +29,7 @@ GET /public/api/{apiVersion}/queryable-voting-data/broadcasts
       "broadcastDate": "2025-01-01",
       "cityName": "CityName",
       "contestStage": "GrandFinal",
-      "votingFormat": "JuryAndTelevote",
+      "broadcastFormat": "JuryAndTelevote",
       "competingCountryCodes": [
         "AA",
         "BB",

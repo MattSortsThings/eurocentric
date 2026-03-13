@@ -51,7 +51,7 @@ This document is part of the [launch specification](README.md).
 - The Admin creates a new `Contest`, specifying:
   - the contest year
   - the city name
-  - the Semi-Final voting format
+  - the Semi-Final broadcast format
   - the optional global televote country ID
   - the participants, for each:
     - the participating country ID

@@ -49,7 +49,7 @@ Location: {host}/admin/api/{apiVersion}/broadcasts/{broadcastId}
     "broadcastDate": "2025-01-01",
     "parentContestId": "00000000-0000-0000-0000-000000000000",
     "contestStage": "GrandFinal",
-    "votingFormat": "JuryAndTelevote",
+    "broadcastFormat": "JuryAndTelevote",
     "completed": false,
     "competitors": [
       {

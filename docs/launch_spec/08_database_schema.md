@@ -18,7 +18,7 @@ broadcast {
   DATE broadcast_date UK "BETWEEN '2016-01-01' AND '2030-12-31'"
   UNIQUEIDENTIFIER parent_contest_id
   VARCHAR(10) contest_stage "IN ('SemiFinal1', 'SemiFinal2', 'GrandFinal')"
-  VARCHAR(15) voting_format "IN ('JuryAndTelevote', 'TelevoteOnly')"
+  VARCHAR(15) broadcast_format "IN ('JuryAndTelevote', 'TelevoteOnly')"
   BIT completed
 }
 
@@ -80,8 +80,8 @@ contest {
   UNIQUEIDENTIFIER contest_id PK
   INT contest_year UK "BETWEEN 2016 AND 2030"
   NVARCHAR(150) city_name
-  VARCHAR(15) semi_final_voting_format "IN ('JuryAndTelevote', 'TelevoteOnly')"
-  VARCHAR(15) grand_final_voting_format "IN ('JuryAndTelevote', 'TelevoteOnly')"
+  VARCHAR(15) semi_final_broadcast_format "IN ('JuryAndTelevote', 'TelevoteOnly')"
+  VARCHAR(15) grand_final_broadcast_format "IN ('JuryAndTelevote', 'TelevoteOnly')"
   BIT queryable
   UNIQUEIDENTIFIER global_televote_voting_country_id "NULL"
 }

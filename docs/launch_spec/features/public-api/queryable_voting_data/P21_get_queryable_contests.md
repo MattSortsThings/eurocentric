@@ -28,8 +28,8 @@ GET /public/api/{apiVersion}/queryable-voting-data/contests
     {
       "contestYear": 2025,
       "cityName": "CityName",
-      "semiFinalVotingFormat": "JuryAndTelevote",
-      "grandFinalVotingFormat": "JuryAndTelevote",
+      "semiFinalBroadcastFormat": "JuryAndTelevote",
+      "grandFinalBroadcastFormat": "JuryAndTelevote",
       "globalTelevoteVotingCountryCode": "XX",
       "participatingCountryCodes": [
         "AA",

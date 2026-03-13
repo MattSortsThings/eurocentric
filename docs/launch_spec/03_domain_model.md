@@ -4,13 +4,13 @@ This document is part of the [launch specification](README.md).
 
 - [3. Domain model](#3-domain-model)
   - [Enums](#enums)
+    - [`BroadcastFormat` enum](#broadcastformat-enum)
     - [`BroadcastHalf` enum](#broadcasthalf-enum)
     - [`ContestStage` enum](#conteststage-enum)
     - [`ContestStageFilter` enum](#conteststagefilter-enum)
     - [`CountryType` enum](#countrytype-enum)
     - [`DomainErrorType` enum](#domainerrortype-enum)
     - [`SemiFinalDraw` enum](#semifinaldraw-enum)
-    - [`VotingFormat` enum](#votingformat-enum)
     - [`VotingMethod` enum](#votingmethod-enum)
     - [`VotingMethodFilter` enum](#votingmethodfilter-enum)
   - [Guid atomic value objects](#guid-atomic-value-objects)
@@ -51,6 +51,11 @@ This document is part of the [launch specification](README.md).
 
 ## Enums
 
+### `BroadcastFormat` enum
+
+- A `BroadcastFormat` enum value specifies the voting format used in a broadcast
+- The enum values are  `{ JuryAndTelevote, TelevoteOnly }`
+
 ### `BroadcastHalf` enum
 
 - A `BroadcastHalf` enum value specifies a half of a broadcast's performing order
@@ -80,11 +85,6 @@ This document is part of the [launch specification](README.md).
 
 - A `SemiFinalDraw` enum value specifies a participant's Semi-Final draw in their contest
 - The enum values are `{ SemiFinal1, SemiFinal2 }`
-
-### `VotingFormat` enum
-
-- A `VotingFormat` enum value specifies the voting format used in a broadcast
-- The enum values are  `{ JuryAndTelevote, TelevoteOnly }`
 
 ### `VotingMethod` enum
 
@@ -238,8 +238,8 @@ classDiagram
     +ContestId Id
     +ContestYear ContestYear
     +CityName CityName
-    +VotingFormat SemiFinalVotingFormat
-    +VotingFormat GrandFinalVotingFormat
+    +BroadcastFormat SemiFinalBroadcastFormat
+    +BroadcastFormat GrandFinalBroadcastFormat
     +bool Queryable
     +GlobalTelevote? GlobalTelevote
     +IReadOnlyCollection~Participant~ Participants
@@ -290,8 +290,8 @@ classDiagram
   - a `ContestId`
   - a `ContestYear`
   - a `CityName`
-  - a Semi-Final `VotingFormat` value
-  - a Grand Final `VotingFormat` value
+  - a Semi-Final `BroadcastFormat` value
+  - a Grand Final `BroadcastFormat` value
   - a "queryable" boolean value, which is initially `false`
   - 1 or 0 `GlobalTelevote`
   - a `Participant` collection
@@ -343,7 +343,7 @@ classDiagram
     +BroadcastDate BroadcastDate
     +ContestId ParentContestId
     +ContestStage ContestStage
-    +VotingFormat VotingFormat
+    +BroadcastFormat BroadcastFormat
     +bool Completed
     +IReadOnlyCollection~Competitor~ Competitors
     +IReadOnlyCollection~Televote~ Televotes
@@ -390,7 +390,7 @@ classDiagram
   - a `BroadcastDate`
   - a parent `ContestId`, which references a `Contest` aggregate
   - a `ContestStage` value
-  - a `VotingFormat` value
+  - a `BroadcastFormat` value
   - a "completed" boolean value, which is initially `false`
   - a `Competitor` collection
   - a `Televote` collection
