@@ -11,5 +11,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Riok.Mapperly" />
+    <PackageReference Include="SlimMessageBus.Host.Memory" />
   </ItemGroup>
 </Project>
