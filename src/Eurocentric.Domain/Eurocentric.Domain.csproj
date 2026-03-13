@@ -3,4 +3,11 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Eurocentric.Domain</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" />
+    <PackageReference Include="CSharpFunctionalExtensions.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>
