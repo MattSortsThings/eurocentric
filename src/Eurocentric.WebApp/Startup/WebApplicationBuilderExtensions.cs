@@ -1,5 +1,4 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Eurocentric.Components.Configuration;
 
 namespace Eurocentric.WebApp.Startup;
 
@@ -15,14 +14,7 @@ internal static class WebApplicationBuilderExtensions
     /// <returns>The original <see cref="WebApplicationBuilder" /> instance.</returns>
     public static WebApplicationBuilder ConfigureAllServices(this WebApplicationBuilder builder)
     {
-        builder.Services.ConfigureHttpJsonOptions(options =>
-        {
-            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
-            options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.SerializerOptions.WriteIndented = false;
-        });
+        builder.Services.ConfigureOptions<ConfigureHttpJsonOptions>();
 
         return builder;
     }

@@ -1,3 +1,7 @@
+using Eurocentric.Apis.Admin;
+using Eurocentric.Apis.Public;
+using Eurocentric.Components.Endpoints;
+
 namespace Eurocentric.WebApp.Startup;
 
 /// <summary>
@@ -14,8 +18,7 @@ internal static class WebApplicationExtensions
     {
         app.UseHttpsRedirection();
 
-        app.MapGet("blobby", () => TypedResults.Ok("Blobby Blobby Blobby!"))
-            .AllowAnonymous();
+        app.Map<AdminApiEndpoints>().Map<PublicApiEndpoints>();
 
         return app;
     }

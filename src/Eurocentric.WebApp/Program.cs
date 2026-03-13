@@ -1,7 +1,3 @@
 using Eurocentric.WebApp.Startup;
 
-WebApplication.CreateBuilder(args)
-    .ConfigureAllServices()
-    .Build()
-    .ConfigureHttpRequestPipeline()
-    .Run();
+WebApplication.CreateBuilder(args).ConfigureAllServices().Build().ConfigureHttpRequestPipeline().Run();
