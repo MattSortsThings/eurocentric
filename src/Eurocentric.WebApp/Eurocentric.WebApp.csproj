@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>Eurocentric.WebApp</RootNamespace>
+    <UserSecretsId>c1fe0041-73da-4ba3-b330-ccf17c38f11a</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eurocentric.Apis.Admin\Eurocentric.Apis.Admin.csproj" />
