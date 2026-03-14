@@ -1,5 +1,8 @@
+using Eurocentric.Apis.Admin;
+using Eurocentric.Apis.Public;
 using Eurocentric.Components.Configuration;
 using Eurocentric.Components.DataAccess;
+using Eurocentric.Components.Messaging;
 
 namespace Eurocentric.WebApp.Startup;
 
@@ -17,6 +20,7 @@ internal static class WebApplicationBuilderExtensions
     {
         builder
             .Services.AddDataAccess()
+            .AddInternalMessagingPipeline(typeof(AdminApiEndpoints).Assembly, typeof(PublicApiEndpoints).Assembly)
             .ConfigureOptions<ConfigureDbConnectionOptions>()
             .ConfigureOptions<ConfigureHttpJsonOptions>();
 
